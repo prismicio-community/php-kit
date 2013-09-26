@@ -3,40 +3,28 @@
 namespace prismic;
 
 if (!function_exists('curl_init')) {
-    throw new Exception('Wroom needs the CURL PHP extension.');
+    throw new \Exception('Prismic needs the CURL PHP extension.');
 }
 if (!function_exists('json_decode')) {
-    throw new Exception('Wroom needs the JSON PHP extension.');
+    throw new \Exception('Prismic needs the JSON PHP extension.');
 }
 
 class API {
 
-    protected $url;
-    protected $apidata = null;
+    private $data;
 
     /**
-     * Default options for curl.
+     * @param $url full qualified URL of the Prismic server to access
      */
-    public static $CURL_OPTS = array(
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 60,
-        CURLOPT_USERAGENT      => 'wroom-php-0.1',
-        CURLOPT_HTTPHEADER     => array('Accept: application/json')
-    );
-
-    /**
-     * @param $url full qualified URL of the Wroom server to access
-     */
-    function __construct($url) {
-        $this->url = $url;
+    function __construct($data) {
+        $this->data = $data;
     }
 
     /**
      * @return mixed Array of the references present on the server
      */
-    public function refs() {
-        $refs = $this->getApiData()->refs;
+    public function refs($ref) {
+        $refs = $this->data->refs;
         foreach($refs as $ref) {
             $refs[$ref->label] = $ref;
         }
@@ -48,21 +36,29 @@ class API {
      * @return array of bookmarks present on the server
      */
     public function bookmarks() {
-        return $this->getApiData()->bookmarks;
+        return $this->data->bookmarks;
     }
 
     /**
      * @return the master reference
      */
     public function master() {
-        $masters = array_filter($this->getApiData()->refs, function ($ref) { return $ref->isMasterRef == true; });
+        $masters = array_filter($this->data->refs, function ($ref) { return $ref->isMasterRef == true; });
         return $masters[0];
     }
 
     public function forms() {
-        $forms = $this->getApiData()->forms;
+        $forms = $this->data->forms;
         foreach($forms as $key => $form) {
-            $forms->$key = new SearchForm($this, $form);
+            $f = new Form(
+                isset($form->name) ? $form->name : NULL,
+                $form->method,
+                isset($form->rel) ? $form->rel : NULL,
+                $form->enctype,
+                $form->action,
+                $form->fields
+            );
+            $forms->$key = new SearchForm($this, $f, $f->defaultData());
         }
         return $forms;
     }
@@ -76,54 +72,63 @@ class API {
         return $this->forms()->everything->query($ref, "[[at(document.id, \"" . $id . "\")]]")[0];
     }
 
-    /**
-     * Return apidata, but fetch lazily (to avoid fetching the apidata if no call is done)
-     */
-    public function getApiData() {
-        if (!$this->apidata) {
-            $this->apidata = json_decode(self::get($this->url));
-        }
-        return $this->apidata;
-    }
-
     public static function get($url) {
-        $ch = curl_init();
-
-        $opts = self::$CURL_OPTS;
-        $opts[CURLOPT_URL] = $url;
-
-        // disable the 'Expect: 100-continue' behaviour. This causes CURL to wait
-        // for 2 seconds if the server does not support this header.
-        if (isset($opts[CURLOPT_HTTPHEADER])) {
-            $existing_headers = $opts[CURLOPT_HTTPHEADER];
-            $existing_headers[] = 'Expect:';
-            $opts[CURLOPT_HTTPHEADER] = $existing_headers;
-        } else {
-            $opts[CURLOPT_HTTPHEADER] = array('Expect:');
+        $response = WS::get($url);
+        if (!$response->data) {
+            throw new \Exception("HTTP Error: " . $http_status);
         }
 
-        curl_setopt_array($ch, $opts);
-        $result = curl_exec($ch);
-
-        if ($result === false) {
-            $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            throw new Exception("HTTP Error: " . $http_status);
-        }
-        curl_close($ch);
-        return $result;
+        $apiData = new ApiData(
+            $response->data->refs,
+            $response->data->bookmarks,
+            $response->data->types,
+            $response->data->tags,
+            $response->data->forms,
+            $response->data->oauth_initiate,
+            $response->data->oauth_token
+        );
+        return new API($apiData);
     }
-
 }
 
 class SearchForm {
 
     private $api;
     private $form;
+    private $data;
 
-    function __construct($api, $form) {
+    function __construct($api, $form, $data) {
         $this->api = $api;
         $this->form = $form;
+        $this->data = $data;
+    }
+
+    function ref($ref) {
+        $data = $this->data;
+        $data['ref'] = $ref;
+        return new SearchForm($this->api, $this->form, $data);
+    }
+
+    private static function parseResult($json) {
+        $documents = array();
+        foreach($json as $doc) {
+            array_push($documents, new Document($doc));
+        }
+        return $documents;
+    }
+
+    function submit() {
+        if($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
+            $url = $this->form->action . '?' . http_build_query($this->data);
+            $response = WS::get($url);
+            if($response->status != 200) {
+                throw new \Exception("Http error: " . $response->status);
+            } else {
+                return self::parseResult($response->data);
+            }
+        } else {
+            throw new \Exception("Form type not supported");
+        }
     }
 
     function query($ref, $q = null) {
@@ -147,7 +152,6 @@ class SearchForm {
         }
         return $documents;
     }
-
 }
 
 class Document {
@@ -223,7 +227,6 @@ class Document {
         $fragment = $this->fragments[$field];
         return $fragment->getImage($view);
     }
-
 }
 
 // Fragment types
@@ -241,7 +244,6 @@ class Fragment {
     public function asHtml($linkResolver = null) {
         return "";
     }
-
 }
 
 class Link extends Fragment {
@@ -255,7 +257,6 @@ class Link extends Fragment {
     public function asHtml($linkResolver = null) {
         return "";
     }
-
 }
 
 class Number extends Fragment {
@@ -352,6 +353,120 @@ class StructuredText extends Fragment {
         // TODO: Find the first image
         return null;
     }
-
 }
 
+class Form {
+
+    private $maybeName;
+    private $method;
+    private $maybeRel;
+    private $enctype;
+    private $action;
+    private $fields;
+
+    function __construct($maybeName, $method, $maybeRel, $enctype, $action, $fields) {
+        $this->maybeName = $maybeName;
+        $this->method = $method;
+        $this->maybeRel = $maybeRel;
+        $this->enctype = $enctype;
+        $this->action = $action;
+        $this->fields = $fields;
+    }
+
+    function defaultData() {
+        $dft = array();
+        foreach($this->fields as $key=>$field) {
+            if (property_exists($field, "default")) {
+                $queryParameters[$key] = $field->default;
+            }
+        }
+        return $dft;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+}
+
+class ApiData {
+
+    private $refs;
+    private $bookmarks;
+    private $types;
+    private $tags;
+    private $forms;
+    private $oauth_initiate;
+    private $oauth_token;
+
+    function __construct($refs, $bookmarks, $types, $tags, $forms, $oauth_initiate, $oauth_token) {
+        $this->refs = $refs;
+        $this->bookmarks = $bookmarks;
+        $this->types = $types;
+        $this->tags = $tags;
+        $this->forms = $forms;
+        $this->oauth_initiate = $oauth_initiate;
+        $this->oauth_token = $oauth_token;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+}
+
+class WS {
+
+    /**
+     * Default options for curl.
+     */
+    public static $CURL_OPTS = array(
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 60,
+        CURLOPT_USERAGENT      => 'prismic-php-0.1',
+        CURLOPT_HTTPHEADER     => array('Accept: application/json')
+    );
+
+    public static function get($url) {
+        $ch = curl_init();
+        $opts = self::$CURL_OPTS;
+        $opts[CURLOPT_URL] = $url;
+
+        // disable the 'Expect: 100-continue' behaviour. This causes CURL to wait
+        // for 2 seconds if the server does not support this header.
+        if (isset($opts[CURLOPT_HTTPHEADER])) {
+            $existing_headers = $opts[CURLOPT_HTTPHEADER];
+            $existing_headers[] = 'Expect:';
+            $opts[CURLOPT_HTTPHEADER] = $existing_headers;
+        } else {
+            $opts[CURLOPT_HTTPHEADER] = array('Expect:');
+        }
+
+        curl_setopt_array($ch, $opts);
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $data = json_decode($result);
+        return new WSResponse($status, $data);
+    }
+}
+
+class WSResponse {
+
+    private $status;
+    private $data;
+
+    function __construct($status, $data) {
+        $this->status = $status;
+        $this->data = $data;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+}
