@@ -309,7 +309,7 @@ class StructuredText implements Fragment {
     }
 
     public static function asHtmlText($text, $spans, $linkResolver=null) {
-        if(!empty($span)) {
+        if(!empty($spans)) {
             $starts = array();
             for($i = count($spans) - 1; $i >= 0; $i--) {
                 array_push($starts, $spans[$i]);
@@ -319,28 +319,49 @@ class StructuredText implements Fragment {
             $result = "";
             $pos = 0;
 
+            $getStartAndEnd = function($span, $linkResolver=null) {
+                if($span instanceof StrongSpan) {
+                    return array("<strong>", "</strong>");
+                }
+                if($span instanceof EmSpan) {
+                    return array("<em>", "</em>");
+                }
+                if($span instanceof HyperlinkSpan) {
+                    return array('<a href="#">', '</a>'); //TODO;
+                }
+                return array('', '');
+            };
+
             $peek = function($array) {
-                return $array[count($array - 1)];
+                return $array[count($array) - 1];
+            };
+
+            $peekStart = function($span) {
+                return empty($span) ? PHP_INT_MAX : $span[count($span) - 1]->start;
+            };
+
+            $peekEnd = function($span) {
+                return empty($span) ? PHP_INT_MAX : $span[count($span) - 1]->end;
             };
 
             while(!(empty($starts) && empty($endings))) {
-                $next = min(StructuredText::peekStart($starts), StructuredText::peekEnd($endings));
+                $next = min($peekStart($starts), $peekEnd($endings));
                 if($next > $pos) {
-                    $result = $result . substr(0, $next - $pos -1);
+                    $result = $result . substr($text, 0, $next - $pos -1);
                     $text = substr($text, $next - $pos);
                     $pos = $next;
                 } else {
                     $spansToApply = "";
-                    while(min(StructuredText::peekStart($starts), StructuredText::peekEnd($endings)) == $pos) {
+                    while(min($peekStart($starts), $peekEnd($endings)) == $pos) {
                         if(!empty($endings) && $peek($endings)->end == $pos) {
-                            $spansToApply = $spansToApply . StructuredText::getStartAndEnd(array_pop($endings), $linkResolver)[1];
+                            $spansToApply = $spansToApply . $getStartAndEnd(array_pop($endings), $linkResolver)[1];
                         }
                         else if(!empty($starts) && $peek($starts)->start == $pos) {
                             $start = array_pop($starts);
                             array_push($endings, $start);
-                            $spansToApply = $spansToApply . getStartAndEnd($start, $linkResolver)[0];
+                            $spansToApply = $spansToApply . $getStartAndEnd($start, $linkResolver)[0];
                         }
-                        $result = $result . $spansToApply;
+                        $result = $result . " " . $spansToApply;
                     }
                 }
             }
@@ -348,18 +369,6 @@ class StructuredText implements Fragment {
         } else {
             return $text;
         }
-    }
-
-    public static function getStartAndEnd($span, $linkResolver) {
-        return array('', '');
-    }
-
-    public static function peekStart($span) {
-        return empty($span) ? PHP_INT_MAX : $span[count($span) - 1]->start;
-    }
-
-    public static function peekEnd() {
-        return empty($span) ? PHP_INT_MAX : $span[0]->end;
     }
 
     public function getTitle() {
@@ -495,7 +504,7 @@ class ParsedText {
 
     function __construct($text, $spans) {
         $this->text = $text;
-        $this->span = $spans;
+        $this->spans = $spans;
     }
 
     public function __get($property) {
@@ -607,6 +616,12 @@ class EmSpan implements Span {
         $this->start = $start;
         $this->end = $end;
     }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
 }
 
 class StrongSpan implements Span {
@@ -617,6 +632,12 @@ class StrongSpan implements Span {
     function __construct($start, $end) {
         $this->start = $start;
         $this->end = $end;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
 
@@ -630,6 +651,12 @@ class HyperlinkSpan implements Span {
         $this->start = $start;
         $this->end = $end;
         $this->link = $link;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
 
