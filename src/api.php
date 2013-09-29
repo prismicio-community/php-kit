@@ -2,6 +2,8 @@
 
 namespace prismic;
 
+require_once(VENDORS_PATH . "/fragments.php");
+
 if (!function_exists('curl_init')) {
     throw new \Exception('Prismic needs the CURL PHP extension.');
 }
@@ -13,16 +15,10 @@ class API {
 
     private $data;
 
-    /**
-     * @param $url full qualified URL of the Prismic server to access
-     */
     function __construct($data) {
         $this->data = $data;
     }
 
-    /**
-     * @return mixed Array of the references present on the server
-     */
     public function refs($ref) {
         $refs = $this->data->refs;
         foreach($refs as $ref) {
@@ -32,16 +28,10 @@ class API {
         return $refs;
     }
 
-    /**
-     * @return array of bookmarks present on the server
-     */
-    public function bookmarks() {
+     public function bookmarks() {
         return $this->data->bookmarks;
     }
 
-    /**
-     * @return the master reference
-     */
     public function master() {
         $masters = array_filter($this->data->refs, function ($ref) {
             return $ref->isMasterRef == true;
@@ -63,15 +53,6 @@ class API {
             $forms->$key = new SearchForm($this, $f, $f->defaultData());
         }
         return $forms;
-    }
-
-    /**
-     * @param $ref
-     * @param $id
-     * @return mixed A prismatic\Document if found, null otherwise
-     */
-    public function document($ref, $id) {
-        return $this->forms()->everything->query($ref, "[[at(document.id, \"" . $id . "\")]]")[0];
     }
 
     public static function get($url) {
@@ -105,7 +86,7 @@ class SearchForm {
         $this->data = $data;
     }
 
-    function ref($ref) {
+    public function ref($ref) {
         $data = $this->data;
         $data['ref'] = $ref;
         return new SearchForm($this->api, $this->form, $data);
@@ -117,7 +98,7 @@ class SearchForm {
         }, $result);
     }
 
-    function submit() {
+    public function submit() {
         if($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
             $url = $this->form->action . '?' . http_build_query($this->data);
             $response = WS::get($url);
@@ -131,7 +112,7 @@ class SearchForm {
         }
     }
 
-    function query($q) {
+    public function query($q) {
         function strip($str) {
             $trimmed = trim($str);
             $drop1 = substr($trimmed, 1, strlen($trimmed));
@@ -218,38 +199,55 @@ class Document {
             foreach($fields as $key=>$value) {
                 $fragment = null;
                 if (is_object($value) && property_exists($value, "type")) {
-                    if ($value->type === "Link") {
-                        $fragment = new Link($value->value);
+
+                    if ($value->type === "Image") {
+                        $data = $value->value;
+                        $views = array();
+                        foreach($value->value->views as $key => $jsonView) {
+                            $views[$key] = ImageView::parse($jsonView);
+                        }
+                        $mainView = ImageView::parse($data->main, $views);
+                        $fragment = new Image($mainView, $views);
                     }
-                    if ($value->type === "Number") {
-                        $fragment = new Number($value->value);
-                    }
+
                     if ($value->type === "Color") {
                         $fragment = new Color($value->value);
                     }
-                    if ($value->type === "Image") {
-                        $data = $value->value;
-                        function asView ($json) {
-                            return new ImageView(
-                                $json->{ 'url' },
-                                $json->dimensions->width,
-                                $json->dimensions->height
-                            );
-                        }
 
-                        $views = array();
-                        foreach($value->value->views as $key => $jsonView) {
-                            echo $key;
-                            $views[$key] = asView($jsonView);
-                        }
-                        $mainView = asView($data->main, $views);
-                        $fragment = new Image($mainView, $views);
+                    if ($value->type === "Number") {
+                        $fragment = new Number($value->value);
                     }
+
+                    if ($value->type === "Date") {
+                        $fragment = new Date($value->value);
+                    }
+
+                    if ($value->type === "Text") {
+                        $fragment = new Text($value->value);
+                    }
+
+                    if ($value->type === "Select") {
+                        $fragment = new Text($value->value);
+                    }
+
+                    if ($value->type === "Embed") {
+                        $fragment = Embed::parse($value->value);
+                    }
+
+                    if ($value->type === "Link.web") {
+                        $fragment = WebLink::parse($value->value);
+                    }
+
+                    if ($value->type === "Link.document") {
+                        $fragment = DocumentLink::parse($value->value);
+                    }
+
                     if ($value->type === "StructuredText") {
-                        $fragment = new StructuredText($value->value);
+                        $fragment = StructuredText::parse($value->value);
                     }
                 }
-                if ($fragment) {
+
+                if (isset($fragment)) {
                     $fragments[$type . "." . $key] = $fragment;
                 }
             }
@@ -282,7 +280,7 @@ class Form {
         $this->fields = $fields;
     }
 
-    function defaultData() {
+    public function defaultData() {
         $dft = array();
         foreach($this->fields as $key=>$field) {
             if (property_exists($field, "default")) {
@@ -323,276 +321,6 @@ class ApiData {
         if (property_exists($this, $property)) {
             return $this->$property;
         }
-    }
-}
-
-
-/** Fragment types */
-
-class Fragment {}
-class Link extends Fragment {}
-
-class WebLink extends Link {
-    private $url;
-    private $maybeContentType;
-
-    function __construct($url, $maybeContentType) {
-        $this->url = $url;
-        $this->maybeContentType = $maybeContentType;
-    }
-
-    public function asHtml($linkResolver = null) {
-        return '<a href="'. $this->url .'">$url</a>';
-    }
-
-    public static function parse($json) {
-        new WebLink($json->url);
-    }
-}
-
-class MediaLink extends Link {
-
-    private $url;
-    private $contentType;
-    private $size;
-    private $filename;
-
-    function __construct($url, $contentType, $size, $filename) {
-        $this->url = $url;
-        $this->contentType = $contentType;
-        $this->size = $size;
-        $this->filename = $filename;
-    }
-
-    public function asHtml($linkResolver = null) {
-        return '<a href="'. $this->url .'">'. $this->filename .'</a>';
-    }
-}
-
-class DocumentLink extends Link {
-
-    private $id;
-    private $type;
-    private $tags;
-    private $slug;
-    private $isBroken;
-
-    function __construct($id, $type, $tags, $slug, $isBroken) {
-        $this->id = $id;
-        $this->type = $type;
-        $this->tags = $tags;
-        $this->slug = $slug;
-        $this->isBroken = $isBroken;
-    }
-
-    public function asHtml($linkResolver) {
-        return '<a href="' . $linkResolver($this) . '">' . $this->slug . '</a>';
-    }
-
-    public static function parse($json) {
-        new DocumentLink(
-            $json->id,
-            $json->type,
-            $json->tags,
-            $json->slug,
-            $json->isBroken
-        );
-    }
-}
-
-class Number extends Fragment {
-
-    private $data;
-
-    function __construct($data) {
-        $this->data = $data;
-    }
-
-    public function asText() {
-        return $this->data;
-    }
-
-    public function asHtml($linkResolver = null) {
-        return '<span class="number">' . $this->data . '</span>';
-    }
-}
-
-class Text extends Fragment {
-
-    private $value;
-
-    function __construct($value) {
-        $this->value = $value;
-    }
-
-    public function asHtml() {
-        return '<span class="text">' .$this->value . '</span>';
-    }
-}
-
-class Date extends Fragment {
-
-    private $value;
-
-    function __construct($value) {
-        $this->value = $value;
-    }
-
-    public function asHtml() {
-        return '<time>'. $this->value .'</time>';
-    }
-}
-
-class Embed($type, $provider, $url, $maybeWidth, $maybeHeight, $maybeHtml, $oembedJson) {
-
-    private $type;
-    private $provider;
-    private $url;
-    private $maybeWidth;
-    private $maybeHeight;
-    private $maybeHtml;
-    private $oembedJson;
-
-    function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson) {
-        $this->type = $type;
-        $this->provider = $provider;
-        $this->url = $url;
-        $this->maybeWidth = $maybeWidth;
-        $this->maybeHeight = $maybeHeigth;
-        $this->maybeHtml = $maybeHtml;
-        $this->oembedJson = $oembedJson;
-    }
-
-    public function asHtml() {
-        if(isset($this->maybeHtml)) {
-            '<div data-oembed="' . $this->url . '" data-oembed-type="$' . strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->html . '</div>'
-        } else {
-            return "";
-        }
-    }
-
-    public function parse($json) {
-        return new Embed(
-            $json->type,
-            $json->provider_name,
-            $json->embed_url,
-            $json->width,
-            $json->height,
-            $json->html
-        );
-    }
-}
-
-class Color extends Fragment {
-
-    private $data;
-
-    function __construct($data) {
-        $this->data = $data;
-    }
-
-    public function asHtml() {
-        return '<span class="color">' . $this->data . '</span>';
-    }
-}
-
-class ImageView {
-
-    private $url;
-    private $width;
-    private $height;
-
-    function __construct($url, $width, $height) {
-        $this->url = $url;
-        $this->width = $width;
-        $this->height = $height;
-    }
-
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
-
-    function asHtml() {
-        return '<img src="' . $this->url . '" width="' . $this->width . '" height="' . $this->heigth . '"/>';
-    }
-
-    function ratio() {
-        return $this->width / $this->height;
-    }
-}
-
-class Image extends Fragment {
-
-    private $main;
-    private $views;
-
-    function __construct($main, $views) {
-        $this->main = $main;
-        $this->views = $views;
-    }
-
-    public function asHtml() {
-        return $this->main->asHtml();
-    }
-
-    public function getView($key) {
-        if(strtolower($key) == "main") {
-            return $this->main;
-        } else {
-            return $this->views[$key];
-        }
-    }
-}
-
-class StructuredText extends Fragment {
-
-    private $blocks;
-
-    function __construct($blocks) {
-        $this->blocks = $blocks;
-    }
-
-    public function asText() {
-        $result = array_map(function ($block) {
-            return $block->text;
-        }, $this->blocks);
-        return join("\n\n", $result);
-    }
-
-    // TODO: Resolve spans within blocks
-    public function asHtml($linkResolver = null) {
-        $result = array_map(function ($block) {
-            if ($block->type === "paragraph") {
-                return "<p>" . $block->text . "</p>";
-            }
-            if ($block->type === "heading1") {
-                return "<h1>" . $block->text . "</h1>";
-            }
-            if ($block->type === "heading2") {
-                return "<h2>" . $block->text . "</h2>";
-            }
-            if ($block->type === "heading3") {
-                return "<h3>" . $block->text . "</h3>";
-            }
-            if ($block->type === "heading4") {
-                return "<h4>" . $block->text . "</h4>";
-            }
-        }, $this->blocks);
-        return join("\n\n", $result);
-    }
-
-    public function getTitle() {
-        
-    }
-
-    public function getFirstParagraph() {
-        
-    }
-
-    public function getFirstImage() {
-        
     }
 }
 
