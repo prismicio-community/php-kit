@@ -87,7 +87,7 @@ class DocumentLink implements Link {
         return new DocumentLink(
             $json->document->id,
             $json->document->type,
-            $json->document->tags,
+            isset($json->document-> {'tags'}) ? $json->document->tags : null,
             $json->document->slug,
             $json->isBroken
         );

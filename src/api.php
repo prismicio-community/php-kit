@@ -285,8 +285,6 @@ class Document {
 
                 if (isset($fragment)) {
                     $fragments[$type . "." . $key] = $fragment;
-                } else {
-                    echo '<br/>';
                 }
             }
         }
