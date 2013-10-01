@@ -32,7 +32,7 @@ class WebLink implements Link {
 class MediaLink implements Link {
 
     private $url;
-    private $contentType;
+    private $kind;
     private $size;
     private $filename;
 
@@ -364,8 +364,6 @@ class StructuredText implements Fragment {
                     } else if($span->link instanceof DocumentLink) {
                         $url = $linkResolver ? $linkResolver($span->link) : '';
                         return array('<a href="' . $url .'">', '</a>');
-                    } else if($span->link instanceof MediaLink) {
-                        return array('<a href="' . $span->link->url .'">', '</a>');
                     }
                 }
                 return array('', '');

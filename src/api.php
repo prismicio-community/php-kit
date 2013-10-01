@@ -214,62 +214,79 @@ class Document {
         return $html;
     }
 
+    public static function parseFragment($json) {
+        if (is_object($json) && property_exists($json, "type")) {
+            if ($json->type === "Image") {
+                $data = $json->value;
+                $views = array();
+                foreach($json->value->views as $key => $jsonView) {
+                    $views[$key] = ImageView::parse($jsonView);
+                }
+                $mainView = ImageView::parse($data->main, $views);
+                return new Image($mainView, $views);
+            }
+
+            if ($json->type === "Color") {
+                return new Color($json->value);
+            }
+
+            if ($json->type === "Number") {
+                return new Number($json->value);
+            }
+
+            if ($json->type === "Date") {
+                return new Date($json->value);
+            }
+
+            if ($json->type === "Text") {
+                return new Text($json->value);
+            }
+
+            if ($json->type === "Select") {
+                return new Text($json->value);
+            }
+
+            if ($json->type === "Embed") {
+                return Embed::parse($json->value);
+            }
+
+            if ($json->type === "Link.web") {
+                return WebLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.document") {
+                return DocumentLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.file") {
+                return MediaLink::parse($json->value);
+            }
+
+            if ($json->type === "StructuredText") {
+                return StructuredText::parse($json->value);
+            }
+            return null;
+        }
+    }
+
     public static function parse($json) {
         $fragments = array();
         foreach($json->data as $type=>$fields) {
             foreach($fields as $key=>$value) {
-                $fragment = null;
-                if (is_object($value) && property_exists($value, "type")) {
-
-                    if ($value->type === "Image") {
-                        $data = $value->value;
-                        $views = array();
-                        foreach($value->value->views as $key => $jsonView) {
-                            $views[$key] = ImageView::parse($jsonView);
+                if (is_array($value)) {
+                    for($i=0; $i<count($value); $i++) {
+                        $f = self::parseFragment($value[$i]);
+                        if(isset($f)) {
+                            $fragments[$type . '.' . $key . '['.$i.']'] = $f;
                         }
-                        $mainView = ImageView::parse($data->main, $views);
-                        $fragment = new Image($mainView, $views);
-                    }
-
-                    if ($value->type === "Color") {
-                        $fragment = new Color($value->value);
-                    }
-
-                    if ($value->type === "Number") {
-                        $fragment = new Number($value->value);
-                    }
-
-                    if ($value->type === "Date") {
-                        $fragment = new Date($value->value);
-                    }
-
-                    if ($value->type === "Text") {
-                        $fragment = new Text($value->value);
-                    }
-
-                    if ($value->type === "Select") {
-                        $fragment = new Text($value->value);
-                    }
-
-                    if ($value->type === "Embed") {
-                        $fragment = Embed::parse($value->value);
-                    }
-
-                    if ($value->type === "Link.web") {
-                        $fragment = WebLink::parse($value->value);
-                    }
-
-                    if ($value->type === "Link.document") {
-                        $fragment = DocumentLink::parse($value->value);
-                    }
-
-                    if ($value->type === "StructuredText") {
-                        $fragment = StructuredText::parse($value->value);
                     }
                 }
+                $fragment = self::parseFragment($value);
 
                 if (isset($fragment)) {
                     $fragments[$type . "." . $key] = $fragment;
+                } else {
+                    echo '<br/>';
                 }
             }
         }
