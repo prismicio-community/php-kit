@@ -173,7 +173,7 @@ class Document {
     }
 
     public function containsSlug($slug) {
-        $found = array_filter($this->slugs, function($s) {
+        $found = array_filter($this->slugs, function($s) use ($slug) {
             return $s == $slug;
         });
         return count($found) > 0;

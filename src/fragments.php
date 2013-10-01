@@ -36,9 +36,9 @@ class MediaLink implements Link {
     private $size;
     private $filename;
 
-    function __construct($url, $contentType, $size, $filename) {
+    function __construct($url, $kind, $size, $filename) {
         $this->url = $url;
-        $this->contentType = $contentType;
+        $this->kind = $kind;
         $this->size = $size;
         $this->filename = $filename;
     }
@@ -51,6 +51,15 @@ class MediaLink implements Link {
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+    }
+
+    public static function parse($json) {
+        return new MediaLink(
+            $json->file->url,
+            $json->file->kind,
+            $json->file->size,
+            $json->file->name
+        );
     }
 }
 
@@ -156,7 +165,7 @@ class Embed implements Fragment {
 
     public function asHtml() {
         if(isset($this->maybeHtml)) {
-            '<div data-oembed="' . $this->url . '" data-oembed-type="$' . strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->html . '</div>';
+            return '<div data-oembed="' . $this->url . '" data-oembed-type="'. strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->maybeHtml . '</div>';
         } else {
             return "";
         }
@@ -164,7 +173,7 @@ class Embed implements Fragment {
 
     public static function parse($json) {
         return new Embed(
-            $json->type,
+            $json->oembed->type,
             $json->oembed->provider_name,
             $json->oembed->embed_url,
             $json->oembed->width,
@@ -293,7 +302,8 @@ class StructuredText implements Fragment {
         }
         $html = "";
         foreach($groups as $group) {
-            if(isset($group->maybeTag)) {
+            $maybeTag = $group->maybeTag;
+            if(isset($maybeTag)) {
                 $html = $html . "<" . $group->maybeTag . ">";
                 foreach($group->blocks as $block) {
                     $html = $html . StructuredText::asHtmlBlock($block, $linkResolver);
@@ -354,6 +364,8 @@ class StructuredText implements Fragment {
                     } else if($span->link instanceof DocumentLink) {
                         $url = $linkResolver ? $linkResolver($span->link) : '';
                         return array('<a href="' . $url .'">', '</a>');
+                    } else if($span->link instanceof MediaLink) {
+                        return array('<a href="' . $span->link->url .'">', '</a>');
                     }
                 }
                 return array('', '');
@@ -418,6 +430,8 @@ class StructuredText implements Fragment {
                 $link = WebLink::parse($json->data->value);
             } else if("Link.document" == $linkType) {
                 $link = DocumentLink::parse($json->data->value);
+            } else if("Link.file" == $linkType) {
+                $link = MediaLink::parse($json->data->value);
             }
         }
 
@@ -471,13 +485,18 @@ class StructuredText implements Fragment {
             return new ListItemBlock($p->text, $p->spans, false);
         }
 
+        if($json->type == 'o-list-item') {
+            $p = StructuredText::parseText($json);
+            return new ListItemBlock($p->text, $p->spans, true);
+        }
+
         if($json->type == 'image') {
             $view = ImageView::parse($json);
             return new ImageBlock($view);
         }
 
         if($json->type == 'embed') {
-            return Embed::parse($json);
+            return new EmbedBlock(Embed::parse($json));
         }
 
         return null;
