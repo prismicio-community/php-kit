@@ -14,18 +14,31 @@ if (!function_exists('json_decode')) {
 class API {
 
     private $data;
+    private $maybeAccessToken;
 
-    function __construct($data) {
+    function __construct($data, $maybeAccessToken=null) {
         $this->data = $data;
+        $this->maybeAccessToken = $maybeAccessToken;
     }
 
-    public function refs($ref) {
+    public function refs() {
         $refs = $this->data->refs;
+        $groupBy = array();
         foreach($refs as $ref) {
-            $refs[$ref->label] = $ref;
+            if(isset($refs[$ref->label])) {
+                $arr = $refs[$ref->label];
+                array_push($arr, $ref);
+                $groupBy[$ref->label] = $arr;
+            } else {
+                $groupBy[$ref->label] = array($ref);
+            }
         }
-        unset($ref);
-        return $refs;
+
+        $results = array();
+        foreach($groupBy as $label => $values) {
+            $results[$label] = $values[0];
+        }
+        return $results;
     }
 
      public function bookmarks() {
@@ -43,26 +56,37 @@ class API {
         $forms = $this->data->forms;
         foreach($forms as $key => $form) {
             $f = new Form(
-                isset($form->name) ? $form->name : NULL,
+                isset($form->name) ? $form->name : null,
                 $form->method,
-                isset($form->rel) ? $form->rel : NULL,
+                isset($form->rel) ? $form->rel : null,
                 $form->enctype,
                 $form->action,
                 $form->fields
             );
-            $forms->$key = new SearchForm($this, $f, $f->defaultData());
+            $data = $f->defaultData();
+            if(isset($this->maybeAccessToken)) {
+                $data['access_token'] = $this->maybeAccessToken;
+            }
+            $forms->$key = new SearchForm($this, $f, $data);
         }
         return $forms;
     }
 
-    public static function get($url) {
-        $response = WS::get($url);
-        if (!$response->data) {
-            throw new \Exception("HTTP Error: " . $http_status);
-        }
+    public function oauthInitiateEndpoint() {
+        return $this->data->oauth_initiate;
+    }
+
+    public function oauthTokenEndpoint() {
+        return $this->data->oauth_token;
+    }
+
+    public static function get($url, $maybeAccessToken=null) {
+        $paramToken = isset($maybeAccessToken) ?  '?access_token=' . $maybeAccessToken : '';
+        $response = WS::get($url . $paramToken);
+        WSResponse::check($response);
 
         $apiData = new ApiData(
-            $response->data->refs,
+            array_map(function($ref) { return Ref::parse($ref); }, $response->data->refs),
             $response->data->bookmarks,
             $response->data->types,
             $response->data->tags,
@@ -70,7 +94,7 @@ class API {
             $response->data->oauth_initiate,
             $response->data->oauth_token
         );
-        return new API($apiData);
+        return new API($apiData, $maybeAccessToken);
     }
 }
 
@@ -102,11 +126,8 @@ class SearchForm {
         if($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
             $url = $this->form->action . '?' . http_build_query($this->data);
             $response = WS::get($url);
-            if($response->status != 200) {
-                throw new \Exception("Http error: " . $response->status);
-            } else {
-                return self::parseResult($response->data);
-            }
+            WSResponse::check($response);
+            return self::parseResult($response->data);
         } else {
             throw new \Exception("Form type not supported");
         }
@@ -121,7 +142,7 @@ class SearchForm {
         }
 
         $field = $this->form->fields->q;
-        $maybeDefault = property_exists($field, "default") ? $field->default : NULL;
+        $maybeDefault = property_exists($field, "default") ? $field->default : null;
         $q1 = isset($maybeDefault) ? strip($maybeDefault) : "";
         $data = $this->data;
         $data['q'] = '[' . $q1 . strip($q) . ']';
@@ -185,10 +206,10 @@ class Document {
         return $fragment->getImage($view);
     }
 
-    public function asHtml() {
-        $html = NULL;
+    public function asHtml($linkResolver=null) {
+        $html = null;
         foreach($this->fragments as $field=>$v) {
-            $html = $html . '<section data-field="'. $field .'">'. $this->getHtml($field) .'</section>';
+            $html = $html . '<section data-field="'. $field .'">'. $this->getHtml($field, $linkResolver) .'</section>';
         };
         return $html;
     }
@@ -324,6 +345,35 @@ class ApiData {
     }
 }
 
+class Ref {
+    private $ref;
+    private $label;
+    private $isMasterRef;
+    private $maybeScheduledAt;
+
+    function __construct($ref, $label, $isMasterRef, $maybeScheduledAt=null) {
+        $this->ref = $ref;
+        $this->label = $label;
+        $this->isMasterRef = $isMasterRef;
+        $this->maybeScheduledAt = $maybeScheduledAt;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public static function parse($json) {
+        return new Ref(
+            $json->ref,
+            $json->label,
+            isset($json-> { 'isMasterRef' }) ? $json->isMasterRef : false,
+            isset($json-> { 'scheduledAt' }) ? $json->scheduledAt : null
+        );
+    }
+}
+
 /** Utils */
 
 class WS {
@@ -338,6 +388,20 @@ class WS {
         CURLOPT_USERAGENT      => 'prismic-php-0.1',
         CURLOPT_HTTPHEADER     => array('Accept: application/json')
     );
+
+    public static function post($url, $data) {
+        $ch = curl_init();
+        $opts = self::$CURL_OPTS;
+        $opts[CURLOPT_URL] =  $url;
+        $opts[CURLOPT_POST] = count($data);
+        $opts[CURLOPT_POSTFIELDS] = http_build_query($data);
+        curl_setopt_array($ch, $opts);
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $data = json_decode($result);
+        return new WSResponse($status, $data);
+    }
 
     public static function get($url) {
         $ch = curl_init();
@@ -377,5 +441,52 @@ class WSResponse {
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+    }
+
+    public static function check($response) {
+        if($response->status != 200) {
+            if($response->status == 401) {
+                throw new UnauthorizeException();
+            }
+            else if($response->status == 403) {
+                throw new ForbiddenException();
+            }
+            else if($response->status == 404) {
+                throw new NotFoundException();
+            }
+            else {
+                throw new \Exception("HTTP error: " . $response->status);
+            }
+        }
+    }
+}
+
+class UnauthorizedException extends \Exception {
+    public function __construct() {
+        parent::__construct("HTTP error: Unauthorized Exception", 0, null);
+    }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+}
+
+class ForbiddenException extends \Exception {
+    public function __construct() {
+        parent::__construct("HTTP error: Forbidden Exception", 0, null);
+    }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+}
+
+class NotFoundException extends \Exception {
+    public function __construct() {
+        parent::__construct("HTTP error: Forbidden Exception", 0, null);
+    }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 }

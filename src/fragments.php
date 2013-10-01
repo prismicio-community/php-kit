@@ -9,7 +9,7 @@ class WebLink implements Link {
     private $url;
     private $maybeContentType;
 
-    function __construct($url, $maybeContentType) {
+    function __construct($url, $maybeContentType=null) {
         $this->url = $url;
         $this->maybeContentType = $maybeContentType;
     }
@@ -19,7 +19,13 @@ class WebLink implements Link {
     }
 
     public static function parse($json) {
-        new WebLink($json->url);
+        return new WebLink($json->url);
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
 
@@ -39,6 +45,12 @@ class MediaLink implements Link {
 
     public function asHtml($linkResolver = null) {
         return '<a href="'. $this->url .'">'. $this->filename .'</a>';
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
 
@@ -63,13 +75,19 @@ class DocumentLink implements Link {
     }
 
     public static function parse($json) {
-        new DocumentLink(
-            $json->id,
-            $json->type,
-            $json->tags,
-            $json->slug,
+        return new DocumentLink(
+            $json->document->id,
+            $json->document->type,
+            $json->document->tags,
+            $json->document->slug,
             $json->isBroken
         );
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
 
@@ -85,7 +103,7 @@ class Number implements Fragment {
         return $this->data;
     }
 
-    public function asHtml($linkResolver = null) {
+    public function asHtml() {
         return '<span class="number">' . $this->data . '</span>';
     }
 }
@@ -144,14 +162,15 @@ class Embed implements Fragment {
         }
     }
 
-    public function parse($json) {
+    public static function parse($json) {
         return new Embed(
             $json->type,
-            $json->provider_name,
-            $json->embed_url,
-            $json->width,
-            $json->height,
-            $json->html
+            $json->oembed->provider_name,
+            $json->oembed->embed_url,
+            $json->oembed->width,
+            $json->oembed->height,
+            $json->oembed->html,
+            $json->oembed
         );
     }
 }
@@ -236,7 +255,7 @@ class StructuredText implements Fragment {
         return join("\n\n", $result);
     }
 
-    public function asHtml($blocks=null, $linkResolver=null) {
+    public function asHtml($linkResolver=null) {
         if(!isset($blocks)) {
             $blocks = $this->blocks;
         }
@@ -277,12 +296,12 @@ class StructuredText implements Fragment {
             if(isset($group->maybeTag)) {
                 $html = $html . "<" . $group->maybeTag . ">";
                 foreach($group->blocks as $block) {
-                    $html = $html . StructuredText::asHtmlBlock($block);
+                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver);
                 }
                 $html = $html . "</" . $group->maybeTag . ">";
             } else {
                 foreach($group->blocks as $block) {
-                    $html = $html . StructuredText::asHtmlBlock($block);
+                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver);
                 }
             }
         }
@@ -300,7 +319,7 @@ class StructuredText implements Fragment {
             return '<li>' . StructuredText::asHtmlText($block->text, $block->spans, $linkResolver) . '</li>';
         }
         else if($block instanceof ImageBlock) {
-            return '<p>' . $block->view->asHtml() . '</p>';
+            return '<p>' . $block->view->asHtml($linkResolver) . '</p>';
         }
         else if($block instanceof EmbedBlock) {
             return $block->obj->asHtml();
@@ -327,7 +346,15 @@ class StructuredText implements Fragment {
                     return array("<em>", "</em>");
                 }
                 if($span instanceof HyperlinkSpan) {
-                    return array('<a href="#">', '</a>'); //TODO;
+                    if($span->link instanceof WebLink) {
+                        return array('<a href="' . $span->link->url . '">', '</a>');
+                    }
+                    else if($span->link instanceof MediaLink) {
+                        return array('<a href="' . $span->link->url . '">', '</a>');
+                    } else if($span->link instanceof DocumentLink) {
+                        $url = $linkResolver ? $linkResolver($span->link) : '';
+                        return array('<a href="' . $url .'">', '</a>');
+                    }
                 }
                 return array('', '');
             };
@@ -347,7 +374,7 @@ class StructuredText implements Fragment {
             while(!(empty($starts) && empty($endings))) {
                 $next = min($peekStart($starts), $peekEnd($endings));
                 if($next > $pos) {
-                    $result = $result . substr($text, 0, $next - $pos -1);
+                    $result = $result . substr($text, 0, $next - $pos);
                     $text = substr($text, $next - $pos);
                     $pos = $next;
                 } else {
@@ -361,23 +388,14 @@ class StructuredText implements Fragment {
                             array_push($endings, $start);
                             $spansToApply = $spansToApply . $getStartAndEnd($start, $linkResolver)[0];
                         }
-                        $result = $result . " " . $spansToApply;
                     }
+                    $result = $result . $spansToApply;
                 }
             }
-            return $result;
+            return $result . (strlen($text) > 0 ? $text : '');
         } else {
             return $text;
         }
-    }
-
-    public function getTitle() {
-    }
-
-    public function getFirstParagraph() {
-    }
-
-    public function getFirstImage() {
     }
 
     public static function parseSpan($json) {
@@ -393,9 +411,9 @@ class StructuredText implements Fragment {
             return new EmSpan($start, $end);
         }
 
+        $link;
         if("hyperlink" == $type) {
             $linkType = $json->data->type;
-            $link;
             if("Link.web" == $linkType) {
                 $link = WebLink::parse($json->data->value);
             } else if("Link.document" == $linkType) {
@@ -406,7 +424,7 @@ class StructuredText implements Fragment {
         if(isset($link)) {
             return new HyperlinkSpan($start, $end, $link);
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -459,9 +477,9 @@ class StructuredText implements Fragment {
         }
 
         if($json->type == 'embed') {
-            $view = Embed::parse($json);
-            return new Embed($view);
+            return Embed::parse($json);
         }
+
         return null;
     }
 
