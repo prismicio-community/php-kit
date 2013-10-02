@@ -461,7 +461,7 @@ class WSResponse {
     public static function check($response) {
         if($response->status != 200) {
             if($response->status == 401) {
-                throw new UnauthorizeException();
+                throw new UnauthorizedException();
             }
             else if($response->status == 403) {
                 throw new ForbiddenException();
