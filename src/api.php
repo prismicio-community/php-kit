@@ -2,7 +2,7 @@
 
 namespace prismic;
 
-require_once(VENDORS_PATH . "/fragments.php");
+require_once("fragments.php");
 
 if (!function_exists('curl_init')) {
     throw new \Exception('Prismic needs the CURL PHP extension.');
