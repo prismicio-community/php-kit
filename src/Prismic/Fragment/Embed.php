@@ -1,0 +1,49 @@
+<?php
+
+namespace Prismic\Fragment;
+
+class Embed implements FragmentInterface
+{
+
+    private $type;
+    private $provider;
+    private $url;
+    private $maybeWidth;
+    private $maybeHeight;
+    private $maybeHtml;
+    private $oembedJson;
+
+    function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson)
+    {
+        $this->type = $type;
+        $this->provider = $provider;
+        $this->url = $url;
+        $this->maybeWidth = $maybeWidth;
+        $this->maybeHeight = $maybeHeigth;
+        $this->maybeHtml = $maybeHtml;
+        $this->oembedJson = $oembedJson;
+    }
+
+    public function asHtml()
+    {
+        if (isset($this->maybeHtml)) {
+            return '<div data-oembed="' . $this->url . '" data-oembed-type="' . strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->maybeHtml . '</div>';
+        }
+        else {
+            return "";
+        }
+    }
+
+    public static function parse($json)
+    {
+        return new Embed(
+            $json->oembed->type,
+            $json->oembed->provider_name,
+            $json->oembed->embed_url,
+            $json->oembed->width,
+            $json->oembed->height,
+            $json->oembed->html,
+            $json->oembed
+        );
+    }
+}

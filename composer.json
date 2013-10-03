@@ -1,0 +1,22 @@
+{
+    "name": "prismic/php-sdk",
+    "description": "PHP development kit for prismic.io",
+
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+
+    "license": "Apache 2 license",
+
+    "minimum-stability": "stable",
+
+    "require": {
+        "php": ">=5.3.3",
+        "guzzle/guzzle": "~3.7"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
