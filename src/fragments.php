@@ -128,6 +128,10 @@ class Text implements Fragment {
     public function asHtml() {
         return '<span class="text">' .$this->value . '</span>';
     }
+
+    public function asText() {
+      return $this->value;
+    }
 }
 
 class Date implements Fragment {
@@ -140,6 +144,14 @@ class Date implements Fragment {
 
     public function asHtml() {
         return '<time>'. $this->value .'</time>';
+    }
+
+    public function asText() {
+      return $this->value;
+    }
+
+    public function asEpoch() {
+      return strtotime($this->value);
     }
 }
 
@@ -195,6 +207,11 @@ class Color implements Fragment {
     public function asHtml() {
         return '<span class="color">' . $this->data . '</span>';
     }
+
+    public function asText() {
+      return $this->data;
+    }
+
 }
 
 class ImageView {
@@ -215,6 +232,10 @@ class ImageView {
 
     public function ratio() {
         return $this->width / $this->height;
+    }
+
+    public function url(){
+      return $this->url;
     }
 
     public static function parse($json) {
@@ -316,6 +337,30 @@ class StructuredText implements Fragment {
             }
         }
         return $html;
+    }
+
+    public function getFirstParagraph(){
+      foreach($this->blocks as $block){
+        if($block instanceof ParagraphBlock){
+          return $block;
+        }
+      }
+    }
+
+    public function getTitle(){
+      foreach($this->blocks as $block){
+        if($block instanceof HeadingBlock){
+          return $block;
+        }
+      }
+    }
+
+    public function getImage(){
+      foreach($this->blocks as $block){
+        if($block instanceof ImageBlock){
+          return $block->view;
+        }
+      }
     }
 
     public static function asHtmlBlock($block, $linkResolver=null) {

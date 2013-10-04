@@ -54,6 +54,7 @@ class API {
 
     public function forms() {
         $forms = $this->data->forms;
+        $rforms = new \stdClass();
         foreach($forms as $key => $form) {
             $f = new Form(
                 isset($form->name) ? $form->name : null,
@@ -67,9 +68,9 @@ class API {
             if(isset($this->maybeAccessToken)) {
                 $data['access_token'] = $this->maybeAccessToken;
             }
-            $forms->$key = new SearchForm($this, $f, $data);
+            $rforms->$key = new SearchForm($this, $f, $data);
         }
-        return $forms;
+        return $rforms;
     }
 
     public function oauthInitiateEndpoint() {
@@ -133,19 +134,19 @@ class SearchForm {
         }
     }
 
-    public function query($q) {
-        function strip($str) {
+    static function strip($str) {
             $trimmed = trim($str);
             $drop1 = substr($trimmed, 1, strlen($trimmed));
             $dropR1 = substr($drop1, 0, strlen($drop1) - 1);
             return $dropR1;
         }
 
+    public function query($q=NULL) {
         $field = $this->form->fields->q;
         $maybeDefault = property_exists($field, "default") ? $field->default : null;
-        $q1 = isset($maybeDefault) ? strip($maybeDefault) : "";
+        $q1 = isset($maybeDefault) ? self::strip($maybeDefault) : "";
         $data = $this->data;
-        $data['q'] = '[' . $q1 . strip($q) . ']';
+        $data['q'] = '[' . $q1 . self::strip($q) . ']';
         return new SearchForm($this->api, $this->form, $data);
     }
 }
@@ -200,10 +201,49 @@ class Document {
         return $this->fragments[$field]->asHtml($linkResolver);
     }
 
-    public function getImage($field, $view) {
+    public function getImage($field, $view=null) {
         if (!array_key_exists($field, $this->fragments)) return null;
         $fragment = $this->fragments[$field];
-        return $fragment->getImage($view);
+        if($fragment instanceof Image){
+          return $fragment->getView($view);
+        }
+        else if($fragment instanceof StructuredText){
+          return $fragment->getImage();
+        }
+    }
+
+    public function getNumber($field, $format=null) {
+      $value = $this->get($field);
+      if($format){
+        return sprintf($format, $value->asText());
+      }
+      return $value->asText();
+    }
+
+    public function getBoolean($field) {
+      $value = $this->get($field);
+      var_dump($value);
+      return filter_var($value->asText(), FILTER_VALIDATE_BOOLEAN);
+    }
+
+    public function getDate($field, $format=null){
+      $value = $this->get($field);
+      if($format){
+        return date($format, $value->asEpoch());
+      }
+      return $value->asText();
+    }
+
+    public function getAll($field){
+      $a = array();
+      $pattern = '/'.str_replace('.', '\.', $field).'\[(\d+)\]/';
+      foreach($this->fragments as $key => $fragment){
+        if(preg_match($pattern, $key, $matches)){
+          $a[$matches[1][0]] = $fragment;
+        }
+      }
+      ksort($a);
+      return $a;
     }
 
     public function asHtml($linkResolver=null) {
