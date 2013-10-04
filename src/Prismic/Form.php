@@ -18,9 +18,9 @@ class Form
      * @param string $maybeRel
      * @param string $enctype
      * @param string $action
-     * @param array $fields
+     * @param string $fields
      */
-    public function __construct($maybeName, $method, $maybeRel, $enctype, $action, array $fields)
+    public function __construct($maybeName, $method, $maybeRel, $enctype, $action, $fields)
     {
         $this->maybeName = $maybeName;
         $this->method = $method;

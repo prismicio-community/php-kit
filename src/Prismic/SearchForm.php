@@ -2,15 +2,22 @@
 
 namespace Prismic;
 
+use Guzzle\Http\ClientInterface;
+
 class SearchForm
 {
-    private $api;
+    private $client;
     private $form;
     private $data;
 
-    public function __construct($api, $form, $data)
+    /**
+     * @param ClientInterface $client
+     * @param $form
+     * @param $data
+     */
+    public function __construct(ClientInterface $client, $form, $data)
     {
-        $this->api = $api;
+        $this->client = $client;
         $this->form = $form;
         $this->data = $data;
     }
@@ -19,7 +26,8 @@ class SearchForm
     {
         $data = $this->data;
         $data['ref'] = $ref;
-        return new SearchForm($this->api, $this->form, $data);
+
+        return new SearchForm($this->client, $this->form, $data);
     }
 
     private static function parseResult($result)
@@ -33,13 +41,17 @@ class SearchForm
     {
         if ($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
             $url = $this->form->action . '?' . http_build_query($this->data);
-            $response = WS::get($url);
-            WSResponse::check($response);
+
+            // @todo: refactor this
+            $request = $this->client->get($url);
+            $response = $request->send();
+
+            $response = @json_decode($response->getBody(true));
+
             return self::parseResult($response->data);
         }
-        else {
-            throw new \Exception("Form type not supported");
-        }
+
+        throw new \RuntimeException("Form type not supported");
     }
 
     public function query($q)
@@ -50,7 +62,7 @@ class SearchForm
         $data = $this->data;
         $data['q'] = '[' . $q1 . self::strip($q) . ']';
 
-        return new SearchForm($this->api, $this->form, $data);
+        return new SearchForm($this->client, $this->form, $data);
     }
 
     public static function strip($str)
@@ -58,6 +70,7 @@ class SearchForm
         $trimmed = trim($str);
         $drop1 = substr($trimmed, 1, strlen($trimmed));
         $dropR1 = substr($drop1, 0, strlen($drop1) - 1);
+
         return $dropR1;
     }
 }

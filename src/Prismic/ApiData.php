@@ -12,7 +12,7 @@ class ApiData
     private $oauth_initiate;
     private $oauth_token;
 
-    function __construct($refs, $bookmarks, $types, $tags, $forms, $oauth_initiate, $oauth_token)
+    public function __construct($refs, $bookmarks, $types, $tags, $forms, $oauth_initiate, $oauth_token)
     {
         $this->refs = $refs;
         $this->bookmarks = $bookmarks;
