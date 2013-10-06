@@ -8,39 +8,125 @@ use Guzzle\Http\Client;
 class Api
 {
     protected $accessToken;
+    protected $data;
+
+    protected static $client;
 
     /**
-     * @param string $accessToken
-     * @param ClientInterface $client
+     * @param string $data
+     * @param null   $accessToken
      */
-    public function __construct($accessToken, ClientInterface $client = null)
+    private function __construct($data, $accessToken = null)
     {
+        $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->client = $client ?: new Client('', array(
-            Client::CURL_OPTIONS => array(
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 60,
-                CURLOPT_USERAGENT      => 'prismic-php-0.1',
-                CURLOPT_HTTPHEADER     => array('Accept: application/json')
-            )
-        ));
-
-        $this->client->setDefaultOption('allow_redirects', false);
-        $this->client->setDefaultOption('exceptions', true);
     }
 
     /**
+     * returns all repositories references
+     *
+     * @return array
+     */
+    public function refs()
+    {
+        $refs = $this->data->refs;
+        $groupBy = array();
+        foreach ($refs as $ref) {
+            if (isset($refs[$ref->label])) {
+                $arr = $refs[$ref->label];
+                array_push($arr, $ref);
+                $groupBy[$ref->label] = $arr;
+            } else {
+                $groupBy[$ref->label] = array($ref);
+            }
+        }
+
+        $results = array();
+        foreach ($groupBy as $label => $values) {
+            $results[$label] = $values[0];
+        }
+
+        return $results;
+    }
+
+    public function bookmarks()
+    {
+        return $this->data->bookmarks;
+    }
+
+    /**
+     * returns the master reference repository
+     *
+     * @return string
+     */
+    public function master()
+    {
+        $masters = array_filter($this->data->refs, function ($ref) {
+            return $ref->isMasterRef == true;
+        });
+
+        return $masters[0];
+    }
+
+    /**
+     * returns all forms availables
+     *
+     * @return mixed
+     */
+    public function forms()
+    {
+        $forms = $this->data->forms;
+        foreach ($forms as $key => $form) {
+            $f = new Form(
+                isset($form->name) ? $form->name : null,
+                $form->method,
+                isset($form->rel) ? $form->rel : null,
+                $form->enctype,
+                $form->action,
+                $form->fields
+            );
+
+            $data = $f->defaultData();
+
+            if ($this->accessToken) {
+                $data['access_token'] = $this->accessToken;
+            }
+
+            $forms->$key = new SearchForm($this, $f, $data);
+        }
+
+        return $forms;
+    }
+
+    /**
+     * @return string
+     */
+    public function oauthInitiateEndpoint()
+    {
+        return $this->data->oauth_initiate;
+    }
+
+    /**
+     * @return string
+     */
+    public function oauthTokenEndpoint()
+    {
+        return $this->data->oauth_token;
+    }
+
+    /**
+     * This method is static to respect the others API
+     *
      * @param string $action
-     * @param string $maybeAccessToken
+     * @param string $accessToken
      *
      * @return Api
      */
-    public function get($action, $maybeAccessToken = null)
+    public static function get($action, $accessToken = null)
     {
-        $paramToken = isset($maybeAccessToken) ? '?access_token=' . $maybeAccessToken : '';
+        $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
 
-        $request = $this->client->get($action . $paramToken);
+        $request = self::getClient()->get($url);
 
         $response = $request->send();
 
@@ -62,6 +148,36 @@ class Api
             $response->oauth_token
         );
 
-        return new Response($this->client, $apiData, $maybeAccessToken);
+        return new Api($apiData, $accessToken);
+    }
+
+    /**
+     * This is an entry point to alter the client used by the API
+     *
+     * @param \Guzzle\Http\ClientInterface $client
+     */
+    public static function setClient(ClientInterface $client)
+    {
+        self::$client = $client;
+    }
+
+    /**
+     * @return \Guzzle\Http\Client
+     */
+    public static function getClient()
+    {
+        if (self::$client === null) {
+            self::$client = new Client('', array(
+                Client::CURL_OPTIONS => array(
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT        => 60,
+                    CURLOPT_USERAGENT      => 'prismic-php-0.1',
+                    CURLOPT_HTTPHEADER     => array('Accept: application/json')
+                )
+            ));
+        }
+
+        return self::$client;
     }
 }

@@ -8,16 +8,6 @@ use Prismic\Response;
 class ApiTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \Guzzle\Http\Exception\CurlException
-     * @expectedMessage [curl] 6: Couldn't resolve host 'goog' [url] http://goog
-     */
-    public function testExceptionUnableToSolveHost()
-    {
-        $api = new Api('sd');
-        $api->get('http://goog');
-    }
-
-    /**
      * @expectedException \RuntimeException
      */
     public function testUnableToDecode()
@@ -33,8 +23,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getMock('Guzzle\Http\Client');
         $client->expects($this->once())->method('get')->will($this->returnValue($request));
 
-        $api = new Api('sd', $client);
-        $api->get('don\'t care about this value');
+        Api::setClient($client);
+
+        Api::get('don\'t care about this value');
     }
 
     public function testValidApiCall()
@@ -50,22 +41,23 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getMock('Guzzle\Http\Client');
         $client->expects($this->once())->method('get')->will($this->returnValue($request));
 
-        $api = new Api('sd', $client);
+        Api::setClient($client);
 
-        $response = $api->get('don\'t care about this value');
+        $api = Api::get('don\'t care about this value');
 
-        $this->assertInstanceOf('Prismic\Response', $response);
+        $this->assertInstanceOf('Prismic\Api', $api);
 
-        return $response;
+        return $api;
     }
 
     /**
-     * @param Response $response
+     * @param Api $response
+     *
      * @depends testValidApiCall
      */
-    public function testForm(Response $response)
+    public function testForm(Api $api)
     {
-        $forms = $response->forms();
+        $forms = $api->forms();
 
         $this->assertObjectHasAttribute('everything', $forms);
 

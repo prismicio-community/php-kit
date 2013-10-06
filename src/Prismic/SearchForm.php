@@ -2,22 +2,21 @@
 
 namespace Prismic;
 
-use Guzzle\Http\ClientInterface;
 
 class SearchForm
 {
-    private $client;
+    private $api;
     private $form;
     private $data;
 
     /**
-     * @param ClientInterface $client
-     * @param $form
-     * @param $data
+     * @param Api   $client
+     * @param mixed $form
+     * @param mixed $data
      */
-    public function __construct(ClientInterface $client, $form, $data)
+    public function __construct(Api $api, $form, $data)
     {
-        $this->client = $client;
+        $this->api  = $api;
         $this->form = $form;
         $this->data = $data;
     }
@@ -27,7 +26,7 @@ class SearchForm
         $data = $this->data;
         $data['ref'] = $ref;
 
-        return new SearchForm($this->client, $this->form, $data);
+        return new SearchForm($this->api, $this->form, $data);
     }
 
     private static function parseResult($result)
@@ -43,12 +42,16 @@ class SearchForm
             $url = $this->form->action . '?' . http_build_query($this->data);
 
             // @todo: refactor this
-            $request = $this->client->get($url);
+            $request = Api::getClient()->get($url);
             $response = $request->send();
 
             $response = @json_decode($response->getBody(true));
 
-            return self::parseResult($response->data);
+            if (!$response) {
+                throw new \RuntimeException("Unable to decode json response");
+            }
+
+            return self::parseResult($response);
         }
 
         throw new \RuntimeException("Form type not supported");
@@ -62,7 +65,7 @@ class SearchForm
         $data = $this->data;
         $data['q'] = '[' . $q1 . self::strip($q) . ']';
 
-        return new SearchForm($this->client, $this->form, $data);
+        return new SearchForm($this->api, $this->form, $data);
     }
 
     public static function strip($str)
