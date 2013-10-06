@@ -45,7 +45,7 @@ class Context
      */
     public function hasPrivilegedAccess()
     {
-        return isset($this->maybeAccessToken);
+        return isset($this->accessToken);
     }
 
     /**
