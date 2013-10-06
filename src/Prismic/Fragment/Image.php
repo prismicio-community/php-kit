@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Prismic PHP SDK
+ *
+ * Copyright 2013 Zengularity (http://www.zengularity.com).
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Prismic\Fragment;
 
 class Image implements FragmentInterface
@@ -23,8 +32,7 @@ class Image implements FragmentInterface
         if (strtolower($key) == "main") {
             return $this->main;
         }
-        else {
-            return $this->views[$key];
-        }
-    }
+
+        return $this->views[$key];
+     }
 }
