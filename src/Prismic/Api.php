@@ -85,6 +85,7 @@ class Api
     public function forms()
     {
         $forms = $this->data->forms;
+        $rforms = new \stdClass();
         foreach ($forms as $key => $form) {
             $f = new Form(
                 isset($form->name) ? $form->name : null,
@@ -101,10 +102,9 @@ class Api
                 $data['access_token'] = $this->accessToken;
             }
 
-            $forms->$key = new SearchForm($this, $f, $data);
+            $rforms->$key = new SearchForm($this, $f, $data);
         }
-
-        return $forms;
+        return $rforms;
     }
 
     /**

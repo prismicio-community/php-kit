@@ -24,4 +24,19 @@ class Date implements FragmentInterface
     {
         return '<time>' . $this->value . '</time>';
     }
+
+    public function asText($pattern) {
+        return date($pattern, $this->asEpoch());
+    }
+
+    public function asEpoch() {
+        return strtotime($this->value);
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
 }

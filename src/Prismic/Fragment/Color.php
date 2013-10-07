@@ -13,15 +13,22 @@ namespace Prismic\Fragment;
 
 class Color implements FragmentInterface
 {
-    private $data;
+    private $hex;
 
-    public function __construct($data)
+    public function __construct($hex)
     {
-        $this->data = $data;
+        $this->hex = $hex;
     }
 
     public function asHtml()
     {
-        return '<span class="color">' . $this->data . '</span>';
+        return '<span class="color">' . $this->hex . '</span>';
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }

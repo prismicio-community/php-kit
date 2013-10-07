@@ -11,7 +11,7 @@
 
 namespace Prismic\Fragment\Block;
 
-class ListItemBlock implements BlockInterface
+class ListItemBlock implements TextInterface
 {
 
     private $text;

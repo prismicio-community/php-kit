@@ -11,7 +11,7 @@
 
 namespace Prismic\Fragment\Block;
 
-class ParagraphBlock implements BlockInterface
+class ParagraphBlock implements TextInterface
 {
     private $text;
     private $spans;

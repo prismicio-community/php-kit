@@ -11,7 +11,7 @@
 
 namespace Prismic\Fragment\Block;
 
-class HeadingBlock implements BlockInterface
+class HeadingBlock implements TextInterface
 {
     private $text;
     private $spans;

@@ -28,7 +28,7 @@
         "everything": {
             "method": "GET",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "http://lesbonneschoses.wroom.io/api/documents/search",
+            "action": "http://lesbonneschoses.prismic.io/api/documents/search",
             "fields": {
                 "ref": {
                     "type": "String"
@@ -39,6 +39,6 @@
             }
         }
     },
-    "oauth_initiate": "http://lesbonneschoses.wroom.io/auth",
-    "oauth_token": "http://lesbonneschoses.wroom.io/auth/token"
+    "oauth_initiate": "http://lesbonneschoses.prismic.io/auth",
+    "oauth_token": "http://lesbonneschoses.prismic.io/auth/token"
 }

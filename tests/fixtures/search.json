@@ -1,43 +1,34 @@
 [
     {
-        "id": "UdUkXt_mqZBObPeS",
+        "id": "UjHYesuvzT0A_yi6",
         "type": "product",
-        "href": "http://lesbonneschoses.wroom.io/api/documents/search?ref=UgjWQN_mqa8HvPJY&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UdUkXt_mqZBObPeS%22%29+%5D%5D",
+        "href": "http://lesbonneschoses.prismic.io/api/documents/search?ref=UlMgkDLCaosHjz7R&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjHYesuvzT0A_yi6%22%29+%5D%5D",
         "tags": [
-            "Macaron"
+            "Macaron",
+            "Featured"
         ],
         "slugs": [
-            "vanilla-macaron"
+            "cool-coconut-macaron",
+            "coconut-macaron"
         ],
         "data": {
             "product": {
-                "image": {
-                    "type": "Image",
-                    "value": {
-                        "main": {
-                            "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/0417110ebf2dc34a3e8b7b28ee4e06ac82473b70.png",
-                            "dimensions": {
-                                "width": 500,
-                                "height": 500
-                            }
-                        },
-                        "views": {
-                            "icon": {
-                                "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/babdc3421037f9af77720d8f5dcf1b84c912c6ba.png",
-                                "dimensions": {
-                                    "width": 250,
-                                    "height": 250
-                                }
-                            }
+                "name": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "heading1",
+                            "text": "Cool Coconut Macaron",
+                            "spans": []
                         }
-                    }
+                    ]
                 },
                 "short_lede": {
                     "type": "StructuredText",
                     "value": [
                         {
                             "type": "heading2",
-                            "text": "Crispiness and softness, rolled into one",
+                            "text": "An island of flavours",
                             "spans": []
                         }
                     ]
@@ -47,267 +38,239 @@
                     "value": [
                         {
                             "type": "paragraph",
-                            "text": "Experience the ultimate vanilla experience. Our vanilla Macarons are made with our very own (in-house) pure extract of Madagascar vanilla, and subtly dusted with our own vanilla sugar (which we make from real vanilla beans).",
+                            "text": "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.",
+                            "spans": []
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "link",
                             "spans": [
                                 {
-                                    "start": 103,
-                                    "end": 137,
-                                    "type": "strong"
-                                },
-                                {
-                                    "start": 162,
-                                    "end": 183,
-                                    "type": "strong"
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.web",
+                                        "value": {
+                                            "url": "http://apple.com"
+                                        }
+                                    }
                                 }
                             ]
-                        }
-                    ]
-                },
-                "testimonial_author": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "heading3",
-                                "text": "Chef Guillaume Bort",
-                                "spans": []
-                            }
-                        ]
-                    }
-                ],
-                "testimonial_quote": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "paragraph",
-                                "text": "The taste of pure vanilla is very hard to tame, and therefore, most cooks resort to substitutes. It takes a high-skill chef to know how to get the best of tastes, and Les Bonnes Choses's vanilla macaron does just that. The result is more than a success, it simply is a gastronomic piece of art.",
-                                "spans": [
-                                    {
-                                        "start": 97,
-                                        "end": 167,
-                                        "type": "strong"
-                                    },
-                                    {
-                                        "start": 167,
-                                        "end": 184,
-                                        "type": "strong"
-                                    },
-                                    {
-                                        "start": 167,
-                                        "end": 184,
-                                        "type": "em"
-                                    },
-                                    {
-                                        "start": 184,
-                                        "end": 217,
-                                        "type": "strong"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
-                "related": [
-                    {
-                        "type": "Link.document",
-                        "value": {
-                            "document": {
-                                "id": "UdUjvt_mqVNObPeO",
-                                "type": "product",
-                                "tags": [
-                                    "Macaron"
-                                ],
-                                "slug": "dark-chocolate-macaron"
-                            },
-                            "isBroken": false
-                        }
-                    },
-                    {
-                        "type": "Link.document",
-                        "value": {
-                            "document": {
-                                "id": "UdUjsN_mqT1ObPeM",
-                                "type": "product",
-                                "tags": [
-                                    "Macaron"
-                                ],
-                                "slug": "salted-caramel-macaron"
-                            },
-                            "isBroken": false
-                        }
-                    }
-                ],
-                "price": {
-                    "type": "Number",
-                    "value": 3.55
-                },
-                "color": {
-                    "type": "Color",
-                    "value": "#ffeacd"
-                },
-                "flavour": [
-                    {
-                        "type": "Select",
-                        "value": "Vanilla"
-                    }
-                ],
-                "name": {
-                    "type": "StructuredText",
-                    "value": [
+                        },
                         {
-                            "type": "heading1",
-                            "text": "Vanilla Macaron",
+                            "type": "paragraph",
+                            "text": "link1",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UjHkUrGIJ7cBlWAb",
+                                                "type": "product",
+                                                "tags": [
+                                                    "Pie"
+                                                ],
+                                                "slug": "apricot-pie"
+                                            },
+                                            "isBroken": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "link2",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.file",
+                                        "value": {
+                                            "file": {
+                                                "name": "medium_1374778510922_coconut.png",
+                                                "kind": "image",
+                                                "url": "http://data.prismic.io/lesbonneschoses%2F1378998378075_medium_1374778510922_coconut.png",
+                                                "size": "1268903"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "qsdqdsqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "sqdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "qsdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsdqsdqqdq",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                            "dimensions": {
+                                "width": 900,
+                                "height": 600
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df2A.jpg",
+                            "dimensions": {
+                                "width": 800,
+                                "height": 400
+                            }
+                        },
+                        {
+                            "type": "embed",
+                            "oembed": {
+                                "html": "<iframe width=\"459\" height=\"344\" src=\"http://www.youtube.com/embed/MmIKLlRE7n0?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+                                "thumbnail_width": 480,
+                                "width": 459,
+                                "author_url": "http://www.youtube.com/user/88FanHendrick",
+                                "height": 344,
+                                "thumbnail_height": 360,
+                                "provider_name": "YouTube",
+                                "title": "WRC Sebastien Loeb Crash SS15 Rallye de France 2013",
+                                "provider_url": "http://www.youtube.com/",
+                                "author_name": "Jonathan Nascar",
+                                "version": "1.0",
+                                "thumbnail_url": "http://i1.ytimg.com/vi/MmIKLlRE7n0/hqdefault.jpg",
+                                "type": "video",
+                                "embed_url": "http://www.youtube.com/watch?v=MmIKLlRE7n0"
+                            }
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "",
                             "spans": []
                         }
                     ]
                 },
                 "allergens": {
                     "type": "Text",
-                    "value": "Contains almonds, eggs, milk"
-                }
-            }
-        }
-    },
-    {
-        "id": "UdUjsN_mqT1ObPeM",
-        "type": "product",
-        "href": "http://lesbonneschoses.wroom.io/api/documents/search?ref=UgjWQN_mqa8HvPJY&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UdUjsN_mqT1ObPeM%22%29+%5D%5D",
-        "tags": [
-            "Macaron"
-        ],
-        "slugs": [
-            "salted-caramel-macaron"
-        ],
-        "data": {
-            "product": {
-                "image": {
-                    "type": "Image",
-                    "value": {
-                        "main": {
-                            "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/06074de2d9590adddcdb50547108d811af0d9913.png",
-                            "dimensions": {
-                                "width": 500,
-                                "height": 500
-                            }
-                        },
-                        "views": {
-                            "icon": {
-                                "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/7accefd1e7204bbca06e8f13b8ef25fdb673ec67.png",
+                    "value": "Fruit"
+                },
+                "birthdate": {
+                    "type": "Date",
+                    "value": "2013-10-23"
+                },
+                "adult": {
+                    "type": "Text",
+                    "value": "yes"
+                },
+                "teenager": {
+                    "type": "Text",
+                    "value": "true"
+                },
+                "french": {
+                    "type": "Text",
+                    "value": "false"
+                },
+                "price": {
+                    "type": "Number",
+                    "value": 2.5
+                },
+                "flavour": [
+                    {
+                        "type": "Select",
+                        "value": "Lemon/lime"
+                    },
+                    {
+                        "type": "Select",
+                        "value": "Chocolate"
+                    }
+                ],
+                "gallery": [
+                    {
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/71925289ed70e89812a4040de310f0a8b97a2375.jpg",
                                 "dimensions": {
-                                    "width": 250,
-                                    "height": 250
+                                    "width": 1500,
+                                    "height": 500
+                                }
+                            },
+                            "views": {
+                                "squared": {
+                                    "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/2d21ec2fc5bcde736867360885c291770d9ec0c4.jpg",
+                                    "dimensions": {
+                                        "width": 500,
+                                        "height": 500
+                                    }
+                                },
+                                "small": {
+                                    "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/163483658e10f5bad8ee69c29ed313699ea792b8.jpg",
+                                    "dimensions": {
+                                        "width": 150,
+                                        "height": 50
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                "short_lede": {
-                    "type": "StructuredText",
-                    "value": [
-                        {
-                            "type": "heading2",
-                            "text": "Salty-sweety, evermore melty",
-                            "spans": []
-                        }
-                    ]
-                },
-                "description": {
+                ],
+                "testimonial_quote": {
                     "type": "StructuredText",
                     "value": [
                         {
                             "type": "paragraph",
-                            "text": "It's no wonder why our 'Salted Caramel French Macaron' has become our best-selling macaron: on top of the authentic Parisian preparation that has been making our macarons so popular and enjoyed by gourmets, you can also feel the waves of Britanny's ocean as you bite into it. Two of the best French local gastronomies meet in your mouth, and suddenly, it's like French Revolution all over again, contained in a single macaron.",
+                            "text": "With a flavor as self-centered as coconut, it's rather easy to give it the starring role, and not worry about the rest. Les Bonnes Choses did exactly the opposite, marrying it with one of the least expected flavor, and effortlessly creating a whole new experience, a redefinition of the raw material.",
                             "spans": []
                         }
                     ]
                 },
-                "testimonial_author": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "heading3",
-                                "text": "Chef Drobi",
-                                "spans": []
-                            }
-                        ]
-                    },
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "heading3",
-                                "text": "Chef Guergachi",
-                                "spans": []
-                            }
-                        ]
-                    }
-                ],
-                "testimonial_quote": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "paragraph",
-                                "text": "You have never known macarons, unless you have tasted Les Bonnes Choses's signature macaron! Salted caramel is very addictive, and even more so when treated with such high standards and respect for the raw material. This is the single best pastry you may taste before long.",
-                                "spans": [
-                                    {
-                                        "start": 54,
-                                        "end": 71,
-                                        "type": "em"
-                                    },
-                                    {
-                                        "start": 216,
-                                        "end": 272,
-                                        "type": "strong"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "paragraph",
-                                "text": "Try Les Bonnes Choses's salty caramel macaron, and I personally guarantee that you will be grateful to yourself! This is the only dessert I serve in my restaurant which isn't prepared in my own kitchens, and yet, it is always the one I advise first to my most hesitant clients for their dessert. Let's be honest: that way, I just know I'm getting a customer back within weeks...",
-                                "spans": [
-                                    {
-                                        "start": 4,
-                                        "end": 21,
-                                        "type": "em"
-                                    },
-                                    {
-                                        "start": 51,
-                                        "end": 112,
-                                        "type": "strong"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
+                "testimonial_author": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "heading3",
+                            "text": "Chef Drobi",
+                            "spans": []
+                        }
+                    ]
+                },
+                "color": {
+                    "type": "Color",
+                    "value": "#d4bf43"
+                },
                 "related": [
                     {
                         "type": "Link.document",
                         "value": {
                             "document": {
-                                "id": "UdUjvt_mqVNObPeO",
-                                "type": "product",
-                                "tags": [
-                                    "Macaron"
-                                ],
-                                "slug": "dark-chocolate-macaron"
-                            },
-                            "isBroken": false
-                        }
-                    },
-                    {
-                        "type": "Link.document",
-                        "value": {
-                            "document": {
-                                "id": "UdUkXt_mqZBObPeS",
+                                "id": "UjHcxsuvzT0A_yjP",
                                 "type": "product",
                                 "tags": [
                                     "Macaron"
@@ -321,69 +284,71 @@
                         "type": "Link.document",
                         "value": {
                             "document": {
-                                "id": "UdUoc9_mqRlQbPeU",
+                                "id": "UjHZtMuvzT0A_yjA",
                                 "type": "product",
                                 "tags": [
                                     "Macaron"
                                 ],
-                                "slug": "pistachio-macaron"
+                                "slug": "black-white-macaron"
                             },
                             "isBroken": false
                         }
                     }
                 ],
-                "price": {
-                    "type": "Number",
-                    "value": 3.5
-                },
-                "color": {
-                    "type": "Color",
-                    "value": "#db6e09"
-                },
-                "flavour": [
+                "relatedImages": [
                     {
-                        "type": "Select",
-                        "value": "Salted caramel"
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "dimensions": {
+                                    "width": 900,
+                                    "height": 600
+                                }
+                            },
+                            "views": {}
+                        }
                     },
                     {
-                        "type": "Select",
-                        "value": ""
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "dimensions": {
+                                    "width": 900,
+                                    "height": 600
+                                }
+                            },
+                            "views": {}
+                        }
                     }
                 ],
-                "name": {
-                    "type": "StructuredText",
-                    "value": [
-                        {
-                            "type": "heading1",
-                            "text": "Salted Caramel Macaron",
-                            "spans": []
+                "video": {
+                    "type": "Embed",
+                    "value": {
+                        "oembed": {
+                            "author_name": "VitaaVEVO",
+                            "provider_url": "http://www.youtube.com/",
+                            "provider_name": "YouTube",
+                            "thumbnail_height": 360,
+                            "height": 344,
+                            "author_url": "http://www.youtube.com/user/VitaaVEVO",
+                            "version": "1.0",
+                            "width": 459,
+                            "html": "<iframe width=\"459\" height=\"344\" src=\"http://www.youtube.com/embed/97Nis75DAgc?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+                            "title": "Vitaa - Game Over ft. Maître Gims",
+                            "type": "video",
+                            "thumbnail_url": "http://i1.ytimg.com/vi/97Nis75DAgc/hqdefault.jpg",
+                            "thumbnail_width": 480,
+                            "embed_url": "http://www.youtube.com/watch?v=97Nis75DAgc"
                         }
-                    ]
+                    }
                 },
-                "allergens": {
-                    "type": "Text",
-                    "value": "Contains almonds, eggs and milk"
-                }
-            }
-        }
-    },
-    {
-        "id": "UebQ4N_mqYEJYF7N",
-        "type": "product",
-        "href": "http://lesbonneschoses.wroom.io/api/documents/search?ref=UgjWQN_mqa8HvPJY&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UebQ4N_mqYEJYF7N%22%29+%5D%5D",
-        "tags": [
-            "Pie"
-        ],
-        "slugs": [
-            "cherry-lime-pie"
-        ],
-        "data": {
-            "product": {
                 "image": {
                     "type": "Image",
                     "value": {
                         "main": {
-                            "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/d88b287f7971c0d5f6d17c90176ac186fcd5ba22.png",
+                            "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png",
                             "dimensions": {
                                 "width": 500,
                                 "height": 500
@@ -391,7 +356,7 @@
                         },
                         "views": {
                             "icon": {
-                                "url": "https://wroomio.s3.amazonaws.com/lesbonneschoses/4a4acae4e5f3dd466ba2d8c9d2083a411439431d.png",
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/f428de9ed832705617063c9c69eb752f4ab92ac5.png",
                                 "dimensions": {
                                     "width": 250,
                                     "height": 250
@@ -399,114 +364,6 @@
                             }
                         }
                     }
-                },
-                "short_lede": {
-                    "type": "StructuredText",
-                    "value": [
-                        {
-                            "type": "heading2",
-                            "text": "Sweet and sour, but mostly sweet",
-                            "spans": []
-                        }
-                    ]
-                },
-                "description": {
-                    "type": "StructuredText",
-                    "value": [
-                        {
-                            "type": "paragraph",
-                            "text": "Cherry flavour in pastries is always a bit aggressive, and usually doesn't care much to let other tastes express themselves. But today, cherry is meeting an opponent who's very able to challenge him: pure Italian-imported lime! As they fight for their right to let you experience their magic the result is an explosion of opposing tastes in your mouth! Chocolate dust will serve as the palate-awakening judge of this heated encounter, while the cherry will attempt to display its domination by sitting on the boxing ring.",
-                            "spans": []
-                        }
-                    ]
-                },
-                "testimonial_author": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "heading3",
-                                "text": "Chef Crème",
-                                "spans": []
-                            }
-                        ]
-                    },
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "heading3",
-                                "text": "Chef Drobi",
-                                "spans": []
-                            }
-                        ]
-                    }
-                ],
-                "testimonial_quote": [
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "paragraph",
-                                "text": "If you're looking for one of Les Bonnes Choses's notoriously daring masterpieces... look no more! Whatever your experience with pastry, this will unsettle you, to a point where you'll wonder whether pastry can be taken further than this bold piece of art. To be urgently advised to anyone who believes that pastry can not be an experience by itself.",
-                                "spans": [
-                                    {
-                                        "start": 29,
-                                        "end": 46,
-                                        "type": "em"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "type": "StructuredText",
-                        "value": [
-                            {
-                                "type": "paragraph",
-                                "text": "I've had my share of fruit-combination attempts, and lime was always last on my list to combine with berries, because it just seemed wrong. It took a great pastry house like Les Bonnes Choses to suppress my taboo, and realize that what once seems wrong, can later seem insanely right!",
-                                "spans": [
-                                    {
-                                        "start": 174,
-                                        "end": 191,
-                                        "type": "em"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ],
-                "price": {
-                    "type": "Number",
-                    "value": 3
-                },
-                "color": {
-                    "type": "Color",
-                    "value": "#e9221d"
-                },
-                "flavour": [
-                    {
-                        "type": "Select",
-                        "value": "Lemon/lime"
-                    },
-                    {
-                        "type": "Select",
-                        "value": "Berries"
-                    }
-                ],
-                "name": {
-                    "type": "StructuredText",
-                    "value": [
-                        {
-                            "type": "heading1",
-                            "text": "Cherry-Lime Pie",
-                            "spans": []
-                        }
-                    ]
-                },
-                "allergens": {
-                    "type": "Text",
-                    "value": "Contains lime, milk and eggs."
                 }
             }
         }

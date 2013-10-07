@@ -15,13 +15,16 @@ use Prismic\Fragment\Color;
 use Prismic\Fragment\Date;
 use Prismic\Fragment\Embed;
 use Prismic\Fragment\Image;
+use Prismic\Fragment\Number;
 use Prismic\Fragment\ImageView;
 use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\MediaLink;
 use Prismic\Fragment\Link\WebLink;
-use Prismic\Fragment\Number;
 use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
+use Prismic\Fragment\Block\HeadingBlock;
+use Prismic\Fragment\Block\ImageBlock;
+use Prismic\Fragment\Block\TextInterface;
 
 class Document
 {
@@ -81,35 +84,179 @@ class Document
     public function get($field)
     {
         if (!array_key_exists($field, $this->fragments)) {
-            return null;
+            $multi = $this->getAll($field);
+            if(!empty($multi)) {
+                $single = $multi[0];
+            }
+        } else {
+            $single = $this->fragments[$field];
         }
-
-        return $this->fragments[$field];
+        return $single;
     }
 
+    /**
+     * @param string $field
+     *
+     * @return array
+     */
+    public function getAll($field)
+    {
+        $result = array();
+        foreach ($this->fragments as $key => $value) {
+            $groups = array();
+            if(preg_match('/^([^\[]+)(\[\d+\])?$/', $key, $groups) == 1) {
+                if($groups[1] == $field) {
+                    array_push($result, $value);
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
     public function getText($field)
     {
-        if (!array_key_exists($field, $this->fragments)) {
-            return "";
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof StructuredText) {
+            $text = "";
+            foreach($fragment->blocks as $block) {
+                if($block instanceof TextInterface) {
+                    $text = $text . $block->text;
+                    $text = $text . "\n";
+                }
+            }
+            return trim($text);
         }
-        return $this->fragments[$field]->asText();
+        else if(isset($fragment) && $fragment instanceof Number) {
+            return $fragment->value;
+        }
+        else if(isset($fragment) && $fragment instanceof Color) {
+            return $fragment->hex;
+        }
+        else if(isset($fragment) && $fragment instanceof Text) {
+            return $fragment->value;
+        }
+        else if(isset($fragment) && $fragment instanceof Date) {
+            return $fragment->value;
+        }
+        return "";
     }
 
-    public function getHtml($field, $linkResolver = null)
-    {
-        if (!array_key_exists($field, $this->fragments)) {
-            return "";
+    public function getNumber($field, $pattern=null) {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof Number) {
+            if(isset($pattern) && isset($fragment)) {
+                return $fragment->asText($pattern);
+            } else {
+                return $fragment;
+            }
         }
-        return $this->fragments[$field]->asHtml($linkResolver);
+        return null;
     }
 
-    public function getImage($field, $view)
-    {
-        if (!array_key_exists($field, $this->fragments)) {
-            return null;
+    public function getBoolean($field) {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof Text) {
+            return ("yes" == $fragment->value) || ("true" == $fragment->value);
         }
-        $fragment = $this->fragments[$field];
-        return $fragment->getImage($view);
+        return null;
+    }
+
+    public function getDate($field, $pattern=null) {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof Date) {
+            if(isset($pattern)) {
+                return $fragment->asText($pattern);
+            }
+            return $fragment;
+        }
+        return null;
+    }
+
+    public function getHtml($field, $linkResolver=null)
+    {
+        $fragment = $this->get($field);
+        if(isset($fragment) && method_exists($fragment, 'asHtml')) {
+            if($fragment instanceof DocumentLink) {
+                return $fragment->asHtml($linkResolver);
+            } else {
+                return $fragment->asHtml();
+            }
+        }
+        return "";
+    }
+
+    public function getImage($field)
+    {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof Image) {
+            return $fragment;
+        }
+        else if(isset($fragment) && $fragment instanceof StructuredText) {
+            foreach($fragment->blocks as $block) {
+                if($block instanceof ImageBlock) {
+                    return new Image($block->view);
+                }
+            }
+        }
+        return null;
+    }
+
+    public function getAllImages($field)
+    {
+        $fragments = $this->getAll($field);
+        $images = array();
+        foreach($fragments as $fragment) {
+            if(isset($fragment) && $fragment instanceof Image) {
+                array_push($images, $fragment);
+            }
+            else if(isset($fragment) && $fragment instanceof StructuredText) {
+                foreach($fragment->blocks as $block) {
+                    if($block instanceof ImageBlock) {
+                        array_push($images, new Image($block->view));
+                    }
+                }
+            }
+        }
+        return $images;
+    }
+
+    public function getImageView($field, $view=null) {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof Image) {
+            return $fragment->getView($view);
+        }
+        else if(isset($fragment) && $fragment instanceof StructuredText && $view == 'main') {
+            $maybeImage = $this->getImage($field);
+            if(isset($maybeImage)) {
+                return $maybeImage->main;
+            }
+        }
+        return null;
+    }
+
+    public function getAllImageViews($field, $view) {
+        $imageViews = array();
+        foreach($this->getAllImages($field) as $image) {
+            $imageView = $image->getView($view);
+            if(isset($imageView)) {
+                array_push($imageViews, $imageView);
+            }
+        };
+        return $imageViews;
+    }
+
+    public function getStructuredText($field)
+    {
+        $fragment = $this->get($field);
+        if(isset($fragment) && $fragment instanceof StructuredText) {
+            return $fragment;
+        }
+        return null;
     }
 
     public function asHtml($linkResolver = null)

@@ -13,20 +13,27 @@ namespace Prismic\Fragment;
 
 class Number implements FragmentInterface
 {
-    private $data;
+    private $value;
 
-    public function __construct($data)
+    public function __construct($value)
     {
-        $this->data = $data;
+        $this->value = $value;
     }
 
-    public function asText()
+    public function asText($pattern)
     {
-        return $this->data;
+        return sprintf($pattern, $this->value);
     }
 
     public function asHtml()
     {
-        return '<span class="number">' . $this->data . '</span>';
+        return '<span class="number">' . $this->value . '</span>';
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }

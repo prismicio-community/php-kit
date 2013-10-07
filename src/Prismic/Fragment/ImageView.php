@@ -13,7 +13,6 @@ namespace Prismic\Fragment;
 
 class ImageView
 {
-
     private $url;
     private $width;
     private $height;
@@ -42,5 +41,12 @@ class ImageView
             $json->dimensions->width,
             $json->dimensions->height
         );
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }

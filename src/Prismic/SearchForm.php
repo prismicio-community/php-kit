@@ -119,7 +119,7 @@ class SearchForm
      *
      * @return string
      */
-    public static function strip($str)
+    private static function strip($str)
     {
         $trimmed = trim($str);
         $drop1 = substr($trimmed, 1, strlen($trimmed));

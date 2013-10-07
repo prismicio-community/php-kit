@@ -41,6 +41,22 @@ class StructuredText implements FragmentInterface
         return join("\n\n", $result);
     }
 
+    public function getFirstParagraph() {
+        foreach($this->blocks as $block) {
+            if(isset($block) && $block instanceof ParagraphBlock) {
+                return $block;
+            }
+        }
+    }
+
+    public function getFirstImage() {
+        foreach($this->blocks as $block) {
+            if(isset($block) && $block instanceof ImageBlock) {
+                return $block;
+            }
+        }
+    }
+
     public function asHtml($linkResolver = null)
     {
         $groups = array();
@@ -299,5 +315,12 @@ class StructuredText implements FragmentInterface
             }
         }
         return new StructuredText($blocks);
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 }
