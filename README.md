@@ -1,18 +1,28 @@
 ## PHP development kit for prismic.io
 
-### Getting Started
+### Installation using Composer
 
-Put the development kit in your project (for instance "vendors/prismic" directory).   
-Then include it with:
+Add the dependency:
 
-```php
-require_once("vendors/prismic/api.php");
+```bash
+php composer.phar require prismic/php-sdk
 ```
 
-This php library uses the namespace `prismic`.   
-So, you can import it like this:   
+If asked for a version, type in 'dev-master' (unless you want another version):
+
+```bash
+Please provide a version constraint for the prismic/php-sdk requirement: dev-master
+```
+
+### Usage
+
 ```php
-use prismic\API as API;
+<?php
+
+include_once __DIR__.'/../vendor/autoload.php';
+
+use Prismic\Api;
+
 ```
 
 ### Licence
