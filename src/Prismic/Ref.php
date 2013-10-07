@@ -18,6 +18,12 @@ class Ref
     private $isMasterRef;
     private $maybeScheduledAt;
 
+    /**
+     * @param string $ref
+     * @param string $label
+     * @param string $isMasterRef
+     * @param string $maybeScheduledAt
+     */
     public function __construct($ref, $label, $isMasterRef, $maybeScheduledAt = null)
     {
         $this->ref = $ref;
@@ -39,7 +45,7 @@ class Ref
             $json->ref,
             $json->label,
             isset($json->{'isMasterRef'}) ? $json->isMasterRef : false,
-            isset($json->{'scheduledAt'}) ? $json->scheduledAt : null
+            isset($json->{'scheduledAt'}) ? $json->scheduledAt : null    // @todo: convert value into \DateTime ?
         );
     }
 }

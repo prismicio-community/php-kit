@@ -20,16 +20,23 @@ class SearchForm
 
     /**
      * @param Api   $client
-     * @param mixed $form
-     * @param mixed $data
+     * @param Form  $form
+     * @param array $data
      */
-    public function __construct(Api $api, $form, $data)
+    public function __construct(Api $api, Form $form, array $data)
     {
         $this->api  = $api;
         $this->form = $form;
         $this->data = $data;
     }
 
+    /**
+     * Set the repository reference
+     *
+     * @param string $ref
+     *
+     * @return SearchForm
+     */
     public function ref($ref)
     {
         $data = $this->data;
@@ -38,13 +45,27 @@ class SearchForm
         return new SearchForm($this->api, $this->form, $data);
     }
 
-    private static function parseResult($result)
+    /**
+     * Create documents from the search results
+     *
+     * @param $results
+     *
+     * @return array
+     */
+    private static function parseResult($results)
     {
         return array_map(function ($json) {
             return Document::parse($json);
-        }, $result);
+        }, $results);
     }
 
+    /**
+     * Submit the current form to retrieve remote contents
+     *
+     * @return stdClass
+     *
+     * @throws \RuntimeException
+     */
     public function submit()
     {
         if ($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
@@ -66,17 +87,38 @@ class SearchForm
         throw new \RuntimeException("Form type not supported");
     }
 
+    /**
+     * Generate a SearchForm instance for the provided query. Please note the ref method need to
+     * be call before so the repository is set.
+     *
+     *    $boundForm = $formSearch->ref('my content repository reference');
+     *    $queryForm = $boundForm->query('[[:d = at(document.type, "event")]]');
+     *    $results = $queryForm->submit()
+     *
+     * @param $q
+     *
+     * @return SearchForm
+     */
     public function query($q)
     {
         $field = $this->form->fields->q;
+
         $maybeDefault = property_exists($field, "default") ? $field->default : null;
-        $q1 = isset($maybeDefault) ? self::strip($maybeDefault) : "";
+        $q1 = $maybeDefault ? self::strip($maybeDefault) : "";
+
         $data = $this->data;
         $data['q'] = '[' . $q1 . self::strip($q) . ']';
 
         return new SearchForm($this->api, $this->form, $data);
     }
 
+    /**
+     * Clean the query
+     *
+     * @param string $str
+     *
+     * @return string
+     */
     public static function strip($str)
     {
         $trimmed = trim($str);

@@ -23,7 +23,7 @@ class Api
 
     /**
      * @param string $data
-     * @param null   $accessToken
+     * @param string $accessToken
      */
     private function __construct($data, $accessToken = null)
     {
@@ -124,7 +124,7 @@ class Api
     }
 
     /**
-     * This method is static to respect the others API
+     * This method is static to respect others API
      *
      * @param string $action
      * @param string $accessToken

@@ -21,7 +21,16 @@ class ApiData
     private $oauth_initiate;
     private $oauth_token;
 
-    public function __construct($refs, $bookmarks, $types, $tags, $forms, $oauth_initiate, $oauth_token)
+    /**
+     * @param array     $refs
+     * @param \stdClass $bookmarks
+     * @param \stdClass $types
+     * @param array     $tags
+     * @param \stdClass $forms
+     * @param string    $oauth_initiate
+     * @param string    $oauth_token
+     */
+    public function __construct(array $refs, \stdClass $bookmarks, \stdClass $types, array $tags, \stdClass $forms, $oauth_initiate, $oauth_token)
     {
         $this->refs = $refs;
         $this->bookmarks = $bookmarks;
@@ -32,6 +41,11 @@ class ApiData
         $this->oauth_token = $oauth_token;
     }
 
+    /**
+     * @param string $property
+     *
+     * @return mixed
+     */
     public function __get($property)
     {
         if (property_exists($this, $property)) {

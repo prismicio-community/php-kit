@@ -33,6 +33,14 @@ class Document
     private $slugs;
     private $fragments;
 
+    /**
+     * @param string $id
+     * @param string $type
+     * @param string $href
+     * @param array  $tags
+     * @param array  $slugs
+     * @param array $fragments
+     */
     public function __construct($id, $type, $href, $tags, $slugs, array $fragments)
     {
         $this->id = $id;
@@ -43,24 +51,39 @@ class Document
         $this->fragments = $fragments;
     }
 
+    /**
+     * @return string
+     */
     public function slug()
     {
         return $this->slugs[0];
     }
 
+    /**
+     * @param $slug
+     *
+     * @return bool
+     */
     public function containsSlug($slug)
     {
         $found = array_filter($this->slugs, function ($s) use ($slug) {
             return $s == $slug;
         });
+
         return count($found) > 0;
     }
 
+    /**
+     * @param string $field
+     *
+     * @return mixed
+     */
     public function get($field)
     {
         if (!array_key_exists($field, $this->fragments)) {
             return null;
         }
+
         return $this->fragments[$field];
     }
 
@@ -155,7 +178,12 @@ class Document
         }
     }
 
-    public static function parse($json)
+    /**
+     * @param \stdClass $json
+     *
+     * @return Document
+     */
+    public static function parse(\stdClass $json)
     {
         $fragments = array();
         foreach ($json->data as $type => $fields) {

@@ -21,12 +21,12 @@ class Form
     private $fields;
 
     /**
-     * @param string $maybeName
-     * @param string $method
-     * @param string $maybeRel
-     * @param string $enctype
-     * @param string $action
-     * @param string $fields
+     * @param string    $maybeName
+     * @param string    $method
+     * @param string    $maybeRel
+     * @param string    $enctype
+     * @param string    $action
+     * @param \stdClass $fields
      */
     public function __construct($maybeName, $method, $maybeRel, $enctype, $action, $fields)
     {
@@ -43,9 +43,10 @@ class Form
         $dft = array();
         foreach ($this->fields as $key => $field) {
             if (property_exists($field, "default")) {
-                $queryParameters[$key] = $field->default;
+                $dft[$key] = $field->default;
             }
         }
+
         return $dft;
     }
 
