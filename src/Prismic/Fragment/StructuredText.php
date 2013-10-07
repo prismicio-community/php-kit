@@ -13,6 +13,7 @@ namespace Prismic\Fragment;
 
 use Prismic\Fragment\Block\EmbedBlock;
 use Prismic\Fragment\Block\HeadingBlock;
+use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\ListItemBlock;
 use Prismic\Fragment\Block\ParagraphBlock;
 use Prismic\Fragment\Link\DocumentLink;

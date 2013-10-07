@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Prismic\Fragment;
+namespace Prismic\Fragment\Block;
 
 class ImageBlock implements BlockInterface
 {
