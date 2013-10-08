@@ -193,12 +193,14 @@ class StructuredText implements FragmentInterface
                 $spansToApply = "";
                 while (min($peekStart($starts), $peekEnd($endings)) == $pos) {
                     if (!empty($endings) && $peek($endings)->end == $pos) {
-                        $spansToApply = $spansToApply . $getStartAndEnd(array_pop($endings), $linkResolver)[1];
+                        $startAndEnd = $getStartAndEnd(array_pop($endings), $linkResolver);
+                        $spansToApply = $spansToApply . $startAndEnd[1];
                     }
                     else if (!empty($starts) && $peek($starts)->start == $pos) {
                         $start = array_pop($starts);
                         array_push($endings, $start);
-                        $spansToApply = $spansToApply . $getStartAndEnd($start, $linkResolver)[0];
+                        $startAndEnd = $getStartAndEnd($start, $linkResolver);
+                        $spansToApply = $spansToApply . $startAndEnd[0];
                     }
                 }
                 $result = $result . $spansToApply;
