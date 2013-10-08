@@ -76,10 +76,14 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testGetAllImagesViews()
     {
         $url1 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png';
-        $this->assertEquals($this->document->getAllImageViews('product.image', 'main')[0]->url, $url1);
+        $views = $this->document->getAllImageViews('product.image', 'main');
+        $view = $views[0];
+        $this->assertEquals($view->url, $url1);
 
         $url2 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg';
-        $this->assertEquals($this->document->getAllImageViews('product.description', 'main')[0]->url, $url2);
+        $views = $this->document->getAllImageViews('product.description', 'main');
+        $view = $views[0];
+        $this->assertEquals($view->url, $url2);
     }
 
     public function testGetStructuredText()
