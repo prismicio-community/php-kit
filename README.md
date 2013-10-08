@@ -1,4 +1,4 @@
-![alt text](https://travis-ci.org/prismicio/php-kit.png "Travis build")
+![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")
 
 ## PHP development kit for prismic.io
 
