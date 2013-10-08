@@ -1,3 +1,5 @@
+![alt text](https://travis-ci.org/prismicio/php-kit.png "Travis build")
+
 ## PHP development kit for prismic.io
 
 ### Installation using Composer
