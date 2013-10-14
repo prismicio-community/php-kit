@@ -25,4 +25,10 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
     public function testGetFirstImage() {
         $this->assertEquals($this->structuredText->getFirstImage()->view->url, 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg');
     }
+
+    public function testGetFirstPreformatted() {
+        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
+        $this->assertEquals($this->structuredText->getFirstPreformatted()->text, $content);
+    }
+
 }
