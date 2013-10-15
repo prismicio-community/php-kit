@@ -16,6 +16,7 @@ use Prismic\Fragment\Block\HeadingBlock;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\ListItemBlock;
 use Prismic\Fragment\Block\ParagraphBlock;
+use Prismic\Fragment\Block\PreformattedBlock;
 use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\MediaLink;
 use Prismic\Fragment\Link\WebLink;
@@ -39,6 +40,14 @@ class StructuredText implements FragmentInterface
         }, $this->blocks);
 
         return join("\n\n", $result);
+    }
+
+    public function getFirstPreformatted() {
+        foreach($this->blocks as $block) {
+            if(isset($block) && $block instanceof PreformattedBlock) {
+                return $block;
+            }
+        }
     }
 
     public function getFirstParagraph() {
@@ -130,11 +139,15 @@ class StructuredText implements FragmentInterface
         else if ($block instanceof EmbedBlock) {
             return $block->obj->asHtml();
         }
+        else if ($block instanceof PreformattedBlock) {
+            return '<pre>' . StructuredText::asHtmlText($block->text, $block->spans, $linkResolver) . '</pre>';
+        }
         return "";
     }
 
     public static function asHtmlText($text, $spans, $linkResolver = null)
     {
+        $text = htmlentities($text);
         if (empty($spans)) {
             return $text;
         }
@@ -302,6 +315,10 @@ class StructuredText implements FragmentInterface
 
         if ($json->type == 'embed') {
             return new EmbedBlock(Embed::parse($json));
+        }
+
+        if ($json->type == 'preformatted') {
+            return new PreformattedBlock($json->text, $json->spans, false);
         }
 
         return null;

@@ -25,4 +25,30 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
     public function testGetFirstImage() {
         $this->assertEquals($this->structuredText->getFirstImage()->view->url, 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg');
     }
+
+    public function testGetFirstPreformatted() {
+        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
+        $this->assertEquals($this->structuredText->getFirstPreformatted()->text, $content);
+    }
+
+    public function testPreformattedBlockFormatRendering() {
+        $text = "This is a test.";
+        $spans = array(
+            new \Prismic\Fragment\Span\EmSpan(5, 7),
+            new \Prismic\Fragment\Span\StrongSpan(8, 9)
+        );
+        $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, $spans, null);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $content = "<pre>This <em>is</em> <strong>a</strong> test.</pre>";
+        $this->assertEquals($structuredText->asHtml(), $content);
+    }
+
+    public function testPreformattedBlockEscapeRendering() {
+        $text = "This is <a> test.";
+        $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, array(), null);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $content = "<pre>This is &lt;a&gt; test.</pre>";
+        $this->assertEquals($structuredText->asHtml(), $content);
+    }
+
 }
