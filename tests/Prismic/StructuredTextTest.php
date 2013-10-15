@@ -31,4 +31,16 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->structuredText->getFirstPreformatted()->text, $content);
     }
 
+    public function testPreformattedBlockFormatRendering() {
+        $text = "This is a test.";
+        $spans = array(
+            new \Prismic\Fragment\Span\EmSpan(5, 7),
+            new \Prismic\Fragment\Span\StrongSpan(8, 9)
+        );
+        $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, $spans, null);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $content = "<pre>This <em>is</em> <strong>a</strong> test.</pre>";
+        $this->assertEquals($structuredText->asHtml(), $content);
+    }
+
 }

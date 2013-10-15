@@ -140,7 +140,7 @@ class StructuredText implements FragmentInterface
             return $block->obj->asHtml();
         }
         else if ($block instanceof PreformattedBlock) {
-            return '<pre>' . $block->text . '</pre>';
+            return '<pre>' . StructuredText::asHtmlText($block->text, $block->spans, $linkResolver) . '</pre>';
         }
         return "";
     }
