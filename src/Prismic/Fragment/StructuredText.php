@@ -147,6 +147,7 @@ class StructuredText implements FragmentInterface
 
     public static function asHtmlText($text, $spans, $linkResolver = null)
     {
+        $text = htmlentities($text);
         if (empty($spans)) {
             return $text;
         }

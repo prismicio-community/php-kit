@@ -43,4 +43,12 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($structuredText->asHtml(), $content);
     }
 
+    public function testPreformattedBlockEscapeRendering() {
+        $text = "This is <a> test.";
+        $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, array(), null);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $content = "<pre>This is &lt;a&gt; test.</pre>";
+        $this->assertEquals($structuredText->asHtml(), $content);
+    }
+
 }
