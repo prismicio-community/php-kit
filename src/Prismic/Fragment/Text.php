@@ -22,7 +22,7 @@ class Text implements FragmentInterface
 
     public function asHtml()
     {
-        return '<span class="text">' . $this->value . '</span>';
+        return '<span class="text">' . htmlentities($this->value) . '</span>';
     }
 
     public function __get($property)
