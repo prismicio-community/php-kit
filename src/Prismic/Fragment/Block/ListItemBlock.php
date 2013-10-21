@@ -25,10 +25,15 @@ class ListItemBlock implements TextInterface
         $this->ordered = $ordered;
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getText() {
+        return $this->text;
+    }
+
+    public function getSpans() {
+        return $this->spans;
+    }
+
+    public function isOrdered() {
+        return $this->ordered;
     }
 }

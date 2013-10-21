@@ -38,15 +38,15 @@ class Api
      */
     public function refs()
     {
-        $refs = $this->data->refs;
+        $refs = $this->data->getRefs();
         $groupBy = array();
         foreach ($refs as $ref) {
-            if (isset($refs[$ref->label])) {
-                $arr = $refs[$ref->label];
+            if (isset($refs[$ref->getLabel()])) {
+                $arr = $refs[$ref->getLabel()];
                 array_push($arr, $ref);
-                $groupBy[$ref->label] = $arr;
+                $groupBy[$ref->getLabel()] = $arr;
             } else {
-                $groupBy[$ref->label] = array($ref);
+                $groupBy[$ref->getLabel()] = array($ref);
             }
         }
 
@@ -60,7 +60,7 @@ class Api
 
     public function bookmarks()
     {
-        return $this->data->bookmarks;
+        return $this->data->getBookmarks();
     }
 
     /**
@@ -70,8 +70,8 @@ class Api
      */
     public function master()
     {
-        $masters = array_filter($this->data->refs, function ($ref) {
-            return $ref->isMasterRef == true;
+        $masters = array_filter($this->data->getRefs(), function ($ref) {
+            return $ref->isMasterRef() == true;
         });
 
         return $masters[0];
@@ -84,7 +84,7 @@ class Api
      */
     public function forms()
     {
-        $forms = $this->data->forms;
+        $forms = $this->data->getForms();
         $rforms = new \stdClass();
         foreach ($forms as $key => $form) {
             $f = new Form(
@@ -112,7 +112,7 @@ class Api
      */
     public function oauthInitiateEndpoint()
     {
-        return $this->data->oauth_initiate;
+        return $this->data->getOauthInitiate();
     }
 
     /**
@@ -120,7 +120,7 @@ class Api
      */
     public function oauthTokenEndpoint()
     {
-        return $this->data->oauth_token;
+        return $this->data->getOauthToken();
     }
 
     /**

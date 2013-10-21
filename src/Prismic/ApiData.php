@@ -41,15 +41,31 @@ class ApiData
         $this->oauth_token = $oauth_token;
     }
 
-    /**
-     * @param string $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getRefs() {
+        return $this->refs;
+    }
+
+    public function getBookmarks() {
+        return $this->bookmarks;
+    }
+
+    public function getTypes() {
+        return $this->types;
+    }
+
+    public function getTags() {
+        return $this->tags;
+    }
+
+    public function getForms() {
+        return $this->forms;
+    }
+
+    public function getOauthInitiate() {
+        return $this->oauth_initiate;
+    }
+
+    public function getOauthToken() {
+        return $this->oauth_token;
     }
 }

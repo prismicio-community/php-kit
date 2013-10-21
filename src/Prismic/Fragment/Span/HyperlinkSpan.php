@@ -25,10 +25,15 @@ class HyperlinkSpan implements SpanInterface
         $this->link = $link;
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getStart() {
+        return $this->start;
+    }
+
+    public function getEnd() {
+        return $this->end;
+    }
+
+    public function getLink() {
+        return $this->link;
     }
 }

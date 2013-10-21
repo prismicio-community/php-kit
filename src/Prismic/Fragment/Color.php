@@ -25,10 +25,7 @@ class Color implements FragmentInterface
         return '<span class="color">' . $this->hex . '</span>';
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getHexValue() {
+        return $this->hex;
     }
 }

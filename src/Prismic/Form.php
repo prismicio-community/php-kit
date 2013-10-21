@@ -50,15 +50,27 @@ class Form
         return $dft;
     }
 
-    /**
-     * @param string $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getName() {
+        return $this->maybeName;
+    }
+
+    public function getMethod() {
+        return $this->method;
+    }
+
+    public function getRel() {
+        return $this->maybeRel;
+    }
+
+    public function getEnctype() {
+        return $this->enctype;
+    }
+
+    public function getAction() {
+        return $this->action;
+    }
+
+    public function getFields() {
+        return $this->fields;
     }
 }

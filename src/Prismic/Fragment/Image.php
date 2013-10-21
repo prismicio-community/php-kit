@@ -36,10 +36,11 @@ class Image implements FragmentInterface
         return $this->views[$key];
      }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getMain() {
+        return $this->main;
+    }
+
+    public function getViews() {
+        return $this->views;
     }
 }

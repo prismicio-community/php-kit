@@ -27,15 +27,16 @@ class WebLink implements LinkInterface
         return '<a href="' . $this->url . '">$url</a>';
     }
 
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function getContentType() {
+        return $this->maybeContentType;
+    }
+
     public static function parse($json)
     {
         return new WebLink($json->url);
-    }
-
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
     }
 }

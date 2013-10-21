@@ -30,10 +30,7 @@ class Number implements FragmentInterface
         return '<span class="number">' . $this->value . '</span>';
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getValue() {
+        return $this->value;
     }
 }

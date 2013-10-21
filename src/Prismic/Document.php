@@ -59,7 +59,10 @@ class Document
      */
     public function slug()
     {
-        return $this->slugs[0];
+        if(count($this->slugs) > 0) {
+            return $this->slugs[0];
+        }
+        return null;
     }
 
     /**
@@ -123,25 +126,25 @@ class Document
         $fragment = $this->get($field);
         if(isset($fragment) && $fragment instanceof StructuredText) {
             $text = "";
-            foreach($fragment->blocks as $block) {
+            foreach($fragment->getBlocks() as $block) {
                 if($block instanceof TextInterface) {
-                    $text = $text . $block->text;
+                    $text = $text . $block->getText();
                     $text = $text . "\n";
                 }
             }
             return trim($text);
         }
         else if(isset($fragment) && $fragment instanceof Number) {
-            return $fragment->value;
+            return $fragment->getValue();
         }
         else if(isset($fragment) && $fragment instanceof Color) {
-            return $fragment->hex;
+            return $fragment->getHex();
         }
         else if(isset($fragment) && $fragment instanceof Text) {
-            return $fragment->value;
+            return $fragment->getValue();
         }
         else if(isset($fragment) && $fragment instanceof Date) {
-            return $fragment->value;
+            return $fragment->getValue();
         }
         return "";
     }
@@ -161,7 +164,7 @@ class Document
     public function getBoolean($field) {
         $fragment = $this->get($field);
         if(isset($fragment) && $fragment instanceof Text) {
-            return ("yes" == $fragment->value) || ("true" == $fragment->value);
+            return ("yes" == $fragment->getValue()) || ("true" == $fragment->getValue());
         }
         return null;
     }
@@ -197,9 +200,9 @@ class Document
             return $fragment;
         }
         else if(isset($fragment) && $fragment instanceof StructuredText) {
-            foreach($fragment->blocks as $block) {
+            foreach($fragment->getBlocks() as $block) {
                 if($block instanceof ImageBlock) {
-                    return new Image($block->view);
+                    return new Image($block->getView());
                 }
             }
         }
@@ -215,9 +218,9 @@ class Document
                 array_push($images, $fragment);
             }
             else if(isset($fragment) && $fragment instanceof StructuredText) {
-                foreach($fragment->blocks as $block) {
+                foreach($fragment->getBlocks() as $block) {
                     if($block instanceof ImageBlock) {
-                        array_push($images, new Image($block->view));
+                        array_push($images, new Image($block->getView()));
                     }
                 }
             }
@@ -233,7 +236,7 @@ class Document
         else if(isset($fragment) && $fragment instanceof StructuredText && $view == 'main') {
             $maybeImage = $this->getImage($field);
             if(isset($maybeImage)) {
-                return $maybeImage->main;
+                return $maybeImage->getMain();
             }
         }
         return null;
@@ -266,6 +269,30 @@ class Document
             $html = $html . '<section data-field="' . $field . '">' . $this->getHtml($field, $linkResolver) . '</section>';
         };
         return $html;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getHref() {
+        return $this->href;
+    }
+
+    public function getTags() {
+        return $this->tags;
+    }
+
+    public function getSlugs() {
+        return $this->slugs;
+    }
+
+    public function getFragments() {
+        return $this->fragments;
     }
 
     public static function parseFragment($json)
@@ -352,12 +379,5 @@ class Document
         }
 
         return new Document($json->id, $json->type, $json->href, $json->tags, $json->slugs, $fragments);
-    }
-
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
     }
 }

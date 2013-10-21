@@ -35,7 +35,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumber()
     {
-        $this->assertEquals($this->document->getNumber('product.price')->value, 2.5);
+        $this->assertEquals($this->document->getNumber('product.price')->getValue(), 2.5);
         $this->assertEquals($this->document->getNumber('product.price', '%s'), '2.5');
     }
 
@@ -48,7 +48,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDate()
     {
-        $this->assertEquals($this->document->getDate('product.birthdate')->value, '2013-10-23');
+        $this->assertEquals($this->document->getDate('product.birthdate')->getValue(), '2013-10-23');
         $this->assertEquals($this->document->getDate('product.birthdate', 'Y'), '2013');
     }
 
@@ -67,10 +67,10 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testGetImageView()
     {
         $url1 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png';
-        $this->assertEquals($this->document->getImageView('product.image', 'main')->url, $url1);
+        $this->assertEquals($this->document->getImageView('product.image', 'main')->getUrl(), $url1);
 
         $url2 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg';
-        $this->assertEquals($this->document->getImageView('product.description', 'main')->url, $url2);
+        $this->assertEquals($this->document->getImageView('product.description', 'main')->getUrl(), $url2);
     }
 
     public function testGetAllImagesViews()
@@ -78,12 +78,12 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $url1 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png';
         $views = $this->document->getAllImageViews('product.image', 'main');
         $view = $views[0];
-        $this->assertEquals($view->url, $url1);
+        $this->assertEquals($view->getUrl(), $url1);
 
         $url2 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg';
         $views = $this->document->getAllImageViews('product.description', 'main');
         $view = $views[0];
-        $this->assertEquals($view->url, $url2);
+        $this->assertEquals($view->getUrl(), $url2);
     }
 
     public function testGetStructuredText()

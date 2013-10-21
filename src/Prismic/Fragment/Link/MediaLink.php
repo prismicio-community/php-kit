@@ -31,11 +31,20 @@ class MediaLink implements LinkInterface
         return '<a href="' . $this->url . '">' . $this->filename . '</a>';
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function getKind() {
+        return $this->kind;
+    }
+
+    public function getSize() {
+        return $this->size;
+    }
+
+    public function getFilename() {
+        return $this->filename;
     }
 
     public static function parse($json)

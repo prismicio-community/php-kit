@@ -22,10 +22,11 @@ class EmSpan implements SpanInterface
         $this->end = $end;
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getStart() {
+        return $this->start;
+    }
+
+    public function getEnd() {
+        return $this->end;
     }
 }

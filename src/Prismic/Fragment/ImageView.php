@@ -34,6 +34,18 @@ class ImageView
         return $this->width / $this->height;
     }
 
+    public function getUrl() {
+        return $this->url;
+    }
+
+    public function getWidth() {
+        return $this->width;
+    }
+
+    public function getHeight() {
+        return $this->height;
+    }
+
     public static function parse($json)
     {
         return new ImageView(
@@ -41,12 +53,5 @@ class ImageView
             $json->dimensions->width,
             $json->dimensions->height
         );
-    }
-
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
     }
 }

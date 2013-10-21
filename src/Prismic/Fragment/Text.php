@@ -25,10 +25,7 @@ class Text implements FragmentInterface
         return '<span class="text">' . htmlentities($this->value) . '</span>';
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getValue() {
+        return $this->value;
     }
 }

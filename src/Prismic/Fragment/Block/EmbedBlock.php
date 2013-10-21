@@ -20,10 +20,7 @@ class EmbedBlock implements BlockInterface
         $this->obj = $obj;
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getObj() {
+        return $this->obj;
     }
 }

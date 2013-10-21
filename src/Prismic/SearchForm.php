@@ -68,16 +68,15 @@ class SearchForm
      */
     public function submit()
     {
-        if ($this->form->method == 'GET' && $this->form->enctype == 'application/x-www-form-urlencoded' && $this->form->action) {
-            $url = $this->form->action . '?' . http_build_query($this->data);
+        if ($this->form->getMethod() == 'GET' && $this->form->getEnctype() == 'application/x-www-form-urlencoded' && $this->form->getAction()) {
+            $url = $this->form->getAction() . '?' . http_build_query($this->data);
 
             // @todo: refactor this
             $request = Api::getClient()->get($url);
             $response = $request->send();
 
             $response = @json_decode($response->getBody(true));
-
-            if (!$response) {
+            if (!isset($response)) {
                 throw new \RuntimeException("Unable to decode json response");
             }
 
@@ -101,7 +100,7 @@ class SearchForm
      */
     public function query($q)
     {
-        $field = $this->form->fields->q;
+        $field = $this->form->getFields()->q;
 
         $maybeDefault = property_exists($field, "default") ? $field->default : null;
         $q1 = $maybeDefault ? self::strip($maybeDefault) : "";

@@ -44,10 +44,23 @@ class DocumentLink implements LinkInterface
         );
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getTags() {
+        return $this->tags;
+    }
+
+    public function getSlug() {
+        return $this->slug;
+    }
+
+    public function isBroken() {
+        return $this->isBroken;
     }
 }

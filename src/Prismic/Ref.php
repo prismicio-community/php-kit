@@ -32,11 +32,20 @@ class Ref
         $this->maybeScheduledAt = $maybeScheduledAt;
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getRef() {
+        return $this->ref;
+    }
+
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function isMasterRef() {
+        return $this->isMasterRef;
+    }
+
+    public function getScheduledAt() {
+        return $this->maybeScheduledAt;
     }
 
     public static function parse($json)

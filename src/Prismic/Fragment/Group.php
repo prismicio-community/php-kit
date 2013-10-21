@@ -27,10 +27,11 @@ class Group
         array_push($this->blocks, $block);
     }
 
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
+    public function getTag() {
+        return $this->maybeTag;
+    }
+
+    public function getBlocks() {
+        return $this->blocks;
     }
 }
