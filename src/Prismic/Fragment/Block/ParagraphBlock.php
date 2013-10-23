@@ -22,11 +22,13 @@ class ParagraphBlock implements TextInterface
         $this->spans = $spans;
     }
 
-    public function getText() {
+    public function getText()
+    {
         return $this->text;
     }
 
-    public function getSpans() {
+    public function getSpans()
+    {
         return $this->spans;
     }
 }

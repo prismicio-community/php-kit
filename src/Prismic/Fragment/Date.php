@@ -15,7 +15,7 @@ class Date implements FragmentInterface
 {
     private $value;
 
-    function __construct($value)
+    public function __construct($value)
     {
         $this->value = $value;
     }
@@ -25,15 +25,18 @@ class Date implements FragmentInterface
         return '<time>' . $this->value . '</time>';
     }
 
-    public function asText($pattern) {
+    public function asText($pattern)
+    {
         return date($pattern, $this->asEpoch());
     }
 
-    public function asEpoch() {
+    public function asEpoch()
+    {
         return strtotime($this->value);
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 }

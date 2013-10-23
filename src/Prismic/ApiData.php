@@ -41,31 +41,38 @@ class ApiData
         $this->oauth_token = $oauth_token;
     }
 
-    public function getRefs() {
+    public function getRefs()
+    {
         return $this->refs;
     }
 
-    public function getBookmarks() {
+    public function getBookmarks()
+    {
         return $this->bookmarks;
     }
 
-    public function getTypes() {
+    public function getTypes()
+    {
         return $this->types;
     }
 
-    public function getTags() {
+    public function getTags()
+    {
         return $this->tags;
     }
 
-    public function getForms() {
+    public function getForms()
+    {
         return $this->forms;
     }
 
-    public function getOauthInitiate() {
+    public function getOauthInitiate()
+    {
         return $this->oauth_initiate;
     }
 
-    public function getOauthToken() {
+    public function getOauthToken()
+    {
         return $this->oauth_token;
     }
 }

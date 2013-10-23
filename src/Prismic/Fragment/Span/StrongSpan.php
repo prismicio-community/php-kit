@@ -23,11 +23,13 @@ class StrongSpan implements SpanInterface
         $this->end = $end;
     }
 
-    public function getStart() {
+    public function getStart()
+    {
         return $this->start;
     }
 
-    public function getEnd() {
+    public function getEnd()
+    {
         return $this->end;
     }
 }

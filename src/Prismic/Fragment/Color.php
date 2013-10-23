@@ -25,7 +25,8 @@ class Color implements FragmentInterface
         return '<span class="color">' . $this->hex . '</span>';
     }
 
-    public function getHexValue() {
+    public function getHexValue()
+    {
         return $this->hex;
     }
 }

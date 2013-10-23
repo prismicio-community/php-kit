@@ -20,7 +20,8 @@ class EmbedBlock implements BlockInterface
         $this->obj = $obj;
     }
 
-    public function getObj() {
+    public function getObj()
+    {
         return $this->obj;
     }
 }

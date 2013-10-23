@@ -16,17 +16,19 @@ class ParsedText
     private $text;
     private $spans;
 
-    function __construct($text, $spans)
+    public function __construct($text, $spans)
     {
         $this->text = $text;
         $this->spans = $spans;
     }
 
-    public function getText() {
+    public function getText()
+    {
         return $this->text;
     }
 
-    public function getSpans() {
+    public function getSpans()
+    {
         return $this->spans;
     }
 }

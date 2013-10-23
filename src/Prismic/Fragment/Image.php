@@ -36,11 +36,13 @@ class Image implements FragmentInterface
         return $this->views[$key];
      }
 
-    public function getMain() {
+    public function getMain()
+    {
         return $this->main;
     }
 
-    public function getViews() {
+    public function getViews()
+    {
         return $this->views;
     }
 }

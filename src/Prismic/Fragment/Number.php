@@ -30,7 +30,8 @@ class Number implements FragmentInterface
         return '<span class="number">' . $this->value . '</span>';
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 }

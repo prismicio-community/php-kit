@@ -25,7 +25,8 @@ class Text implements FragmentInterface
         return '<span class="text">' . htmlentities($this->value) . '</span>';
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 }

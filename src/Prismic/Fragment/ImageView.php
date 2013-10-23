@@ -34,15 +34,18 @@ class ImageView
         return $this->width / $this->height;
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
-    public function getWidth() {
+    public function getWidth()
+    {
         return $this->width;
     }
 
-    public function getHeight() {
+    public function getHeight()
+    {
         return $this->height;
     }
 

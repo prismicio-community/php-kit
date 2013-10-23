@@ -16,22 +16,25 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->structuredText = $this->document->getStructuredText('product.description');
     }
 
-
-    public function testGetFirstParagraph() {
+    public function testGetFirstParagraph()
+    {
         $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
         $this->assertEquals($content, $this->structuredText->getFirstParagraph()->getText());
     }
 
-    public function testGetFirstImage() {
+    public function testGetFirstImage()
+    {
         $this->assertEquals($this->structuredText->getFirstImage()->getView()->getUrl(), 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg');
     }
 
-    public function testGetFirstPreformatted() {
+    public function testGetFirstPreformatted()
+    {
         $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
         $this->assertEquals($content, $this->structuredText->getFirstPreformatted()->getText());
     }
 
-    public function testPreformattedBlockFormatRendering() {
+    public function testPreformattedBlockFormatRendering()
+    {
         $text = "This is a test.";
         $spans = array(
             new \Prismic\Fragment\Span\EmSpan(5, 7),
@@ -43,7 +46,8 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $structuredText->asHtml());
     }
 
-    public function testPreformattedBlockEscapeAndFormatRendering() {
+    public function testPreformattedBlockEscapeAndFormatRendering()
+    {
         $text = "This is <a> &test.";
         $spans = array(
             new \Prismic\Fragment\Span\EmSpan(5, 7),
@@ -55,7 +59,8 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $structuredText->asHtml());
     }
 
-    public function testPreformattedBlockEscapeRendering() {
+    public function testPreformattedBlockEscapeRendering()
+    {
         $text = "This is <a> test.";
         $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, array(), null);
         $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));

@@ -16,12 +16,13 @@ class ImageBlock implements BlockInterface
 
     private $view;
 
-    function __construct($view)
+    public function __construct($view)
     {
         $this->view = $view;
     }
 
-    public function getView() {
+    public function getView()
+    {
         return $this->view;
     }
 }

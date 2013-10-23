@@ -11,7 +11,6 @@
 
 namespace Prismic;
 
-
 class SearchForm
 {
     private $api;

@@ -24,15 +24,18 @@ class PreformattedBlock implements TextInterface
         $this->level = $level;
     }
 
-    public function getText() {
+    public function getText()
+    {
         return $this->text;
     }
 
-    public function getSpans() {
+    public function getSpans()
+    {
         return $this->spans;
     }
 
-    public function getLevel() {
+    public function getLevel()
+    {
         return $this->level;
     }
 }

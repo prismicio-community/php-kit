@@ -32,19 +32,23 @@ class Ref
         $this->maybeScheduledAt = $maybeScheduledAt;
     }
 
-    public function getRef() {
+    public function getRef()
+    {
         return $this->ref;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->label;
     }
 
-    public function isMasterRef() {
+    public function isMasterRef()
+    {
         return $this->isMasterRef;
     }
 
-    public function getScheduledAt() {
+    public function getScheduledAt()
+    {
         return $this->maybeScheduledAt;
     }
 

@@ -25,15 +25,18 @@ class HyperlinkSpan implements SpanInterface
         $this->link = $link;
     }
 
-    public function getStart() {
+    public function getStart()
+    {
         return $this->start;
     }
 
-    public function getEnd() {
+    public function getEnd()
+    {
         return $this->end;
     }
 
-    public function getLink() {
+    public function getLink()
+    {
         return $this->link;
     }
 }

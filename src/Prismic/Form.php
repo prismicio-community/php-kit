@@ -50,27 +50,33 @@ class Form
         return $dft;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->maybeName;
     }
 
-    public function getMethod() {
+    public function getMethod()
+    {
         return $this->method;
     }
 
-    public function getRel() {
+    public function getRel()
+    {
         return $this->maybeRel;
     }
 
-    public function getEnctype() {
+    public function getEnctype()
+    {
         return $this->enctype;
     }
 
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->fields;
     }
 }

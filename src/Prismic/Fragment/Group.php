@@ -27,11 +27,13 @@ class Group
         array_push($this->blocks, $block);
     }
 
-    public function getTag() {
+    public function getTag()
+    {
         return $this->maybeTag;
     }
 
-    public function getBlocks() {
+    public function getBlocks()
+    {
         return $this->blocks;
     }
 }

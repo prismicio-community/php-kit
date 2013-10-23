@@ -104,6 +104,7 @@ class Api
 
             $rforms->$key = new SearchForm($this, $f, $data);
         }
+
         return $rforms;
     }
 

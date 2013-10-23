@@ -22,7 +22,7 @@ class Embed implements FragmentInterface
     private $maybeHtml;
     private $oembedJson;
 
-    function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson)
+    public function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson)
     {
         $this->type = $type;
         $this->provider = $provider;
@@ -37,8 +37,7 @@ class Embed implements FragmentInterface
     {
         if (isset($this->maybeHtml)) {
             return '<div data-oembed="' . $this->url . '" data-oembed-type="' . strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->maybeHtml . '</div>';
-        }
-        else {
+        } else {
             return "";
         }
     }

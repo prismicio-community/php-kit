@@ -27,11 +27,13 @@ class WebLink implements LinkInterface
         return '<a href="' . $this->url . '">$url</a>';
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
-    public function getContentType() {
+    public function getContentType()
+    {
         return $this->maybeContentType;
     }
 

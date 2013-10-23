@@ -31,19 +31,23 @@ class MediaLink implements LinkInterface
         return '<a href="' . $this->url . '">' . $this->filename . '</a>';
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
-    public function getKind() {
+    public function getKind()
+    {
         return $this->kind;
     }
 
-    public function getSize() {
+    public function getSize()
+    {
         return $this->size;
     }
 
-    public function getFilename() {
+    public function getFilename()
+    {
         return $this->filename;
     }
 
