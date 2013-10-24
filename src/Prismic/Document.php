@@ -420,11 +420,6 @@ class Document
      */
     public function __toString()
     {
-        $json = array();
-        foreach($this->fragments as $key => $fragment) {
-            $strippedKey = str_replace($this->type.'.', '', $key);
-            $json[$strippedKey] = (string)$fragment;
-        }
-        return json_encode($json);
+        return $this->id;
     }
 }
