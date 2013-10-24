@@ -57,6 +57,6 @@ class Embed implements FragmentInterface
 
     public function __toString()
     {
-        return $this->url;
+        return $this->url ?: '';
     }
 }
