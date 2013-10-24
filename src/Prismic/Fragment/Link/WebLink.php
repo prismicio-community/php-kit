@@ -44,6 +44,6 @@ class WebLink implements LinkInterface
 
     public function __toString()
     {
-        return $this->getUrl();
+        return $this->getUrl() ?: '';
     }
 }

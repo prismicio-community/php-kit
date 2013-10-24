@@ -48,6 +48,6 @@ class Image implements FragmentInterface
 
     public function __toString()
     {
-        return $this->getMain()->getUrl();
+        return $this->getMain()->getUrl() ?: '';
     }
 }

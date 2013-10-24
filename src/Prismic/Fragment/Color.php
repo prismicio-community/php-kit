@@ -32,6 +32,6 @@ class Color implements FragmentInterface
 
     public function __toString()
     {
-        return $this->getHexValue();
+        return $this->getHexValue() ?: '';
     }
 }

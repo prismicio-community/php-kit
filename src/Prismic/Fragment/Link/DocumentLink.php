@@ -71,6 +71,6 @@ class DocumentLink implements LinkInterface
 
     public function __toString()
     {
-        return $this->getId();
+        return $this->getId() ?: '';
     }
 }

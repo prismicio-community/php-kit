@@ -34,6 +34,6 @@ class ParsedText
 
     public function __toString()
     {
-        return $this->getText();
+        return $this->getText() ?: '';
     }
 }

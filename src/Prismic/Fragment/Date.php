@@ -42,6 +42,6 @@ class Date implements FragmentInterface
 
     public function __toString()
     {
-        return $this->getValue();
+        return $this->getValue() ?: '';
     }
 }

@@ -343,6 +343,6 @@ class StructuredText implements FragmentInterface
 
     public function __toString()
     {
-        return $this->asText();
+        return $this->asText() ?: '';
     }
 }

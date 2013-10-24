@@ -37,6 +37,6 @@ class Number implements FragmentInterface
 
     public function __toString()
     {
-        return (string)$this->getValue();
+        return (string)$this->getValue() ?: '';
     }
 }
