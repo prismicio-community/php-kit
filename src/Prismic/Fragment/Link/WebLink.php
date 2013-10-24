@@ -41,4 +41,9 @@ class WebLink implements LinkInterface
     {
         return new WebLink($json->url);
     }
+
+    public function __toString()
+    {
+        return $this->getUrl();
+    }
 }

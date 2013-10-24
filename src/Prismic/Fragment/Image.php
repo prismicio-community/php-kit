@@ -45,4 +45,9 @@ class Image implements FragmentInterface
     {
         return $this->views;
     }
+
+    public function __toString()
+    {
+        return $this->getMain()->getUrl();
+    }
 }

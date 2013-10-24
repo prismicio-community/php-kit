@@ -340,4 +340,9 @@ class StructuredText implements FragmentInterface
 
         return new StructuredText($blocks);
     }
+
+    public function __toString()
+    {
+        return $this->asText();
+    }
 }

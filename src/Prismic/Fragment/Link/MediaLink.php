@@ -60,4 +60,9 @@ class MediaLink implements LinkInterface
             $json->file->name
         );
     }
+
+    public function __toString()
+    {
+        return $this->getUrl();
+    }
 }

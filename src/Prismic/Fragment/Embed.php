@@ -54,4 +54,9 @@ class Embed implements FragmentInterface
             $json->oembed
         );
     }
+
+    public function __toString()
+    {
+        return $this->url;
+    }
 }
