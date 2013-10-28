@@ -56,7 +56,7 @@ class Document
     /**
      * @return string
      */
-    public function slug()
+    public function getSlug()
     {
         if (count($this->slugs) > 0) {
             return $this->slugs[0];

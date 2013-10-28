@@ -17,7 +17,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testSlug()
     {
-        $this->assertEquals($this->document->slug(), 'cool-coconut-macaron');
+        $this->assertEquals($this->document->getSlug(), 'cool-coconut-macaron');
     }
 
     public function testContainsSlug()
