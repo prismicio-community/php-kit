@@ -65,7 +65,10 @@ class Api
 
     public function bookmark($name)
     {
-        return $this->bookmarks()->{$name};
+        if (isSet($this->bookmarks()->{$name})) {
+            return $this->bookmarks()->{$name};
+        }
+        return null;
     }
 
     /**
@@ -152,9 +155,11 @@ class Api
         }
 
         $apiData = new ApiData(
-            array_map(function ($ref) {
-               return Ref::parse($ref);
-            }, $response->refs),
+            array_map(
+                function ($ref) {
+                    return Ref::parse($ref);
+                }, $response->refs
+            ),
             $response->bookmarks,
             $response->types,
             $response->tags,
