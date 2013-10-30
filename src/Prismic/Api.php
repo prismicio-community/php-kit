@@ -63,6 +63,11 @@ class Api
         return $this->data->getBookmarks();
     }
 
+    public function bookmark($name)
+    {
+        return $this->bookmarks()->{$name};
+    }
+
     /**
      * returns the master reference repository
      *

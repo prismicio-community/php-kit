@@ -28,8 +28,7 @@ abstract class LinkResolver {
   }
 
   public function isBookmark($api, $link, $bookmark) {
-    $bookmarks = $api->bookmarks();
-    $maybeId = $bookmarks->{$bookmark};
+    $maybeId = $api->bookmark($bookmark);
     if ($maybeId == $link->getId()) {
       return true;
     }
