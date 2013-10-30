@@ -30,7 +30,7 @@ class DocumentLink implements LinkInterface
 
     public function asHtml($linkResolver)
     {
-        return '<a href="' . $linkResolver($this) . '">' . $this->slug . '</a>';
+        return '<a href="' . $linkResolver->resolve($this) . '">' . $this->slug . '</a>';
     }
 
     public static function parse($json)
