@@ -22,7 +22,7 @@ class Image implements FragmentInterface
         $this->views = $views;
     }
 
-    public function asHtml($linkResolver = null;)
+    public function asHtml($linkResolver = null)
     {
         return $this->main->asHtml();
     }
