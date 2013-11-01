@@ -178,7 +178,7 @@ class Document
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Date) {
             if (isset($pattern)) {
-                return $fragment->pattern($pattern);
+                return $fragment->formatted($pattern);
             }
 
             return $fragment;
