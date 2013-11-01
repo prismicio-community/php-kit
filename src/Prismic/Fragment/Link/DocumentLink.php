@@ -49,6 +49,11 @@ class DocumentLink implements LinkInterface
         return $this->id;
     }
 
+    public function asText()
+    {
+        return $this->id;
+    }
+
     public function getType()
     {
         return $this->type;

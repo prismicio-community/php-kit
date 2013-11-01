@@ -20,9 +20,14 @@ class Text implements FragmentInterface
         $this->value = $value;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null)
     {
         return '<span class="text">' . htmlentities($this->value) . '</span>';
+    }
+
+    public function asText()
+    {
+        return $this->getValue();
     }
 
     public function getValue()
