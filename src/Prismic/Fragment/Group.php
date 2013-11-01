@@ -24,7 +24,12 @@ class Group
 
     public function asText()
     {
-        return $this->maybeTag;
+        return null;
+    }
+
+    public function asHtml($linkResolver = null)
+    {
+        return null;
     }
 
     public function addBlock($block)
