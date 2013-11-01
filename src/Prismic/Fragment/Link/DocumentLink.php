@@ -68,4 +68,9 @@ class DocumentLink implements LinkInterface
     {
         return $this->isBroken;
     }
+
+    public function __toString()
+    {
+        return $this->getId() ?: '';
+    }
 }

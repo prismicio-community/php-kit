@@ -24,7 +24,7 @@ class WebLink implements LinkInterface
 
     public function asHtml($linkResolver = null)
     {
-        return '<a href="' . $this->url . '">$url</a>';
+        return '<a href="' . $this->url . '">' . $this->url . '</a>';
     }
 
     public function getUrl()
@@ -40,5 +40,10 @@ class WebLink implements LinkInterface
     public static function parse($json)
     {
         return new WebLink($json->url);
+    }
+
+    public function __toString()
+    {
+        return $this->getUrl() ?: '';
     }
 }

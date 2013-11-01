@@ -400,4 +400,26 @@ class Document
 
         return new Document($json->id, $json->type, $json->href, $json->tags, $json->slugs, $fragments);
     }
+
+    /**
+     * Handle dynamic attribute calls to the document
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        $fragment = $this->get($this->type.'.'.$key);
+        return $fragment;
+    }
+
+    /**
+     * Handle string typecasting of the document
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->id;
+    }
 }

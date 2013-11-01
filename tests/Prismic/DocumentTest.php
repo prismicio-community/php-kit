@@ -99,4 +99,21 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->document->getHtml('product.birthdate'), '<time>2013-10-23</time>');
         //TODO
     }
+
+    public function testToString()
+    {
+        $this->assertEquals((string)$this->document, 'UjHYesuvzT0A_yi6');
+
+        $this->document->name = null;
+        $this->assertEmpty((string)$this->document->name);
+    }
+
+    public function testDynamicGet()
+    {
+        $this->assertEquals($this->document->name, 'Cool Coconut Macaron');
+        $this->assertEquals((string)$this->document->price, 2.5);
+        $this->assertEquals((string)$this->document->adult, 'yes');
+        $this->assertEquals((string)$this->document->birthdate, '2013-10-23');
+        $this->assertTrue(null != (string)$this->document->image);
+    }
 }

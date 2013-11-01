@@ -29,4 +29,9 @@ class Text implements FragmentInterface
     {
         return $this->value;
     }
+
+    public function __toString()
+    {
+        return $this->getValue() ?: '';
+    }
 }

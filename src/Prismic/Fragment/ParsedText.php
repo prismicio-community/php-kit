@@ -31,4 +31,9 @@ class ParsedText
     {
         return $this->spans;
     }
+
+    public function __toString()
+    {
+        return $this->getText() ?: '';
+    }
 }

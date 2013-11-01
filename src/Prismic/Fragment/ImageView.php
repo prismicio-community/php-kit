@@ -57,4 +57,9 @@ class ImageView
             $json->dimensions->height
         );
     }
+
+    public function __toString()
+    {
+        return $this->getUrl() ?: '';
+    }
 }
