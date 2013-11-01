@@ -27,6 +27,11 @@ class Image implements FragmentInterface
         return $this->main->asHtml();
     }
 
+    public function asText()
+    {
+        return $this->main->getUrl();
+    }
+
     public function getView($key)
     {
         if (strtolower($key) == "main") {

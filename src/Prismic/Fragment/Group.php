@@ -22,6 +22,11 @@ class Group
         $this->blocks = $blocks;
     }
 
+    public function asText()
+    {
+        return $this->maybeTag;
+    }
+
     public function addBlock($block)
     {
         array_push($this->blocks, $block);

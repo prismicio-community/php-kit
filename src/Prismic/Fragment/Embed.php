@@ -42,6 +42,11 @@ class Embed implements FragmentInterface
         }
     }
 
+    public function asText()
+    {
+        return $this->url;
+    }
+
     public static function parse($json)
     {
         return new Embed(
