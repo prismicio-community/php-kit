@@ -20,12 +20,17 @@ class Number implements FragmentInterface
         $this->value = $value;
     }
 
-    public function asText($pattern)
+    public function format($pattern)
     {
         return sprintf($pattern, $this->value);
     }
 
-    public function asHtml()
+    public function asText()
+    {
+        return $this->getValue();
+    }
+
+    public function asHtml($linkResolver = null)
     {
         return '<span class="number">' . $this->value . '</span>';
     }

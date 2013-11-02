@@ -20,9 +20,14 @@ class Color implements FragmentInterface
         $this->hex = $hex;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null)
     {
         return '<span class="color">' . $this->hex . '</span>';
+    }
+
+    public function asText()
+    {
+        return $this->getHexValue();
     }
 
     public function getHexValue()

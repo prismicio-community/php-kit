@@ -20,12 +20,17 @@ class Date implements FragmentInterface
         $this->value = $value;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null)
     {
         return '<time>' . $this->value . '</time>';
     }
 
-    public function asText($pattern)
+    public function asText()
+    {
+        return $this->value;
+    }
+
+    public function formatted($pattern)
     {
         return date($pattern, $this->asEpoch());
     }

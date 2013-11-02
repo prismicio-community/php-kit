@@ -33,13 +33,18 @@ class Embed implements FragmentInterface
         $this->oembedJson = $oembedJson;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null)
     {
         if (isset($this->maybeHtml)) {
             return '<div data-oembed="' . $this->url . '" data-oembed-type="' . strtolower($this->type) . '" data-oembed-provider="' . strtolower($this->provider) . '">' . $this->maybeHtml . '</div>';
         } else {
             return "";
         }
+    }
+
+    public function asText()
+    {
+        return $this->url;
     }
 
     public static function parse($json)

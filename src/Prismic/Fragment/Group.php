@@ -22,6 +22,16 @@ class Group
         $this->blocks = $blocks;
     }
 
+    public function asText()
+    {
+        return null;
+    }
+
+    public function asHtml($linkResolver = null)
+    {
+        return null;
+    }
+
     public function addBlock($block)
     {
         array_push($this->blocks, $block);
