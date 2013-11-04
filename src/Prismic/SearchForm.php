@@ -29,6 +29,35 @@ class SearchForm
         $this->data = $data;
     }
 
+    public function set($key, $value)
+    {
+        if (isset($key) && isset($value)) {
+            $fields = $this->form->getFields();
+            $field = $fields[$key];
+
+            if (is_int($value) && $field->getType() != "Integer") {
+                throw new \RuntimeException("Cannot use a Int as value for field " . $key);
+            } else {
+                $data = $this->data;
+                if ($field->isMultiple()) {
+                    $values = isset($data[$key]) ? $data[$key] : array();
+                    if (is_array($values)) {
+                        array_push($values, $value);
+                    } else {
+                        $values = array($value);
+                    }
+                    $data[$key] = $values;
+                } else {
+                    $data[$key] = $value;
+                }
+            }
+
+            return new SearchForm($this->api, $this->form, $data);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Set the repository reference
      *
@@ -38,16 +67,13 @@ class SearchForm
      */
     public function ref($ref)
     {
-        $data = $this->data;
-        $data['ref'] = $ref;
-
-        return new SearchForm($this->api, $this->form, $data);
+        return $this->set("ref", $ref);
     }
 
     /**
      * Set the repository page size
      *
-     * @param  int $pageSize
+     * @param  int        $pageSize
      * @return SearchForm
      */
     public function pageSize($pageSize)
@@ -61,7 +87,7 @@ class SearchForm
     /**
      * Set the repository page
      *
-     * @param  int  $page
+     * @param  int        $page
      * @return SearchForm
      */
     public function page($page)
@@ -79,11 +105,11 @@ class SearchForm
      *
      * @return array
      */
-    private static function parseResult($results)
+    private static function parseResult($json)
     {
-        return array_map(function ($json) {
-            return Document::parse($json);
-        }, $results);
+        return array_map(function ($doc) {
+            return Document::parse($doc);
+        }, isset($json->results) ? $json->results : $json);
     }
 
     /**
@@ -97,7 +123,6 @@ class SearchForm
     {
         if ($this->form->getMethod() == 'GET' && $this->form->getEnctype() == 'application/x-www-form-urlencoded' && $this->form->getAction()) {
             $url = $this->form->getAction() . '?' . http_build_query($this->data);
-
             // @todo: refactor this
             $request = Api::getClient()->get($url);
             $response = $request->send();
@@ -127,15 +152,19 @@ class SearchForm
      */
     public function query($q)
     {
-        $field = $this->form->getFields()->q;
+        $field = $this->form->getFields()['q'];
+        if ($field->isMultiple()) {
+            return set("q", $q);
+        } else {
+            // Temporary Hack for backward compatibility
+            $maybeDefault = property_exists($field, "default") ? $field->default : null;
+            $q1 = $maybeDefault ? self::strip($maybeDefault) : "";
 
-        $maybeDefault = property_exists($field, "default") ? $field->default : null;
-        $q1 = $maybeDefault ? self::strip($maybeDefault) : "";
+            $data = $this->data;
+            $data['q'] = '[' . $q1 . self::strip($q) . ']';
 
-        $data = $this->data;
-        $data['q'] = '[' . $q1 . self::strip($q) . ']';
-
-        return new SearchForm($this->api, $this->form, $data);
+            return new SearchForm($this->api, $this->form, $data);
+        }
     }
 
     /**

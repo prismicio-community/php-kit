@@ -13,6 +13,7 @@ namespace Prismic;
 
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Client;
+use Prismic\FieldForm;
 
 class Api
 {
@@ -68,6 +69,7 @@ class Api
         if (isSet($this->bookmarks()->{$name})) {
             return $this->bookmarks()->{$name};
         }
+
         return null;
     }
 
@@ -95,21 +97,24 @@ class Api
         $forms = $this->data->getForms();
         $rforms = new \stdClass();
         foreach ($forms as $key => $form) {
+
+            $fields = array();
+            foreach ($form->fields as $name => $field) {
+                $maybeDefault = isset($field->default) ? $field->default : null;
+                $isMultiple = isset($field->multiple) ? $field->multiple : false;
+                $fields[$name] = new FieldForm($field->type, $isMultiple, $maybeDefault);
+            }
+
             $f = new Form(
                 isset($form->name) ? $form->name : null,
                 $form->method,
                 isset($form->rel) ? $form->rel : null,
                 $form->enctype,
                 $form->action,
-                $form->fields
+                $fields
             );
 
             $data = $f->defaultData();
-
-            if ($this->accessToken) {
-                $data['access_token'] = $this->accessToken;
-            }
-
             $rforms->$key = new SearchForm($this, $f, $data);
         }
 
@@ -143,9 +148,8 @@ class Api
     public static function get($action, $accessToken = null)
     {
         $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-
-        $request = self::getClient()->get($url);
-
+        $client = self::getClient();
+        $request = $client->get($url);
         $response = $request->send();
 
         $response = @json_decode($response->getBody(true));

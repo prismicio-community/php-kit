@@ -24,7 +24,7 @@ abstract class LinkResolver
      *
      * @return String
      */
-    public abstract function resolve($link);
+    abstract public function resolve($link);
 
     /**
      * Returns the application-specific URL related to this Document
@@ -79,6 +79,7 @@ abstract class LinkResolver
         if ($maybeId == $link->getId()) {
             return true;
         }
+
         return false;
     }
 

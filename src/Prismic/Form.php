@@ -42,8 +42,13 @@ class Form
     {
         $dft = array();
         foreach ($this->fields as $key => $field) {
-            if (property_exists($field, "default")) {
-                $dft[$key] = $field->default;
+            $default = $field->getDefaultValue();
+            if (isset($default)) {
+                if ($field->isMultiple()) {
+                    $dft[$key] = array($default);
+                } else {
+                    $dft[$key] = $default;
+                }
             }
         }
 
