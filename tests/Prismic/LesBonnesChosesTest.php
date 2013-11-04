@@ -3,7 +3,6 @@
 namespace Prismic\Test;
 
 use Prismic\Api;
-use Prismic\Response;
 
 class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +56,8 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($nbRefs, 3);
     }
 
-    public function testSubmitProductsFormInTheFuture() {
+    public function testSubmitProductsFormInTheFuture()
+    {
         $api = Api::get(self::$testRepository, self::$previewToken);
         $refs = $api->refs();
         $future = $refs['Announcement of new SF shop'];

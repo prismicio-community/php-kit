@@ -11,7 +11,6 @@
 
 namespace Prismic;
 
-use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Client;
 use Prismic\FieldForm;
 
@@ -135,7 +134,8 @@ class Api
         return $this->data->getOauthToken();
     }
 
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 

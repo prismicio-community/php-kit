@@ -153,7 +153,8 @@ class SearchForm
      */
     public function query($q)
     {
-        $field = $this->form->getFields()['q'];
+        $fields = $this->form->getFields();
+        $field = $fields['q'];
         if ($field->isMultiple()) {
             return $this->set("q", $q);
         } else {
