@@ -20,8 +20,6 @@ class Api
     protected $accessToken;
     protected $data;
 
-    protected static $client;
-
     /**
      * @param string $data
      * @param string $accessToken
@@ -137,6 +135,10 @@ class Api
         return $this->data->getOauthToken();
     }
 
+    public function getData() {
+        return $this->data;
+    }
+
     /**
      * This method is static to respect others API
      *
@@ -145,10 +147,10 @@ class Api
      *
      * @return Api
      */
-    public static function get($action, $accessToken = null)
+    public static function get($action, $accessToken = null, $client = null)
     {
         $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-        $client = self::getClient();
+        $client = isset($client) ? $client : self::defaultClient();
         $request = $client->get($url);
         $response = $request->send();
 
@@ -175,33 +177,16 @@ class Api
         return new Api($apiData, $accessToken);
     }
 
-    /**
-     * This is an entry point to alter the client used by the API
-     *
-     * @param \Guzzle\Http\ClientInterface $client
-     */
-    public static function setClient(ClientInterface $client)
+    public static function defaultClient()
     {
-        self::$client = $client;
-    }
-
-    /**
-     * @return \Guzzle\Http\Client
-     */
-    public static function getClient()
-    {
-        if (self::$client === null) {
-            self::$client = new Client('', array(
-                Client::CURL_OPTIONS => array(
-                    CURLOPT_CONNECTTIMEOUT => 10,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_TIMEOUT        => 60,
-                    CURLOPT_USERAGENT      => 'prismic-php-0.1',
-                    CURLOPT_HTTPHEADER     => array('Accept: application/json')
-                )
-            ));
-        }
-
-        return self::$client;
+        return new Client('', array(
+            Client::CURL_OPTIONS => array(
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT        => 60,
+                CURLOPT_USERAGENT      => 'prismic-php-0.1',
+                CURLOPT_HTTPHEADER     => array('Accept: application/json')
+            )
+        ));
     }
 }

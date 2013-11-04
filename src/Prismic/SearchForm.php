@@ -123,8 +123,9 @@ class SearchForm
     {
         if ($this->form->getMethod() == 'GET' && $this->form->getEnctype() == 'application/x-www-form-urlencoded' && $this->form->getAction()) {
             $url = $this->form->getAction() . '?' . http_build_query($this->data);
-            // @todo: refactor this
-            $request = Api::getClient()->get($url);
+            $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
+
+            $request = Api::defaultClient()->get($url);
             $response = $request->send();
 
             $response = @json_decode($response->getBody(true));
@@ -154,7 +155,7 @@ class SearchForm
     {
         $field = $this->form->getFields()['q'];
         if ($field->isMultiple()) {
-            return set("q", $q);
+            return $this->set("q", $q);
         } else {
             // Temporary Hack for backward compatibility
             $maybeDefault = property_exists($field, "default") ? $field->default : null;

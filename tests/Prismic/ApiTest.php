@@ -23,9 +23,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getMock('Guzzle\Http\Client');
         $client->expects($this->once())->method('get')->will($this->returnValue($request));
 
-        Api::setClient($client);
-
-        Api::get('don\'t care about this value');
+        Api::get('don\'t care about this value', null, $client);
     }
 
     public function testValidApiCall()
@@ -41,9 +39,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $client = $this->getMock('Guzzle\Http\Client');
         $client->expects($this->once())->method('get')->will($this->returnValue($request));
 
-        Api::setClient($client);
-
-        $api = Api::get('don\'t care about this value');
+        $api = Api::get('don\'t care about this value', null, $client);
 
         $this->assertInstanceOf('Prismic\Api', $api);
 

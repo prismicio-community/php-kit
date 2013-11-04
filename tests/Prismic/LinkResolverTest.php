@@ -38,8 +38,7 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->once())->method('send')->will($this->returnValue($response));
         $client = $this->getMock('Guzzle\Http\Client');
         $client->expects($this->once())->method('get')->will($this->returnValue($request));
-        Api::setClient($client);
-        $this->api = Api::get('don\'t care about this value');
+        $this->api = Api::get('don\'t care about this value', null, $client);
     }
 
     public function testResolveDocumentLink()
