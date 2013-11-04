@@ -45,6 +45,34 @@ class SearchForm
     }
 
     /**
+     * Set the repository page size
+     *
+     * @param  int $pageSize
+     * @return SearchForm
+     */
+    public function pageSize($pageSize)
+    {
+        $data = $this->data;
+        $data['pageSize'] = $pageSize;
+
+        return new SearchForm($this->api, $this->form, $data);
+    }
+
+    /**
+     * Set the repository page
+     *
+     * @param  int  $page
+     * @return SearchForm
+     */
+    public function page($page)
+    {
+        $data = $this->data;
+        $data['page'] = $page;
+
+        return new SearchForm($this->api, $this->form, $data);
+    }
+
+    /**
      * Create documents from the search results
      *
      * @param $results
