@@ -159,7 +159,7 @@ class SearchForm
             return $this->set("q", $q);
         } else {
             // Temporary Hack for backward compatibility
-            $maybeDefault = property_exists($field, "default") ? $field->default : null;
+            $maybeDefault = property_exists($field, "defaultValue") ? $field->getDefaultValue() : null;
             $q1 = $maybeDefault ? self::strip($maybeDefault) : "";
 
             $data = $this->data;
