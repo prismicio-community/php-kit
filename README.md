@@ -2,12 +2,16 @@
 
 ## PHP development kit for prismic.io
 
-### Installation using Composer
+### Getting started
 
-Add the dependency:
+#### Install the kit for your project
+
+The best way to install the library is with the composer package manager ([install it](https://getcomposer.org/doc/00-intro.md) if you haven't yet)
+
+Then run this from your project's root in order to add the dependency:
 
 ```bash
-php composer.phar require prismic/php-sdk
+composer require prismic/php-sdk
 ```
 
 If asked for a version, type in 'dev-master' (unless you want another version):
@@ -16,7 +20,7 @@ If asked for a version, type in 'dev-master' (unless you want another version):
 Please provide a version constraint for the prismic/php-sdk requirement: dev-master
 ```
 
-### Usage
+Usage in your PHP code:
 
 ```php
 <?php
@@ -26,6 +30,55 @@ include_once __DIR__.'/../vendor/autoload.php';
 use Prismic\Api;
 
 ```
+
+#### Get started with prismic.io
+
+You can find out [how to get started with prismic.io](https://developers.prismic.io/documentation/UjBaQsuvzdIHvE4D/getting-started) on our [prismic.io developer's portal](https://developers.prismic.io/).
+
+#### Get started using the kit
+
+Also on our [prismic.io developer's portal](https://developers.prismic.io/), on top of our full documentation, you will:
+ * get a thorough introduction of [how to use prismic.io kits](https://developers.prismic.io/documentation/UjBe8bGIJ3EKtgBZ/api-documentation#kits-and-helpers), including this one.
+ * see [what else is available for PHP](https://developers.prismic.io/technologies/UjBh98uvzeMJvE4q/php): starter projects, examples, ...
+
+
+#### Kit's detailed documentation
+
+You can find the documentation of the PHP kit as comments within the kit's source code.
+ *(Feel free to talk to us about generated docs for PHP.)*
+
+Thanks to PHP's syntax, this kit contains some mild differences and syntastic sugar over the section of our documentation that tells you [how to use prismic.io kits](https://developers.prismic.io/documentation/UjBe8bGIJ3EKtgBZ/api-documentation#kits-and-helpers) in general (which you should read first). The differences are listed here:
+ * 
+
+*(Feel free to contribute differences you find.)*
+
+### Changelog
+
+Need to see what changed, or to upgrade your kit? Check out [this kit's changelog](changelog.md).
+
+### Contribute to the kit
+
+Contribution is open to all developer levels, read our "[Contribute to the official kits](https://developers.prismic.io/documentation/UszOeAEAANUlwFpp/contribute-to-the-official-kits)" documentation to learn more.
+
+#### Install the kit locally
+
+Clone this GitHub repository, then [install Composer](https://getcomposer.org/doc/00-intro.md) if you haven't, and run:
+```bash
+composer install
+```
+
+#### Test
+
+Please write tests for any bugfix or new feature.
+
+If you find existing code that is not optimally tested and wish to make it better, we really appreciate it; but you should document it on its own branch and its own pull request.
+
+#### Documentation
+
+Please document any bugfix or new feature.
+
+If you find existing code that is not optimally documented and wish to make it better, we really appreciate it; but you should document it on its own branch and its own pull request.
+
 
 ### Licence
 
