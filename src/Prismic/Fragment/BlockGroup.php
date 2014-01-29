@@ -11,7 +11,7 @@
 
 namespace Prismic\Fragment;
 
-class Group
+class BlockGroup
 {
     private $maybeTag;
     private $blocks;
