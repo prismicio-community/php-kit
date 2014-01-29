@@ -86,6 +86,7 @@ class Document
      */
     public function get($field)
     {
+        $single = null;
         if (!array_key_exists($field, $this->fragments)) {
             $multi = $this->getAll($field);
             if (!empty($multi)) {
