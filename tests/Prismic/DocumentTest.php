@@ -108,17 +108,19 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testGetGroup()
     {
         $masterRef = $this->micro_api->master()->getRef();
-        $docchapter = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UrDndQEAALQMyrXF")]]')->submit()[0];
+        $docchapter = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UrDndQEAALQMyrXF")]]')->submit();
+        $docchapter = $docchapter[0];
 
-        $this->assertEquals(count($docchapter->getGroup('docchapter.docs')->getArray()), 2);
-        $this->assertEquals(implode("|", array_keys($docchapter->getGroup('docchapter.docs')->getArray()[0])), "linktodoc");
-        $this->assertEquals($docchapter->getGroup('docchapter.docs')->getArray()[0]['linktodoc']->getType(), 'doc');
-        $this->assertEquals($docchapter->getGroup('docchapter.docs')->getArray()[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
+        $docchapterdocs = $docchapter->getGroup('docchapter.docs')->getArray();
+        $this->assertEquals(count($docchapterdocs), 2);
+        $this->assertEquals(implode("|", array_keys($docchapterdocs[0])), "linktodoc");
+        $this->assertEquals($docchapterdocs[0]['linktodoc']->getType(), 'doc');
+        $this->assertEquals($docchapterdocs[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
 
         $getSlug = function($doclink) {
             return $doclink['linktodoc']->getSlug();
         };
-        $this->assertEquals(implode(' ', array_map($getSlug, $docchapter->getGroup('docchapter.docs')->getArray())), "with-jquery with-bootstrap");
+        $this->assertEquals(implode(' ', array_map($getSlug, $docchapterdocs)), "with-jquery with-bootstrap");
 
         $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section>');
     }

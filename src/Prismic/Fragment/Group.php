@@ -50,7 +50,7 @@ class Group implements FragmentInterface
     }
 
     public static function parseSubfragmentList($json) {
-        $subfragments = [];
+        $subfragments = Array();
         foreach ($json as $subfragment_name => $subfragmentJson) {
             $subfragment = Document::parseFragment($subfragmentJson);
             if (isset($subfragment)) {
