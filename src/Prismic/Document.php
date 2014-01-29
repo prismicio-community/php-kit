@@ -22,6 +22,7 @@ use Prismic\Fragment\Link\MediaLink;
 use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
+use Prismic\Fragment\Group;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\TextInterface;
 
@@ -274,6 +275,16 @@ class Document
         return null;
     }
 
+    public function getGroup($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof Group) {
+            return $fragment;
+        }
+
+        return null;
+    }
+
     public function asHtml($linkResolver = null)
     {
         $html = null;
@@ -366,6 +377,10 @@ class Document
 
             if ($json->type === "StructuredText") {
                 return StructuredText::parse($json->value);
+            }
+
+            if ($json->type === "Group") {
+                return Group::parse($json->value);
             }
 
             return null;
