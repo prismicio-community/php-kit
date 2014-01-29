@@ -3,16 +3,21 @@
 namespace Prismic\Test;
 
 use Prismic\Document;
+use Prismic\Api;
 
 class DocumentTest extends \PHPUnit_Framework_TestCase
 {
+    private static $testRepository = 'http://micro.prismic.io/api';
 
     protected $document;
+    protected $micro_api;
 
     protected function setUp()
     {
         $search = json_decode(file_get_contents(__DIR__.'/../fixtures/search.json'));
         $this->document = Document::parse($search[0]);
+        $this->micro_api = Api::get(self::$testRepository);
+        $this->linkResolver = new FakeLinkResolver();
     }
 
     public function testSlug()
@@ -98,5 +103,23 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->document->getHtml('product.adult'), '<span class="text">yes</span>');
         $this->assertEquals($this->document->getHtml('product.birthdate'), '<time>2013-10-23</time>');
         //TODO
+    }
+
+    public function testGetGroup()
+    {
+        $masterRef = $this->micro_api->master()->getRef();
+        $docchapter = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UrDndQEAALQMyrXF")]]')->submit()[0];
+
+        $this->assertEquals(count($docchapter->getGroup('docchapter.docs')->getArray()), 2);
+        $this->assertEquals(implode("|", array_keys($docchapter->getGroup('docchapter.docs')->getArray()[0])), "linktodoc");
+        $this->assertEquals($docchapter->getGroup('docchapter.docs')->getArray()[0]['linktodoc']->getType(), 'doc');
+        $this->assertEquals($docchapter->getGroup('docchapter.docs')->getArray()[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
+
+        $getSlug = function($doclink) {
+            return $doclink['linktodoc']->getSlug();
+        };
+        $this->assertEquals(implode(' ', array_map($getSlug, $docchapter->getGroup('docchapter.docs')->getArray())), "with-jquery with-bootstrap");
+
+        $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section>');
     }
 }
