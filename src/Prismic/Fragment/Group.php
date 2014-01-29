@@ -11,39 +11,65 @@
 
 namespace Prismic\Fragment;
 
-class Group
+use Prismic\Document;
+
+class Group implements FragmentInterface
 {
-    private $maybeTag;
-    private $blocks;
+    private $array;
 
-    public function __construct($maybeTag, $blocks)
+    public function __construct($array)
     {
-        $this->maybeTag = $maybeTag;
-        $this->blocks = $blocks;
-    }
-
-    public function asText()
-    {
-        return null;
+        $this->array = $array;
     }
 
     public function asHtml($linkResolver = null)
     {
-        return null;
+        $string = "";
+        foreach ($this->array as $subfragments) {
+            foreach ($subfragments as $subfragment_name => $subfragment) {
+                $string .= "<section data-field=\"{$subfragment_name}\">{$subfragment->asHtml($linkResolver)}</section>";
+            }
+        }
+        return $string;
     }
 
-    public function addBlock($block)
+    public function asText()
     {
-        array_push($this->blocks, $block);
+        $string = "";
+        foreach ($this->array as $subfragments) {
+            foreach ($subfragments as $subfragment_name => $subfragment) {
+                $string .= $subfragment->asText();
+            }
+        }
+        return $string;
     }
 
-    public function getTag()
+    public function getArray()
     {
-        return $this->maybeTag;
+        return $this->array;
     }
 
-    public function getBlocks()
+    public static function parseSubfragmentList($json) {
+        $subfragments = Array();
+        foreach ($json as $subfragment_name => $subfragmentJson) {
+            $subfragment = Document::parseFragment($subfragmentJson);
+            if (isset($subfragment)) {
+                $subfragments[$subfragment_name] = $subfragment;
+            }
+        }
+        return $subfragments;
+    }
+
+    public static function parse($json)
     {
-        return $this->blocks;
+        $array = array();
+        foreach ($json as $subfragmentListJson) {
+            $subfragmentList = Group::parseSubfragmentList($subfragmentListJson);
+            if (isset($subfragmentList)) {
+                array_push($array, $subfragmentList);
+            }
+        }
+
+        return new Group($array);
     }
 }
