@@ -16,7 +16,7 @@ class Image implements FragmentInterface
     private $main;
     private $views;
 
-    public function __construct($main, $views=array())
+    public function __construct($main, $views = array())
     {
         $this->main = $main;
         $this->views = $views;
@@ -39,7 +39,7 @@ class Image implements FragmentInterface
         }
 
         return $this->views[$key];
-     }
+    }
 
     public function getMain()
     {

@@ -35,7 +35,7 @@ abstract class LinkResolver
      */
     public function resolveDocument($document)
     {
-        return $this->resolve($this->_asLink($document));
+        return $this->resolve($this->asLink($document));
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class LinkResolver
      */
     public function isBookmarkDocument($api, $document, $bookmark)
     {
-        return $this->isBookmark($api, $this->_asLink($document), $bookmark);
+        return $this->isBookmark($api, $this->asLink($document), $bookmark);
     }
 
     /**
@@ -90,9 +90,14 @@ abstract class LinkResolver
      *
      * @return Fragment\Link\DocumentLink The document link
      */
-    private function _asLink($document)
+    private function asLink($document)
     {
-        return new Fragment\Link\DocumentLink($document->getId(), $document->getType(), $document->getTags(), $document->getSlug(), false);
+        return new Fragment\Link\DocumentLink(
+            $document->getId(),
+            $document->getType(),
+            $document->getTags(),
+            $document->getSlug(),
+            false
+        );
     }
-
 }

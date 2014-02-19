@@ -121,7 +121,10 @@ class SearchForm
      */
     public function submit()
     {
-        if ($this->form->getMethod() == 'GET' && $this->form->getEnctype() == 'application/x-www-form-urlencoded' && $this->form->getAction()) {
+        if ($this->form->getMethod() == 'GET' &&
+            $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
+            $this->form->getAction()
+        ) {
             $url = $this->form->getAction() . '?' . http_build_query($this->data);
             $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
 

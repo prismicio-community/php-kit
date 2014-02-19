@@ -63,7 +63,7 @@ class Api
 
     public function bookmark($name)
     {
-        if (isSet($this->bookmarks()->{$name})) {
+        if (isset($this->bookmarks()->{$name})) {
             return $this->bookmarks()->{$name};
         }
 
@@ -164,7 +164,8 @@ class Api
             array_map(
                 function ($ref) {
                     return Ref::parse($ref);
-                }, $response->refs
+                },
+                $response->refs
             ),
             $response->bookmarks,
             $response->types,

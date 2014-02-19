@@ -13,17 +13,17 @@ namespace Prismic\Fragment;
 
 interface FragmentInterface
 {
-  /**
-   * Return the value of the fragment as text.
-   *
-   * @return string
-   */
-  public function asText();
+    /**
+     * Return the value of the fragment as text.
+     *
+     * @return string
+     */
+    public function asText();
 
-  /**
-   * Return the value of the fagment as HTML.
-   *
-   * @return string
-   */
-  public function asHtml($linkResolver);
+    /**
+     * Return the value of the fagment as HTML.
+     *
+     * @return string
+     */
+    public function asHtml($linkResolver);
 }

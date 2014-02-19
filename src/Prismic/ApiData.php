@@ -30,8 +30,15 @@ class ApiData
      * @param string    $oauth_initiate
      * @param string    $oauth_token
      */
-    public function __construct(array $refs, \stdClass $bookmarks, \stdClass $types, array $tags, \stdClass $forms, $oauth_initiate, $oauth_token)
-    {
+    public function __construct(
+        array $refs,
+        \stdClass $bookmarks,
+        \stdClass $types,
+        array $tags,
+        \stdClass $forms,
+        $oauth_initiate,
+        $oauth_token
+    ) {
         $this->refs = $refs;
         $this->bookmarks = $bookmarks;
         $this->types = $types;

@@ -27,7 +27,9 @@ class Group implements FragmentInterface
         $string = "";
         foreach ($this->array as $subfragments) {
             foreach ($subfragments as $subfragment_name => $subfragment) {
-                $string .= "<section data-field=\"{$subfragment_name}\">{$subfragment->asHtml($linkResolver)}</section>";
+                $string .= "<section data-field=\"$subfragment_name\">" .
+                           $subfragment->asHtml($linkResolver) .
+                           "</section>";
             }
         }
         return $string;
@@ -49,8 +51,9 @@ class Group implements FragmentInterface
         return $this->array;
     }
 
-    public static function parseSubfragmentList($json) {
-        $subfragments = Array();
+    public static function parseSubfragmentList($json)
+    {
+        $subfragments = array();
         foreach ($json as $subfragment_name => $subfragmentJson) {
             $subfragment = Document::parseFragment($subfragmentJson);
             if (isset($subfragment)) {

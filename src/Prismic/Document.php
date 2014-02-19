@@ -151,7 +151,7 @@ class Document
         return "";
     }
 
-    public function getNumber($field, $pattern=null)
+    public function getNumber($field, $pattern = null)
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Number) {
@@ -175,7 +175,7 @@ class Document
         return null;
     }
 
-    public function getDate($field, $pattern=null)
+    public function getDate($field, $pattern = null)
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Date) {
@@ -189,7 +189,7 @@ class Document
         return null;
     }
 
-    public function getHtml($field, $linkResolver=null)
+    public function getHtml($field, $linkResolver = null)
     {
         $fragment = $this->get($field);
         if (isset($fragment) && method_exists($fragment, 'asHtml')) {
@@ -238,7 +238,7 @@ class Document
         return $images;
     }
 
-    public function getImageView($field, $view=null)
+    public function getImageView($field, $view = null)
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Image) {
@@ -290,7 +290,8 @@ class Document
     {
         $html = null;
         foreach ($this->fragments as $field => $v) {
-            $html = $html . '<section data-field="' . $field . '">' . $this->getHtml($field, $linkResolver) . '</section>';
+            $html = $html . '<section data-field="' . $field . '">' .
+                    $this->getHtml($field, $linkResolver) . '</section>';
         };
 
         return $html;

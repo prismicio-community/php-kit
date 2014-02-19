@@ -95,13 +95,13 @@ class StructuredText implements FragmentInterface
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     } else {
-                        $newBlockGroup = new BlockGroup(NULL, array());
+                        $newBlockGroup = new BlockGroup(null, array());
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     }
                 }
             } else {
-                $newBlockGroup = new BlockGroup(NULL, array());
+                $newBlockGroup = new BlockGroup(null, array());
                 $newBlockGroup->addBlock($block);
                 array_push($groups, $newBlockGroup);
             }
@@ -128,17 +128,23 @@ class StructuredText implements FragmentInterface
     public static function asHtmlBlock($block, $linkResolver = null)
     {
         if ($block instanceof HeadingBlock) {
-            return '<h' . $block->getLevel() . '>' . StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</h' . $block->getLevel() . '>';
+            return '<h' . $block->getLevel() . '>' .
+                    StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) .
+                    '</h' . $block->getLevel() . '>';
         } elseif ($block instanceof ParagraphBlock) {
-            return '<p>' . StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</p>';
+            return '<p>' .
+                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</p>';
         } elseif ($block instanceof ListItemBlock) {
-            return '<li>' . StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</li>';
+            return '<li>' .
+                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</li>';
         } elseif ($block instanceof ImageBlock) {
             return '<p>' . $block->getView()->asHtml($linkResolver) . '</p>';
         } elseif ($block instanceof EmbedBlock) {
             return $block->getObj()->asHtml();
         } elseif ($block instanceof PreformattedBlock) {
-            return '<pre>' . StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</pre>';
+            return '<pre>' .
+                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) .
+                   '</pre>';
         }
 
         return "";
