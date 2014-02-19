@@ -5,15 +5,6 @@ namespace Prismic\Test;
 use Prismic\API;
 use Prismic\Document;
 use Prismic\Fragment\Link\DocumentLink;
-use Prismic\LinkResolver;
-
-class FakeLinkResolver extends LinkResolver
-{
-    public function resolve($link)
-    {
-        return "http://host/doc/".$link->getId();
-    }
-}
 
 class LinkResolverTest extends \PHPUnit_Framework_TestCase
 {
