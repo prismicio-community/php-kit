@@ -68,4 +68,11 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $structuredText->asHtml());
     }
 
+    public function testDocumentLinkRendering()
+    {
+        $linkResolver = new FakeLinkResolver();
+        $structuredText = $this->document->getStructuredText('product.listLinks');
+        $content = '<p><a href="http://host/doc/UjHkUrGIJ7cBlWAb">link1</a></p>';
+        $this->assertEquals($content, $structuredText->asHtml($linkResolver));
+    }
 }

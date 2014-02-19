@@ -178,7 +178,7 @@ class StructuredText implements FragmentInterface
                 } elseif ($span->getLink() instanceof MediaLink) {
                     return array('<a href="' . $span->getLink()->getUrl() . '">', '</a>');
                 } elseif ($span->getLink() instanceof DocumentLink) {
-                    $url = $linkResolver ? $linkResolver($span->getLink()) : '';
+                    $url = $linkResolver ? $linkResolver->resolve($span->getLink()) : '';
 
                     return array('<a href="' . $url . '">', '</a>');
                 }

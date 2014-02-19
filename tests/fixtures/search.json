@@ -300,6 +300,36 @@
                         }
                     }
                 ],
+                "listLinks": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "link1",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UjHkUrGIJ7cBlWAb",
+                                                "type": "product",
+                                                "tags": [
+                                                    "Pie"
+                                                ],
+                                                "slug": "apricot-pie"
+                                            },
+                                            "isBroken": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "relatedImages": [
                     {
                         "type": "Image",
