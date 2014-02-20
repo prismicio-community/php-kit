@@ -11,6 +11,8 @@
 
 namespace Prismic\Fragment;
 
+use DOMDocument;
+
 class ImageView
 {
     private $url;
@@ -26,7 +28,13 @@ class ImageView
 
     public function asHtml()
     {
-        return '<img src="' . $this->url . '" width="' . $this->width . '" height="' . $this->height . '"/>';
+        $doc = new DOMDocument();
+        $img = $doc->createElement('img');
+        $img->setAttribute('src', $this->getUrl());
+        $img->setAttribute('width', $this->getWidth());
+        $img->setAttribute('height', $this->getHeight());
+        $doc->appendChild($img);
+        return trim($doc->saveHTML()); // trim removes trailing newline
     }
 
     public function ratio()
