@@ -193,11 +193,7 @@ class Document
     {
         $fragment = $this->get($field);
         if (isset($fragment) && method_exists($fragment, 'asHtml')) {
-            if ($fragment instanceof DocumentLink) {
-                return $fragment->asHtml($linkResolver);
-            } else {
-                return $fragment->asHtml();
-            }
+            return $fragment->asHtml($linkResolver);
         }
 
         return "";

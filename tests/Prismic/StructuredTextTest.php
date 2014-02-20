@@ -75,4 +75,20 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $content = '<p><a href="http://host/doc/UjHkUrGIJ7cBlWAb">link1</a></p>';
         $this->assertEquals($content, $structuredText->asHtml($linkResolver));
     }
+
+    public function testNestedDocumentLinkRendering()
+    {
+        $linkResolver = new FakeLinkResolver();
+        $content = '<section data-field="product.listLinks"><p>' .
+                   '<a href="http://host/doc/UjHkUrGIJ7cBlWAb">link1</a></p></section>';
+        // There should be better way (.*? - (?!)) than this one but no one seems to work.
+        $notSection = '([^<]|<[^\/]|<\/[^s]|<\/s[^e]|<\/se[^c]|<\/sec[^t]|<\/sect[^i]|' .
+                      '<\/secti[^o]|<\/sectio[^n]|<\/section[^>])';
+        $html = preg_replace(
+            '/.*(<section data-field="product.listLinks">' . $notSection . '*<\/section>).*/',
+            '$1',
+            $this->document->asHtml($linkResolver)
+        );
+        $this->assertEquals($content, $html);
+    }
 }
