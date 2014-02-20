@@ -16,12 +16,16 @@ use DOMDocument;
 class ImageView
 {
     private $url;
+    private $alt;
+    private $copyright;
     private $width;
     private $height;
 
-    public function __construct($url, $width, $height)
+    public function __construct($url, $alt, $copyright, $width, $height)
     {
         $this->url = $url;
+        $this->alt = $alt;
+        $this->copyright = $copyright;
         $this->width = $width;
         $this->height = $height;
     }
@@ -47,6 +51,16 @@ class ImageView
         return $this->url;
     }
 
+    public function getAlt()
+    {
+        return $this->alt;
+    }
+
+    public function getCopyright()
+    {
+        return $this->copyright;
+    }
+
     public function getWidth()
     {
         return $this->width;
@@ -61,6 +75,8 @@ class ImageView
     {
         return new ImageView(
             $json->url,
+            $json->alt,
+            $json->copyright,
             $json->dimensions->width,
             $json->dimensions->height
         );
