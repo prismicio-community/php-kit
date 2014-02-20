@@ -44,6 +44,13 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $this->linkResolver->resolve($this->link));
     }
 
+    public function testCall()
+    {
+        $content = 'http://host/doc/Ue0EDd_mqb8Dhk3j';
+        $linkResolver = $this->linkResolver;
+        $this->assertEquals($content, $linkResolver($this->link));
+    }
+
     public function testResolveDocument()
     {
         $content = "http://host/doc/Ue0EDd_mqb8Dhk3j";
