@@ -143,6 +143,8 @@
                         {
                             "type": "image",
                             "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                            "alt": "",
+                            "copyright": "",
                             "dimensions": {
                                 "width": 900,
                                 "height": 600
@@ -151,6 +153,8 @@
                         {
                             "type": "image",
                             "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df2A.jpg",
+                            "alt": "",
+                            "copyright": "",
                             "dimensions": {
                                 "width": 800,
                                 "height": 400
@@ -222,6 +226,8 @@
                         "value": {
                             "main": {
                                 "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/71925289ed70e89812a4040de310f0a8b97a2375.jpg",
+                                "alt": "test alt text with \"quotes\" and it's also got a single quote",
+                                "copyright": "test copyright text",
                                 "dimensions": {
                                     "width": 1500,
                                     "height": 500
@@ -230,6 +236,8 @@
                             "views": {
                                 "squared": {
                                     "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/2d21ec2fc5bcde736867360885c291770d9ec0c4.jpg",
+                                    "alt": "",
+                                    "copyright": "",
                                     "dimensions": {
                                         "width": 500,
                                         "height": 500
@@ -237,6 +245,8 @@
                                 },
                                 "small": {
                                     "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/163483658e10f5bad8ee69c29ed313699ea792b8.jpg",
+                                    "alt": " ",
+                                    "copyright": " ",
                                     "dimensions": {
                                         "width": 150,
                                         "height": 50
@@ -336,6 +346,8 @@
                         "value": {
                             "main": {
                                 "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
                                 "dimensions": {
                                     "width": 900,
                                     "height": 600
@@ -349,6 +361,8 @@
                         "value": {
                             "main": {
                                 "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
                                 "dimensions": {
                                     "width": 900,
                                     "height": 600
@@ -384,6 +398,8 @@
                     "value": {
                         "main": {
                             "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png",
+                            "alt": "alt text",
+                            "copyright": "copyright info",
                             "dimensions": {
                                 "width": 500,
                                 "height": 500
@@ -392,6 +408,8 @@
                         "views": {
                             "icon": {
                                 "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/f428de9ed832705617063c9c69eb752f4ab92ac5.png",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
                                 "dimensions": {
                                     "width": 250,
                                     "height": 250
