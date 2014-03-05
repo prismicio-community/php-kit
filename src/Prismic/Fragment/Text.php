@@ -13,7 +13,7 @@ namespace Prismic\Fragment;
 
 class Text implements FragmentInterface
 {
-    private $value;
+    protected $value;
 
     public function __construct($value)
     {

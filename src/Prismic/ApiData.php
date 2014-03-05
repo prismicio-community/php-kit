@@ -13,13 +13,13 @@ namespace Prismic;
 
 class ApiData
 {
-    private $refs;
-    private $bookmarks;
-    private $types;
-    private $tags;
-    private $forms;
-    private $oauth_initiate;
-    private $oauth_token;
+    protected $refs;
+    protected $bookmarks;
+    protected $types;
+    protected $tags;
+    protected $forms;
+    protected $oauth_initiate;
+    protected $oauth_token;
 
     /**
      * @param array     $refs

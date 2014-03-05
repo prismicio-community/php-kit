@@ -13,8 +13,8 @@ namespace Prismic\Fragment;
 
 class BlockGroup
 {
-    private $maybeTag;
-    private $blocks;
+    protected $maybeTag;
+    protected $blocks;
 
     public function __construct($maybeTag, $blocks)
     {

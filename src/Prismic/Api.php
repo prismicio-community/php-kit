@@ -23,7 +23,7 @@ class Api
      * @param string $data
      * @param string $accessToken
      */
-    private function __construct($data, $accessToken = null)
+    protected function __construct($data, $accessToken = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;

@@ -14,7 +14,7 @@ namespace Prismic\Fragment\Block;
 class ImageBlock implements BlockInterface
 {
 
-    private $view;
+    protected $view;
 
     public function __construct($view)
     {

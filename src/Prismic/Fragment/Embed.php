@@ -14,13 +14,13 @@ namespace Prismic\Fragment;
 class Embed implements FragmentInterface
 {
 
-    private $type;
-    private $provider;
-    private $url;
-    private $maybeWidth;
-    private $maybeHeight;
-    private $maybeHtml;
-    private $oembedJson;
+    protected $type;
+    protected $provider;
+    protected $url;
+    protected $maybeWidth;
+    protected $maybeHeight;
+    protected $maybeHtml;
+    protected $oembedJson;
 
     public function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson)
     {

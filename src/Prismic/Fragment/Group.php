@@ -15,7 +15,7 @@ use Prismic\Document;
 
 class Group implements FragmentInterface
 {
-    private $array;
+    protected $array;
 
     public function __construct($array)
     {

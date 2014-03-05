@@ -95,7 +95,7 @@ abstract class LinkResolver
      *
      * @return Fragment\Link\DocumentLink The document link
      */
-    private function asLink($document)
+    protected function asLink($document)
     {
         return new Fragment\Link\DocumentLink(
             $document->getId(),

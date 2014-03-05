@@ -13,8 +13,8 @@ namespace Prismic\Fragment\Span;
 
 class EmSpan implements SpanInterface
 {
-    private $start;
-    private $end;
+    protected $start;
+    protected $end;
 
     public function __construct($start, $end)
     {

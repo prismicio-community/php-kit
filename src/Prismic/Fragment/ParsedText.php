@@ -13,8 +13,8 @@ namespace Prismic\Fragment;
 
 class ParsedText
 {
-    private $text;
-    private $spans;
+    protected $text;
+    protected $spans;
 
     public function __construct($text, $spans)
     {

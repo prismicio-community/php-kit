@@ -14,9 +14,9 @@ namespace Prismic;
 class FieldForm
 {
 
-    private $type;
-    private $multiple;
-    private $defaultValue;
+    protected $type;
+    protected $multiple;
+    protected $defaultValue;
 
     /**
      * @param string $type
