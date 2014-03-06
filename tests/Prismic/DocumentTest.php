@@ -99,4 +99,14 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->document->getHtml('product.birthdate'), '<time>2013-10-23</time>');
         //TODO
     }
+
+    public function testHasWithExistingField()
+    {
+        $this->assertEquals($this->document->has('product.name'), true);
+    }
+
+    public function testHasWithUnknownField()
+    {
+        $this->assertEquals($this->document->has('product.badField'), false);
+    }
 }
