@@ -99,6 +99,16 @@ class Document
 
         return $single;
     }
+    
+    /**
+     * @param string $field
+     *
+     * @return bool
+     * */
+     public function has($field)
+     {
+         return array_key_exists($field, $this->fragments);
+     }
 
     /**
      * @param string $field
