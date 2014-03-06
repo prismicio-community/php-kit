@@ -13,12 +13,12 @@ namespace Prismic;
 
 class Form
 {
-    private $maybeName;
-    private $method;
-    private $maybeRel;
-    private $enctype;
-    private $action;
-    private $fields;
+    protected $maybeName;
+    protected $method;
+    protected $maybeRel;
+    protected $enctype;
+    protected $action;
+    protected $fields;
 
     /**
      * @param string    $maybeName

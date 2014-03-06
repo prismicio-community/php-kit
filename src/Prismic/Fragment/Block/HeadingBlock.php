@@ -13,9 +13,9 @@ namespace Prismic\Fragment\Block;
 
 class HeadingBlock implements TextInterface
 {
-    private $text;
-    private $spans;
-    private $level;
+    protected $text;
+    protected $spans;
+    protected $level;
 
     public function __construct($text, $spans, $level)
     {

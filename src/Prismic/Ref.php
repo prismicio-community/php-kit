@@ -13,10 +13,10 @@ namespace Prismic;
 
 class Ref
 {
-    private $ref;
-    private $label;
-    private $isMasterRef;
-    private $maybeScheduledAt;
+    protected $ref;
+    protected $label;
+    protected $isMasterRef;
+    protected $maybeScheduledAt;
 
     /**
      * @param string $ref

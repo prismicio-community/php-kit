@@ -13,11 +13,11 @@ namespace Prismic\Fragment\Link;
 
 class DocumentLink implements LinkInterface
 {
-    private $id;
-    private $type;
-    private $tags;
-    private $slug;
-    private $isBroken;
+    protected $id;
+    protected $type;
+    protected $tags;
+    protected $slug;
+    protected $isBroken;
 
     public function __construct($id, $type, $tags, $slug, $isBroken)
     {

@@ -29,12 +29,12 @@ use Prismic\Fragment\Block\TextInterface;
 class Document
 {
 
-    private $id;
-    private $type;
-    private $href;
-    private $tags;
-    private $slugs;
-    private $fragments;
+    protected $id;
+    protected $type;
+    protected $href;
+    protected $tags;
+    protected $slugs;
+    protected $fragments;
 
     /**
      * @param string $id

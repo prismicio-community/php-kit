@@ -26,7 +26,7 @@ use Prismic\Fragment\Span\StrongSpan;
 
 class StructuredText implements FragmentInterface
 {
-    private $blocks;
+    protected $blocks;
 
     public function __construct($blocks)
     {

@@ -13,7 +13,7 @@ namespace Prismic\Fragment\Block;
 
 class EmbedBlock implements BlockInterface
 {
-    private $obj;
+    protected $obj;
 
     public function __construct($obj)
     {

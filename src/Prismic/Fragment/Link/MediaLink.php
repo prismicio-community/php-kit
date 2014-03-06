@@ -13,10 +13,10 @@ namespace Prismic\Fragment\Link;
 
 class MediaLink implements LinkInterface
 {
-    private $url;
-    private $kind;
-    private $size;
-    private $filename;
+    protected $url;
+    protected $kind;
+    protected $size;
+    protected $filename;
 
     public function __construct($url, $kind, $size, $filename)
     {

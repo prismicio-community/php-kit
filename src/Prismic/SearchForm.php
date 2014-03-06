@@ -13,9 +13,9 @@ namespace Prismic;
 
 class SearchForm
 {
-    private $api;
-    private $form;
-    private $data;
+    protected $api;
+    protected $form;
+    protected $data;
 
     /**
      * @param Api   $client
@@ -105,7 +105,7 @@ class SearchForm
      *
      * @return array
      */
-    private static function parseResult($json)
+    protected static function parseResult($json)
     {
         return array_map(function ($doc) {
             return Document::parse($doc);
@@ -179,7 +179,7 @@ class SearchForm
      *
      * @return string
      */
-    private static function strip($str)
+    protected static function strip($str)
     {
         $trimmed = trim($str);
         $drop1 = substr($trimmed, 1, strlen($trimmed));

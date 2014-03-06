@@ -13,8 +13,8 @@ namespace Prismic\Fragment\Block;
 
 class ParagraphBlock implements TextInterface
 {
-    private $text;
-    private $spans;
+    protected $text;
+    protected $spans;
 
     public function __construct($text, $spans)
     {

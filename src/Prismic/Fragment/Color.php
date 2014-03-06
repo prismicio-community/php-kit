@@ -13,7 +13,7 @@ namespace Prismic\Fragment;
 
 class Color implements FragmentInterface
 {
-    private $hex;
+    protected $hex;
 
     public function __construct($hex)
     {

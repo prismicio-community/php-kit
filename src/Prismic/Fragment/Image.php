@@ -13,8 +13,8 @@ namespace Prismic\Fragment;
 
 class Image implements FragmentInterface
 {
-    private $main;
-    private $views;
+    protected $main;
+    protected $views;
 
     public function __construct($main, $views = array())
     {

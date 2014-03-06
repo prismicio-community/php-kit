@@ -13,7 +13,7 @@ namespace Prismic\Fragment;
 
 class Date implements FragmentInterface
 {
-    private $value;
+    protected $value;
 
     public function __construct($value)
     {

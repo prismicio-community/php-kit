@@ -14,9 +14,9 @@ namespace Prismic\Fragment\Span;
 class HyperlinkSpan implements SpanInterface
 {
 
-    private $start;
-    private $end;
-    private $link;
+    protected $start;
+    protected $end;
+    protected $link;
 
     public function __construct($start, $end, $link)
     {

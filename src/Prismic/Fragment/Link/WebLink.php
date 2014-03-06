@@ -13,8 +13,8 @@ namespace Prismic\Fragment\Link;
 
 class WebLink implements LinkInterface
 {
-    private $url;
-    private $maybeContentType;
+    protected $url;
+    protected $maybeContentType;
 
     public function __construct($url, $maybeContentType = null)
     {

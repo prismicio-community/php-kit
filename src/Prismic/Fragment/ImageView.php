@@ -13,9 +13,9 @@ namespace Prismic\Fragment;
 
 class ImageView
 {
-    private $url;
-    private $width;
-    private $height;
+    protected $url;
+    protected $width;
+    protected $height;
 
     public function __construct($url, $width, $height)
     {

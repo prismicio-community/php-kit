@@ -14,9 +14,9 @@ namespace Prismic\Fragment\Block;
 class ListItemBlock implements TextInterface
 {
 
-    private $text;
-    private $spans;
-    private $ordered;
+    protected $text;
+    protected $spans;
+    protected $ordered;
 
     public function __construct($text, $spans, $ordered)
     {

@@ -14,8 +14,8 @@ namespace Prismic\Fragment\Span;
 class StrongSpan implements SpanInterface
 {
 
-    private $start;
-    private $end;
+    protected $start;
+    protected $end;
 
     public function __construct($start, $end)
     {
