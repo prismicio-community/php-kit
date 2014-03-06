@@ -124,4 +124,14 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section>');
     }
+
+    public function testHasWithExistingField()
+    {
+        $this->assertEquals($this->document->has('product.name'), true);
+    }
+
+    public function testHasWithUnknownField()
+    {
+        $this->assertEquals($this->document->has('product.badField'), false);
+    }
 }
