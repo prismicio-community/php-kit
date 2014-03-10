@@ -115,11 +115,15 @@ class SearchForm
     /**
      * Submit the current form to retrieve remote contents
      *
-     * @return stdClass
+     * @param boolean $raw Whether to return the entire data structure (default
+     * is just the results)
+     *
+     * @return mixed Array of Document objects ($raw is false) or stdClass
+     * object of raw results ($raw is true)
      *
      * @throws \RuntimeException
      */
-    public function submit()
+    public function submit($raw = false)
     {
         if ($this->form->getMethod() == 'GET' &&
             $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
@@ -136,10 +140,29 @@ class SearchForm
                 throw new \RuntimeException("Unable to decode json response");
             }
 
+            if ($raw) {
+                return $response;
+            }
             return self::parseResult($response);
         }
 
         throw new \RuntimeException("Form type not supported");
+    }
+
+    /**
+     * Get the result count for this form
+     *
+     * This uses a copy of the SearchForm with a page size of 1 (the smallest
+     * allowed) since all we care about is one of the returned non-result
+     * fields.
+     *
+     * @return integer Total number of results
+     *
+     * @throws \RuntimeException
+     */
+    public function count()
+    {
+        return $this->pageSize(1)->submit(true)->total_results_size;
     }
 
     /**
