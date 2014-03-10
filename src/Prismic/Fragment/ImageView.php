@@ -30,14 +30,19 @@ class ImageView
         $this->height = $height;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null, $attributes = array())
     {
         $doc = new DOMDocument();
         $img = $doc->createElement('img');
-        $img->setAttribute('src', $this->getUrl());
-        $img->setAttribute('alt', $this->getAlt());
-        $img->setAttribute('width', $this->getWidth());
-        $img->setAttribute('height', $this->getHeight());
+        $attributes = array_merge(array(
+            'src' => $this->getUrl(),
+            'alt' => $this->getAlt(),
+            'width' => $this->getWidth(),
+            'height' => $this->getHeight(),
+        ), $attributes);
+        foreach ($attributes as $key => $value) {
+            $img->setAttribute($key, $value);
+        }
         $doc->appendChild($img);
         return trim($doc->saveHTML()); // trim removes trailing newline
     }

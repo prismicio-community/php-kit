@@ -83,4 +83,27 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testExtraAttribute()
+    {
+        $html = $this->input[0]['view']->asHtml(null, array('data-test' => 'attribute value'));
+        $dom = new DOMDocument;
+        $dom->loadHTML($html);
+        $xpath = new DOMXpath($dom);
+        $results = $xpath->query('//img');
+        $img = $results->item(0);
+        $this->assertTrue($img->hasAttribute('data-test'));
+        $this->assertEquals($img->getAttribute('data-test'), 'attribute value');
+    }
+
+    public function testOverriddenAttribute()
+    {
+        $html = $this->input[0]['view']->asHtml(null, array('alt' => 'overridden value'));
+        $dom = new DOMDocument;
+        $dom->loadHTML($html);
+        $xpath = new DOMXpath($dom);
+        $results = $xpath->query('//img');
+        $img = $results->item(0);
+        $this->assertEquals($img->getAttribute('alt'), 'overridden value');
+    }
+
 }
