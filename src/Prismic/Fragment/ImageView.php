@@ -11,22 +11,40 @@
 
 namespace Prismic\Fragment;
 
+use DOMDocument;
+
 class ImageView
 {
     private $url;
+    private $alt;
+    private $copyright;
     private $width;
     private $height;
 
-    public function __construct($url, $width, $height)
+    public function __construct($url, $alt, $copyright, $width, $height)
     {
         $this->url = $url;
+        $this->alt = $alt;
+        $this->copyright = $copyright;
         $this->width = $width;
         $this->height = $height;
     }
 
-    public function asHtml()
+    public function asHtml($linkResolver = null, $attributes = array())
     {
-        return '<img src="' . $this->url . '" width="' . $this->width . '" height="' . $this->height . '"/>';
+        $doc = new DOMDocument();
+        $img = $doc->createElement('img');
+        $attributes = array_merge(array(
+            'src' => $this->getUrl(),
+            'alt' => $this->getAlt(),
+            'width' => $this->getWidth(),
+            'height' => $this->getHeight(),
+        ), $attributes);
+        foreach ($attributes as $key => $value) {
+            $img->setAttribute($key, $value);
+        }
+        $doc->appendChild($img);
+        return trim($doc->saveHTML()); // trim removes trailing newline
     }
 
     public function ratio()
@@ -37,6 +55,16 @@ class ImageView
     public function getUrl()
     {
         return $this->url;
+    }
+
+    public function getAlt()
+    {
+        return $this->alt;
+    }
+
+    public function getCopyright()
+    {
+        return $this->copyright;
     }
 
     public function getWidth()
@@ -53,6 +81,8 @@ class ImageView
     {
         return new ImageView(
             $json->url,
+            $json->alt,
+            $json->copyright,
             $json->dimensions->width,
             $json->dimensions->height
         );
