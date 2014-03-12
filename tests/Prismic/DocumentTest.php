@@ -49,6 +49,9 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->document->getBoolean('product.adult'));
         $this->assertTrue($this->document->getBoolean('product.teenager'));
         $this->assertFalse($this->document->getBoolean('product.french'));
+        $this->assertTrue($this->document->getBoolean('product.german'));
+        $this->assertTrue($this->document->getBoolean('product.spanish'));
+        $this->assertFalse($this->document->getBoolean('product.farsi'));
     }
 
     public function testGetDate()

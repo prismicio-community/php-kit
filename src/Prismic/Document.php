@@ -179,7 +179,11 @@ class Document
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Text) {
-            return ("yes" == $fragment->getValue()) || ("true" == $fragment->getValue());
+            $value = strtolower($fragment->getValue());
+            return in_array(strtolower($fragment->getValue()), array(
+                'yes',
+                'true',
+            ));
         }
 
         return null;
