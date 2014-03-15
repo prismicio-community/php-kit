@@ -22,7 +22,7 @@ class Text implements FragmentInterface
 
     public function asHtml($linkResolver = null)
     {
-        return '<span class="text">' . htmlentities($this->value) . '</span>';
+        return '<span class="text">' . nl2br(htmlentities($this->value)) . '</span>';
     }
 
     public function asText()

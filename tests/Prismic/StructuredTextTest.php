@@ -18,7 +18,7 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFirstParagraph()
     {
-        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
+        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
         $this->assertEquals($content, $this->structuredText->getFirstParagraph()->getText());
     }
 
@@ -29,7 +29,7 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFirstPreformatted()
     {
-        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
+        $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
         $this->assertEquals($content, $this->structuredText->getFirstPreformatted()->getText());
     }
 
@@ -68,6 +68,14 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $structuredText->asHtml());
     }
 
+    public function testPreformattedBlockHtmlHasNoExtraBreakTags()
+    {
+        $text = "This pre block has\ntwo lines and a break tag shouldn't be added.";
+        $bloc = new \Prismic\Fragment\Block\PreformattedBlock($text, array(), null);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $this->assertRegExp('/block has\ntwo lines/', $structuredText->asHtml());
+    }
+
     public function testDocumentLinkRendering()
     {
         $linkResolver = new FakeLinkResolver();
@@ -85,7 +93,7 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $notSection = '([^<]|<[^\/]|<\/[^s]|<\/s[^e]|<\/se[^c]|<\/sec[^t]|<\/sect[^i]|' .
                       '<\/secti[^o]|<\/sectio[^n]|<\/section[^>])';
         $html = preg_replace(
-            '/.*(<section data-field="product.listLinks">' . $notSection . '*<\/section>).*/',
+            '/.*(<section data-field="product.listLinks">' . $notSection . '*<\/section>).*/s',
             '$1',
             $this->document->asHtml($linkResolver)
         );
@@ -101,4 +109,10 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $content = '<p><a href="http://host/document/UjHkUrGIJ7cBlWAb">link1</a></p>';
         $this->assertEquals($content, $structuredText->asHtml($linkResolver));
     }
+
+    public function testStructuredTextHtmlHasBreakTags()
+    {
+        $this->assertRegExp('`can be rough sometimes\.\s*<br\s*/?>\s*This is after a new line\.`s', $this->structuredText->asHtml());
+    }
+
 }
