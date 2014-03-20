@@ -202,8 +202,8 @@ class StructuredText implements FragmentInterface
         while (!(empty($starts) && empty($endings))) {
             $next = min($peekStart($starts), $peekEnd($endings));
             if ($next > $pos) {
-                $htmlToAdd = htmlentities(substr($text, 0, $next - $pos));
-                $text = substr($text, $next - $pos);
+                $htmlToAdd = htmlentities(mb_substr($text, 0, $next - $pos));
+                $text = mb_substr($text, $next - $pos);
                 $pos = $next;
             } else {
                 $spansToApply = "";
@@ -223,7 +223,7 @@ class StructuredText implements FragmentInterface
             $result = $result . $htmlToAdd;
         }
 
-        return $result . (strlen($text) > 0 ? htmlentities($text) : '');
+        return $result . (mb_strlen($text) > 0 ? htmlentities($text) : '');
     }
 
     public static function parseSpan($json)
