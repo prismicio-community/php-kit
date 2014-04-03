@@ -166,7 +166,7 @@ class StructuredText implements FragmentInterface
             // If this is a text node we have found the right node
             if ($node instanceof \DOMText) {
                 if ($span->getEnd() - $span->getStart() > $nodeLength) {
-                    // The span is too long for the node -- we have improperly 
+                    // The span is too long for the node -- we have improperly
                     // nested spans
                     //throw new \Exception("Improperly nested span of type " . get_class($span) . " starting at offset {$span->getStart()}");
                     return;
@@ -177,7 +177,7 @@ class StructuredText implements FragmentInterface
                 $tail = $meat->splitText($span->getEnd() - $span->getStart());
 
                 // Decide element type and attributes based on span class
-                $attributes = [];
+                $attributes = array();
                 if ($span instanceof StrongSpan) {
                     $nodeName = 'strong';
                 } else if ($span instanceof EmSpan) {
@@ -194,7 +194,7 @@ class StructuredText implements FragmentInterface
                     $nodeName = 'span';
                 }
 
-                // Make the new span element, and put the text from the meat 
+                // Make the new span element, and put the text from the meat
                 // inside
                 $spanNode = $node->ownerDocument->createElement($nodeName, htmlspecialchars($meat->textContent));
                 foreach ($attributes as $k => $v) {
