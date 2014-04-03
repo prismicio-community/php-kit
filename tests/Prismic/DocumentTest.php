@@ -34,7 +34,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->document->getText('product.name'), 'Cool Coconut Macaron');
         $this->assertEquals($this->document->getText('product.short_lede'), 'An island of flavours');
-        $this->assertEquals($this->document->getText('product.allergens'), 'Fruit');
+        $this->assertEquals($this->document->getText('product.allergens'), "Fruit\nCats");
         $this->assertEquals($this->document->getText('product.price'), '2.5');
     }
 
@@ -105,6 +105,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->document->getHtml('product.price'), '<span class="number">2.5</span>');
         $this->assertEquals($this->document->getHtml('product.adult'), '<span class="text">yes</span>');
         $this->assertEquals($this->document->getHtml('product.birthdate'), '<time>2013-10-23</time>');
+        $this->assertRegExp('`Fruit\s*<br\s*/?>\s*Cats`s', $this->document->getHtml('product.allergens'));
         //TODO
     }
 
