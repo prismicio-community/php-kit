@@ -115,38 +115,13 @@ class SearchForm
     /**
      * Submit the current form to retrieve remote contents
      *
-     * @param boolean $raw Whether to return the entire data structure (default
-     * is just the results)
-     *
-     * @return mixed Array of Document objects ($raw is false) or stdClass
-     * object of raw results ($raw is true)
+     * @return mixed Array of Document objects
      *
      * @throws \RuntimeException
      */
-    public function submit($raw = false)
+    public function submit()
     {
-        if ($this->form->getMethod() == 'GET' &&
-            $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
-            $this->form->getAction()
-        ) {
-            $url = $this->form->getAction() . '?' . http_build_query($this->data);
-            $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
-
-            $request = Api::defaultClient()->get($url);
-            $response = $request->send();
-
-            $response = @json_decode($response->getBody(true));
-            if (!isset($response)) {
-                throw new \RuntimeException("Unable to decode json response");
-            }
-
-            if ($raw) {
-                return $response;
-            }
-            return self::parseResult($response);
-        }
-
-        throw new \RuntimeException("Form type not supported");
+        return self::parseResult($this->submit_raw());
     }
 
     /**
@@ -162,7 +137,7 @@ class SearchForm
      */
     public function count()
     {
-        return $this->pageSize(1)->submit(true)->total_results_size;
+        return $this->pageSize(1)->submit_raw()->total_results_size;
     }
 
     /**
@@ -193,6 +168,34 @@ class SearchForm
 
             return new SearchForm($this->api, $this->form, $data);
         }
+    }
+
+    /**
+     * Perform the actual submit call
+     *
+     * @return the raw (unparsed) response
+     */
+    private function submit_raw()
+    {
+        if ($this->form->getMethod() == 'GET' &&
+            $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
+            $this->form->getAction()
+        ) {
+            $url = $this->form->getAction() . '?' . http_build_query($this->data);
+            $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
+
+            $request = Api::defaultClient()->get($url);
+            $response = $request->send();
+
+            $response = @json_decode($response->getBody(true));
+            if (!isset($response)) {
+                throw new \RuntimeException("Unable to decode json response");
+            }
+
+            return $response;
+        }
+
+        throw new \RuntimeException("Form type not supported");
     }
 
     /**
