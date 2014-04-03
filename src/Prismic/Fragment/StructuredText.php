@@ -153,77 +153,91 @@ class StructuredText implements FragmentInterface
     public static function asHtmlText($text, $spans, $linkResolver = null)
     {
         if (empty($spans)) {
-            return htmlentities($text);
+            return htmlspecialchars($text);
         }
 
-        $starts = array();
-        for ($i = count($spans) - 1; $i >= 0; $i--) {
-            array_push($starts, $spans[$i]);
-        }
+        $doc = new \DOMDocument;
+        $doc->appendChild($doc->createTextNode($text));
 
-        $endings = array();
-        $result = "";
-        $pos = 0;
+        $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver) {
+            // Get length of node's text content
+            $nodeLength = mb_strlen($node->textContent);
 
-        $getStartAndEnd = function ($span, $linkResolver = null) {
-            if ($span instanceof StrongSpan) {
-                return array("<strong>", "</strong>");
-            }
-            if ($span instanceof EmSpan) {
-                return array("<em>", "</em>");
-            }
-            if ($span instanceof HyperlinkSpan) {
-                if ($span->getLink() instanceof WebLink) {
-                    return array('<a href="' . $span->getLink()->getUrl() . '">', '</a>');
-                } elseif ($span->getLink() instanceof MediaLink) {
-                    return array('<a href="' . $span->getLink()->getUrl() . '">', '</a>');
-                } elseif ($span->getLink() instanceof DocumentLink) {
-                    $url = $linkResolver ? $linkResolver($span->getLink()) : '';
-
-                    return array('<a href="' . $url . '">', '</a>');
+            // If this is a text node we have found the right node
+            if ($node instanceof \DOMText) {
+                if ($span->getEnd() - $span->getStart() > $nodeLength) {
+                    // The span is too long for the node -- we have improperly
+                    // nested spans
+                    //throw new \Exception("Improperly nested span of type " . get_class($span) . " starting at offset {$span->getStart()}");
+                    return;
                 }
-            }
 
-            return array('', '');
-        };
+                // Split the text node into a head, meat and tail
+                $meat = $node->splitText($span->getStart() - $start);
+                $tail = $meat->splitText($span->getEnd() - $span->getStart());
 
-        $peek = function ($array) {
-            return $array[count($array) - 1];
-        };
-
-        $peekStart = function ($span) {
-            return empty($span) ? PHP_INT_MAX : $span[count($span) - 1]->getStart();
-        };
-
-        $peekEnd = function ($span) {
-            return empty($span) ? PHP_INT_MAX : $span[count($span) - 1]->getEnd();
-        };
-
-        while (!(empty($starts) && empty($endings))) {
-            $next = min($peekStart($starts), $peekEnd($endings));
-            if ($next > $pos) {
-                $htmlToAdd = htmlentities(mb_substr($text, 0, $next - $pos));
-                $text = mb_substr($text, $next - $pos);
-                $pos = $next;
-            } else {
-                $spansToApply = "";
-                while (min($peekStart($starts), $peekEnd($endings)) == $pos) {
-                    if (!empty($endings) && $peek($endings)->getEnd() == $pos) {
-                        $startAndEnd = $getStartAndEnd(array_pop($endings), $linkResolver);
-                        $spansToApply = $spansToApply . $startAndEnd[1];
-                    } elseif (!empty($starts) && $peek($starts)->getStart() == $pos) {
-                        $start = array_pop($starts);
-                        array_push($endings, $start);
-                        $startAndEnd = $getStartAndEnd($start, $linkResolver);
-                        $spansToApply = $spansToApply . $startAndEnd[0];
+                // Decide element type and attributes based on span class
+                $attributes = array();
+                if ($span instanceof StrongSpan) {
+                    $nodeName = 'strong';
+                } else if ($span instanceof EmSpan) {
+                    $nodeName = 'em';
+                } else if ($span instanceof HyperlinkSpan) {
+                    $nodeName = 'a';
+                    if ($span->getLink() instanceof DocumentLink) {
+                        $attributes['href'] = $linkResolver ? $linkResolver($span->getLink()) : '';
+                    } else {
+                        $attributes['href'] = $span->getLink()->getUrl();
                     }
+                } else {
+                    //throw new \Exception("Unknown span type " . get_class($span));
+                    $nodeName = 'span';
                 }
-                $htmlToAdd = $spansToApply;
+
+                // Make the new span element, and put the text from the meat
+                // inside
+                $spanNode = $node->ownerDocument->createElement($nodeName, htmlspecialchars($meat->textContent));
+                foreach ($attributes as $k => $v) {
+                    $spanNode->setAttribute($k, $v);
+                }
+
+                // Replace the original meat text node with the span
+                $meat->parentNode->replaceChild($spanNode, $meat);
+
+                return;
             }
-            $result = $result . $htmlToAdd;
+
+            // Skip this node if the span start is beyond it
+            if ($span->getStart() >= $start + mb_strlen($node->textContent)) {
+                return;
+            }
+
+            // Loop over child nodes to find the correct one
+            if ($node->childNodes) {
+                foreach ($node->childNodes as $child) {
+                    $nodeLength = mb_strlen($child->textContent);
+                    if ($span->getStart() < $start + $nodeLength) {
+                        // This is the right node -- recurse
+                        return $iterateChildren($child, $start, $span);
+                    }
+                    $start += $nodeLength;
+                }
+            }
+
+            // Not found
+            return;
+        };
+
+        foreach ($spans as $span) {
+            if ($span->getEnd() < $span->getStart()) {
+                //throw new \Exception("Span of type " . get_class($span) . " starting at {$span->getStart()} ends at {$span->getEnd()} (before it begins)");
+                continue;
+            }
+            $iterateChildren($doc, 0, $span);
         }
 
-        return $result . (mb_strlen($text) > 0 ? htmlentities($text) : '');
+        return trim($doc->saveHTML());
+
     }
 
     public static function parseSpan($json)
