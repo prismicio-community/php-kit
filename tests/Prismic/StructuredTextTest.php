@@ -6,8 +6,9 @@ use Prismic\Document;
 
 class StructuredTextTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $document;
+
+    protected $structuredText;
 
     protected function setUp()
     {
@@ -22,15 +23,30 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($content, $this->structuredText->getFirstParagraph()->getText());
     }
 
+    public function testGetParagraphs()
+    {
+        $this->assertCount(5, $this->structuredText->getParagraphs());
+    }
+
     public function testGetFirstImage()
     {
         $this->assertEquals($this->structuredText->getFirstImage()->getView()->getUrl(), 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg');
+    }
+
+    public function testGetImages()
+    {
+        $this->assertCount(2, $this->structuredText->getImages());
     }
 
     public function testGetFirstPreformatted()
     {
         $content = "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.";
         $this->assertEquals($content, $this->structuredText->getFirstPreformatted()->getText());
+    }
+
+    public function testGetPreformatted()
+    {
+        $this->assertCount(1, $this->structuredText->getPreformatted());
     }
 
     public function testPreformattedBlockFormatRendering()
