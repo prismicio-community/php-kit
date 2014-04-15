@@ -49,29 +49,44 @@ class StructuredText implements FragmentInterface
 
     public function getFirstPreformatted()
     {
-        foreach ($this->blocks as $block) {
-            if (isset($block) && $block instanceof PreformattedBlock) {
-                return $block;
-            }
-        }
+        $blocks = $this->getPreformatted();
+
+        return reset($blocks);
+    }
+
+    public function getPreformatted()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof PreformattedBlock);
+        });
     }
 
     public function getFirstParagraph()
     {
-        foreach ($this->blocks as $block) {
-            if (isset($block) && $block instanceof ParagraphBlock) {
-                return $block;
-            }
-        }
+        $blocks = $this->getParagraphs();
+
+        return reset($blocks);
+    }
+
+    public function getParagraphs()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof ParagraphBlock);
+        });
     }
 
     public function getFirstImage()
     {
-        foreach ($this->blocks as $block) {
-            if (isset($block) && $block instanceof ImageBlock) {
-                return $block;
-            }
-        }
+        $blocks = $this->getImages();
+
+        return reset($blocks);
+    }
+
+    public function getImages()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof ImageBlock);
+        });
     }
 
     public function asHtml($linkResolver = null)
