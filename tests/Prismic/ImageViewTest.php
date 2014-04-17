@@ -39,7 +39,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
     public function testParsable()
     {
         foreach ($this->input as $input) {
-            $this->assertTrue($input['parsed']);
+            $this->assertNotNull($input['parsed']);
         }
     }
 
