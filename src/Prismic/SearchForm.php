@@ -154,7 +154,7 @@ class SearchForm
     {
         $field = $this->form->getFields()['q'];
         if ($field->isMultiple()) {
-            return set("q", $q);
+            return $this->set("q", $q);
         } else {
             // Temporary Hack for backward compatibility
             $maybeDefault = property_exists($field, "default") ? $field->default : null;
