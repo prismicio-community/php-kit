@@ -39,8 +39,8 @@ class Api
         $refs = $this->data->getRefs();
         $groupBy = array();
         foreach ($refs as $ref) {
-            if (isset($refs[$ref->getLabel()])) {
-                $arr = $refs[$ref->getLabel()];
+            if (isset($groupBy[$ref->getLabel()])) {
+                $arr = $groupBy[$ref->getLabel()];
                 array_push($arr, $ref);
                 $groupBy[$ref->getLabel()] = $arr;
             } else {
