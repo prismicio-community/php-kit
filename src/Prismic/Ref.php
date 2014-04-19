@@ -52,6 +52,11 @@ class Ref
         return $this->maybeScheduledAt;
     }
 
+    public function __toString()
+    {
+        return (string) $this->getRef();
+    }
+
     public static function parse($json)
     {
         return new Ref(
