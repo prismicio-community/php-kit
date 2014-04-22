@@ -13,4 +13,5 @@ namespace Prismic\Fragment\Block;
 
 interface TextInterface extends BlockInterface
 {
+    public function getText();
 }
