@@ -12,6 +12,8 @@
 namespace Prismic;
 
 use Guzzle\Http\Client;
+use Guzzle\Plugin\Cache\CachePlugin;
+use Guzzle\Plugin\Cache\DefaultCacheStorage;
 
 class Api
 {
@@ -141,15 +143,28 @@ class Api
     /**
      * This method is static to respect others API
      *
-     * @param string $action
-     * @param string $accessToken
+     * @param string $action the URL endpoint of the repository's API
+     * @param string $accessToken an optional permanent access token (leave null is you're not sure what you're doing)
+     * @param string $client the client being used, or if null, will used a default client
+     * @param bool|Guzzle\Cache\CacheAdapterInterface $cache the cache adapter being used, which must implement CacheAdapterInterface; set to true (default value) if you want the out-of-the box cache (a LRU cache of 100 entries); set to false if you want to disable the cache. If you want an LRU of 1000 entries, for instance, you can pass new LruCacheAdapter(1000).
      *
      * @return Api
      */
-    public static function get($action, $accessToken = null, $client = null)
+    public static function get($action, $accessToken = null, $client = null, $cache = true)
     {
         $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
         $client = isset($client) ? $client : self::defaultClient();
+
+        // Adding the cache in case it's provided
+        if (is_bool($cache)) {
+            if ($cache) {
+                $client->addSubscriber( new CachePlugin(array('storage' => new DefaultCacheStorage(new LruCacheAdapter(100)))) );
+            }
+        }
+        else {
+            $client->addSubscriber( new CachePlugin(array('storage' => new DefaultCacheStorage($cache))) );
+        }
+
         $request = $client->get($url);
         $response = $request->send();
 
@@ -184,7 +199,7 @@ class Api
                 CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_TIMEOUT        => 60,
-                CURLOPT_USERAGENT      => 'prismic-php-0.1',
+                CURLOPT_USERAGENT      => 'prismic-php-kit',
                 CURLOPT_HTTPHEADER     => array('Accept: application/json')
             )
         ));
