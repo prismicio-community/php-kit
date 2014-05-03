@@ -169,7 +169,7 @@ class StructuredText implements FragmentInterface
     public static function asHtmlText($text, $spans, $linkResolver = null)
     {
         if (empty($spans)) {
-            return htmlspecialchars($text);
+            return htmlentities($text);
         }
 
         $doc = new \DOMDocument;

@@ -36,7 +36,7 @@ class ImageView
         $img = $doc->createElement('img');
         $attributes = array_merge(array(
             'src' => $this->getUrl(),
-            'alt' => $this->getAlt(),
+            'alt' => htmlentities($this->getAlt()),
             'width' => $this->getWidth(),
             'height' => $this->getHeight(),
         ), $attributes);
