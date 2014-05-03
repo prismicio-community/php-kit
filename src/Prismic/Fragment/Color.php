@@ -22,7 +22,7 @@ class Color implements FragmentInterface
 
     public function asHtml($linkResolver = null)
     {
-        return '<span class="color">' . $this->hex . '</span>';
+        return '<span class="color">' . htmlentities($this->hex) . '</span>';
     }
 
     public function asText()

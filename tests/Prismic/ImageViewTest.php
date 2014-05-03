@@ -79,7 +79,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue($img->hasAttribute('height'));
             $this->assertEquals($img->getAttribute('height'), $this->input[$index]['view']->getHeight());
             $this->assertTrue($img->hasAttribute('alt'));
-            $this->assertEquals($img->getAttribute('alt'), $this->input[$index]['view']->getAlt());
+            $this->assertEquals($img->getAttribute('alt'), htmlentities($this->input[$index]['view']->getAlt()));
         }
     }
 
