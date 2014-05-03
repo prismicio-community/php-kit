@@ -21,7 +21,7 @@ class LruCacheAdapter implements CacheAdapterInterface
 
 	public function __construct($maxSize) {
 		$this->maxSize = $maxSize;
-		$this->cache = [];
+		$this->cache = array();
 	}
 
     public function contains($id, array $options = null)
