@@ -109,7 +109,7 @@ class SearchForm
     {
         return array_map(function ($doc) {
             return Document::parse($doc);
-        }, isset($json->results) ? $json->results : $json);
+        }, $json->results);
     }
 
     /**
