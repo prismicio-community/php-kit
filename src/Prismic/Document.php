@@ -17,6 +17,7 @@ use Prismic\Fragment\Embed;
 use Prismic\Fragment\Image;
 use Prismic\Fragment\Number;
 use Prismic\Fragment\ImageView;
+use Prismic\Fragment\Link\LinkInterface;
 use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\MediaLink;
 use Prismic\Fragment\Link\WebLink;
@@ -280,6 +281,16 @@ class Document
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof StructuredText) {
+            return $fragment;
+        }
+
+        return null;
+    }
+
+    public function getLink($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && ($fragment instanceof LinkInterface)) {
             return $fragment;
         }
 
