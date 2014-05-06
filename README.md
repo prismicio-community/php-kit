@@ -44,8 +44,7 @@ Also on our [prismic.io developer's portal](https://developers.prismic.io/), on 
 
 #### Kit's detailed documentation
 
-You can find the documentation of the PHP kit as comments within the kit's source code.
- *(Feel free to talk to us about generated docs for PHP.)*
+You can find [the full documentation of the PHP kit here](http://prismicio.github.io/php-kit/).
 
 Thanks to PHP's syntax, this kit contains some mild differences and syntastic sugar over the section of our documentation that tells you [how to use prismic.io kits](https://developers.prismic.io/documentation/UjBe8bGIJ3EKtgBZ/api-documentation#kits-and-helpers) in general (which you should read first). The differences are listed here:
  * 
