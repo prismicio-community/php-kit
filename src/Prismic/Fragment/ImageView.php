@@ -44,6 +44,7 @@ class ImageView
             $img->setAttribute($key, $value);
         }
         $doc->appendChild($img);
+
         return trim($doc->saveHTML()); // trim removes trailing newline
     }
 

@@ -32,6 +32,7 @@ class Group implements FragmentInterface
                            "</section>";
             }
         }
+
         return $string;
     }
 
@@ -43,6 +44,7 @@ class Group implements FragmentInterface
                 $string .= $subfragment->asText();
             }
         }
+
         return $string;
     }
 
@@ -60,6 +62,7 @@ class Group implements FragmentInterface
                 $subfragments[$subfragment_name] = $subfragment;
             }
         }
+
         return $subfragments;
     }
 

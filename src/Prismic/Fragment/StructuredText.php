@@ -196,9 +196,9 @@ class StructuredText implements FragmentInterface
                 $attributes = array();
                 if ($span instanceof StrongSpan) {
                     $nodeName = 'strong';
-                } else if ($span instanceof EmSpan) {
+                } elseif ($span instanceof EmSpan) {
                     $nodeName = 'em';
-                } else if ($span instanceof HyperlinkSpan) {
+                } elseif ($span instanceof HyperlinkSpan) {
                     $nodeName = 'a';
                     if ($span->getLink() instanceof DocumentLink) {
                         $attributes['href'] = $linkResolver ? $linkResolver($span->getLink()) : '';

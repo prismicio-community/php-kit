@@ -104,7 +104,7 @@ class Document
      * @param string $field
      *
      * @return bool
-     * */
+     *              */
      public function has($field)
      {
          return array_key_exists($field, $this->fragments);
@@ -180,6 +180,7 @@ class Document
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Text) {
             $value = strtolower($fragment->getValue());
+
             return in_array(strtolower($fragment->getValue()), array(
                 'yes',
                 'true',

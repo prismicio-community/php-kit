@@ -12,7 +12,6 @@
 namespace Prismic;
 
 use Guzzle\Http\Client;
-use Prismic\FieldForm;
 
 class Api
 {
