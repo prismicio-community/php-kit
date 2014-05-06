@@ -15,7 +15,6 @@ use Guzzle\Http\Client;
 use Guzzle\Plugin\Cache\CachePlugin;
 use Guzzle\Plugin\Cache\DefaultCacheStorage;
 
-
 class Api
 {
     protected $accessToken;
@@ -144,10 +143,10 @@ class Api
     /**
      * This method is static to respect others API
      *
-     * @param string $action the URL endpoint of the repository's API
-     * @param string $accessToken an optional permanent access token (leave null is you're not sure what you're doing)
-     * @param string $client the client being used, or if null, will used a default client
-     * @param bool|Guzzle\Cache\CacheAdapterInterface $cache the cache adapter being used, which must implement CacheAdapterInterface; set to true (default value) if you want the out-of-the box cache (a LRU cache of 100 entries); set to false if you want to disable the cache. If you want an LRU of 1000 entries, for instance, you can pass new LruCacheAdapter(1000).
+     * @param string                                  $action      the URL endpoint of the repository's API
+     * @param string                                  $accessToken an optional permanent access token (leave null is you're not sure what you're doing)
+     * @param string                                  $client      the client being used, or if null, will used a default client
+     * @param bool|Guzzle\Cache\CacheAdapterInterface $cache       the cache adapter being used, which must implement CacheAdapterInterface; set to true (default value) if you want the out-of-the box cache (a LRU cache of 100 entries); set to false if you want to disable the cache. If you want an LRU of 1000 entries, for instance, you can pass new LruCacheAdapter(1000).
      *
      * @return Api
      */
@@ -161,8 +160,7 @@ class Api
             if ($cache) {
                 $client->addSubscriber( new CachePlugin(array('storage' => new DefaultCacheStorage(new LruCacheAdapter(100)))) );
             }
-        }
-        else {
+        } else {
             $client->addSubscriber( new CachePlugin(array('storage' => new DefaultCacheStorage($cache))) );
         }
 
