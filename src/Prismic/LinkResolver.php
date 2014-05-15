@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -26,6 +25,11 @@ abstract class LinkResolver
      */
     abstract public function resolve($link);
 
+    /**
+     * What happens when the link resolver gets called.
+     *
+     * @param Fragment\Link\DocumentLink $link The document link
+     */
     public function __invoke($link)
     {
         return $this->resolve($link);

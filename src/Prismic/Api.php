@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -13,12 +12,26 @@ namespace Prismic;
 
 use Guzzle\Http\Client;
 
+/**
+ * This class embodies a connection to your prismic.io repository's API.
+ * Initialize it with Prismic\Api\get, and use your Prismic\Api\forms to make API calls.
+ *
+ * @api
+ */
 class Api
 {
+    /**
+     * @var string the API's access token to be used with each API call
+     */
     protected $accessToken;
+    /**
+     * @var Prismic\ApiData the raw data of the /api document (prefer to use this class's instance methods)
+     */
     protected $data;
 
     /**
+     * Private constructor, not be used outside of this class.
+     *
      * @param string $data
      * @param string $accessToken
      */
@@ -29,9 +42,11 @@ class Api
     }
 
     /**
-     * returns all repositories references
+     * Returns all of the repository's references (queryable points in time)
      *
-     * @return array
+     * @api
+     *
+     * @return array the array of references, with their IDs, labels, ...
      */
     public function refs()
     {
@@ -55,11 +70,32 @@ class Api
         return $results;
     }
 
+    /**
+     * Returns the list of all bookmarks on the repository. If you're looking
+     * for a document from it's bookmark name, you should use the bookrmark() function.
+     *
+     * @api
+     *
+     * @return array the array of bookmarks
+     */
     public function bookmarks()
     {
         return $this->data->getBookmarks();
     }
 
+    /**
+     * From a bookmark name, returns the ID of the attached document.
+     * You can then use this ID for anything, for instance to query with a predicate
+     * that looks like this [:d = at(document.id, "abcdefghijkl")].
+     * Most starter projects embed a helper to query a document from their ID string,
+     * which makes this even easier.
+     *
+     * @api
+     *
+     * @param string $name the bookmark name to use
+     *
+     * @return string the ID string for a given bookmark name
+     */
     public function bookmark($name)
     {
         if (isset($this->bookmarks()->{$name})) {
@@ -70,9 +106,12 @@ class Api
     }
 
     /**
-     * returns the master reference repository
+     * Returns the master ref repository: the ref which is to be used to query content
+     * that is live right now.
      *
-     * @return string
+     * @api
+     *
+     * @return string the master ref
      */
     public function master()
     {
@@ -84,9 +123,13 @@ class Api
     }
 
     /**
-     * returns all forms availables
+     * Returns all forms of type Prismic\SearchForm that are available for this repository's API.
+     * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
+     * Learn more about those keywords in prismic.io's documentation on our developers' portal.
      *
-     * @return mixed
+     * @api
+     *
+     * @return array all forms
      */
     public function forms()
     {
@@ -118,7 +161,9 @@ class Api
     }
 
     /**
-     * @return string
+     * Returning the URL of the endpoint to initiate OAuth authentication.
+     *
+     * @return string the URL of the endpoint
      */
     public function oauthInitiateEndpoint()
     {
@@ -126,25 +171,37 @@ class Api
     }
 
     /**
-     * @return string
+     * Returning the URL of the endpoint to use OAuth authentication.
+     *
+     * @return string the URL of the endpoint
      */
     public function oauthTokenEndpoint()
     {
         return $this->data->getOauthToken();
     }
 
+    /**
+     * Accessing raw data returned by the /api endpoint
+     *
+     * @return Prismic\ApiData the raw data
+     */
     public function getData()
     {
         return $this->data;
     }
 
     /**
-     * This method is static to respect others API
+     * This is the endpoint to build your API, and is a static method.
+     * If your API is set to "public" or "open", you can instantiate your Api object just like this:
+     * Api::get('http://idofyourrepository.prismic.io/api')
      *
-     * @param string $action
-     * @param string $accessToken
+     * @api
      *
-     * @return Api
+     * @param string             $action      the URL of your repository API's endpoint
+     * @param string             $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
+     *
+     * @return Api the Api object, useable to perform queries
      */
     public static function get($action, $accessToken = null, $client = null)
     {
@@ -177,6 +234,9 @@ class Api
         return new Api($apiData, $accessToken);
     }
 
+    /**
+     * The default configuration of the client used in the kit; this is entirely overridable by passing
+     */
     public static function defaultClient()
     {
         return new Client('', array(

@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -26,23 +25,46 @@ use Prismic\Fragment\Group;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\TextInterface;
 
+/**
+ * Embodies a document retrieved from the API, which we'll be able to manipulate.
+ */
 class Document
 {
 
+    /**
+     * @var string the ID of the document (please use instance methods to get information that is in there)
+     */
     private $id;
+    /**
+     * @var string the type of the document (please use instance methods to get information that is in there)
+     */
     private $type;
+    /**
+     * @var string the URL of the document in the repository's API (please use instance methods to get information that is in there)
+     */
     private $href;
+    /**
+     * @var array the tags used in the document (please use instance methods to get information that is in there)
+     */
     private $tags;
+    /**
+     * @var array the slugs used in the document, in the past and today; today's slug is the head (please use instance methods to get information that is in there)
+     */
     private $slugs;
+    /**
+     * @var array all the fragments in the document (please use instance methods to get information that is in there)
+     */
     private $fragments;
 
     /**
-     * @param string $id
-     * @param string $type
-     * @param string $href
-     * @param array  $tags
-     * @param array  $slugs
-     * @param array  $fragments
+     * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
+     *
+     * @param string $id the ID of the document
+     * @param string $type the type of the document
+     * @param string $href the URL of the document in the repository's API
+     * @param array  $tags the tags used in the document
+     * @param array  $slugs the slugs used in the document, in the past and today; today's slug is the head
+     * @param array  $fragments all the fragments in the document
      */
     public function __construct($id, $type, $href, $tags, $slugs, array $fragments)
     {
@@ -55,7 +77,11 @@ class Document
     }
 
     /**
-     * @return string
+     * Returns the current slug of the document
+     *
+     * @api
+     *
+     * @return string the current slug of the document
      */
     public function getSlug()
     {
@@ -67,9 +93,11 @@ class Document
     }
 
     /**
-     * @param $slug
+     * Checks if a given slug is a past or current slug of the document
      *
-     * @return bool
+     * @api
+     * @param string $slug the slug to check
+     * @return bool true if the slug is a past or current slug of the document, false otherwise
      */
     public function containsSlug($slug)
     {
@@ -81,9 +109,16 @@ class Document
     }
 
     /**
-     * @param string $field
+     * Accesses a fragment of the document. For instance, if the document is of the type "product"
+     * and the name of the fragment is "description", then you can access the fragment like this:
+     * document->get('product.description').
      *
-     * @return mixed
+     * If you prefer a more type-safe access, that only works if the fragment is of the right type,
+     * you can use the getStructuredText, getColor, getDate, etc. methods.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.description"
+     * @return Prismic\Fragment\FragmentInterface the fragment as an object
      */
     public function get($field)
     {
@@ -101,9 +136,11 @@ class Document
     }
 
     /**
-     * @param string $field
+     * Checks if a given fragment exists in the document.
      *
-     * @return bool
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.description"
+     * @return bool true if the fragment exists, false otherwise
      *              */
      public function has($field)
      {
@@ -111,9 +148,11 @@ class Document
      }
 
     /**
-     * @param string $field
+     * Returns all fragments of the name given
      *
-     * @return array
+     * @deprecated deprecated as it was meant to be used with an old concept called "multiples"; prefer to use Group fragments now, that are more powerful.
+     * @param string $field name of the fragments
+     * @return array the list of fragments that exist
      */
     public function getAll($field)
     {
@@ -131,9 +170,14 @@ class Document
     }
 
     /**
-     * @param string $field
+     * For any fragment type that makes sense to return as a text value, returns the text value.
      *
-     * @return string
+     * Works with: StructuredText, Number, Color, Text and Date fragments. If fragment is of the wrong type
+     * or doesn't exist, returns an empty string.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.description"
+     * @return string the directly usable string
      */
     public function getText($field)
     {
@@ -161,6 +205,15 @@ class Document
         return "";
     }
 
+    /**
+     * Returns the string for a Number fragment, potentially matching a given pattern,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.price"
+     * @param string $pattern with the syntax expected by sprintf; null if not used
+     * @return string the directly usable string, or null if the fragment is of the wrong type or unset
+     */
     public function getNumber($field, $pattern = null)
     {
         $fragment = $this->get($field);
@@ -175,6 +228,16 @@ class Document
         return null;
     }
 
+    /**
+     * Returns a boolean for any type of fragment that extends Prismic\Fragment\Text, if the text is
+     * either 'yes' or 'true', or null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * This works well with Select fragment for instance, where you set your values to "true" or "false".
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.withchocolate"
+     * @return boolean the directly usable boolean, or null if the fragment is of the wrong type or unset
+     */
     public function getBoolean($field)
     {
         $fragment = $this->get($field);
@@ -190,6 +253,15 @@ class Document
         return null;
     }
 
+    /**
+     * Returns the string for a Date fragment, potentially matching a given pattern,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.publishedAt"
+     * @param string $pattern with the syntax expected by the date function; null if not used
+     * @return string the directly usable string, or null if the fragment is of the wrong type or unset
+     */
     public function getDate($field, $pattern = null)
     {
         $fragment = $this->get($field);
@@ -204,6 +276,15 @@ class Document
         return null;
     }
 
+    /**
+     * Returns an HTML serialization for any kind of fragment. This is simply a faster way to write
+     * $doc->get($field)->asHtml($linkResolver).
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.description"
+     * @param Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @return string the directly usable HTML code, or null if the fragment is unset
+     */
     public function getHtml($field, $linkResolver = null)
     {
         $fragment = $this->get($field);
@@ -214,6 +295,14 @@ class Document
         return "";
     }
 
+    /**
+     * Returns the usable Image fragment as an object, ready to be manipulated.
+     * This function also works on StructuredText fragment, and returns the first image in the fragment.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.picture"
+     * @return Prismic\Fragment\Image the directly usable HTML code, or null if the fragment is unset
+     */
     public function getImage($field)
     {
         $fragment = $this->get($field);
@@ -230,6 +319,14 @@ class Document
         return null;
     }
 
+    /**
+     * Returns all the usable Image fragments in the given StructuredText fragment, ready to be manipulated.
+     * This function also works on Image fragments, but only was useful in that case before Group fragments existed.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.picture"
+     * @return array an array of all the Prismic\Fragment\Image objects found
+     */
     public function getAllImages($field)
     {
         $fragments = $this->getAll($field);
@@ -249,6 +346,15 @@ class Document
         return $images;
     }
 
+    /**
+     * Returns the proper view of the given Image fragment, ready to be manipulated.
+     * This function also works on StructuredText fragments, to return the first Image, if the view is set to "main".
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.picture"
+     * @param string $view name of the view, like "small"
+     * @return Prismic\Fragment\ImageView the directly usable object symbolizing the view
+     */
     public function getImageView($field, $view = null)
     {
         $fragment = $this->get($field);
@@ -264,6 +370,13 @@ class Document
         return null;
     }
 
+    /**
+     * Get all given views of all images for a given fragment name.
+     *
+     * @param string $field name of the fragments, with the document's type, like "product.picture"
+     * @param string $view name of the view, like "small"
+     * @deprecated deprecated because this only made sense when Group fragments didn't exist yet.
+     */
     public function getAllImageViews($field, $view)
     {
         $imageViews = array();
@@ -277,6 +390,14 @@ class Document
         return $imageViews;
     }
 
+    /**
+     * Returns the StructuredText fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.description"
+     * @return Prismic\Fragment\StructuredText the directly usable object, or null if the fragment is of the wrong type or unset
+     */
     public function getStructuredText($field)
     {
         $fragment = $this->get($field);
@@ -287,6 +408,15 @@ class Document
         return null;
     }
 
+    /**
+     * Returns the Group fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     * This is the point of entry to then loop or search through the elements inside the Group fragment.
+     *
+     * @api
+     * @param string $field name of the fragment, with the document's type, like "product.gallery"
+     * @return Prismic\Fragment\Group the directly usable object, or null if the fragment is of the wrong type or unset
+     */
     public function getGroup($field)
     {
         $fragment = $this->get($field);
@@ -297,6 +427,16 @@ class Document
         return null;
     }
 
+    /**
+     * Returns an HTML serialization for the whole document at once, by serializing all fragments in order.
+     *
+     * This is a basic serialization, if you want to template your document better, you will need to serialize
+     * at the fragment level; for instance: $doc->get('product.description')->asHtml($linkResolver);
+     *
+     * @api
+     * @param Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @return string the directly usable HTML code
+     */
     public function asHtml($linkResolver = null)
     {
         $html = null;
@@ -308,36 +448,84 @@ class Document
         return $html;
     }
 
+    /**
+     * Returns the ID of the document
+     *
+     * @api
+     *
+     * @return string the ID of the document
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Returns the type of the document
+     *
+     * @api
+     *
+     * @return string the type of the document
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * Returns the URL of the document in the repository's API
+     *
+     * @api
+     *
+     * @return string the URL of the document in the repository's API
+     */
     public function getHref()
     {
         return $this->href;
     }
 
+    /**
+     * Returns the tags in the document
+     *
+     * @api
+     *
+     * @return array the tags in the document
+     */
     public function getTags()
     {
         return $this->tags;
     }
 
+    /**
+     * Returns the slugs used in the document, in the past and today; today's slug is the head.
+     * Your can use getSlug() if you need just the current slug.
+     *
+     * @api
+     *
+     * @return array the slugs used in the document, in the past and today; today's slug is the head
+     */
     public function getSlugs()
     {
         return $this->slugs;
     }
 
+    /**
+     * Returns the list of fragments of the document. You shouldn't have a reason to use this,
+     * as you can access fragments with get functions.
+     *
+     * @return array the list of fragments in the document.
+     */
     public function getFragments()
     {
         return $this->fragments;
     }
 
+    /**
+     * Parses a given fragment. Not meant to be used except for testing.
+     *
+     * @param \stdClass $json the json bit retrieved from the API that represents any fragment.
+     * @return Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
+     */
     public static function parseFragment($json)
     {
         if (is_object($json) && property_exists($json, "type")) {
@@ -401,9 +589,10 @@ class Document
     }
 
     /**
-     * @param \stdClass $json
+     * Parses a given document. Not meant to be used except for testing.
      *
-     * @return Document
+     * @param \stdClass $json the json bit retrieved from the API that represents a document.
+     * @return Prismic\Document the manipulable object for that document.
      */
     public static function parse(\stdClass $json)
     {

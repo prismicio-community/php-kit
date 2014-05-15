@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -11,16 +10,41 @@
 
 namespace Prismic;
 
+/**
+ * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
+ * then you can chain instance method calls to precise your need, and the query gets launched with
+ * Prismic\SearchForm.submit.
+ *
+ * For instance, here's how you query all of the repository:
+ * $result = $api->form('everything')->ref($ref)->submit()
+ *
+ * And here's an example of a more complex query:
+ * $result = $api->form('products')->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
+ *
+ * Note that setting the ref is mandatory, or your submit call will fail.
+ *
+ * @api
+ */
 class SearchForm
 {
+    /**
+     * @var Prismic\Api the API object containing all the information to know where to query
+     */
     private $api;
+    /**
+     * @var Prismic\Form the REST form we're querying on in the API
+     */
     private $form;
+    /**
+     * @var array the parameters we're getting ready to submit
+     */
     private $data;
 
     /**
-     * @param Api   $client
-     * @param Form  $form
-     * @param array $data
+     * Constructs a SearchForm object, is not meant for 
+     * @param Prismic\Api   $api  the API object containing all the information to know where to query
+     * @param Prismic\Form  $form the REST form we're querying on in the API
+     * @param array         $data the parameters we're getting ready to submit
      */
     public function __construct(Api $api, Form $form, array $data)
     {
@@ -29,6 +53,17 @@ class SearchForm
         $this->data = $data;
     }
 
+    /**
+     * Sets a value for a given parameter. For instance: set('orderings', '[product.price]'),
+     * or set('page', 2).
+     *
+     * Checks that the parameter is expected in the RESTful form before allowing to add it.
+     *
+     * @api
+     * @param string $key the name of the parameter
+     * @param string $value the value of the parameter
+     * @return Prismic\SearchForm the current SearchForm object, with the new parameter added
+     */
     public function set($key, $value)
     {
         if (isset($key) && isset($value)) {
@@ -59,11 +94,11 @@ class SearchForm
     }
 
     /**
-     * Set the repository reference
+     * Set the repository's ref.
      *
-     * @param string $ref
-     *
-     * @return SearchForm
+     * @api
+     * @param string $ref the ID of the ref we wish to query on.
+     * @return Prismic\SearchForm the current SearchForm object, with the new ref parameter added
      */
     public function ref($ref)
     {
@@ -71,10 +106,11 @@ class SearchForm
     }
 
     /**
-     * Set the repository page size
+     * Set the query's page size, for the pagination.
      *
-     * @param  int        $pageSize
-     * @return SearchForm
+     * @api
+     * @param  int                $pageSize
+     * @return Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
      */
     public function pageSize($pageSize)
     {
@@ -85,10 +121,11 @@ class SearchForm
     }
 
     /**
-     * Set the repository page
+     * Set the query's page, for the pagination.
      *
-     * @param  int        $page
-     * @return SearchForm
+     * @api
+     * @param  int                $page
+     * @return Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function page($page)
     {
@@ -99,11 +136,10 @@ class SearchForm
     }
 
     /**
-     * Create documents from the search results
+     * Parsing the results gotten from such an API call, and unmarshalling them into PHP objects.
      *
-     * @param $results
-     *
-     * @return array
+     * @param \stdClass $json the JSON retrieved from the call
+     * @return Prismic\Documents the result of the call
      */
     private static function parseResult($json)
     {
@@ -113,10 +149,9 @@ class SearchForm
     }
 
     /**
-     * Submit the current form to retrieve remote contents
+     * Submit the current API call, and unmarshals the result into PHP objects.
      *
-     * @return mixed Array of Document objects
-     *
+     * @return Prismic\Documents the result of the call
      * @throws \RuntimeException
      */
     public function submit()
@@ -132,7 +167,6 @@ class SearchForm
      * fields.
      *
      * @return integer Total number of results
-     *
      * @throws \RuntimeException
      */
     public function count()
@@ -141,16 +175,12 @@ class SearchForm
     }
 
     /**
-     * Generate a SearchForm instance for the provided query. Please note the ref method need to
-     * be call before so the repository is set.
+     * Set the query's predicates themselves.
      *
-     *    $boundForm = $formSearch->ref('my content repository reference');
-     *    $queryForm = $boundForm->query('[[:d = at(document.type, "event")]]');
-     *    $results = $queryForm->submit()
+     * @api
      *
-     * @param $q
-     *
-     * @return SearchForm
+     * @param string $q the predicates.
+     * @return Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function query($q)
     {
@@ -171,9 +201,9 @@ class SearchForm
     }
 
     /**
-     * Perform the actual submit call
+     * Performs the actual submit call, without the unmarshalling.
      *
-     * @return the raw (unparsed) response
+     * @return \stdClass the raw (unparsed) response.
      */
     private function submit_raw()
     {
