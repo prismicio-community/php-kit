@@ -117,7 +117,8 @@ class StructuredText implements FragmentInterface
                     }
                 }
             } else {
-                $newBlockGroup = new BlockGroup(null, array());
+                $tag = (($block instanceof ListItemBlock) && !$block->isOrdered() ? "ul" : (($block instanceof ListItemBlock) && $block->isOrdered() ? "li" : null ));
+                $newBlockGroup = new BlockGroup($tag, array());
                 $newBlockGroup->addBlock($block);
                 array_push($groups, $newBlockGroup);
             }
