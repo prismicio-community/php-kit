@@ -136,7 +136,8 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get('http://rudysandbox.prismic.io/api');
         $masterRef = $api->master()->getRef();
-        $document = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "U3VdAwEAACoAA9qi")]]')->submit()[0];
+        $results = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "U3VdAwEAACoAA9qi")]]')->submit();
+        $document = $results[0];
         $this->assertEquals($document->getStructuredText('buglistitemphp.body')->asHtml(), '<ul><li>Chaudi&egrave;re murale gaz &agrave; condensation &agrave; tr&egrave;s haut rendement</li><li>Chaudi&egrave;re double service, avec ballon eau chaude sanitaire 62 litres</li><li>Echangeur en acier inoxydable auto-nettoyant: r&eacute;sistance sans pareille &agrave; la corrosion</li><li>Br&ucirc;leur &agrave; pr&eacute;-m&eacute;lange, gaz naturel ou propane</li><li>Avec vase d&rsquo;expansion 12 litres</li><li>Raccordement ventouse en standard</li><li>Kits hydrauliques et accessoires de r&eacute;gulation en option</li></ul>');
     }
 
