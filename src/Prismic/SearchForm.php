@@ -136,6 +136,21 @@ class SearchForm
     }
 
     /**
+     * Set the query's ordering, setting in what order the documents must be retrieved.
+     *
+     * @api
+     * @param  string                $orderings
+     * @return Prismic\SearchForm the current SearchForm object, with the new orderings parameter added
+     */
+    public function orderings($orderings)
+    {
+        $data = $this->data;
+        $data['orderings'] = $orderings;
+
+        return new SearchForm($this->api, $this->form, $data);
+    }
+
+    /**
      * Parsing the results gotten from such an API call, and unmarshalling them into PHP objects.
      *
      * @param \stdClass $json the JSON retrieved from the call
