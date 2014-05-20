@@ -11,6 +11,8 @@
 namespace Prismic;
 
 use Guzzle\Http\Client;
+use \Prismic\Cache\NoCache;
+use \Prismic\Cache\DefaultCache;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -29,16 +31,19 @@ class Api
      */
     protected $data;
 
+    private $cache;
+
     /**
      * Private constructor, not be used outside of this class.
      *
      * @param string $data
      * @param string $accessToken
      */
-    private function __construct($data, $accessToken = null)
+    private function __construct($data, $accessToken = null, $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
+        $this->cache = is_null($cache) ? new DefaultCache() : $cache;
     }
 
     /**
@@ -190,6 +195,11 @@ class Api
         return $this->data;
     }
 
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
     /**
      * This is the endpoint to build your API, and is a static method.
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
@@ -200,38 +210,49 @@ class Api
      * @param string             $action      the URL of your repository API's endpoint
      * @param string             $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
      * @param Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
-     *
+     * @param CacheInterface     $cache       Cache implementation
      * @return Api the Api object, useable to perform queries
      */
-    public static function get($action, $accessToken = null, $client = null)
+    public static function get($action, $accessToken = null, $client = null, $cache = null)
     {
-        $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-        $client = isset($client) ? $client : self::defaultClient();
-        $request = $client->get($url);
-        $response = $request->send();
+        $cache = is_null($cache) ? new NoCache() : $cache;
+        $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
 
-        $response = @json_decode($response->getBody(true));
+        $api = $cache->get($cacheKey);
+        $api = $api ? unserialize($api) : null;
 
-        if (!$response) {
-            throw new \RuntimeException('Unable to decode the json response');
+        if($api) {
+            return $api;
+        } else {
+            $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
+            $client = isset($client) ? $client : self::defaultClient();
+            $request = $client->get($url);
+            $response = $request->send();
+            $response = @json_decode($response->getBody(true));
+
+            if (!$response) {
+                throw new \RuntimeException('Unable to decode the json response');
+            }
+
+            $apiData = new ApiData(
+                array_map(
+                    function ($ref) {
+                        return Ref::parse($ref);
+                    },
+                    $response->refs
+                ),
+                $response->bookmarks,
+                $response->types,
+                $response->tags,
+                $response->forms,
+                $response->oauth_initiate,
+                $response->oauth_token
+            );
+
+            $api = new Api($apiData, $accessToken, $cache);
+            $cache->set($cacheKey, serialize($api), 5);
+            return $api;
         }
-
-        $apiData = new ApiData(
-            array_map(
-                function ($ref) {
-                    return Ref::parse($ref);
-                },
-                $response->refs
-            ),
-            $response->bookmarks,
-            $response->types,
-            $response->tags,
-            $response->forms,
-            $response->oauth_initiate,
-            $response->oauth_token
-        );
-
-        return new Api($apiData, $accessToken);
     }
 
     /**

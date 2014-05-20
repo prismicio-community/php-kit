@@ -12,6 +12,8 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $cache = new \Prismic\Cache\DefaultCache();
+        $cache->clear();
         $this->linkResolver = new FakeLinkResolver();
         $this->id = 'Ue0EDd_mqb8Dhk3j';
         $type = 'product';
@@ -26,10 +28,10 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $response->expects($this->once())->method('getBody')->will($this->returnValue(file_get_contents(__DIR__.'/../fixtures/data.json')));
         $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $request->expects($this->once())->method('send')->will($this->returnValue($response));
+        $request->expects($this->any())->method('send')->will($this->returnValue($response));
         $client = $this->getMock('Guzzle\Http\Client');
-        $client->expects($this->once())->method('get')->will($this->returnValue($request));
-        $this->api = Api::get('don\'t care about this value', null, $client);
+        $client->expects($this->any())->method('get')->will($this->returnValue($request));
+        $this->api = Api::get('don\'t care about this value', null, $client, $cache);
     }
 
     public function testResolveDocumentLink()

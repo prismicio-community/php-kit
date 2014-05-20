@@ -10,6 +10,12 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     private static $testRepository = 'http://lesbonneschoses.prismic.io/api';
     private static $previewToken = 'MC5VbDdXQmtuTTB6Z0hNWHF3.c--_vVbvv73vv73vv73vv71EA--_vS_vv73vv70T77-9Ke-_ve-_vWfvv70ebO-_ve-_ve-_vQN377-9ce-_vRfvv70';
 
+    protected function setUp()
+    {
+        $cache = new \Prismic\Cache\DefaultCache();
+        $cache->clear();
+    }
+
     public function testRetrieveApi()
     {
         $api = Api::get(self::$testRepository);

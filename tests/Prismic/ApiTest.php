@@ -7,6 +7,13 @@ use Prismic\Response;
 
 class ApiTest extends \PHPUnit_Framework_TestCase
 {
+
+    protected function setUp()
+    {
+        $cache = new \Prismic\Cache\DefaultCache();
+        $cache->clear();
+    }
+
     /**
      * @expectedException \RuntimeException
      */

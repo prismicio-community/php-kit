@@ -214,15 +214,29 @@ class SearchForm
             $url = $this->form->getAction() . '?' . http_build_query($this->data);
             $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
 
-            $request = Api::defaultClient()->get($url);
-            $response = $request->send();
+            $response = $this->api->getCache()->get($url);
+            $response = $response ? null : unserialize($response);
 
-            $response = @json_decode($response->getBody(true));
-            if (!isset($response)) {
-                throw new \RuntimeException("Unable to decode json response");
+            if($response) {
+                return $response;
+            } else {
+                $request = Api::defaultClient()->get($url);
+                $response = $request->send();
+                $cacheControl = $response->getHeaders()->get('Cache-Control');
+                $cacheDuration = null;
+                if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
+                    $cacheDuration = (int)$groups[1];
+                }
+                $json = @json_decode($response->getBody(true));
+                if (!isset($json)) {
+                    throw new \RuntimeException("Unable to decode json response");
+                }
+                if ($cacheDuration !== null) {
+                    $expiration = time() + $cacheDuration;
+                    $this->api->getCache()->set($url, $json, $expiration);
+                }
+                return $json;
             }
-
-            return $response;
         }
 
         throw new \RuntimeException("Form type not supported");
