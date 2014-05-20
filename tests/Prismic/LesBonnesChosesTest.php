@@ -49,6 +49,14 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($results), 5);
     }
 
+    public function testSubmitProductsFormWithOrderings()
+    {
+        $api = Api::get(self::$testRepository);
+        $masterRef = $api->master()->getRef();
+        $results = $api->forms()->products->orderings('[my.product.price]')->ref($masterRef)->submit();
+        $this->assertEquals($results[0]->getId(), 'UkL0gMuvzYUANCpQ'); // this is the "Hot Berry Cupcake", the cheapest one.
+    }
+
     public function testRetrieveApiWithPrivilege()
     {
         $api = Api::get(self::$testRepository, self::$previewToken);
