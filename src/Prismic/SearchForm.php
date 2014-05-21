@@ -227,7 +227,7 @@ class SearchForm
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
                     $cacheDuration = (int)$groups[1];
                 }
-                $json = @json_decode($response->getBody(true));
+                $json = json_decode($response->getBody(true));
                 if (!isset($json)) {
                     throw new \RuntimeException("Unable to decode json response");
                 }

@@ -11,6 +11,7 @@
 namespace Prismic;
 
 use Guzzle\Http\Client;
+use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\NoCache;
 use \Prismic\Cache\DefaultCache;
 
@@ -39,7 +40,7 @@ class Api
      * @param string $data
      * @param string $accessToken
      */
-    private function __construct($data, $accessToken = null, $cache = null)
+    private function __construct($data, $accessToken = null, CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
@@ -228,7 +229,7 @@ class Api
             $client = isset($client) ? $client : self::defaultClient();
             $request = $client->get($url);
             $response = $request->send();
-            $response = @json_decode($response->getBody(true));
+            $response = json_decode($response->getBody(true));
 
             if (!$response) {
                 throw new \RuntimeException('Unable to decode the json response');
