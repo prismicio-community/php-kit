@@ -123,7 +123,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($docchapterdocs[0]['linktodoc']->getType(), 'doc');
         $this->assertEquals($docchapterdocs[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
 
-        $getSlug = function($doclink) {
+        $getSlug = function ($doclink) {
             return $doclink['linktodoc']->getSlug();
         };
         $this->assertEquals(implode(' ', array_map($getSlug, $docchapterdocs)), "with-jquery with-bootstrap");

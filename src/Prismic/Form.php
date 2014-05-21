@@ -44,11 +44,11 @@ class Form
      * Constructs the Form object.
      *
      * @param string    $maybeName the name if there's one
-     * @param string    $method the method to use
-     * @param string    $maybeRel the rel if there's one
-     * @param string    $enctype the encoding type
-     * @param string    $action the action
-     * @param \stdClass $fields the list of Prismic\FieldForm objects that can be used
+     * @param string    $method    the method to use
+     * @param string    $maybeRel  the rel if there's one
+     * @param string    $enctype   the encoding type
+     * @param string    $action    the action
+     * @param \stdClass $fields    the list of Prismic\FieldForm objects that can be used
      */
     public function __construct($maybeName, $method, $maybeRel, $enctype, $action, $fields)
     {

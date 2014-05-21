@@ -32,8 +32,8 @@ class FieldForm
     /**
      * Constructing a FieldForm.
      *
-     * @param string  $type the type of the field
-     * @param boolean $multiple can the parameter be used multiple times
+     * @param string  $type         the type of the field
+     * @param boolean $multiple     can the parameter be used multiple times
      * @param string  $defaultValue the default value
      */
     public function __construct($type, $multiple, $defaultValue)

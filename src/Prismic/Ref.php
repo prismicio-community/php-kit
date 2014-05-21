@@ -43,9 +43,9 @@ class Ref
     /**
      * Constructs a Ref object.
      *
-     * @param string $ref the ID of the ref
-     * @param string $label the display label of the ref
-     * @param string $isMasterRef is the ref the master ref?
+     * @param string $ref              the ID of the ref
+     * @param string $label            the display label of the ref
+     * @param string $isMasterRef      is the ref the master ref?
      * @param string $maybeScheduledAt the date and time at which the ref is scheduled, if it is
      */
     public function __construct($ref, $label, $isMasterRef, $maybeScheduledAt = null)
@@ -109,7 +109,7 @@ class Ref
     /**
      * Parses a ref.
      *
-     * @param \stdClass $json the json bit retrieved from the API that represents a ref.
+     * @param  \stdClass   $json the json bit retrieved from the API that represents a ref.
      * @return Prismic\Ref the manipulable object for that ref.
      */
     public static function parse($json)

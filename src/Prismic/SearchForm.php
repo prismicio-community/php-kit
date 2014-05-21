@@ -41,10 +41,10 @@ class SearchForm
     private $data;
 
     /**
-     * Constructs a SearchForm object, is not meant for 
-     * @param Prismic\Api   $api  the API object containing all the information to know where to query
-     * @param Prismic\Form  $form the REST form we're querying on in the API
-     * @param array         $data the parameters we're getting ready to submit
+     * Constructs a SearchForm object, is not meant for
+     * @param Prismic\Api  $api  the API object containing all the information to know where to query
+     * @param Prismic\Form $form the REST form we're querying on in the API
+     * @param array        $data the parameters we're getting ready to submit
      */
     public function __construct(Api $api, Form $form, array $data)
     {
@@ -60,8 +60,8 @@ class SearchForm
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
      * @api
-     * @param string $key the name of the parameter
-     * @param string $value the value of the parameter
+     * @param  string             $key   the name of the parameter
+     * @param  string             $value the value of the parameter
      * @return Prismic\SearchForm the current SearchForm object, with the new parameter added
      */
     public function set($key, $value)
@@ -97,7 +97,7 @@ class SearchForm
      * Set the repository's ref.
      *
      * @api
-     * @param string $ref the ID of the ref we wish to query on.
+     * @param  string             $ref the ID of the ref we wish to query on.
      * @return Prismic\SearchForm the current SearchForm object, with the new ref parameter added
      */
     public function ref($ref)
@@ -138,7 +138,7 @@ class SearchForm
     /**
      * Parsing the results gotten from such an API call, and unmarshalling them into PHP objects.
      *
-     * @param \stdClass $json the JSON retrieved from the call
+     * @param  \stdClass         $json the JSON retrieved from the call
      * @return Prismic\Documents the result of the call
      */
     private static function parseResult($json)
@@ -166,7 +166,7 @@ class SearchForm
      * allowed) since all we care about is one of the returned non-result
      * fields.
      *
-     * @return integer Total number of results
+     * @return integer           Total number of results
      * @throws \RuntimeException
      */
     public function count()
@@ -179,7 +179,7 @@ class SearchForm
      *
      * @api
      *
-     * @param string $q the predicates.
+     * @param  string             $q the predicates.
      * @return Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function query($q)
@@ -217,7 +217,7 @@ class SearchForm
             $response = $this->api->getCache()->get($url);
             $response = $response ? null : unserialize($response);
 
-            if($response) {
+            if ($response) {
                 return $response;
             } else {
                 $request = Api::defaultClient()->get($url);
@@ -225,7 +225,7 @@ class SearchForm
                 $cacheControl = $response->getHeaders()->get('Cache-Control');
                 $cacheDuration = null;
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
-                    $cacheDuration = (int)$groups[1];
+                    $cacheDuration = (int) $groups[1];
                 }
                 $json = json_decode($response->getBody(true));
                 if (!isset($json)) {
@@ -235,6 +235,7 @@ class SearchForm
                     $expiration = time() + $cacheDuration;
                     $this->api->getCache()->set($url, $json, $expiration);
                 }
+
                 return $json;
             }
         }

@@ -208,11 +208,11 @@ class Api
      *
      * @api
      *
-     * @param string             $action      the URL of your repository API's endpoint
-     * @param string             $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
-     * @param CacheInterface     $cache       Cache implementation
-     * @return Api the Api object, useable to perform queries
+     * @param  string             $action      the URL of your repository API's endpoint
+     * @param  string             $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
+     * @param  CacheInterface     $cache       Cache implementation
+     * @return Api                the Api object, useable to perform queries
      */
     public static function get($action, $accessToken = null, $client = null, $cache = null)
     {
@@ -222,7 +222,7 @@ class Api
         $api = $cache->get($cacheKey);
         $api = $api ? unserialize($api) : null;
 
-        if($api) {
+        if ($api) {
             return $api;
         } else {
             $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
@@ -252,6 +252,7 @@ class Api
 
             $api = new Api($apiData, $accessToken, $cache);
             $cache->set($cacheKey, serialize($api), 5);
+
             return $api;
         }
     }

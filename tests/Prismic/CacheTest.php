@@ -6,23 +6,27 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 {
     private $cache;
 
-    protected function setUp() {
+    protected function setUp()
+    {
         $this->cache = new \Prismic\Cache\DefaultCache();
     }
 
-    public function testSetGetValue() {
+    public function testSetGetValue()
+    {
         $this->cache->set('key', 'value');
         $this->assertEquals($this->cache->get('key'), 'value');
     }
 
-    public function testSetDeleteValue() {
+    public function testSetDeleteValue()
+    {
         $this->cache->set('key', 'value');
         $this->assertEquals($this->cache->get('key'), 'value');
         $this->cache->delete('key');
         $this->assertFalse($this->cache->get('key'));
     }
 
-    public function testSetValueClear() {
+    public function testSetValueClear()
+    {
         $this->cache->set('key', 'value');
         $this->cache->set('key1', 'value1');
         $this->cache->set('key2', 'value2');

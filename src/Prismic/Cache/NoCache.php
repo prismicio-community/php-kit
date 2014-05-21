@@ -11,21 +11,25 @@
 
 namespace Prismic\Cache;
 
-class NoCache implements CacheInterface {
-
-    public function get($key) {
+class NoCache implements CacheInterface
+{
+    public function get($key)
+    {
         return false;
     }
 
-    public function set($key, $value, $ttl = null) {
+    public function set($key, $value, $ttl = null)
+    {
         return false;
     }
 
-    public function delete($key) {
+    public function delete($key)
+    {
         return false;
     }
 
-    public function clear() {
+    public function clear()
+    {
         return false;
     }
 }
