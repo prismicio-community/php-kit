@@ -19,7 +19,8 @@ use Prismic\Fragment\Block\ParagraphBlock;
 use Prismic\Fragment\Block\PreformattedBlock;
 use Prismic\Fragment\Block\TextInterface;
 use Prismic\Fragment\Link\DocumentLink;
-use Prismic\Fragment\Link\MediaLink;
+use Prismic\Fragment\Link\FileLink;
+use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
@@ -278,7 +279,9 @@ class StructuredText implements FragmentInterface
             } elseif ("Link.document" == $linkType) {
                 $link = DocumentLink::parse($json->data->value);
             } elseif ("Link.file" == $linkType) {
-                $link = MediaLink::parse($json->data->value);
+                $link = FileLink::parse($json->data->value);
+            } elseif ("Link.image" == $linkType) {
+                $link = ImageLink::parse($json->data->value);
             }
         }
 

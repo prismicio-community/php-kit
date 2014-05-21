@@ -15,4 +15,5 @@ use Prismic\Fragment\FragmentInterface;
 
 interface LinkInterface extends FragmentInterface
 {
+    public function getUrl($linkResolver = null);
 }

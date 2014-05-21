@@ -11,12 +11,12 @@
 
 namespace Prismic\Fragment\Link;
 
-class MediaLink implements LinkInterface
+class FileLink implements LinkInterface
 {
-    private $url;
-    private $kind;
-    private $size;
-    private $filename;
+    protected $url;
+    protected $kind;
+    protected $size;
+    protected $filename;
 
     public function __construct($url, $kind, $size, $filename)
     {
@@ -36,7 +36,7 @@ class MediaLink implements LinkInterface
         return $this->getUrl();
     }
 
-    public function getUrl()
+    public function getUrl($linkResolver = null)
     {
         return $this->url;
     }
@@ -58,7 +58,7 @@ class MediaLink implements LinkInterface
 
     public static function parse($json)
     {
-        return new MediaLink(
+        return new FileLink(
             $json->file->url,
             $json->file->kind,
             $json->file->size,

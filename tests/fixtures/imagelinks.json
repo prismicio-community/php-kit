@@ -1,0 +1,1060 @@
+[
+  {
+    "id": "U30GzQEAADsAGnmX",
+    "type": "product",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U30GzQEAADsAGnmX%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "link-to-an",
+      "untitled-document"
+    ],
+    "data": {
+      "product": {
+        "description": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "Link to an image",
+              "spans": [
+                {
+                  "start": 5,
+                  "end": 16,
+                  "type": "hyperlink",
+                  "data": {
+                    "type": "Link.image",
+                    "value": {
+                      "image": {
+                        "name": "12well_physed-tmagArticle.jpg",
+                        "kind": "image",
+                        "url": "https://prismic-io.s3.amazonaws.com/rudysandbox%2Fecc7ba86-cb12-471d-8374-7f88ce909f0b_12well_physed-tmagarticle.jpg",
+                        "size": "50303",
+                        "height": "557",
+                        "width": "592"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "link": {
+          "type": "Link.image",
+          "value": {
+            "image": {
+              "name": "12well_physed-tmagArticle.jpg",
+              "kind": "image",
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox%2F905e76fb-b327-4862-8a31-8f194608dc91_12well_physed-tmagarticle.jpg",
+              "size": "50303",
+              "height": "557",
+              "width": "592"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "U1mVbwEAACoAif7V",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U1mVbwEAACoAif7V%22%29+%5D%5D",
+    "tags": [
+      "New tag",
+      "I am writing",
+      "More tags",
+      "of that window"
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "article": {
+        
+      }
+    }
+  },
+  {
+    "id": "U2v3aAEAAC8ALckN",
+    "type": "bug-any-groups",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U2v3aAEAAC8ALckN%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "bug-any-groups": {
+        "documents": {
+          "type": "Group",
+          "value": [
+            {
+              "document": {
+                "type": "Link.document",
+                "value": {
+                  "document": {
+                    "id": "U16XIAEAADAAp7ew",
+                    "type": "product",
+                    "tags": [
+                      
+                    ],
+                    "slug": "to-be-requested-on-release-2"
+                  },
+                  "isBroken": false
+                }
+              }
+            },
+            {
+              "document": {
+                "type": "Link.document",
+                "value": {
+                  "document": {
+                    "id": "U0yA0gEAADsAQNMX",
+                    "type": "product",
+                    "tags": [
+                      
+                    ],
+                    "slug": "untitled-document"
+                  },
+                  "isBroken": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "U0WDvgEAANhBHgXL",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U0WDvgEAANhBHgXL%22%29+%5D%5D",
+    "tags": [
+      "firsttag",
+      "secondtag"
+    ],
+    "slugs": [
+      "paying-with-tags"
+    ],
+    "data": {
+      "article": {
+        "title": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "Paying with tags",
+              "spans": [
+                
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "U16XIAEAADAAp7ew",
+    "type": "product",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U16XIAEAADAAp7ew%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "to-be-requested-on-release-2"
+    ],
+    "data": {
+      "product": {
+        "name": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "To be requested on release (2)",
+              "spans": [
+                
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "U3uRfwEAAC0AF49w",
+    "type": "product",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U3uRfwEAAC0AF49w%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "product": {
+        "image": {
+          "type": "Image",
+          "value": {
+            "main": {
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/0cf601a8490d03e7d636ac68b79d09d036a12486.jpg",
+              "alt": "",
+              "copyright": "",
+              "dimensions": {
+                "width": 800,
+                "height": 450
+              }
+            },
+            "views": {
+              "icon": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/50019d6c91e9631cd3adb7064ad127dfd2a8e153.jpg",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 100,
+                  "height": 100
+                }
+              },
+              "column": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/c6afd41a9a49774c5fe08a647ad1006dfe869d47.jpg",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 320,
+                  "height": 500
+                }
+              },
+              "wide": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/128d72645749be75b9fec121d7d926f8b9a9eea1.jpg",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 600,
+                  "height": 300
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "U0yA0gEAADsAQNMX",
+    "type": "product",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U0yA0gEAADsAQNMX%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "product": {
+        "image": {
+          "type": "Image",
+          "value": {
+            "main": {
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/491349f97e0a4e781d0130157740850b00c222b5.jpg",
+              "alt": "Sunset",
+              "copyright": "",
+              "dimensions": {
+                "width": 800,
+                "height": 600
+              }
+            },
+            "views": {
+              "icon": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/787105b8cc0f515289da7dec66987f9d53f82552.jpg",
+                "alt": "Sunset",
+                "copyright": "",
+                "dimensions": {
+                  "width": 100,
+                  "height": 100
+                }
+              },
+              "column": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/21cf987799d4c427c0abbba37f674d921f7385b8.jpg",
+                "alt": "Sunset",
+                "copyright": "",
+                "dimensions": {
+                  "width": 320,
+                  "height": 500
+                }
+              },
+              "wide": {
+                "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/8c05bbc6fac6898bd6a0bf36e6d3a8eb6400f160.jpg",
+                "alt": "Sunset",
+                "copyright": "",
+                "dimensions": {
+                  "width": 600,
+                  "height": 300
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "U3ZD4QEAACsABanz",
+    "type": "bugimagecut",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U3ZD4QEAACsABanz%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "this-is-a"
+    ],
+    "data": {
+      "bugimagecut": {
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "This is a line.",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "image",
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/caff4c08f374540b5dc98b28845f8f1b8581d23c.png",
+              "alt": "",
+              "copyright": "",
+              "dimensions": {
+                "width": 682,
+                "height": 2707
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "U3VdAwEAACoAA9qi",
+    "type": "buglistitemphp",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U3VdAwEAACoAA9qi%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "buglistitemphp": {
+        "body": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "list-item",
+              "text": "Chaudière murale gaz à condensation à très haut rendement",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "Chaudière double service, avec ballon eau chaude sanitaire 62 litres",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "Echangeur en acier inoxydable auto-nettoyant: résistance sans pareille à la corrosion",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "Brûleur à pré-mélange, gaz naturel ou propane",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "Raccordement ventouse en standard",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "Kits hydrauliques et accessoires de régulation en option",
+              "spans": [
+                
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "Uyy--AEAAAcvYdP_",
+    "type": "bugtellink",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uyy--AEAAAcvYdP_%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "bugtellink": {
+        "link": {
+          "type": "Link.web",
+          "value": {
+            "url": "http://tel:555-555-5555"
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "UzCwGgEAAP0M6rgO",
+    "type": "test",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UzCwGgEAAP0M6rgO%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "siobhan-wilson-all-dressed-up"
+    ],
+    "data": {
+      "test": {
+        "link": {
+          "type": "Link.web",
+          "value": {
+            "url": "https:// prismic.io"
+          }
+        },
+        "video": {
+          "type": "Embed",
+          "value": {
+            "oembed": {
+              "provider_url": "http://www.youtube.com/",
+              "type": "video",
+              "thumbnail_height": 360.0,
+              "height": 270.0,
+              "thumbnail_url": "http://i1.ytimg.com/vi/baGfM6dBzs8/hqdefault.jpg",
+              "width": 480.0,
+              "provider_name": "YouTube",
+              "html": "<iframe width=\"480\" height=\"270\" src=\"http://www.youtube.com/embed/baGfM6dBzs8?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+              "author_name": "Siobhan Wilson",
+              "version": "1.0",
+              "author_url": "http://www.youtube.com/user/siobhanwilsonsongs",
+              "thumbnail_width": 480.0,
+              "title": "Siobhan Wilson - All Dressed Up",
+              "embed_url": "https://www.youtube.com/watch?v=baGfM6dBzs8"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "UyCACgEAAI0GbY1F",
+    "type": "bugnumberfragments",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UyCACgEAAI0GbY1F%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "",
+      "untitled-document"
+    ],
+    "data": {
+      "bugnumberfragments": {
+        "price": {
+          "type": "Number",
+          "value": 500.0
+        },
+        "text": {
+          "type": "Text",
+          "value": "Test here"
+        }
+      }
+    }
+  },
+  {
+    "id": "Ux-1gQEAAOwIit9G",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Ux-1gQEAAOwIit9G%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "here-is-a-document-with-anothe-the",
+      "here-is-a-document-with-another-one-block-to-get-the",
+      "here-is-a-document",
+      "here-is-a-document-with-some-bolden"
+    ],
+    "data": {
+      "article": {
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "Here is a document with.",
+              "spans": [
+                {
+                  "start": 8,
+                  "end": 9,
+                  "type": "em"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Anothe the issue.",
+              "spans": [
+                
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "Uz2Y5AEAAHUHz19a",
+    "type": "test",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uz2Y5AEAAHUHz19a%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "testing-whether-a-link-to-a-doc-file-is-ok"
+    ],
+    "data": {
+      "test": {
+        "title": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "Testing whether a link to a doc file is ok",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "link": {
+          "type": "Link.file",
+          "value": {
+            "file": {
+              "name": "worddocument.doc",
+              "kind": "document",
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox%2F8f8cc598-ec31-49af-af45-54ee7a8dc1fb_worddocument.doc",
+              "size": "8704"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "UyCctQEAAKABxfxP",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UyCctQEAAKABxfxP%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "test-with-newline-character"
+    ],
+    "data": {
+      "article": {
+        "title": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "Test with \"newline\" character",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "Here is a first line\nHere is a second line",
+              "spans": [
+                
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "UzDNVAEAAOcQ6rhY",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UzDNVAEAAOcQ6rhY%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "this-is-a-title"
+    ],
+    "data": {
+      "article": {
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "This is a title",
+              "spans": [
+                {
+                  "start": 8,
+                  "end": 9,
+                  "type": "em"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "This is a paragraph that has a lot of formatting going on (even though this formatting could be on any prismic.io text block).",
+              "spans": [
+                {
+                  "start": 38,
+                  "end": 48,
+                  "type": "strong"
+                },
+                {
+                  "start": 59,
+                  "end": 103,
+                  "type": "em"
+                },
+                {
+                  "start": 103,
+                  "end": 113,
+                  "type": "hyperlink",
+                  "data": {
+                    "type": "Link.web",
+                    "value": {
+                      "url": "https://prismic.io"
+                    }
+                  }
+                },
+                {
+                  "start": 103,
+                  "end": 113,
+                  "type": "em"
+                },
+                {
+                  "start": 113,
+                  "end": 124,
+                  "type": "em"
+                }
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "This is",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "a bulleted",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "list",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "image",
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/abc59d245b772e06bd610d5ade73090e4765a971.jpg",
+              "alt": "Sunset",
+              "copyright": "",
+              "dimensions": {
+                "width": 300,
+                "height": 225
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "Uo0X2gEAAJVG2ePz",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uo0X2gEAAJVG2ePz%22%29+%5D%5D",
+    "tags": [
+      "help"
+    ],
+    "slugs": [
+      "first-document"
+    ],
+    "data": {
+      "article": {
+        "title": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading1",
+              "text": "First document!",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "explicittitle": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading2",
+              "text": "This is your first document!",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "shortlede": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "You have much to learn about how to use prismic.io best, and the learning starts here!",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "longlede": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "Just to show you around, we shaped this typical article mask, but you can change it your way, of course! Quick tips: notice that your document fields are organized in tabs (here: \"Headings\", \"Content\" and \"Metadata\"); oh, and don't forget to click on the image below to see the various adaptive versions it has. Then, switch to the \"Content\" tab, we have more information for you there!",
+              "spans": [
+                
+              ]
+            }
+          ]
+        },
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "heading3",
+              "text": "About this writing room's interface",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Hey, wait before clicking in this field! Have you noticed the tag bar up there? For now, we've only set a \"help\" tag on this article, it allows it to be part of the \"Help articles\" collection (in your left menu). But our tagging system is made to be very powerful, and you'll see there are many other ways to use tags smartly.",
+              "spans": [
+                {
+                  "start": 62,
+                  "end": 69,
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Notice how the tag bar transforms into a formatting toolbar when you're writing in this field. Now, this might look like a wysiwyg, but this is actually not your average wysiwyg, as it stores structured information, and not HTML. It only allows you to structure your content better, to perfectly represent it in many different ways.",
+              "spans": [
+                {
+                  "start": 41,
+                  "end": 59,
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Can you see the current status of this document, at the very top left of this writing room? We left it as a \"Draft\" for you, so you can play with it right now; but you're able to change it (and publish the document, for instance) if you click on it. On the top right, you can find little icons, which are the document tools available in your repository; for now, they allow you to see this document's collaborative activity, to compare it to a previous version (with a powerful visual diff), to see the attached media, ...",
+              "spans": [
+                {
+                  "start": 16,
+                  "end": 30,
+                  "type": "strong"
+                },
+                {
+                  "start": 309,
+                  "end": 323,
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "heading3",
+              "text": "About this textarea",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Your textarea field is divided in paragraphs and the current paragraph is highlighted in yellow as you type. To keep your content structured, we advise that you keep a close watch on your content paragraphs.",
+              "spans": [
+                {
+                  "start": 34,
+                  "end": 44,
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "There are many things you can do within this textarea, which all help you remain structured:",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "bullet points, of course (hey, like this one!)",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "different kinds of headings to section your document field even better",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "strength (symbolized by a boldening) and emphasizing (symbolized by italic)",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "you can also use structured links, towards documents in this repository, or outside this repository",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "you can add images in your content, but we strongly advise you to keep illustrative images in their own fields, and only use inline images when they are actually part of your main content",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "list-item",
+              "text": "and you can embed an outside resource into this document (like a Youtube video, or a Slideshare presentation, for instance)",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "heading3",
+              "text": "What's next?",
+              "spans": [
+                
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Have you taken the guided your of the back-office? If you haven't, you should! Click on your avatar at the top-right of this interface, and in the menu, selects \"Take the guided tour\".",
+              "spans": [
+                {
+                  "start": 323,
+                  "end": 184,
+                  "type": "hyperlink",
+                  "data": {
+                    "type": "Link.web",
+                    "value": {
+                      "url": "http://developers.prismic.io"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "If you have, well, it seems like you're all set! You'll find more information about how to use this editor in our online content writer's manual on the prismic.io developers portal. Remember we're also always available if you have any questions: just click on \"Ask us anything\" in the top-right menu, we always reply!",
+              "spans": [
+                {
+                  "start": 152,
+                  "end": 173,
+                  "type": "hyperlink",
+                  "data": {
+                    "type": "Link.web",
+                    "value": {
+                      "url": "http://developers.prismic.io"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "illustration": {
+          "type": "Image",
+          "value": {
+            "main": {
+              "url": "https://prismic-io.s3.amazonaws.com/blank/9899ba73d8b22b4a7ae107022ccf00831ca6e2fc.png",
+              "alt": "",
+              "copyright": "",
+              "dimensions": {
+                "width": 600,
+                "height": 600
+              }
+            },
+            "views": {
+              "icon": {
+                "url": "https://prismic-io.s3.amazonaws.com/blank/bacef4b371695b48a08677475f83ab9dbdc055b3.png",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 90,
+                  "height": 150
+                }
+              },
+              "squared": {
+                "url": "https://prismic-io.s3.amazonaws.com/blank/8b56869b4a63504ffa461766668fca0047035d05.png",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 300,
+                  "height": 300
+                }
+              },
+              "wide": {
+                "url": "https://prismic-io.s3.amazonaws.com/blank/23c845e446db6f599ca095a410d05ee939e7262d.png",
+                "alt": "",
+                "copyright": "",
+                "dimensions": {
+                  "width": 600,
+                  "height": 300
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Uw_ZsAEAAHUIsBNp",
+    "type": "bug-text",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uw_ZsAEAAHUIsBNp%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document",
+      "title-here"
+    ],
+    "data": {
+      "bug-text": {
+        "image": {
+          "type": "Image",
+          "value": {
+            "main": {
+              "url": "https://prismic-io.s3.amazonaws.com/rudysandbox/54a48fb1c00bb7361fe387cac0677e0d959255bc.jpg",
+              "alt": "",
+              "copyright": "",
+              "dimensions": {
+                "width": 592,
+                "height": 557
+              }
+            },
+            "views": {
+              
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "UxZoDwEAANkKj-Ya",
+    "type": "article",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UxZoDwEAANkKj-Ya%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "untitled-document"
+    ],
+    "data": {
+      "article": {
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "embed",
+              "oembed": {
+                "height": 270.0,
+                "author_name": "Siobhan Wilson",
+                "html": "<iframe width=\"480\" height=\"270\" src=\"http://www.youtube.com/embed/baGfM6dBzs8?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+                "thumbnail_width": 480.0,
+                "type": "video",
+                "version": "1.0",
+                "thumbnail_height": 360.0,
+                "provider_url": "http://www.youtube.com/",
+                "title": "Siobhan Wilson - All Dressed Up",
+                "thumbnail_url": "http://i1.ytimg.com/vi/baGfM6dBzs8/hqdefault.jpg",
+                "author_url": "http://www.youtube.com/user/siobhanwilsonsongs",
+                "provider_name": "YouTube",
+                "width": 480.0,
+                "embed_url": "https://www.youtube.com/watch?v=baGfM6dBzs8"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "UxoDSwEAALATH35_",
+    "type": "bug-text",
+    "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UxoDSwEAALATH35_%22%29+%5D%5D",
+    "tags": [
+      
+    ],
+    "slugs": [
+      "this-is-a-text"
+    ],
+    "data": {
+      "bug-text": {
+        "name": {
+          "type": "Text",
+          "value": "This is a text fragment"
+        }
+      }
+    }
+  }
+]

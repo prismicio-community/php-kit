@@ -17,7 +17,8 @@ use Prismic\Fragment\Image;
 use Prismic\Fragment\Number;
 use Prismic\Fragment\ImageView;
 use Prismic\Fragment\Link\DocumentLink;
-use Prismic\Fragment\Link\MediaLink;
+use Prismic\Fragment\Link\FileLink;
+use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
@@ -573,7 +574,11 @@ class Document
             }
 
             if ($json->type === "Link.file") {
-                return MediaLink::parse($json->value);
+                return FileLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.image") {
+                return ImageLink::parse($json->value);
             }
 
             if ($json->type === "StructuredText") {

@@ -32,7 +32,7 @@ class WebLink implements LinkInterface
         return $this->getUrl();
     }
 
-    public function getUrl()
+    public function getUrl($linkResolver = null)
     {
         return $this->url;
     }
