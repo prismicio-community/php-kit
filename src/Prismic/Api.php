@@ -12,7 +12,6 @@ namespace Prismic;
 
 use Guzzle\Http\Client;
 use \Prismic\Cache\CacheInterface;
-use \Prismic\Cache\NoCache;
 use \Prismic\Cache\DefaultCache;
 
 /**
@@ -216,7 +215,7 @@ class Api
      */
     public static function get($action, $accessToken = null, $client = null, $cache = null)
     {
-        $cache = is_null($cache) ? new NoCache() : $cache;
+        $cache = is_null($cache) ? new DefaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
 
         $api = $cache->get($cacheKey);
