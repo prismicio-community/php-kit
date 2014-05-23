@@ -21,32 +21,54 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->submit();
-        $this->assertEquals(count($results), 20);
+        $documents = $api->forms()->everything->ref($masterRef)->submit();
+        $this->assertEquals(count($documents->getResults()), 20);
+        $this->assertEquals($documents->getPage(), 1);
+        $this->assertEquals($documents->getResultsPerPage(), 20);
+        $this->assertEquals($documents->getResultsSize(), 20);
+        $this->assertEquals($documents->getTotalResultsSize(), 40);
+        $this->assertEquals($documents->getTotalPages(), 2);
+        $this->assertEquals($documents->getNextPage(), 'http://lesbonneschoses.prismic.io/api/documents/search?ref=UkL0hcuvzYUANCrm&page=2&pageSize=20');
+        $this->assertEquals($documents->getPrevPage(), '');
+    }
+
+    public function testSubmitEverythingFormWithPageAndPageSize()
+    {
+        $api = Api::get(self::$testRepository);
+        $masterRef = $api->master()->getRef();
+        $documents = $api->forms()->everything->page(2)->pageSize(10)->ref($masterRef)->submit();
+        $this->assertEquals(count($documents->getResults()), 10);
+        $this->assertEquals($documents->getPage(), 2);
+        $this->assertEquals($documents->getResultsPerPage(), 10);
+        $this->assertEquals($documents->getResultsSize(), 10);
+        $this->assertEquals($documents->getTotalResultsSize(), 40);
+        $this->assertEquals($documents->getTotalPages(), 4);
+        $this->assertEquals($documents->getNextPage(), 'http://lesbonneschoses.prismic.io/api/documents/search?ref=UkL0hcuvzYUANCrm&page=3&pageSize=10');
+        $this->assertEquals($documents->getPrevPage(), 'http://lesbonneschoses.prismic.io/api/documents/search?ref=UkL0hcuvzYUANCrm&page=1&pageSize=10');
     }
 
     public function testSubmitEverythingFormWithPredicate()
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.type, "product")]]')->submit();
-        $this->assertEquals(count($results), 16);
+        $documents = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.type, "product")]]')->submit();
+        $this->assertEquals(count($documents->getResults()), 16);
     }
 
     public function testSubmitProductsForm()
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->ref($masterRef)->submit();
-        $this->assertEquals(count($results), 16);
+        $documents = $api->forms()->products->ref($masterRef)->submit();
+        $this->assertEquals(count($documents->getResults()), 16);
     }
 
     public function testSubmitProductsFormWithPredicate()
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->ref($masterRef)->query('[[:d = at(my.product.flavour, "Chocolate")]]')->submit();
-        $this->assertEquals(count($results), 5);
+        $documents = $api->forms()->products->ref($masterRef)->query('[[:d = at(my.product.flavour, "Chocolate")]]')->submit();
+        $this->assertEquals(count($documents->getResults()), 5);
     }
 
     public function testSubmitProductsFormWithOrderings()
@@ -69,7 +91,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $api = Api::get(self::$testRepository, self::$previewToken);
         $refs = $api->refs();
         $future = $refs['Announcement of new SF shop'];
-        $results = $api->forms()->products->ref($future->getRef())->submit();
-        $this->assertEquals(count($results), 17);
+        $documents = $api->forms()->products->ref($future->getRef())->submit();
+        $this->assertEquals(count($documents->getResults()), 17);
     }
 }

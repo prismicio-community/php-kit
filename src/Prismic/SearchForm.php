@@ -158,9 +158,7 @@ class SearchForm
      */
     private static function parseResult($json)
     {
-        return array_map(function ($doc) {
-            return Document::parse($doc);
-        }, isset($json->results) ? $json->results : $json);
+        return Documents::parse($json);
     }
 
     /**
