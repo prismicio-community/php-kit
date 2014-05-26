@@ -52,6 +52,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($results->length, 1);
             $imgs[] = $results->item(0);
         }
+
         return $imgs;
     }
 

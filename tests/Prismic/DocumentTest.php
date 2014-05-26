@@ -14,9 +14,11 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $cache = new \Prismic\Cache\DefaultCache();
+        $cache->clear();
         $search = json_decode(file_get_contents(__DIR__.'/../fixtures/search.json'));
         $this->document = Document::parse($search[0]);
-        $this->micro_api = Api::get(self::$testRepository);
+        $this->micro_api = Api::get(self::$testRepository, null, null, $cache);
         $this->linkResolver = new FakeLinkResolver();
     }
 
@@ -121,7 +123,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($docchapterdocs[0]['linktodoc']->getType(), 'doc');
         $this->assertEquals($docchapterdocs[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
 
-        $getSlug = function($doclink) {
+        $getSlug = function ($doclink) {
             return $doclink['linktodoc']->getSlug();
         };
         $this->assertEquals(implode(' ', array_map($getSlug, $docchapterdocs)), "with-jquery with-bootstrap");

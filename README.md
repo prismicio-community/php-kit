@@ -6,7 +6,9 @@
 
 #### Install the kit for your project
 
-The best way to install the library is with the composer package manager ([install it](https://getcomposer.org/doc/00-intro.md) if you haven't yet)
+First of all, please install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default build-in cache support.
+
+Now, the best way to install the library in your project is with the composer package manager ([install it](https://getcomposer.org/doc/00-intro.md) if you haven't yet)
 
 Then run this from your project's root in order to add the dependency:
 
