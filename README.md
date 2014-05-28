@@ -33,6 +33,8 @@ use Prismic\Api;
 
 ```
 
+The kit is compatible and tested with PHP5.3 and above.
+
 #### Get started with prismic.io
 
 You can find out [how to get started with prismic.io](https://developers.prismic.io/documentation/UjBaQsuvzdIHvE4D/getting-started) on our [prismic.io developer's portal](https://developers.prismic.io/).
