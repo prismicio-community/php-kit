@@ -42,9 +42,9 @@ class SearchForm
 
     /**
      * Constructs a SearchForm object, is not meant for
-     * @param Prismic\Api  $api  the API object containing all the information to know where to query
-     * @param Prismic\Form $form the REST form we're querying on in the API
-     * @param array        $data the parameters we're getting ready to submit
+     * @param \Prismic\Api  $api  the API object containing all the information to know where to query
+     * @param \Prismic\Form $form the REST form we're querying on in the API
+     * @param array         $data the parameters we're getting ready to submit
      */
     public function __construct(Api $api, Form $form, array $data)
     {
@@ -60,9 +60,9 @@ class SearchForm
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
      * @api
-     * @param  string             $key   the name of the parameter
-     * @param  string             $value the value of the parameter
-     * @return Prismic\SearchForm the current SearchForm object, with the new parameter added
+     * @param  string              $key   the name of the parameter
+     * @param  string              $value the value of the parameter
+     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
      */
     public function set($key, $value)
     {
@@ -97,8 +97,8 @@ class SearchForm
      * Set the repository's ref.
      *
      * @api
-     * @param  string             $ref the ID of the ref we wish to query on.
-     * @return Prismic\SearchForm the current SearchForm object, with the new ref parameter added
+     * @param  string              $ref the ID of the ref we wish to query on.
+     * @return \Prismic\SearchForm the current SearchForm object, with the new ref parameter added
      */
     public function ref($ref)
     {
@@ -109,8 +109,8 @@ class SearchForm
      * Set the query's page size, for the pagination.
      *
      * @api
-     * @param  int                $pageSize
-     * @return Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     * @param  int                 $pageSize
+     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
      */
     public function pageSize($pageSize)
     {
@@ -124,8 +124,8 @@ class SearchForm
      * Set the query's page, for the pagination.
      *
      * @api
-     * @param  int                $page
-     * @return Prismic\SearchForm the current SearchForm object, with the new page parameter added
+     * @param  int                 $page
+     * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function page($page)
     {
@@ -139,8 +139,8 @@ class SearchForm
      * Set the query's ordering, setting in what order the documents must be retrieved.
      *
      * @api
-     * @param  string                $orderings
-     * @return Prismic\SearchForm the current SearchForm object, with the new orderings parameter added
+     * @param  string              $orderings
+     * @return \Prismic\SearchForm the current SearchForm object, with the new orderings parameter added
      */
     public function orderings($orderings)
     {
@@ -153,8 +153,8 @@ class SearchForm
     /**
      * Parsing the results gotten from such an API call, and unmarshalling them into PHP objects.
      *
-     * @param  \stdClass         $json the JSON retrieved from the call
-     * @return Prismic\Documents the result of the call
+     * @param  \stdClass          $json the JSON retrieved from the call
+     * @return \Prismic\Documents the result of the call
      */
     private static function parseResult($json)
     {
@@ -166,7 +166,7 @@ class SearchForm
     /**
      * Submit the current API call, and unmarshals the result into PHP objects.
      *
-     * @return Prismic\Documents the result of the call
+     * @return \Prismic\Documents the result of the call
      * @throws \RuntimeException
      */
     public function submit()
@@ -195,7 +195,7 @@ class SearchForm
      * @api
      *
      * @param  string             $q the predicates.
-     * @return Prismic\SearchForm the current SearchForm object, with the new page parameter added
+     * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function query($q)
     {

@@ -96,8 +96,8 @@ class Document
      * Checks if a given slug is a past or current slug of the document
      *
      * @api
-     * @param  string $slug the slug to check
-     * @return bool   true if the slug is a past or current slug of the document, false otherwise
+     * @param  string    $slug the slug to check
+     * @return boolean   true if the slug is a past or current slug of the document, false otherwise
      */
     public function containsSlug($slug)
     {
@@ -118,7 +118,7 @@ class Document
      *
      * @api
      * @param  string                             $field name of the fragment, with the document's type, like "product.description"
-     * @return Prismic\Fragment\FragmentInterface the fragment as an object
+     * @return \Prismic\Fragment\FragmentInterface the fragment as an object
      */
     public function get($field)
     {
@@ -140,7 +140,7 @@ class Document
      *
      * @api
      * @param  string $field name of the fragment, with the document's type, like "product.description"
-     * @return bool   true if the fragment exists, false otherwise
+     * @return boolean   true if the fragment exists, false otherwise
      *                      */
      public function has($field)
      {
@@ -282,7 +282,7 @@ class Document
      *
      * @api
      * @param  string               $field        name of the fragment, with the document's type, like "product.description"
-     * @param  Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @param  \Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
      * @return string               the directly usable HTML code, or null if the fragment is unset
      */
     public function getHtml($field, $linkResolver = null)
@@ -301,7 +301,7 @@ class Document
      *
      * @api
      * @param  string                 $field name of the fragment, with the document's type, like "product.picture"
-     * @return Prismic\Fragment\Image the directly usable HTML code, or null if the fragment is unset
+     * @return \Prismic\Fragment\Image the directly usable HTML code, or null if the fragment is unset
      */
     public function getImage($field)
     {
@@ -353,7 +353,7 @@ class Document
      * @api
      * @param  string                     $field name of the fragment, with the document's type, like "product.picture"
      * @param  string                     $view  name of the view, like "small"
-     * @return Prismic\Fragment\ImageView the directly usable object symbolizing the view
+     * @return \Prismic\Fragment\ImageView the directly usable object symbolizing the view
      */
     public function getImageView($field, $view = null)
     {
@@ -396,7 +396,7 @@ class Document
      *
      * @api
      * @param  string                          $field name of the fragment, with the document's type, like "product.description"
-     * @return Prismic\Fragment\StructuredText the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return \Prismic\Fragment\StructuredText the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getStructuredText($field)
     {
@@ -415,7 +415,7 @@ class Document
      *
      * @api
      * @param  string                 $field name of the fragment, with the document's type, like "product.gallery"
-     * @return Prismic\Fragment\Group the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return \Prismic\Fragment\Group the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getGroup($field)
     {
@@ -434,7 +434,7 @@ class Document
      * at the fragment level; for instance: $doc->get('product.description')->asHtml($linkResolver);
      *
      * @api
-     * @param  Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @param  \Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
      * @return string               the directly usable HTML code
      */
     public function asHtml($linkResolver = null)
@@ -524,7 +524,7 @@ class Document
      * Parses a given fragment. Not meant to be used except for testing.
      *
      * @param  \stdClass                          $json the json bit retrieved from the API that represents any fragment.
-     * @return Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
+     * @return \Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
      */
     public static function parseFragment($json)
     {
@@ -592,7 +592,7 @@ class Document
      * Parses a given document. Not meant to be used except for testing.
      *
      * @param  \stdClass        $json the json bit retrieved from the API that represents a document.
-     * @return Prismic\Document the manipulable object for that document.
+     * @return \Prismic\Document the manipulable object for that document.
      */
     public static function parse(\stdClass $json)
     {

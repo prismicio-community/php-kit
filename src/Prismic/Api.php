@@ -16,7 +16,8 @@ use \Prismic\Cache\DefaultCache;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
- * Initialize it with Prismic\Api\get, and use your Prismic\Api\forms to make API calls.
+ * Initialize it with Prismic\Api::get(), and use your Prismic\Api::forms() to make API calls
+ * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
  *
  * @api
  */
@@ -27,10 +28,12 @@ class Api
      */
     protected $accessToken;
     /**
-     * @var Prismic\ApiData the raw data of the /api document (prefer to use this class's instance methods)
+     * @var ApiData the raw data of the /api document (prefer to use this class's instance methods)
      */
     protected $data;
-
+    /**
+     * @var CacheInterface the cache object specifying how to store the cache
+     */
     private $cache;
 
     /**
@@ -188,13 +191,18 @@ class Api
     /**
      * Accessing raw data returned by the /api endpoint
      *
-     * @return Prismic\ApiData the raw data
+     * @return ApiData the raw data
      */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * Accessing the cache object specifying how to store the cache
+     *
+     * @return CacheInterface the cache object itself
+     */
     public function getCache()
     {
         return $this->cache;
@@ -207,11 +215,11 @@ class Api
      *
      * @api
      *
-     * @param  string             $action      the URL of your repository API's endpoint
-     * @param  string             $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
-     * @param  CacheInterface     $cache       Cache implementation
-     * @return Api                the Api object, useable to perform queries
+     * @param  string              $action      the URL of your repository API's endpoint
+     * @param  string              $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  \Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
+     * @param  CacheInterface      $cache       Cache implementation
+     * @return Api                 the Api object, useable to perform queries
      */
     public static function get($action, $accessToken = null, $client = null, $cache = null)
     {
