@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -11,6 +10,11 @@
 
 namespace Prismic\Fragment\Block;
 
+
+/**
+ * This interface embodies any block of a StructuredText fragment (heading, paragraph, list item, image, ...).
+ * It is used solely for internal purposes
+ */
 interface BlockInterface
 {
 }

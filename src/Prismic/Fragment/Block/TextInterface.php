@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -11,7 +10,18 @@
 
 namespace Prismic\Fragment\Block;
 
+/**
+ * This interface embodies any block of a StructuredText fragment that contains text.
+ * Its known implementations are HeadingBlock, ListItemBlock, ParagraphBlock, and PreformattedBlock.
+ */
 interface TextInterface extends BlockInterface
 {
+    /**
+     * Returns the unformatted text.
+     *
+     * @api
+     *
+     * @return string the unformatted text.
+     */
     public function getText();
 }

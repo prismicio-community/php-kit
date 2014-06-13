@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -13,6 +12,15 @@ namespace Prismic\Fragment\Link;
 
 use Prismic\Fragment\FragmentInterface;
 
+/**
+ * This interface embodies any link.
+ * LinkInterface objects can be found in two occasions: as the "$link" variable of a HyperlinkSpan object
+ * (which happens when the link is a hyperlink in a StructuredText fragment), or the LinkInterface
+ * can also be its own fragment (e.g. for a "related" fragment, that links to a related document).
+ *
+ * Its known implementations are DocumentLink, WebLink, and also FileLink and ImageLink
+ * (united as "MediaLink" in former versions of the kit).
+ */
 interface LinkInterface extends FragmentInterface
 {
 }
