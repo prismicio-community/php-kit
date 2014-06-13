@@ -23,7 +23,6 @@ class PreformattedBlock implements TextInterface
      * @var array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      */
     private $spans;
-    private $level;
 
     /**
      * Constructs a paragraph block.
@@ -31,11 +30,10 @@ class PreformattedBlock implements TextInterface
      * @param string   $text      the unformatted text
      * @param array    $spans     an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      */
-    public function __construct($text, $spans, $level)
+    public function __construct($text, $spans)
     {
         $this->text = $text;
         $this->spans = $spans;
-        $this->level = $level;
     }
 
     /**
@@ -62,8 +60,4 @@ class PreformattedBlock implements TextInterface
         return $this->spans;
     }
 
-    public function getLevel()
-    {
-        return $this->level;
-    }
 }
