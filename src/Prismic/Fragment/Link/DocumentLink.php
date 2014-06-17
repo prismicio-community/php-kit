@@ -44,7 +44,7 @@ class DocumentLink implements LinkInterface
     private $isBroken;
 
     /**
-     * Constructs an document link.
+     * Constructs a document link.
      *
      * @param string  $id       the ID of the linked document
      * @param string  $type     the type of the linked document
@@ -97,6 +97,18 @@ class DocumentLink implements LinkInterface
         );
     }
 
+    /**
+     * Returns the URL of the document we're linking to.
+     * The linkResolver will be needed in this case, as we're linking to a document link,
+     * which should be a URL of your website.
+     * Read more about the link resolver at the very end of prismic.io's documentation.
+     *
+     * @api
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
+     *
+     * @return string the URL of the resource we're linking to online
+     */
     public function getUrl($linkResolver = null)
     {
         return $linkResolver($this);

@@ -23,5 +23,16 @@ use Prismic\Fragment\FragmentInterface;
  */
 interface LinkInterface extends FragmentInterface
 {
+    /**
+     * Returns the URL we're linking to.
+     * The linkResolver will be needed in case the link is a document link.
+     * Read more about the link resolver at the very end of prismic.io's documentation.
+     *
+     * @api
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
+     *
+     * @return string the URL of the resource we're linking to online
+     */
     public function getUrl($linkResolver = null);
 }

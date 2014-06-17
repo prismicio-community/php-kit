@@ -70,6 +70,8 @@ class WebLink implements LinkInterface
     /**
      * Returns the URL of the resource we're linking to online
      *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
+     *
      * @api
      *
      * @return string the URL of the resource we're linking to online

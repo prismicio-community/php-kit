@@ -12,7 +12,7 @@ namespace Prismic\Fragment\Link;
 
 /**
  * This class embodies a file link; it is what is retrieved from the API when
- * a link is created towards a media file.
+ * a link is created towards a non-image file.
  * LinkInterface objects can be found in two occasions: as the "$link" variable of a HyperlinkSpan object
  * (which happens when the link is a hyperlink in a StructuredText fragment), or the LinkInterface
  * can also be its own fragment (e.g. for a "related" fragment, that links to a related document).
@@ -37,7 +37,7 @@ class FileLink implements LinkInterface
     private $filename;
 
     /**
-     * Constructs an document link.
+     * Constructs a file link.
      *
      * @param string $url      the URL of the resource we're linking to
      * @param string $kind     the kind of resource it is (document, image, ...)
@@ -81,6 +81,8 @@ class FileLink implements LinkInterface
 
     /**
      * Returns the URL of the resource we're linking to
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *
      * @api
      *
@@ -128,12 +130,12 @@ class FileLink implements LinkInterface
     }
 
     /**
-     * Parses a proper bit of unmarshaled JSON into a MediaLink object.
+     * Parses a proper bit of unmarshaled JSON into a FileLink object.
      * This is used internally during the unmarshaling of API calls.
      *
      * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *
-     * @return MediaLink the new object that was created form the JSON.
+     * @return FileLink the new object that was created form the JSON.
      */
     public static function parse($json)
     {
