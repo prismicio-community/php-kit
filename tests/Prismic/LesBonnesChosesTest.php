@@ -24,6 +24,8 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($nbRefs, 1);
     }
 
+    /* Tests to calling the API */
+
     public function testSubmitEverythingForm()
     {
         $api = Api::get(self::$testRepository);
@@ -118,5 +120,14 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 
         $this->assertTrue($results1 != $results2);
+    }
+
+    /* Tests to manipulate the document */
+    public function testGetLink()
+    {
+        $api = Api::get('http://micro.prismic.io/api');
+        $masterRef = $api->master()->getRef();
+        $documents = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UvLDWgEAABoHHn1R")]]')->submit()->getResults();
+        $this->assertEquals($documents[0]->getLink('cta.link')->getId(), "U0w8OwEAACoAQEvB");
     }
 }
