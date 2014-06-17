@@ -3,6 +3,7 @@
 namespace Prismic\Test;
 
 use Prismic\Document;
+use Prismic\Api;
 
 class StructuredTextTest extends \PHPUnit_Framework_TestCase
 {
