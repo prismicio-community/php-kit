@@ -60,12 +60,13 @@ class Document
     /**
      * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
      *
-     * @param string $id        the ID of the document
-     * @param string $type      the type of the document
-     * @param string $href      the URL of the document in the repository's API
-     * @param array  $tags      the tags used in the document
-     * @param array  $slugs     the slugs used in the document, in the past and today; today's slug is the head
-     * @param array  $fragments all the fragments in the document
+     * @param string $id              the ID of the document
+     * @param string $type            the type of the document
+     * @param string $href            the URL of the document in the repository's API
+     * @param array  $tags            the tags used in the document
+     * @param array  $slugs           the slugs used in the document, in the past and today; today's slug is the head
+     * @param array  $linkedDocuments the linked documents, from this document
+     * @param array  $fragments       all the fragments in the document
      */
     public function __construct($id, $type, $href, $tags, $slugs, $linkedDocuments, array $fragments)
     {
@@ -94,6 +95,13 @@ class Document
         return null;
     }
 
+    /**
+     * Returns the linked documents, from this document
+     *
+     * @api
+     *
+     * @return string the linked documents, from this document
+     */
     public function getLinkedDocuments()
     {
         return $this->linkedDocuments;
@@ -415,6 +423,14 @@ class Document
         return null;
     }
 
+    /**
+     * Returns the Link fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param  string                  $field name of the fragment, with the document's type, like "product.gallery"
+     * @return \Prismic\Fragment\Link\LinkInterface the directly usable object, or null if the fragment is of the wrong type or unset
+     */
     public function getLink($field)
     {
         $fragment = $this->get($field);
