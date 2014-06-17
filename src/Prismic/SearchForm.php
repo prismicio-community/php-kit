@@ -239,7 +239,6 @@ class SearchForm
             $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
 
             $response = $this->api->getCache()->get($url);
-            $response = $response ? null : unserialize($response);
 
             if ($response) {
                 return $response;

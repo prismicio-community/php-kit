@@ -3,6 +3,7 @@
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Response;
 
 class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
 {
@@ -94,5 +95,28 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $linkedDocuments = $results[0]->getLinkedDocuments();
         $this->assertEquals(count($linkedDocuments), 1);
         $this->assertEquals($linkedDocuments[0]->getId(), "U0w8OwEAACoAQEvB");
+    }
+
+    public function testImmutableObjectCache()
+    {
+        $api = Api::get(self::$testRepository);
+        $masterRef = $api->master()->getRef();
+        $results1 = $api->forms()->everything->ref($masterRef)->submit();
+
+        $fakeResponse = new \stdClass;
+        $fakeResponse->results = array();
+        $fakeResponse->page = 1;
+        $fakeResponse->results_per_page = 0;
+        $fakeResponse->results_size = 0;
+        $fakeResponse->total_results_size = 0;
+        $fakeResponse->total_pages = 0;
+        $fakeResponse->next_page = NULL;
+        $fakeResponse->prev_page = NULL;
+
+        \apc_store('http://lesbonneschoses.prismic.io/api/documents/search?page=1&pageSize=20&ref=UkL0hcuvzYUANCrm', $fakeResponse, 1000);
+
+        $results2 = $api->forms()->everything->ref($masterRef)->submit();
+
+        $this->assertTrue($results1 != $results2);
     }
 }
