@@ -75,7 +75,7 @@ class DocumentLink implements LinkInterface
      */
     public function asHtml($linkResolver)
     {
-        return '<a href="' . $linkResolver($this) . '">' . $this->slug . '</a>';
+        return '<a href="' . $this->getUrl($linkResolver) . '">' . $this->slug . '</a>';
     }
 
     /**
@@ -95,6 +95,11 @@ class DocumentLink implements LinkInterface
             $json->document->slug,
             $json->isBroken
         );
+    }
+
+    public function getUrl($linkResolver = null)
+    {
+        return $linkResolver($this);
     }
 
     /**

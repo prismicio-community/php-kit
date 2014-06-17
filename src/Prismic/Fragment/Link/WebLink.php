@@ -74,7 +74,7 @@ class WebLink implements LinkInterface
      *
      * @return string the URL of the resource we're linking to online
      */
-    public function getUrl()
+    public function getUrl($linkResolver = null)
     {
         return $this->url;
     }

@@ -11,13 +11,13 @@
 namespace Prismic\Fragment\Link;
 
 /**
- * This class embodies a media link; it is what is retrieved from the API when
+ * This class embodies a file link; it is what is retrieved from the API when
  * a link is created towards a media file.
  * LinkInterface objects can be found in two occasions: as the "$link" variable of a HyperlinkSpan object
  * (which happens when the link is a hyperlink in a StructuredText fragment), or the LinkInterface
  * can also be its own fragment (e.g. for a "related" fragment, that links to a related document).
  */
-class MediaLink implements LinkInterface
+class FileLink implements LinkInterface
 {
     /**
      * @var string the URL of the resource we're linking to
@@ -86,7 +86,7 @@ class MediaLink implements LinkInterface
      *
      * @return string the URL of the resource we're linking to
      */
-    public function getUrl()
+    public function getUrl($linkResolver = null)
     {
         return $this->url;
     }
@@ -137,7 +137,7 @@ class MediaLink implements LinkInterface
      */
     public static function parse($json)
     {
-        return new MediaLink(
+        return new FileLink(
             $json->file->url,
             $json->file->kind,
             $json->file->size,
