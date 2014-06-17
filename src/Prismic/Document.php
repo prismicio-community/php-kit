@@ -66,13 +66,14 @@ class Document
      * @param array  $slugs     the slugs used in the document, in the past and today; today's slug is the head
      * @param array  $fragments all the fragments in the document
      */
-    public function __construct($id, $type, $href, $tags, $slugs, array $fragments)
+    public function __construct($id, $type, $href, $tags, $slugs, $linkedDocuments, array $fragments)
     {
         $this->id = $id;
         $this->type = $type;
         $this->href = $href;
         $this->tags = $tags;
         $this->slugs = $slugs;
+        $this->linkedDocuments = $linkedDocuments;
         $this->fragments = $fragments;
     }
 
@@ -90,6 +91,11 @@ class Document
         }
 
         return null;
+    }
+
+    public function getLinkedDocuments()
+    {
+        return $this->linkedDocuments;
     }
 
     /**
@@ -615,6 +621,11 @@ class Document
             }
         }
 
-        return new Document($json->id, $json->type, $json->href, $json->tags, $json->slugs, $fragments);
+        $linkedDocuments = [];
+        if (isset($json->linked_documents)) {
+            $linkedDocuments = array_map(function ($linkedDoc) { return LinkedDocument::parse($linkedDoc);  }, $json->linked_documents);
+        }
+
+        return new Document($json->id, $json->type, $json->href, $json->tags, $json->slugs, $linkedDocuments, $fragments);
     }
 }
