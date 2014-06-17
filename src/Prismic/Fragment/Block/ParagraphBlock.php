@@ -27,8 +27,8 @@ class ParagraphBlock implements TextInterface
     /**
      * Constructs a paragraph block.
      *
-     * @param string   $text      the unformatted text
-     * @param array    $spans     an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param string $text  the unformatted text
+     * @param array  $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      */
     public function __construct($text, $spans)
     {

@@ -158,9 +158,18 @@ class SearchForm
      */
     private static function parseResult($json)
     {
-        return array_map(function ($doc) {
-            return Document::parse($doc);
-        }, isset($json->results) ? $json->results : $json);
+        $results = array_map(function ($doc) { return Document::parse($doc);  }, $json->results);
+
+        return new Response(
+            $results,
+            $json->page,
+            $json->results_per_page,
+            $json->results_size,
+            $json->total_results_size,
+            $json->total_pages,
+            $json->next_page,
+            $json->prev_page
+        );
     }
 
     /**
@@ -194,7 +203,7 @@ class SearchForm
      *
      * @api
      *
-     * @param  string             $q the predicates.
+     * @param  string              $q the predicates.
      * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function query($q)

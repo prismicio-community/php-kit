@@ -21,7 +21,7 @@ class DefaultCache implements CacheInterface
      *
      * @api
      *
-     * @param  string    $key  the key of the cache entry
+     * @param  string    $key the key of the cache entry
      * @return \stdClass the value of the entry
      */
     public function get($key)
@@ -34,9 +34,9 @@ class DefaultCache implements CacheInterface
      *
      * @api
      *
-     * @param  string    $key   the key of the cache entry
-     * @param  \stdClass $value the value of the entry
-     * @param  integer   $ttl   the time until this cache entry expires
+     * @param string    $key   the key of the cache entry
+     * @param \stdClass $value the value of the entry
+     * @param integer   $ttl   the time until this cache entry expires
      */
     public function set($key, $value, $ttl = 0)
     {
@@ -48,7 +48,7 @@ class DefaultCache implements CacheInterface
      *
      * @api
      *
-     * @param  string    $key  the key of the cache entry
+     * @param string $key the key of the cache entry
      */
     public function delete($key)
     {

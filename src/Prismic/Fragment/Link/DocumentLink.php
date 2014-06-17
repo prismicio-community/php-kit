@@ -46,11 +46,11 @@ class DocumentLink implements LinkInterface
     /**
      * Constructs an document link.
      *
-     * @param string   $id        the ID of the linked document
-     * @param string   $type      the type of the linked document
-     * @param array    $tags      an array of strings which are the document's tags
-     * @param string   $slug      the current slug of the document
-     * @param boolean  $isBroken  returns true if the link is towards a document that is not live, for instance
+     * @param string  $id       the ID of the linked document
+     * @param string  $type     the type of the linked document
+     * @param array   $tags     an array of strings which are the document's tags
+     * @param string  $slug     the current slug of the document
+     * @param boolean $isBroken returns true if the link is towards a document that is not live, for instance
      */
     public function __construct($id, $type, $tags, $slug, $isBroken)
     {
@@ -69,7 +69,7 @@ class DocumentLink implements LinkInterface
      *
      * @api
      *
-     * @param \Prismic\LinkResolver  $linkResolver  the link resolver
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
      * @return string the HTML version of the link
      */
@@ -82,9 +82,9 @@ class DocumentLink implements LinkInterface
      * Parses a proper bit of unmarshaled JSON into a DocumentLink object.
      * This is used internally during the unmarshaling of API calls.
      *
-     * @param \stdClass  $json  the raw JSON that needs to be transformed into native objects.
+     * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *
-     * @return DocumentLink  the new object that was created form the JSON.
+     * @return DocumentLink the new object that was created form the JSON.
      */
     public static function parse($json)
     {

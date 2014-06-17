@@ -31,8 +31,8 @@ class WebLink implements LinkInterface
     /**
      * Constructs a media link.
      *
-     * @param string   $url                the URL of the resource we're linking to online
-     * @param string   $maybeContentType   the content type, if known
+     * @param string $url              the URL of the resource we're linking to online
+     * @param string $maybeContentType the content type, if known
      */
     public function __construct($url, $maybeContentType = null)
     {
@@ -46,7 +46,7 @@ class WebLink implements LinkInterface
      *
      * @api
      *
-     * @param \Prismic\LinkResolver  $linkResolver  the link resolver
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
      * @return string the HTML version of the link
      */
@@ -95,9 +95,9 @@ class WebLink implements LinkInterface
      * Parses a proper bit of unmarshaled JSON into a WebLink object.
      * This is used internally during the unmarshaling of API calls.
      *
-     * @param \stdClass  $json  the raw JSON that needs to be transformed into native objects.
+     * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *
-     * @return WebLink  the new object that was created form the JSON.
+     * @return WebLink the new object that was created form the JSON.
      */
     public static function parse($json)
     {

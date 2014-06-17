@@ -109,7 +109,7 @@ class Ref
     /**
      * Parses a ref.
      *
-     * @param  \stdClass   $json the json bit retrieved from the API that represents a ref.
+     * @param  \stdClass    $json the json bit retrieved from the API that represents a ref.
      * @return \Prismic\Ref the manipulable object for that ref.
      */
     public static function parse($json)

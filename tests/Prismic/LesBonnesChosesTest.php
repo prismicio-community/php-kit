@@ -27,15 +27,22 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->submit();
-        $this->assertEquals(count($results), 20);
+        $response = $results = $api->forms()->everything->ref($masterRef)->submit();
+        $this->assertEquals(count($response->getResults()), 20);
+        $this->assertEquals($response->getPage(), 1);
+        $this->assertEquals($response->getResultsPerPage(), 20);
+        $this->assertEquals($response->getResultsSize(), 20);
+        $this->assertEquals($response->getTotalResultsSize(), 40);
+        $this->assertEquals($response->getTotalPages(), 2);
+        $this->assertEquals($response->getNextPage(), "http://lesbonneschoses.prismic.io/api/documents/search?ref=UkL0hcuvzYUANCrm&page=2&pageSize=20");
+        $this->assertEquals($response->getPrevPage(), NULL);
     }
 
     public function testSubmitEverythingFormWithPredicate()
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.type, "product")]]')->submit();
+        $results = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.type, "product")]]')->submit()->getResults();
         $this->assertEquals(count($results), 16);
     }
 
@@ -43,7 +50,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->ref($masterRef)->submit();
+        $results = $api->forms()->products->ref($masterRef)->submit()->getResults();
         $this->assertEquals(count($results), 16);
     }
 
@@ -51,7 +58,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->ref($masterRef)->query('[[:d = at(my.product.flavour, "Chocolate")]]')->submit();
+        $results = $api->forms()->products->ref($masterRef)->query('[[:d = at(my.product.flavour, "Chocolate")]]')->submit()->getResults();
         $this->assertEquals(count($results), 5);
     }
 
@@ -59,7 +66,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->orderings('[my.product.price]')->ref($masterRef)->submit();
+        $results = $api->forms()->products->orderings('[my.product.price]')->ref($masterRef)->submit()->getResults();
         $this->assertEquals($results[0]->getId(), 'UkL0gMuvzYUANCpQ'); // this is the "Hot Berry Cupcake", the cheapest one.
     }
 
@@ -75,7 +82,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $api = Api::get(self::$testRepository, self::$previewToken);
         $refs = $api->refs();
         $future = $refs['Announcement of new SF shop'];
-        $results = $api->forms()->products->ref($future->getRef())->submit();
+        $results = $api->forms()->products->ref($future->getRef())->submit()->getResults();
         $this->assertEquals(count($results), 17);
     }
 }

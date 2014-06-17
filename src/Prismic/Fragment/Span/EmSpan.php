@@ -30,8 +30,8 @@ class EmSpan implements SpanInterface
     /**
      * Constructs an emphasize span
      *
-     * @param integer  $start  the start of the span
-     * @param integer  $end    the end of the span
+     * @param integer $start the start of the span
+     * @param integer $end   the end of the span
      */
     public function __construct($start, $end)
     {

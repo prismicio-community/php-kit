@@ -10,7 +10,6 @@
 
 namespace Prismic\Fragment\Link;
 
-
 /**
  * This class embodies a media link; it is what is retrieved from the API when
  * a link is created towards a media file.
@@ -40,10 +39,10 @@ class MediaLink implements LinkInterface
     /**
      * Constructs an document link.
      *
-     * @param string   $url        the URL of the resource we're linking to
-     * @param string   $kind       the kind of resource it is (document, image, ...)
-     * @param string   $size       the size of the resource, in bytes
-     * @param string   $filename   the resource's original filename, in bytes
+     * @param string $url      the URL of the resource we're linking to
+     * @param string $kind     the kind of resource it is (document, image, ...)
+     * @param string $size     the size of the resource, in bytes
+     * @param string $filename the resource's original filename, in bytes
      */
     public function __construct($url, $kind, $size, $filename)
     {
@@ -59,7 +58,7 @@ class MediaLink implements LinkInterface
      *
      * @api
      *
-     * @param \Prismic\LinkResolver  $linkResolver  the link resolver
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
      * @return string the HTML version of the link
      */
@@ -132,9 +131,9 @@ class MediaLink implements LinkInterface
      * Parses a proper bit of unmarshaled JSON into a MediaLink object.
      * This is used internally during the unmarshaling of API calls.
      *
-     * @param \stdClass  $json  the raw JSON that needs to be transformed into native objects.
+     * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *
-     * @return MediaLink  the new object that was created form the JSON.
+     * @return MediaLink the new object that was created form the JSON.
      */
     public static function parse($json)
     {

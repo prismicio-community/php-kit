@@ -15,7 +15,7 @@ namespace Prismic\Fragment\Span;
  * A span comes in a array of spans, which is served with a raw text. If the raw text is
  * "Hello world!", and the span's start is 6 and its end is 11, then the piece that
  * is meant to be the span is "world".
- * 
+ *
  * The known implementations are EmSpan, StrongSpan and HyperlinkSpan.
  */
 interface SpanInterface

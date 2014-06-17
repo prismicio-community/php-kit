@@ -35,9 +35,9 @@ class HyperlinkSpan implements SpanInterface
     /**
      * Constructs a link span
      *
-     * @param integer                               $start  the start of the span
-     * @param integer                               $end    the end of the span
-     * @param \Prismic\Fragment\Link\LinkInterface  $link   the link to point to
+     * @param integer                              $start the start of the span
+     * @param integer                              $end   the end of the span
+     * @param \Prismic\Fragment\Link\LinkInterface $link  the link to point to
      */
     public function __construct($start, $end, $link)
     {

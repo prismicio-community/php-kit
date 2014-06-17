@@ -32,9 +32,9 @@ class ListItemBlock implements TextInterface
     /**
      * Constructs a list item block.
      *
-     * @param string   $text      the unformatted text
-     * @param array    $spans     an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
-     * @param boolean  $ordered  true if part of an ordered list, false if unordered
+     * @param string  $text    the unformatted text
+     * @param array   $spans   an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param boolean $ordered true if part of an ordered list, false if unordered
      */
     public function __construct($text, $spans, $ordered)
     {

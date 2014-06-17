@@ -10,7 +10,6 @@
 
 namespace Prismic\Fragment\Block;
 
-
 /**
  * This interface embodies any block of a StructuredText fragment (heading, paragraph, list item, image, ...).
  * It is used solely for internal purposes

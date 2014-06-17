@@ -114,7 +114,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function testGetGroup()
     {
         $masterRef = $this->micro_api->master()->getRef();
-        $docchapter = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UrDndQEAALQMyrXF")]]')->submit();
+        $docchapter = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UrDndQEAALQMyrXF")]]')->submit()->getResults();
         $docchapter = $docchapter[0];
 
         $docchapterdocs = $docchapter->getGroup('docchapter.docs')->getArray();

@@ -32,9 +32,9 @@ class HeadingBlock implements TextInterface
     /**
      * Constructs an heading block.
      *
-     * @param string  $text   the unformatted text
-     * @param array   $spans  an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
-     * @param string  $level  the heading's level
+     * @param string $text  the unformatted text
+     * @param array  $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param string $level the heading's level
      */
     public function __construct($text, $spans, $level)
     {
