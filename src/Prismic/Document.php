@@ -653,7 +653,7 @@ class Document
             }
         }
 
-        $linkedDocuments = [];
+        $linkedDocuments = array();
         if (isset($json->linked_documents)) {
             $linkedDocuments = array_map(function ($linkedDoc) { return LinkedDocument::parse($linkedDoc);  }, $json->linked_documents);
         }
