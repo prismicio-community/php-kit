@@ -362,7 +362,7 @@ class StructuredText implements FragmentInterface
         }
 
         if ($json->type == 'preformatted') {
-            return new PreformattedBlock($json->text, $json->spans, false);
+            return new PreformattedBlock($json->text, $json->spans);
         }
 
         return null;
