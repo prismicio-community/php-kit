@@ -26,6 +26,10 @@ class Ref
     /**
      * @var string the ID of the ref
      */
+    private $id;
+    /**
+     * @var string the reference of the ref
+     */
     private $ref;
     /**
      * @var string the display label of the ref
@@ -48,8 +52,9 @@ class Ref
      * @param string $isMasterRef      is the ref the master ref?
      * @param string $maybeScheduledAt the date and time at which the ref is scheduled, if it is
      */
-    public function __construct($ref, $label, $isMasterRef, $maybeScheduledAt = null)
+    public function __construct($id, $ref, $label, $isMasterRef, $maybeScheduledAt = null)
     {
+        $this->id = $id;
         $this->ref = $ref;
         $this->label = $label;
         $this->isMasterRef = $isMasterRef;
@@ -58,8 +63,18 @@ class Ref
 
     /**
      * Returns the ID of the ref
-     *
-     * @return string the ID of the ref
+    *
+    * @return string the ID of the ref
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the reference of the ref
+    *
+    * @return string the ID of the ref
      */
     public function getRef()
     {
@@ -115,6 +130,7 @@ class Ref
     public static function parse($json)
     {
         return new Ref(
+            $json->id,
             $json->ref,
             $json->label,
             isset($json->{'isMasterRef'}) ? $json->isMasterRef : false,
