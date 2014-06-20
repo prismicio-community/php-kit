@@ -13,12 +13,14 @@ namespace Prismic;
 class LinkedDocument
 {
     private $id;
+    private $slug;
     private $type;
     private $tags;
 
-    public function __construct($id, $type, $tags)
+    public function __construct($id, $slug, $type, $tags)
     {
         $this->id = $id;
+        $this->slug = $slug;
         $this->type = $type;
         $this->tags = $tags;
     }
@@ -26,6 +28,11 @@ class LinkedDocument
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     public function getType()
@@ -42,6 +49,7 @@ class LinkedDocument
     {
         return new LinkedDocument(
             $json->id,
+            isset($json->{'slug'}) ? $json->slug : null,
             $json->type,
             $json->tags
         );
