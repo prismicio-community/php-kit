@@ -89,6 +89,10 @@ If you find existing code that is not optimally tested and wish to make it bette
 
 Tests are run by running the command `phpunit`.
 
+Some of the kit's tests check stuff that are built on top of APC and need APC to work from the command line. If you've installed and enabled APC, and your cache tests don't pass:
+ * check if your APC is enabled for your command line, by running `php -i | grep apc`; if no output is displayed, then maybe the APC extension you installed and enabled is only enabled in apache but not for your command line. Check how your OS works to make that happen, and if it involves changing a php.ini file, make sure it's the right php.ini (you might have one for apache, and one for the command line)
+ * if APC is enabled for the command line, and yet the tests still fail, make sure your `apc.enable_cli` (which you see in the output of  `php -i | grep apc`) is 'On'. If it's not, add this at the end of your php.ini: `apc.enable_cli = 1`. Make sure it's the right php.ini (you might have one for apache, and one for the command line)
+
 #### Documentation
 
 Please document any bugfix or new feature.
