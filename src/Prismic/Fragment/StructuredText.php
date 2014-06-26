@@ -91,6 +91,20 @@ class StructuredText implements FragmentInterface
         });
     }
 
+    public function getFirstHeading()
+    {
+        $blocks = $this->getHeadings();
+
+        return reset($blocks);
+    }
+
+    public function getHeadings()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof HeadingBlock);
+        });
+    }
+
     public function asHtml($linkResolver = null)
     {
         $groups = array();

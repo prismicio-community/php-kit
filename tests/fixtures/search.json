@@ -42,6 +42,11 @@
                             "spans": []
                         },
                         {
+                            "type": "heading1",
+                            "text": "A heading followed by a preformatted text",
+                            "spans": []
+                        },
+                        {
                             "type": "preformatted",
                             "text": "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.",
                             "spans": []

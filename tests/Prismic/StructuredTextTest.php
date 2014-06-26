@@ -50,6 +50,17 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->structuredText->getPreformatted());
     }
 
+    public function testGetFirstHeading()
+    {
+        $content = "A heading followed by a preformatted text";
+        $this->assertEquals($content, $this->structuredText->getFirstHeading()->getText());
+    }
+
+    public function testGetHeadings()
+    {
+        $this->assertCount(1, $this->structuredText->getHeadings());
+    }
+
     public function testPreformattedBlockFormatRendering()
     {
         $text = "This is a test.";
