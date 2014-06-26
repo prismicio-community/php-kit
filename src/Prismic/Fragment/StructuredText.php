@@ -286,21 +286,7 @@ class StructuredText implements FragmentInterface
             return new EmSpan($start, $end);
         }
 
-        $link = false;
-        if ("hyperlink" == $type) {
-            $linkType = $json->data->type;
-            if ("Link.web" == $linkType) {
-                $link = WebLink::parse($json->data->value);
-            } elseif ("Link.document" == $linkType) {
-                $link = DocumentLink::parse($json->data->value);
-            } elseif ("Link.file" == $linkType) {
-                $link = FileLink::parse($json->data->value);
-            } elseif ("Link.image" == $linkType) {
-                $link = ImageLink::parse($json->data->value);
-            }
-        }
-
-        if ($link) {
+        if ("hyperlink" == $type && ($link = self::extractLink($json->data))) {
             return new HyperlinkSpan($start, $end, $link);
         }
 
@@ -394,4 +380,21 @@ class StructuredText implements FragmentInterface
 
         return new StructuredText($blocks);
     }
+
+    public static function extractLink($data)
+    {
+        switch ($data->type) {
+            case 'Link.web':
+                return WebLink::parse($data->value);
+            case 'Link.document':
+                return DocumentLink::parse($data->value);
+            case 'Link.file';
+                return FileLink::parse($data->value);
+            case 'Link.image';
+                return ImageLink::parse($data->value);
+            default:
+                return null;
+        }
+    }
+
 }
