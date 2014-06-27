@@ -491,6 +491,10 @@
                             "url": "http://fpoimg.com/199x300"
                         }
                     ]
+                },
+                "publication_time" : {
+                    "type" : "Timestamp",
+                    "value" : "2014-06-18T15:30:00+0000"
                 }
             }
         }

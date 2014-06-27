@@ -12,6 +12,7 @@ namespace Prismic;
 
 use Prismic\Fragment\Color;
 use Prismic\Fragment\Date;
+use Prismic\Fragment\Timestamp;
 use Prismic\Fragment\Embed;
 use Prismic\Fragment\Image;
 use Prismic\Fragment\Number;
@@ -284,6 +285,27 @@ class Document
         if (isset($fragment) && $fragment instanceof Date) {
             if (isset($pattern)) {
                 return $fragment->formatted($pattern);
+            }
+
+            return $fragment;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the usable Timestamp fragment as an object, ready to be manipulated.
+     *
+     * @api
+     * @param  string                       $field   name of the fragment, with the document's type, like "product.publishedAt"
+     * @return \Prismic\Fragment\Timestamp  the directly usable Timestamp, or null if the fragment is of the wrong type or unset
+     */
+    public function getTimestamp($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof Timestamp) {
+            if (isset($pattern)) {
+                return $fragment;
             }
 
             return $fragment;
@@ -584,6 +606,10 @@ class Document
 
             if ($json->type === "Date") {
                 return new Date($json->value);
+            }
+
+            if ($json->type === "Timestamp") {
+                return new Timestamp($json->value);
             }
 
             if ($json->type === "Text") {
