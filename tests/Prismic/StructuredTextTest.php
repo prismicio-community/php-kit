@@ -143,4 +143,20 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('`can be rough sometimes\.\s*<br\s*/?>\s*This is after a new line\.`s', $this->structuredText->asHtml());
     }
 
+    public function testLinkedImageHasLink()
+    {
+        $structuredText = $this->document->getStructuredText('product.linked_images');
+        $link = $structuredText->getFirstImage()->getView()->getLink();
+        $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
+    }
+
+    public function testNonLinkedImageHasNoLink()
+    {
+        $structuredText = $this->document->getStructuredText('product.linked_images');
+        $images = $structuredText->getImages();
+        $image = array_pop($images);
+        $link = $image->getView()->getLink();
+        $this->assertNull($link);
+    }
+
 }
