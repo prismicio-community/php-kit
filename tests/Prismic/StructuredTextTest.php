@@ -110,6 +110,9 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $structuredText = $this->document->getStructuredText('product.listLinks');
         $content = '<p><a href="http://host/doc/UjHkUrGIJ7cBlWAb">link1</a></p>';
         $this->assertEquals($content, $structuredText->asHtml($linkResolver));
+        $structuredText = $this->document->getStructuredText('product.with_broken_link');
+        $content = '<p>The last two words of this sentence are a broken link.</p>';
+        $this->assertEquals($content, $structuredText->asHtml($linkResolver));
     }
 
     public function testNestedDocumentLinkRendering()

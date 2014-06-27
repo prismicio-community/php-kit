@@ -491,6 +491,33 @@
                             "url": "http://fpoimg.com/199x300"
                         }
                     ]
+                },
+                "with_broken_link": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "spans": [
+                                {
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UxERPAEAAHQcsBUH",
+                                                "slug": "-",
+                                                "type": "event-calendar"
+                                            },
+                                            "isBroken": true
+                                        }
+                                    },
+                                    "end": 53,
+                                    "start": 42,
+                                    "type": "hyperlink"
+                                }
+                            ],
+                            "text": "The last two words of this sentence are a broken link.",
+                            "type": "paragraph"
+                        }
+                    ]
                 }
             }
         }
