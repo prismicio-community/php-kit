@@ -152,7 +152,8 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $link = $structuredText->getFirstImage()->getView()->getLink();
         $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
         $linkResolver = new FakeLinkResolver();
-        $this->assertEquals($structuredText->asHtml($linkResolver), '<p>Here is some introductory text.</p><p>The following image is linked.</p><p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a></p><p><strong>More important stuff</strong></p><p>One more image, this one is not linked:</p><p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199"></p>');
+        $this->assertEquals($structuredText->asHtml($linkResolver), '<p>Here is some introductory text.</p><p>The following image is linked.</p><p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a></p><p><strong>More important stuff</strong></p><p>The next is linked to a valid document:</p><p><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a></p><p>The next is linked to a broken document:</p><p><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"></p><p>One more image, this one is not linked:</p><p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199"></p>');
+
     }
 
     public function testNonLinkedImageHasNoLink()

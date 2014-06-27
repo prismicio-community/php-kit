@@ -18,13 +18,16 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
         $gallery = $document->get('product.gallery');
         $views = array_values($gallery->getViews());
         $views[] = $gallery->getMain();
-        $views[] = $document->getStructuredText('product.linked_images')->getFirstImage()->getView();
+        foreach ($document->getStructuredText('product.linked_images')->getImages() as $image) {
+            $views[] = $image->getView();
+        }
         $this->input = array();
+        $this->linkResolver = new FakeLinkResolver();
         foreach ($views as $view) {
             $dom = new DOMDocument;
             $this->input[] = array(
                 'view' => $view,
-                'parsed' => $dom->loadHTML($view->asHtml()),
+                'parsed' => $dom->loadHTML($view->asHtml($this->linkResolver)),
                 'dom' => $dom,
             );
         }
@@ -33,20 +36,20 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
     public function testUnlinkedStartsWithImg()
     {
         foreach ($this->input as $input) {
-            if ($input['view']->getLink() !== null) {
+            if ($input['view']->getLink() !== null && $input['view']->getLink()->getUrl($this->linkResolver) !== null) {
                 continue;
             }
-            $this->assertRegExp('/^<img\b/', $input['view']->asHtml());
+            $this->assertRegExp('/^<img\b/', $input['view']->asHtml($this->linkResolver));
         }
     }
 
     public function testLinkedStartsWithA()
     {
         foreach ($this->input as $input) {
-            if ($input['view']->getLink() === null) {
+            if ($input['view']->getLink() === null || $input['view']->getLink()->getUrl($this->linkResolver) === null) {
                 continue;
             }
-            $this->assertRegExp('/^<a\b/', $input['view']->asHtml());
+            $this->assertRegExp('/^<a\b/', $input['view']->asHtml($this->linkResolver));
         }
     }
 
@@ -61,7 +64,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
     {
         $as = array();
         foreach ($this->input as $index => $input) {
-            if ($input['view']->getLink() === null) {
+            if ($input['view']->getLink() === null || $input['view']->getLink()->getUrl($this->linkResolver) === null) {
                 continue;
             }
             $xpath = new DOMXpath($input['dom']);
@@ -91,7 +94,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
     {
         foreach ($as as $index => $a) {
             $this->assertTrue($a->hasAttribute('href'));
-            $this->assertEquals($a->getAttribute('href'), $this->input[$index]['view']->getLink()->getUrl());
+            $this->assertEquals($a->getAttribute('href'), $this->input[$index]['view']->getLink()->getUrl($this->linkResolver));
         }
     }
 
@@ -126,7 +129,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
     {
         foreach ($imgs as $index => $img) {
             $this->assertTrue($img->hasAttribute('src'));
-            $this->assertEquals($img->getAttribute('src'), $this->input[$index]['view']->getUrl());
+            $this->assertEquals($img->getAttribute('src'), $this->input[$index]['view']->getUrl($this->linkResolver));
             $this->assertTrue($img->hasAttribute('width'));
             $this->assertEquals($img->getAttribute('width'), $this->input[$index]['view']->getWidth());
             $this->assertTrue($img->hasAttribute('height'));
