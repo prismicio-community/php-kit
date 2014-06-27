@@ -40,6 +40,10 @@ class ImageView
      * @var integer the image view's height
      */
     private $height;
+    /**
+     * @var \Prismic\Fragment\Link\LinkInterface the link to point to, or null
+     */
+    private $link;
 
     /**
      * Constructs an image view.
@@ -50,13 +54,14 @@ class ImageView
      * @param string  $width        the image view's URL
      * @param string  $height       the image view's URL
      */
-    public function __construct($url, $alt, $copyright, $width, $height)
+    public function __construct($url, $alt, $copyright, $width, $height, $link)
     {
         $this->url = $url;
         $this->alt = $alt;
         $this->copyright = $copyright;
         $this->width = $width;
         $this->height = $height;
+        $this->link = $link;
     }
 
     /**
@@ -82,7 +87,15 @@ class ImageView
         foreach ($attributes as $key => $value) {
             $img->setAttribute($key, $value);
         }
-        $doc->appendChild($img);
+
+        if ($this->getLink()) {
+            $a = $doc->createElement('a');
+            $a->setAttribute('href', $this->getLink()->getUrl($linkResolver));
+            $a->appendChild($img);
+            $doc->appendChild($a);
+        } else {
+            $doc->appendChild($img);
+        }
 
         return trim($doc->saveHTML()); // trim removes trailing newline
     }
@@ -160,6 +173,18 @@ class ImageView
     }
 
     /**
+     * Returns the link to point to
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Link\LinkInterface the link to point to
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
      * Parses a given image view fragment. Not meant to be used except for testing.
      *
      * @param  \stdClass                    $json the json bit retrieved from the API that represents an image view.
@@ -172,7 +197,8 @@ class ImageView
             $json->alt,
             $json->copyright,
             $json->dimensions->width,
-            $json->dimensions->height
+            $json->dimensions->height,
+            isset($json->linkTo) ? StructuredText::extractLink($json->linkTo) : null
         );
     }
 }

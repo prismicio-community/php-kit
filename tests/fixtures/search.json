@@ -434,6 +434,63 @@
                             }
                         }
                     }
+                },
+                "linked_images": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "spans": [],
+                            "text": "Here is some introductory text.",
+                            "type": "paragraph"
+                        },
+                        {
+                            "spans": [],
+                            "text": "The following image is linked.",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 129,
+                                "width": 260
+                            },
+                            "linkTo": {
+                                "type": "Link.web",
+                                "value": {
+                                    "url": "http://google.com/"
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/129x260"
+                        },
+                        {
+                            "spans": [
+                                {
+                                    "end": 20,
+                                    "start": 0,
+                                    "type": "strong"
+                                }
+                            ],
+                            "text": "More important stuff",
+                            "type": "paragraph"
+                        },
+                        {
+                            "spans": [],
+                            "text": "One more image, this one is not linked:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 199,
+                                "width": 300
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/199x300"
+                        }
+                    ]
                 }
             }
         }

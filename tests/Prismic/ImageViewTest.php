@@ -18,6 +18,7 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
         $gallery = $document->get('product.gallery');
         $views = array_values($gallery->getViews());
         $views[] = $gallery->getMain();
+        $views[] = $document->getStructuredText('product.linked_images')->getFirstImage()->getView();
         $this->input = array();
         foreach ($views as $view) {
             $dom = new DOMDocument;
@@ -29,10 +30,23 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testStartsWithImg()
+    public function testUnlinkedStartsWithImg()
     {
         foreach ($this->input as $input) {
+            if ($input['view']->getLink() !== null) {
+                continue;
+            }
             $this->assertRegExp('/^<img\b/', $input['view']->asHtml());
+        }
+    }
+
+    public function testLinkedStartsWithA()
+    {
+        foreach ($this->input as $input) {
+            if ($input['view']->getLink() === null) {
+                continue;
+            }
+            $this->assertRegExp('/^<a\b/', $input['view']->asHtml());
         }
     }
 
@@ -43,14 +57,52 @@ class ImageViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testLinkedHasExactlyOneA()
+    {
+        $as = array();
+        foreach ($this->input as $index => $input) {
+            if ($input['view']->getLink() === null) {
+                continue;
+            }
+            $xpath = new DOMXpath($input['dom']);
+            $results = $xpath->query('//a');
+            $this->assertEquals($results->length, 1);
+            $as[$index] = $results->item(0);
+        }
+
+        return $as;
+    }
+
+    /**
+     * @depends testLinkedHasExactlyOneA
+     */
+    public function testLinkedAHasNoSiblings(array $as)
+    {
+        foreach ($as as $a) {
+            $this->assertNull($a->nextSibling);
+            $this->assertNull($a->previousSibling);
+        }
+    }
+
+    /**
+     * @depends testLinkedHasExactlyOneA
+     */
+    public function testLinkedAAttributes(array $as)
+    {
+        foreach ($as as $index => $a) {
+            $this->assertTrue($a->hasAttribute('href'));
+            $this->assertEquals($a->getAttribute('href'), $this->input[$index]['view']->getLink()->getUrl());
+        }
+    }
+
     public function testExactlyOneImage()
     {
         $imgs = array();
-        foreach ($this->input as $input) {
+        foreach ($this->input as $index => $input) {
             $xpath = new DOMXpath($input['dom']);
             $results = $xpath->query('//img');
             $this->assertEquals($results->length, 1);
-            $imgs[] = $results->item(0);
+            $imgs[$index] = $results->item(0);
         }
 
         return $imgs;
