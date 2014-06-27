@@ -148,6 +148,8 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $structuredText = $this->document->getStructuredText('product.linked_images');
         $link = $structuredText->getFirstImage()->getView()->getLink();
         $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
+        $linkResolver = new FakeLinkResolver();
+        $this->assertEquals($structuredText->asHtml($linkResolver), '<p>Here is some introductory text.</p><p>The following image is linked.</p><p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a></p><p><strong>More important stuff</strong></p><p>One more image, this one is not linked:</p><p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199"></p>');
     }
 
     public function testNonLinkedImageHasNoLink()
