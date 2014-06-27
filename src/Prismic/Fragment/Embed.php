@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -11,17 +10,52 @@
 
 namespace Prismic\Fragment;
 
+/**
+ * This class embodies an Embed fragment.
+ */
 class Embed implements FragmentInterface
 {
 
+    /**
+     * @var string the OEmbed resource's type
+     */
     private $type;
+    /**
+     * @var string the OEmbed resource's provider
+     */
     private $provider;
+    /**
+     * @var string the OEmbed resource's URL
+     */
     private $url;
+    /**
+     * @var string the OEmbed resource's width
+     */
     private $maybeWidth;
+    /**
+     * @var string the OEmbed resource's height
+     */
     private $maybeHeight;
+    /**
+     * @var string the OEmbed resource's HTML code
+     */
     private $maybeHtml;
+    /**
+     * @var string the OEmbed resource's JSON
+     */
     private $oembedJson;
 
+    /**
+     * Constructs an Embed fragment.
+     *
+     * @param string  $type         the OEmbed resource's type
+     * @param string  $provider     the OEmbed resource's provider
+     * @param string  $url          the OEmbed resource's URL
+     * @param string  $maybeWidth   the OEmbed resource's width
+     * @param string  $maybeHeigth  the OEmbed resource's height
+     * @param string  $maybeHtml    the OEmbed resource's HTML
+     * @param string  $oembedJson   the OEmbed resource's JSON
+     */
     public function __construct($type, $provider, $url, $maybeWidth, $maybeHeigth, $maybeHtml, $oembedJson)
     {
         $this->type = $type;
@@ -33,6 +67,15 @@ class Embed implements FragmentInterface
         $this->oembedJson = $oembedJson;
     }
 
+    /**
+     * Builds a HTML version of the Embed fragment.
+     *
+     * @api
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
+     *
+     * @return string the HTML version of the Embed fragment
+     */
     public function asHtml($linkResolver = null)
     {
         if (isset($this->maybeHtml)) {
@@ -44,11 +87,24 @@ class Embed implements FragmentInterface
         }
     }
 
+    /**
+     * Builds a text version of the Embed fragment.
+     *
+     * @api
+     *
+     * @return string the text version of the Embed fragment
+     */
     public function asText()
     {
         return $this->url;
     }
 
+    /**
+     * Parses a given Embed fragment. Not meant to be used except for testing.
+     *
+     * @param  \stdClass                $json the json bit retrieved from the API that represents an Embed fragment.
+     * @return \Prismic\Fragment\Embed  the manipulable object for that Embed fragment.
+     */
     public static function parse($json)
     {
         return new Embed(

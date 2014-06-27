@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Prismic PHP SDK
  *
  * Copyright 2013 Zengularity (http://www.zengularity.com).
@@ -26,20 +25,50 @@ use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
 
+/**
+ * This class embodies a StructuredText fragment.
+ *
+ * Technically, a StructuredText fragment is not much more than an array of blocks,
+ * but there are many things to do with this fragment, including in the HTML serialization,
+ * but not only. It is arguably the most powerful and manipulable way any CMS stores
+ * structured text nowadays.
+ */
 class StructuredText implements FragmentInterface
 {
+    /**
+     * @var array  the array of Prismic\Fragment\Block\BlockInterface objects
+     */
     private $blocks;
 
+    /**
+     * Constructs a StructuredText object.
+     *
+     * @param array    $blocks   the array of \Prismic\Fragment\Block\BlockInterface objects
+     */
     public function __construct($blocks)
     {
         $this->blocks = $blocks;
     }
 
+    /**
+     * Returns the array of blocks.
+     *
+     * @api
+     *
+     * @return array the array of \Prismic\Fragment\Block\BlockInterface objects
+     */
     public function getBlocks()
     {
         return $this->blocks;
     }
 
+    /**
+     * Builds a text version of the StructuredText fragment.
+     *
+     * @api
+     *
+     * @return string the text version of the StructuredText fragment
+     */
     public function asText()
     {
         $result = array_map(function ($block) {
@@ -49,6 +78,13 @@ class StructuredText implements FragmentInterface
         return join("\n\n", $result);
     }
 
+    /**
+     * Returns the first preformatted block in the StructuredText fragment.
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Block\PreformattedBlock the first preformatted block in the StructuredText fragment
+     */
     public function getFirstPreformatted()
     {
         $blocks = $this->getPreformatted();
@@ -56,6 +92,14 @@ class StructuredText implements FragmentInterface
         return reset($blocks);
     }
 
+    /**
+     * Returns an array of all preformatted blocks in the StructuredText fragment,
+     * as \Prismic\Fragment\Block\PreformattedBlock objects.
+     *
+     * @api
+     *
+     * @return array all preformatted blocks in the StructuredText fragment
+     */
     public function getPreformatted()
     {
         return array_filter($this->blocks, function ($block) {
@@ -63,6 +107,13 @@ class StructuredText implements FragmentInterface
         });
     }
 
+    /**
+     * Returns the first paragraph block in the StructuredText fragment.
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Block\ParagraphBlock the first paragraph block in the StructuredText fragment
+     */
     public function getFirstParagraph()
     {
         $blocks = $this->getParagraphs();
@@ -70,6 +121,14 @@ class StructuredText implements FragmentInterface
         return reset($blocks);
     }
 
+    /**
+     * Returns an array of all paragraph blocks in the StructuredText fragment,
+     * as \Prismic\Fragment\Block\ParagraphBlock objects.
+     *
+     * @api
+     *
+     * @return array all paragraph blocks in the StructuredText fragment
+     */
     public function getParagraphs()
     {
         return array_filter($this->blocks, function ($block) {
@@ -77,6 +136,13 @@ class StructuredText implements FragmentInterface
         });
     }
 
+    /**
+     * Returns the first image block in the StructuredText fragment.
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Block\ImageBlock the first image block in the StructuredText fragment
+     */
     public function getFirstImage()
     {
         $blocks = $this->getImages();
@@ -84,6 +150,14 @@ class StructuredText implements FragmentInterface
         return reset($blocks);
     }
 
+    /**
+     * Returns an array of all image blocks in the StructuredText fragment,
+     * as \Prismic\Fragment\Block\ImageBlock objects.
+     *
+     * @api
+     *
+     * @return array all image blocks in the StructuredText fragment
+     */
     public function getImages()
     {
         return array_filter($this->blocks, function ($block) {
@@ -91,6 +165,13 @@ class StructuredText implements FragmentInterface
         });
     }
 
+    /**
+     * Returns the first heading block in the StructuredText fragment.
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Block\HeadingBlock the first heading block in the StructuredText fragment
+     */
     public function getFirstHeading()
     {
         $blocks = $this->getHeadings();
@@ -98,6 +179,14 @@ class StructuredText implements FragmentInterface
         return reset($blocks);
     }
 
+    /**
+     * Returns an array of all heading blocks in the StructuredText fragment,
+     * as \Prismic\Fragment\Block\HeadingBlock objects.
+     *
+     * @api
+     *
+     * @return array all heading blocks in the StructuredText fragment
+     */
     public function getHeadings()
     {
         return array_filter($this->blocks, function ($block) {
@@ -105,6 +194,15 @@ class StructuredText implements FragmentInterface
         });
     }
 
+    /**
+     * Builds a HTML version of the StructuredText fragment.
+     *
+     * @api
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
+     *
+     * @return string the HTML version of the StructuredText fragment
+     */
     public function asHtml($linkResolver = null)
     {
         $groups = array();
@@ -157,6 +255,14 @@ class StructuredText implements FragmentInterface
         return $html;
     }
 
+    /**
+     * Transforms a block into HTML (for internal use)
+     *
+     * @param \Prismic\Fragment\Block\BlockInterface  $block         a given block
+     * @param \Prismic\LinkResolver                   $linkResolver  the link resolver
+     *
+     * @return string the HTML version of the block
+     */
     public static function asHtmlBlock($block, $linkResolver = null)
     {
         if ($block instanceof HeadingBlock) {
@@ -182,6 +288,15 @@ class StructuredText implements FragmentInterface
         return "";
     }
 
+    /**
+     * Transforms a text block into HTML (for internal use)
+     *
+     * @param string                 $text          the raw text of the block
+     * @param array                  $spans         the spans of the block, as an array of \Prismic\Fragment\Span\SpanInterface objects
+     * @param \Prismic\LinkResolver  $linkResolver  the link resolver
+     *
+     * @return string the HTML version of the block
+     */
     public static function asHtmlText($text, $spans, $linkResolver = null)
     {
         if (empty($spans)) {
@@ -272,6 +387,13 @@ class StructuredText implements FragmentInterface
 
     }
 
+    /**
+     * Parses a given span (for internal use)
+     *
+     * @param  \stdClass  $json the json bit retrieved from the API that represents a span.
+     *
+     * @return \Prismic\Fragment\Span\SpanInterface  the manipulable object for that span.
+     */
     public static function parseSpan($json)
     {
         $type = $json->type;
@@ -307,6 +429,13 @@ class StructuredText implements FragmentInterface
         return null;
     }
 
+    /**
+     * Parses a given text block (for internal use)
+     *
+     * @param  \stdClass  $json the json bit retrieved from the API that represents a text block.
+     *
+     * @return \Prismic\Fragment\ParsedText  the parsed information for that text block.
+     */
     public static function parseText($json)
     {
         $text = $json->text;
@@ -321,6 +450,13 @@ class StructuredText implements FragmentInterface
         return new ParsedText($text, $spans);
     }
 
+    /**
+     * Parses a given block (for internal use)
+     *
+     * @param  \stdClass  $json the json bit retrieved from the API that represents a block.
+     *
+     * @return \Prismic\Fragment\Block\BlockInterface  the manipulable object for that block.
+     */
     public static function parseBlock($json)
     {
         if ($json->type == 'heading1') {
@@ -382,6 +518,13 @@ class StructuredText implements FragmentInterface
         return null;
     }
 
+    /**
+     * Parses a given StructuredText fragment (for internal use)
+     *
+     * @param  \stdClass  $json the json bit retrieved from the API that represents a StructuredText fragment.
+     *
+     * @return \Prismic\Fragment\StructuredText  the manipulable object for that StructuredText fragment.
+     */
     public static function parse($json)
     {
         $blocks = array();
