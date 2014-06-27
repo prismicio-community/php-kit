@@ -336,6 +336,11 @@ class StructuredText implements FragmentInterface
                     } else {
                         $attributes['href'] = $span->getLink()->getUrl();
                     }
+                    if ($attributes['href'] === null) {
+                        // We have no link (LinkResolver said it is not valid,
+                        // or something else went wrong). Abort this span.
+                        return;
+                    }
                 } else {
                     //throw new \Exception("Unknown span type " . get_class($span));
                     $nodeName = 'span';
