@@ -20,14 +20,19 @@ class ImageView
     private $copyright;
     private $width;
     private $height;
+    /**
+     * @var \Prismic\Fragment\Link\LinkInterface the link to point to, or null
+     */
+    private $link;
 
-    public function __construct($url, $alt, $copyright, $width, $height)
+    public function __construct($url, $alt, $copyright, $width, $height, $link)
     {
         $this->url = $url;
         $this->alt = $alt;
         $this->copyright = $copyright;
         $this->width = $width;
         $this->height = $height;
+        $this->link = $link;
     }
 
     public function asHtml($linkResolver = null, $attributes = array())
@@ -43,7 +48,15 @@ class ImageView
         foreach ($attributes as $key => $value) {
             $img->setAttribute($key, $value);
         }
-        $doc->appendChild($img);
+
+        if ($this->getLink()) {
+            $a = $doc->createElement('a');
+            $a->setAttribute('href', $this->getLink()->getUrl($linkResolver));
+            $a->appendChild($img);
+            $doc->appendChild($a);
+        } else {
+            $doc->appendChild($img);
+        }
 
         return trim($doc->saveHTML()); // trim removes trailing newline
     }
@@ -78,6 +91,18 @@ class ImageView
         return $this->height;
     }
 
+    /**
+     * Returns the link to point to
+     *
+     * @api
+     *
+     * @return \Prismic\Fragment\Link\LinkInterface the link to point to
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
     public static function parse($json)
     {
         return new ImageView(
@@ -85,7 +110,8 @@ class ImageView
             $json->alt,
             $json->copyright,
             $json->dimensions->width,
-            $json->dimensions->height
+            $json->dimensions->height,
+            isset($json->linkTo) ? StructuredText::extractLink($json->linkTo) : null
         );
     }
 }
