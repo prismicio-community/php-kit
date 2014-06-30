@@ -47,6 +47,7 @@ class Ref
     /**
      * Constructs a Ref object.
      *
+     * @param string $id               the ID of the release
      * @param string $ref              the ID of the ref
      * @param string $label            the display label of the ref
      * @param string $isMasterRef      is the ref the master ref?

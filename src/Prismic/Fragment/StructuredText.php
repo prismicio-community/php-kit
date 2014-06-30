@@ -529,6 +529,13 @@ class StructuredText implements FragmentInterface
         return new StructuredText($blocks);
     }
 
+    /**
+     * Parses and extracts a link of absolutely any kind.
+     *
+     * @param  \stdClass $data the json bit retrieved from the API that represents a Link fragment.
+     *
+     * @return \Prismic\Fragment\Link\LinkInterface  the manipulable object for that Link fragment.
+     */
     public static function extractLink($data)
     {
         switch ($data->type) {

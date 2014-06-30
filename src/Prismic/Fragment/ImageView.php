@@ -49,10 +49,11 @@ class ImageView
      * Constructs an image view.
      *
      * @param string  $url          the image view's URL
-     * @param string  $alt          the image view's URL
-     * @param string  $copyright    the image view's URL
-     * @param string  $width        the image view's URL
-     * @param string  $height       the image view's URL
+     * @param string  $alt          the image view's alternative text
+     * @param string  $copyright    the image view's copyright
+     * @param string  $width        the image view's width
+     * @param string  $height       the image view's height
+     * @param string  $link         the image view's link to point to
      */
     public function __construct($url, $alt, $copyright, $width, $height, $link)
     {
