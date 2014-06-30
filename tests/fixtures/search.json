@@ -477,6 +477,58 @@
                         },
                         {
                             "spans": [],
+                            "text": "The next is linked to a valid document:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 400,
+                                "width": 400
+                            },
+                            "linkTo": {
+                                "type": "Link.document",
+                                "value": {
+                                    "document": {
+                                        "id": "UxCQFFFFFFFaaYAH",
+                                        "slug": "something-fantastic",
+                                        "type": "lovely-thing"
+                                    },
+                                    "isBroken": false
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/400x400"
+                        },
+                        {
+                            "spans": [],
+                            "text": "The next is linked to a broken document:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 250,
+                                "width": 250
+                            },
+                            "linkTo": {
+                                "type": "Link.document",
+                                "value": {
+                                    "document": {
+                                        "id": "UxERPAEAAHQcsBUH",
+                                        "slug": "-",
+                                        "type": "event-calendar"
+                                    },
+                                    "isBroken": true
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/250x250"
+                        },
+                        {
+                            "spans": [],
                             "text": "One more image, this one is not linked:",
                             "type": "paragraph"
                         },
@@ -489,6 +541,33 @@
                             },
                             "type": "image",
                             "url": "http://fpoimg.com/199x300"
+                        }
+                    ]
+                },
+                "with_broken_link": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "spans": [
+                                {
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UxERPAEAAHQcsBUH",
+                                                "slug": "-",
+                                                "type": "event-calendar"
+                                            },
+                                            "isBroken": true
+                                        }
+                                    },
+                                    "end": 53,
+                                    "start": 42,
+                                    "type": "hyperlink"
+                                }
+                            ],
+                            "text": "The last two words of this sentence are a broken link.",
+                            "type": "paragraph"
                         }
                     ]
                 }

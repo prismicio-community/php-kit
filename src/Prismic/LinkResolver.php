@@ -28,11 +28,12 @@ abstract class LinkResolver
 {
 
     /**
-     * Returns the application-specific URL related to this document link
+     * Returns the application-specific URL related to this document link, or
+     * null if the link is deemed invalid
      *
      * @param Fragment\Link\DocumentLink $link The document link
      *
-     * @return String
+     * @return String or null
      */
     abstract public function resolve($link);
 

@@ -88,9 +88,9 @@ class ImageView
             $img->setAttribute($key, $value);
         }
 
-        if ($this->getLink()) {
+        if ($this->getLink() && ($url = $this->getLink()->getUrl($linkResolver)) !== null) {
             $a = $doc->createElement('a');
-            $a->setAttribute('href', $this->getLink()->getUrl($linkResolver));
+            $a->setAttribute('href', $url);
             $a->appendChild($img);
             $doc->appendChild($a);
         } else {
