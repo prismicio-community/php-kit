@@ -243,7 +243,7 @@ class SearchForm
             if ($response) {
                 return $response;
             } else {
-                $request = Api::defaultClient()->get($url);
+                $request = $this->api->getClient()->get($url);
                 $response = $request->send();
                 $cacheControl = $response->getHeaders()->get('Cache-Control');
                 $cacheDuration = null;
