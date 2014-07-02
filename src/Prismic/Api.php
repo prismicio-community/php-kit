@@ -11,6 +11,7 @@
 namespace Prismic;
 
 use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\DefaultCache;
 
@@ -35,17 +36,24 @@ class Api
      * @var CacheInterface the cache object specifying how to store the cache
      */
     private $cache;
+    /**
+     * @var ClientInterface
+     */
+    private $client;
 
     /**
      * Private constructor, not be used outside of this class.
      *
-     * @param string $data
-     * @param string $accessToken
+     * @param string               $data
+     * @param string               $accessToken
+     * @param ClientInterface|null $client
+     * @param CacheInterface|null  $cache
      */
-    private function __construct($data, $accessToken = null, CacheInterface $cache = null)
+    private function __construct($data, $accessToken = null, ClientInterface $client = null, CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
+        $this->client = is_null($client) ? self::defaultClient() : $client;
         $this->cache = is_null($cache) ? new DefaultCache() : $cache;
     }
 
@@ -209,19 +217,29 @@ class Api
     }
 
     /**
+     * Accessing the underlaying client object responsible for the CURL requests
+     *
+     * @return ClientInterface the client object itself
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
      * This is the endpoint to build your API, and is a static method.
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('http://idofyourrepository.prismic.io/api')
      *
      * @api
      *
-     * @param  string              $action      the URL of your repository API's endpoint
-     * @param  string              $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  \Guzzle\Http\Client $client      by default, the client is a Guzzle with a certain configuration, but you can override it here
-     * @param  CacheInterface      $cache       Cache implementation
-     * @return Api                 the Api object, useable to perform queries
+     * @param  string                  $action      the URL of your repository API's endpoint
+     * @param  string                  $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  ClientInterface $client by default, the client is a Guzzle with a certain configuration, but you can override it here
+     * @param  CacheInterface          $cache       Cache implementation
+     * @return Api                     the Api object, useable to perform queries
      */
-    public static function get($action, $accessToken = null, $client = null, $cache = null)
+    public static function get($action, $accessToken = null, ClientInterface $client = null, CacheInterface $cache = null)
     {
         $cache = is_null($cache) ? new DefaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
@@ -233,7 +251,7 @@ class Api
             return $api;
         } else {
             $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-            $client = isset($client) ? $client : self::defaultClient();
+            $client = is_null($client) ? self::defaultClient() : $client;
             $request = $client->get($url);
             $response = $request->send();
             $response = json_decode($response->getBody(true));
@@ -257,7 +275,7 @@ class Api
                 $response->oauth_token
             );
 
-            $api = new Api($apiData, $accessToken, $cache);
+            $api = new Api($apiData, $accessToken, $client, $cache);
             $cache->set($cacheKey, serialize($api), 5);
 
             return $api;

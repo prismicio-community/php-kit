@@ -49,6 +49,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $api = Api::get('don\'t care about this value', null, $client);
 
         $this->assertInstanceOf('Prismic\Api', $api);
+        $this->assertEquals($client, $api->getClient());
 
         return $api;
     }
