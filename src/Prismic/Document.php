@@ -304,10 +304,6 @@ class Document
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Timestamp) {
-            if (isset($pattern)) {
-                return $fragment;
-            }
-
             return $fragment;
         }
 
