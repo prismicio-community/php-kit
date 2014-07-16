@@ -255,7 +255,7 @@ class SearchForm
                     throw new \RuntimeException("Unable to decode json response");
                 }
                 if ($cacheDuration !== null) {
-                    $expiration = time() + $cacheDuration;
+                    $expiration = $cacheDuration;
                     $this->api->getCache()->set($url, $json, $expiration);
                 }
 
