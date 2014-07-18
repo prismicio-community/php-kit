@@ -54,6 +54,16 @@ class SearchForm
     }
 
     /**
+     * Get the parameters we're about to submit.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Sets a value for a given parameter. For instance: set('orderings', '[product.price]'),
      * or set('page', 2).
      *
