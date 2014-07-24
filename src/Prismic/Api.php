@@ -243,10 +243,8 @@ class Api
     {
         $cache = is_null($cache) ? new DefaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
-
-        $api = $cache->get($cacheKey);
-        $api = $api ? unserialize($api) : null;
-
+        $apiData = $cache->get($cacheKey);
+        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $client, $cache) : null;
         if ($api) {
             return $api;
         } else {
@@ -276,7 +274,7 @@ class Api
             );
 
             $api = new Api($apiData, $accessToken, $client, $cache);
-            $cache->set($cacheKey, serialize($api), 5);
+            $cache->set($cacheKey, serialize($apiData), 5);
 
             return $api;
         }
