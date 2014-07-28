@@ -111,9 +111,9 @@ class Embed implements FragmentInterface
             $json->oembed->type,
             $json->oembed->provider_name,
             $json->oembed->embed_url,
-            $json->oembed->width,
-            $json->oembed->height,
-            $json->oembed->html,
+            isset($json->{'width'}) ? $json->width : null,
+            isset($json->{'height'}) ? $json->height : null,
+            isset($json->{'html'}) ? $json->html : null,
             $json->oembed
         );
     }
