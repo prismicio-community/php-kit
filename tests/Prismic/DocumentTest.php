@@ -62,6 +62,17 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->document->getDate('product.birthdate', 'Y'), '2013');
     }
 
+    public function testGetGeoPoint()
+    {
+        $masterRef = $this->micro_api->master()->getRef();
+        $results = $this->micro_api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "U9pjvjQAADAAehbf")]]')->submit()->getResults();
+        $document = $results[0];
+        $geoPoint = $document->getGeoPoint('contributor.location');
+
+        $this->assertEquals($geoPoint->getLatitude(), 48.87687670000001);
+        $this->assertEquals($geoPoint->getLongitude(), 2.3338801999999825);
+    }
+
     public function testGetImage()
     {
         $this->assertTrue(null != ($this->document->getImage('product.image')));

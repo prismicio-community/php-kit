@@ -15,6 +15,7 @@ use Prismic\Fragment\Date;
 use Prismic\Fragment\Embed;
 use Prismic\Fragment\Image;
 use Prismic\Fragment\Number;
+use Prismic\Fragment\GeoPoint;
 use Prismic\Fragment\ImageView;
 use Prismic\Fragment\Link\LinkInterface;
 use Prismic\Fragment\Link\DocumentLink;
@@ -239,6 +240,23 @@ class Document
             } else {
                 return $fragment;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a GeoPoint fragment or null if the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param  string $field name of the fragment
+     * @return GeoPoint Fragment
+     */
+    public function getGeoPoint($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof GeoPoint) {
+            return $fragment;
         }
 
         return null;
@@ -576,6 +594,10 @@ class Document
 
             if ($json->type === "Color") {
                 return new Color($json->value);
+            }
+
+            if ($json->type === "GeoPoint") {
+                return new GeoPoint($json->value->latitude, $json->value->longitude);
             }
 
             if ($json->type === "Number") {
