@@ -145,7 +145,7 @@ class Api
      *
      * @api
      *
-     * @return array all forms
+     * @return \stdClass all forms
      */
     public function forms()
     {
