@@ -24,6 +24,9 @@ use \Prismic\Cache\DefaultCache;
  */
 class Api
 {
+
+    const VERSION = "1.0.7";
+
     /**
      * @var string the API's access token to be used with each API call
      */
@@ -290,7 +293,7 @@ class Api
                 CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_TIMEOUT        => 60,
-                CURLOPT_USERAGENT      => 'prismic-php-0.1',
+                CURLOPT_USERAGENT      => 'Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion(),
                 CURLOPT_HTTPHEADER     => array('Accept: application/json')
             )
         ));
