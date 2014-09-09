@@ -41,6 +41,7 @@ abstract class LinkResolver
      * What happens when the link resolver gets called.
      *
      * @param Fragment\Link\DocumentLink $link The document link
+     * @return String
      */
     public function __invoke($link)
     {

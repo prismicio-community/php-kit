@@ -203,7 +203,7 @@ class StructuredText implements FragmentInterface
      *
      * @return string the HTML version of the StructuredText fragment
      */
-    public function asHtml($linkResolver = null)
+    public function asHtml($linkResolver = null, $htmlSerializer = null)
     {
         $groups = array();
         foreach ($this->blocks as $block) {
@@ -242,12 +242,12 @@ class StructuredText implements FragmentInterface
             if (isset($maybeTag)) {
                 $html = $html . "<" . $group->getTag() . ">";
                 foreach ($group->getBlocks() as $block) {
-                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver);
+                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver, $htmlSerializer);
                 }
                 $html = $html . "</" . $group->getTag() . ">";
             } else {
                 foreach ($group->getBlocks() as $block) {
-                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver);
+                    $html = $html . StructuredText::asHtmlBlock($block, $linkResolver, $htmlSerializer);
                 }
             }
         }
@@ -258,34 +258,23 @@ class StructuredText implements FragmentInterface
     /**
      * Transforms a block into HTML (for internal use)
      *
-     * @param \Prismic\Fragment\Block\BlockInterface  $block         a given block
-     * @param \Prismic\LinkResolver                   $linkResolver  the link resolver
+     * @param \Prismic\Fragment\Block\BlockInterface $block a given block
+     * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
+     * @param lambda $htmlSerializer
      * @return string the HTML version of the block
      */
-    public static function asHtmlBlock($block, $linkResolver = null)
+    public static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
     {
-        if ($block instanceof HeadingBlock) {
-            return nl2br('<h' . $block->getLevel() . '>' .
-                    StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) .
-                    '</h' . $block->getLevel() . '>');
-        } elseif ($block instanceof ParagraphBlock) {
-            return nl2br('<p>' .
-                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</p>');
-        } elseif ($block instanceof ListItemBlock) {
-            return nl2br('<li>' .
-                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) . '</li>');
-        } elseif ($block instanceof ImageBlock) {
-            return nl2br('<p>' . $block->getView()->asHtml($linkResolver) . '</p>');
-        } elseif ($block instanceof EmbedBlock) {
-            return nl2br($block->getObj()->asHtml());
-        } elseif ($block instanceof PreformattedBlock) {
-            return '<pre>' .
-                   StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver) .
-                   '</pre>';
+        $content = "";
+        if ($block instanceof HeadingBlock ||
+            $block instanceof ParagraphBlock ||
+            $block instanceof ListItemBlock ||
+            $block instanceof PreformattedBlock)
+        {
+            $content = StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver);
         }
-
-        return "";
+        return StructuredText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
 
     /**
@@ -390,6 +379,57 @@ class StructuredText implements FragmentInterface
 
         return trim($doc->saveHTML());
 
+    }
+
+    private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
+        if (!is_null($htmlSerializer)) {
+            $custom = $htmlSerializer($element, $content);
+            if (!is_null($custom)) {
+                return $custom;
+            }
+        }
+
+        // Blocks
+        if ($element instanceof HeadingBlock) {
+            return nl2br('<h' . $element->getLevel() . '>' . $content . '</h' . $element->getLevel() . '>');
+        } elseif ($element instanceof ParagraphBlock) {
+            return nl2br('<p>' . $content . '</p>');
+        } elseif ($element instanceof ListItemBlock) {
+            return nl2br('<li>' . $content . '</li>');
+        } elseif ($element instanceof ImageBlock) {
+            return nl2br('<p class="block-img">' . $element->getView()->asHtml($linkResolver) . '</p>');
+        } elseif ($element instanceof EmbedBlock) {
+            return nl2br($element->getObj()->asHtml());
+        } elseif ($element instanceof PreformattedBlock) {
+            return '<pre>' . $content . '</pre>';
+        }
+
+        // Spans
+        $attributes = array();
+        if ($element instanceof StrongSpan) {
+            $nodeName = 'strong';
+        } elseif ($element instanceof EmSpan) {
+            $nodeName = 'em';
+        } elseif ($element instanceof HyperlinkSpan) {
+            $nodeName = 'a';
+            if ($element->getLink() instanceof DocumentLink) {
+                $attributes['href'] = $linkResolver ? $linkResolver($element->getLink()) : '';
+            } else {
+                $attributes['href'] = $element->getLink()->getUrl();
+            }
+            if ($attributes['href'] === null) {
+                // We have no link (LinkResolver said it is not valid,
+                // or something else went wrong). Abort this span.
+                return;
+            }
+        } else {
+            $nodeName = 'span';
+        }
+        $attributesHtml = "";
+        foreach ($attributes as $k => $v) {
+            $attributesHtml .= (' ' . $k . '="' . $v . '"');
+        }
+        return '<' . $nodeName . $attributesHtml . '>' . $content . '</' . $nodeName . '>';
     }
 
     /**
