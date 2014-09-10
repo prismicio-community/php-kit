@@ -142,6 +142,16 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section>');
     }
 
+    public function testGetTimestamp()
+    {
+        $timestampFragment = $this->document->getTimestamp('product.publication_time');
+        $this->assertEquals($timestampFragment->asText(), '2014-06-18T15:30:00+0000');
+        $this->assertEquals($timestampFragment->getValue(), '2014-06-18T15:30:00+0000');
+        $this->assertEquals($timestampFragment->asHtml(), '<datetime>2014-06-18T15:30:00+0000</datetime>');
+        $dateTime = $timestampFragment->asDateTime();
+        $this->assertEquals($dateTime->getTimestamp(), 1403105400);
+    }
+
     public function testHasWithExistingField()
     {
         $this->assertEquals($this->document->has('product.name'), true);
