@@ -148,7 +148,7 @@ class Api
      *
      * @api
      *
-     * @return array all forms
+     * @return \stdClass all forms
      */
     public function forms()
     {
@@ -236,10 +236,11 @@ class Api
      *
      * @api
      *
-     * @param  string                  $action      the URL of your repository API's endpoint
-     * @param  string                  $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  string $action the URL of your repository API's endpoint
+     * @param  string $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
      * @param  ClientInterface $client by default, the client is a Guzzle with a certain configuration, but you can override it here
-     * @param  CacheInterface          $cache       Cache implementation
+     * @param  CacheInterface $cache Cache implementation
+     * @throws \RuntimeException
      * @return Api                     the Api object, useable to perform queries
      */
     public static function get($action, $accessToken = null, ClientInterface $client = null, CacheInterface $cache = null)

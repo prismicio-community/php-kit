@@ -70,8 +70,9 @@ class SearchForm
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
      * @api
-     * @param  string              $key   the name of the parameter
-     * @param  string              $value the value of the parameter
+     * @param  string $key the name of the parameter
+     * @param  string $value the value of the parameter
+     * @throws \RuntimeException
      * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
      */
     public function set($key, $value)

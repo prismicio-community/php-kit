@@ -408,7 +408,8 @@ class Document
      * Get all given views of all images for a given fragment name.
      *
      * @param string $field name of the fragments, with the document's type, like "product.picture"
-     * @param string $view  name of the view, like "small"
+     * @param string $view name of the view, like "small"
+     * @return array all views of the image
      * @deprecated deprecated because this only made sense when Group fragments didn't exist yet.
      */
     public function getAllImageViews($field, $view)
