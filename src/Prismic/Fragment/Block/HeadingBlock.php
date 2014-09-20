@@ -27,6 +27,10 @@ class HeadingBlock implements TextInterface
      * @var string the heading's level (currently, either 1, 2 or 3)
      */
     private $level;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
 
     /**
@@ -35,12 +39,14 @@ class HeadingBlock implements TextInterface
      * @param string $text  the unformatted text
      * @param array  $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      * @param string $level the heading's level
+     * @param string $label may be null
      */
-    public function __construct($text, $spans, $level)
+    public function __construct($text, $spans, $level, $label = NULL)
     {
         $this->text = $text;
         $this->spans = $spans;
         $this->level = $level;
+        $this->label = $label;
     }
 
     /**
@@ -77,5 +83,17 @@ class HeadingBlock implements TextInterface
     public function getLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

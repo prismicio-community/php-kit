@@ -153,7 +153,10 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $link = $structuredText->getFirstImage()->getView()->getLink();
         $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
         $linkResolver = new FakeLinkResolver();
-        $this->assertEquals($structuredText->asHtml($linkResolver), '<p>Here is some introductory text.</p><p>The following image is linked.</p><p class="block-img"><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a></p><p><strong>More important stuff</strong></p><p>The next is linked to a valid document:</p><p class="block-img"><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a></p><p>The next is linked to a broken document:</p><p class="block-img"><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"></p><p>One more image, this one is not linked:</p><p class="block-img"><img src="http://fpoimg.com/199x300" alt="" width="300" height="199"></p>');
+        $this->assertEquals(
+            '<p class="intro">Here is some introductory text.</p><p>The following image is linked.</p><p class="block-img"><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a></p><p><strong class="warn">More important stuff</strong></p><p>The next is linked to a valid document:</p><p class="block-img"><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a></p><p>The next is linked to a broken document:</p><p class="block-img"><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"></p><p>One more image, this one is not linked:</p><p class="block-img"><img src="http://fpoimg.com/199x300" alt="" width="300" height="199"></p>',
+            $structuredText->asHtml($linkResolver)
+        );
     }
 
     public function testStructuredTextCustomHtmlSerializer()
@@ -168,7 +171,10 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $structuredText = $this->document->getStructuredText('product.linked_images');
         $link = $structuredText->getFirstImage()->getView()->getLink();
         $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
-        $this->assertEquals($structuredText->asHtml($linkResolver, $htmlSerializer), '<p>Here is some introductory text.</p><p>The following image is linked.</p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a><p><strong>More important stuff</strong></p><p>The next is linked to a valid document:</p><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a><p>The next is linked to a broken document:</p><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"><p>One more image, this one is not linked:</p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199">');
+        $this->assertEquals(
+            '<p class="intro">Here is some introductory text.</p><p>The following image is linked.</p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a><p><strong class="warn">More important stuff</strong></p><p>The next is linked to a valid document:</p><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a><p>The next is linked to a broken document:</p><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"><p>One more image, this one is not linked:</p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199">',
+            $structuredText->asHtml($linkResolver, $htmlSerializer)
+        );
     }
 
     public function testNonLinkedImageHasNoLink()

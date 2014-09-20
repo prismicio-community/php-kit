@@ -31,19 +31,25 @@ class HyperlinkSpan implements SpanInterface
      * @var \Prismic\Fragment\Link\LinkInterface the link to point to
      */
     private $link;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
     /**
      * Constructs a link span
      *
-     * @param integer                              $start the start of the span
-     * @param integer                              $end   the end of the span
-     * @param \Prismic\Fragment\Link\LinkInterface $link  the link to point to
+     * @param integer $start the start of the span
+     * @param integer $end the end of the span
+     * @param \Prismic\Fragment\Link\LinkInterface $link the link to point to
+     * @param $label
      */
-    public function __construct($start, $end, $link)
+    public function __construct($start, $end, $link, $label = NULL)
     {
         $this->start = $start;
         $this->end = $end;
         $this->link = $link;
+        $this->label = $label;
     }
 
     /**
@@ -80,5 +86,17 @@ class HyperlinkSpan implements SpanInterface
     public function getLink()
     {
         return $this->link;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

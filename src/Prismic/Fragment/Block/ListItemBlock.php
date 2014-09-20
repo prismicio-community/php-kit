@@ -28,19 +28,25 @@ class ListItemBlock implements TextInterface
      * @var boolean true if part of an ordered list, false if unordered
      */
     private $ordered;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
     /**
      * Constructs a list item block.
      *
-     * @param string  $text    the unformatted text
-     * @param array   $spans   an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param string $text the unformatted text
+     * @param array $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      * @param boolean $ordered true if part of an ordered list, false if unordered
+     * @param $label string
      */
-    public function __construct($text, $spans, $ordered)
+    public function __construct($text, $spans, $ordered, $label = NULL)
     {
         $this->text = $text;
         $this->spans = $spans;
         $this->ordered = $ordered;
+        $this->label = $label;
     }
 
     /**
@@ -77,5 +83,17 @@ class ListItemBlock implements TextInterface
     public function isOrdered()
     {
         return $this->ordered;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

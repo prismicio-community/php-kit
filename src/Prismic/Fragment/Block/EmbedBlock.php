@@ -20,15 +20,21 @@ class EmbedBlock implements BlockInterface
      * @var \Prismic\Fragment\Embed the OEmbed object
      */
     private $obj;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
     /**
      * Constructs an OEmbed block from a OEmbed fragment.
      *
      * @param \Prismic\Fragment\Embed $obj the OEmbed fragment.
+     * @param $label string
      */
-    public function __construct($obj)
+    public function __construct($obj, $label = NULL)
     {
         $this->obj = $obj;
+        $this->label = $label;
     }
 
     /**
@@ -41,5 +47,17 @@ class EmbedBlock implements BlockInterface
     public function getObj()
     {
         return $this->obj;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

@@ -20,15 +20,21 @@ class ImageBlock implements BlockInterface
      * @var \Prismic\Fragment\ImageView the ImageView object describing the image.
      */
     private $view;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
     /**
      * Constructs an Image block from a ImageView.
      *
      * @param \Prismic\Fragment\ImageView $view the ImageView.
+     * @param $label string
      */
-    public function __construct($view)
+    public function __construct($view, $label = NULL)
     {
         $this->view = $view;
+        $this->label = $label;
     }
 
     /**
@@ -41,5 +47,17 @@ class ImageBlock implements BlockInterface
     public function getView()
     {
         return $this->view;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

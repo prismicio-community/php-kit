@@ -23,17 +23,23 @@ class ParagraphBlock implements TextInterface
      * @var array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      */
     private $spans;
+    /**
+     * @var string the label (optional, may be null)
+     */
+    private $label;
 
     /**
      * Constructs a paragraph block.
      *
-     * @param string $text  the unformatted text
-     * @param array  $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param string $text the unformatted text
+     * @param array $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param $label string
      */
-    public function __construct($text, $spans)
+    public function __construct($text, $spans, $label = NULL)
     {
         $this->text = $text;
         $this->spans = $spans;
+        $this->label = $label;
     }
 
     /**
@@ -58,5 +64,17 @@ class ParagraphBlock implements TextInterface
     public function getSpans()
     {
         return $this->spans;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @api
+     *
+     * @return string the label
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

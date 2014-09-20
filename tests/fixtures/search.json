@@ -439,6 +439,7 @@
                     "type": "StructuredText",
                     "value": [
                         {
+                            "label": "intro",
                             "spans": [],
                             "text": "Here is some introductory text.",
                             "type": "paragraph"
@@ -467,6 +468,7 @@
                         {
                             "spans": [
                                 {
+                                    "label": "warn",
                                     "end": 20,
                                     "start": 0,
                                     "type": "strong"

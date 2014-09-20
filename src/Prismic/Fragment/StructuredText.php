@@ -201,6 +201,7 @@ class StructuredText implements FragmentInterface
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
+     * @param lambda $htmlSerializer an optional function to generate custom HTML code
      * @return string the HTML version of the StructuredText fragment
      */
     public function asHtml($linkResolver = null, $htmlSerializer = null)
@@ -272,7 +273,7 @@ class StructuredText implements FragmentInterface
             $block instanceof ListItemBlock ||
             $block instanceof PreformattedBlock)
         {
-            $content = StructuredText::asHtmlText($block->getText(), $block->getSpans(), $linkResolver);
+            $content = StructuredText::insertSpans($block->getText(), $block->getSpans(), $linkResolver);
         }
         return StructuredText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
@@ -286,7 +287,7 @@ class StructuredText implements FragmentInterface
      *
      * @return string the HTML version of the block
      */
-    public static function asHtmlText($text, $spans, $linkResolver = null)
+    public static function insertSpans($text, $spans, $linkResolver = null)
     {
         if (empty($spans)) {
             return htmlentities($text);
@@ -333,6 +334,9 @@ class StructuredText implements FragmentInterface
                 } else {
                     //throw new \Exception("Unknown span type " . get_class($span));
                     $nodeName = 'span';
+                }
+                if ($span->getLabel() != NULL) {
+                    $attributes['class'] = $span->getLabel();
                 }
 
                 // Make the new span element, and put the text from the meat
@@ -389,19 +393,24 @@ class StructuredText implements FragmentInterface
             }
         }
 
+        $classCode = "";
+        $label = $element->getLabel();
+        if (!is_null($label)) {
+            $classCode = ' class="' . $label . '"';
+        }
         // Blocks
         if ($element instanceof HeadingBlock) {
-            return nl2br('<h' . $element->getLevel() . '>' . $content . '</h' . $element->getLevel() . '>');
+            return nl2br('<h' . $element->getLevel() . $classCode . '>' . $content . '</h' . $element->getLevel() . '>');
         } elseif ($element instanceof ParagraphBlock) {
-            return nl2br('<p>' . $content . '</p>');
+            return nl2br('<p' . $classCode . '>' . $content . '</p>');
         } elseif ($element instanceof ListItemBlock) {
-            return nl2br('<li>' . $content . '</li>');
+            return nl2br('<li' . $classCode . '>' . $content . '</li>');
         } elseif ($element instanceof ImageBlock) {
-            return nl2br('<p class="block-img">' . $element->getView()->asHtml($linkResolver) . '</p>');
+            return nl2br('<p class="block-img' . (is_null($label) ? '' : (' ' . $label)) . '">' . $element->getView()->asHtml($linkResolver) . '</p>');
         } elseif ($element instanceof EmbedBlock) {
             return nl2br($element->getObj()->asHtml());
         } elseif ($element instanceof PreformattedBlock) {
-            return '<pre>' . $content . '</pre>';
+            return '<pre' . $classCode . '>' . $content . '</pre>';
         }
 
         // Spans
@@ -425,6 +434,9 @@ class StructuredText implements FragmentInterface
         } else {
             $nodeName = 'span';
         }
+        if (!is_null($label)) {
+            $attributes['class'] = $label;
+        }
         $attributesHtml = "";
         foreach ($attributes as $k => $v) {
             $attributesHtml .= (' ' . $k . '="' . $v . '"');
@@ -444,17 +456,18 @@ class StructuredText implements FragmentInterface
         $type = $json->type;
         $start = $json->start;
         $end = $json->end;
+        $label = property_exists($json, "label") ? $json->label : NULL;
 
         if ("strong" == $type) {
-            return new StrongSpan($start, $end);
+            return new StrongSpan($start, $end, $label);
         }
 
         if ("em" == $type) {
-            return new EmSpan($start, $end);
+            return new EmSpan($start, $end, $label);
         }
 
         if ("hyperlink" == $type && ($link = self::extractLink($json->data))) {
-            return new HyperlinkSpan($start, $end, $link);
+            return new HyperlinkSpan($start, $end, $link, $label);
         }
 
         return null;
@@ -490,60 +503,64 @@ class StructuredText implements FragmentInterface
      */
     public static function parseBlock($json)
     {
+        $label = NULL;
+        if (property_exists($json, "label")) {
+            $label = $json->label;
+        }
         if ($json->type == 'heading1') {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 1);
+            return new HeadingBlock($p->getText(), $p->getSpans(), 1, $label);
         }
 
         if ($json->type == 'heading2') {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 2);
+            return new HeadingBlock($p->getText(), $p->getSpans(), 2, $label);
         }
 
         if ($json->type == 'heading3') {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 3);
+            return new HeadingBlock($p->getText(), $p->getSpans(), 3, $label);
         }
 
         if ($json->type == 'heading4') {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 4);
+            return new HeadingBlock($p->getText(), $p->getSpans(), 4, $label);
         }
 
         if ($json->type == 'paragraph') {
             $p = StructuredText::parseText($json);
 
-            return new ParagraphBlock($p->getText(), $p->getSpans());
+            return new ParagraphBlock($p->getText(), $p->getSpans(), $label);
         }
 
         if ($json->type == 'list-item') {
             $p = StructuredText::parseText($json);
 
-            return new ListItemBlock($p->getText(), $p->getSpans(), false);
+            return new ListItemBlock($p->getText(), $p->getSpans(), false, $label);
         }
 
         if ($json->type == 'o-list-item') {
             $p = StructuredText::parseText($json);
 
-            return new ListItemBlock($p->getText(), $p->getSpans(), true);
+            return new ListItemBlock($p->getText(), $p->getSpans(), true, $label);
         }
 
         if ($json->type == 'image') {
             $view = ImageView::parse($json);
 
-            return new ImageBlock($view);
+            return new ImageBlock($view, $label);
         }
 
         if ($json->type == 'embed') {
-            return new EmbedBlock(Embed::parse($json));
+            return new EmbedBlock(Embed::parse($json), $label);
         }
 
         if ($json->type == 'preformatted') {
-            return new PreformattedBlock($json->text, $json->spans);
+            return new PreformattedBlock($json->text, $json->spans, $label);
         }
 
         return null;
