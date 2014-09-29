@@ -4,6 +4,7 @@ namespace Prismic\Test;
 
 use Prismic\Api;
 use Prismic\Response;
+use Prismic\Predicates;
 
 class ApiTest extends \PHPUnit_Framework_TestCase
 {

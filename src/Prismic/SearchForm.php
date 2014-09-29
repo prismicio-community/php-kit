@@ -214,25 +214,21 @@ class SearchForm
      *
      * @api
      *
-     * @param  string              $q the predicates.
+     * @param  string|\Prismic\Predicate|array  $q the query as a string, a Predicate, or an array of Predicate.
      * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
     public function query($q)
     {
         $fields = $this->form->getFields();
         $field = $fields['q'];
-        if ($field->isMultiple()) {
-            return $this->set("q", $q);
+        if (is_string($q)) {
+            $query = $q;
+        } else if (is_array($q)) {
+            $query = "[" . join("", array_map(function($predicate) { return $predicate.q(); }, $q)) . "]";
         } else {
-            // Temporary Hack for backward compatibility
-            $maybeDefault = property_exists($field, "defaultValue") ? $field->getDefaultValue() : null;
-            $q1 = $maybeDefault ? self::strip($maybeDefault) : "";
-
-            $data = $this->data;
-            $data['q'] = '[' . $q1 . self::strip($q) . ']';
-
-            return new SearchForm($this->api, $this->form, $data);
+            $query = "[" . $q->q() . "]";
         }
+        return $this->set("q", $query);
     }
 
     /**
