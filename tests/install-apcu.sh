@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$TRAVIS_PHP_VERSION" == "5.5" ] ; then
+if [ "$TRAVIS_PHP_VERSION" == "5.5" ] || [ "$TRAVIS_PHP_VERSION" == "5.6" ] ; then
     sudo apt-get install autoconf
     APCU=4.0.2
     wget http://pecl.php.net/get/apcu-$APCU.tgz
