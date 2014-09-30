@@ -17,7 +17,7 @@ class PredicatesTest extends \PHPUnit_Framework_TestCase
 
     public function testAnyPredicate()
     {
-        $p = Predicates::any("document.tags", ["Macaron", "Cupcakes"]);
+        $p = Predicates::any("document.tags", array("Macaron", "Cupcakes"));
         $this->assertEquals('[:d = any(document.tags, ["Macaron", "Cupcakes"])]', $p->q());
     }
 

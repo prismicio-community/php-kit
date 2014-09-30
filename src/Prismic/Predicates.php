@@ -15,83 +15,83 @@ use \Prismic\SimplePredicate;
 class Predicates {
 
     public static function at($fragment, $value) {
-        return new SimplePredicate("at", $fragment, [$value]);
+        return new SimplePredicate("at", $fragment, array($value));
     }
 
     public static function any($fragment, $values) {
-        return new SimplePredicate("any", $fragment, [$values]);
+        return new SimplePredicate("any", $fragment, array($values));
     }
 
     public static function fulltext($fragment, $value) {
-        return new SimplePredicate("fulltext", $fragment, [$value]);
+        return new SimplePredicate("fulltext", $fragment, array($value));
     }
 
     public static function similar($documentId, $maxResults) {
-        return new SimplePredicate("similar", $documentId, [$maxResults]);
+        return new SimplePredicate("similar", $documentId, array($maxResults));
     }
 
     public static function lt($fragment, $lowerBound) {
-        return new SimplePredicate("number.lt", $fragment, [$lowerBound]);
+        return new SimplePredicate("number.lt", $fragment, array($lowerBound));
     }
 
     public static function gt($fragment, $upperBound) {
-        return new SimplePredicate("number.gt", $fragment, [$upperBound]);
+        return new SimplePredicate("number.gt", $fragment, array($upperBound));
     }
 
     public static function inRange($fragment, $lowerBound, $upperBound) {
-        return new SimplePredicate("number.inRange", $fragment, [$lowerBound, $upperBound]);
+        return new SimplePredicate("number.inRange", $fragment, array($lowerBound, $upperBound));
     }
 
     public static function dateBefore($fragment, $before) {
-        return new SimplePredicate("date.date-before", $fragment, [$before]);
+        return new SimplePredicate("date.date-before", $fragment, array($before));
     }
 
     public static function dateAfter($fragment, $after) {
-        return new SimplePredicate("date.date-after", $fragment, [$after]);
+        return new SimplePredicate("date.date-after", $fragment, array($after));
     }
 
     public static function dateBetween($fragment, $before, $after) {
-        return new SimplePredicate("date.date-between", $fragment, [$before, $after]);
+        return new SimplePredicate("date.date-between", $fragment, array($before, $after));
     }
 
     public static function dayOfMonth($fragment, $day) {
-        return new SimplePredicate("date.day-of-month", $fragment, [$day]);
+        return new SimplePredicate("date.day-of-month", $fragment, array($day));
     }
 
     public static function dayOfMonthBefore($fragment, $day) {
-        return new SimplePredicate("date.day-of-month-before", $fragment, [$day]);
+        return new SimplePredicate("date.day-of-month-before", $fragment, array($day));
     }
 
     public static function dayOfMonthAfter($fragment, $day) {
-        return new SimplePredicate("date.day-of-month-after", $fragment, [$day]);
+        return new SimplePredicate("date.day-of-month-after", $fragment, array($day));
     }
 
     public static function month($fragment, $month) {
-        return new SimplePredicate("date.month", $fragment, [$month]);
+        return new SimplePredicate("date.month", $fragment, array($month));
     }
 
     public static function monthBefore($fragment, $month) {
-        return new SimplePredicate("date.month-before", $fragment, [$month]);
+        return new SimplePredicate("date.month-before", $fragment, array($month));
     }
 
     public static function monthAfter($fragment, $month) {
-        return new SimplePredicate("date.month-after", $fragment, [$month]);
+        return new SimplePredicate("date.month-after", $fragment, array($month));
     }
 
     public static function hour($fragment, $hour) {
-        return new SimplePredicate("date.hour", $fragment, [$hour]);
+        return new SimplePredicate("date.hour", $fragment, array($hour));
     }
 
     public static function hourBefore($fragment, $hour) {
-        return new SimplePredicate("date.hour-before", $fragment, [$hour]);
+        return new SimplePredicate("date.hour-before", $fragment, array($hour));
     }
 
     public static function hourAfter($fragment, $hour) {
-        return new SimplePredicate("date.hour-after", $fragment, [$hour]);
+        return new SimplePredicate("date.hour-after", $fragment, array($hour));
     }
 
     public static function near($fragment, $latitude, $longitude, $radius) {
-        return new SimplePredicate("geopoint.near", $fragment, [$latitude, $longitude, $radius]);
+        return new SimplePredicate("geopoint.near", $fragment, array($latitude, $longitude, $radius));
     }
 
 }

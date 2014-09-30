@@ -94,7 +94,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get("https://micro.prismic.io/api");
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->query(Predicates::any('document.type', ["doc", "docchapter"]))->submit()->getResults();
+        $results = $api->forms()->everything->ref($masterRef)->query(Predicates::any('document.type', array("doc", "docchapter")))->submit()->getResults();
         $linkedDocuments = $results[0]->getLinkedDocuments();
         $this->assertEquals(count($linkedDocuments), 1);
         $this->assertEquals($linkedDocuments[0]->getId(), "U0w8OwEAACoAQEvB");

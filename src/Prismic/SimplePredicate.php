@@ -42,7 +42,7 @@ class SimplePredicate implements Predicate
             return "\"" . $value . "\"";
         }
         if (is_array($value)) {
-            $str_array = [];
+            $str_array = array();
             foreach ($value as $elt) {
                 array_push($str_array, SimplePredicate::serializeField($elt));
             }
