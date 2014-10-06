@@ -576,6 +576,25 @@
                 "publication_time" : {
                     "type" : "Timestamp",
                     "value" : "2014-06-18T15:30:00+0000"
+                },
+                "labelled_text" : {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "This is some structured text that has a label",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "label",
+                                    "data": {
+                                        "label": "my-label"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }
             }
         }
