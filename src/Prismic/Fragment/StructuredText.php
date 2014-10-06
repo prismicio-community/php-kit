@@ -24,6 +24,7 @@ use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
+use Prismic\Fragment\Span\LabelSpan;
 
 /**
  * This class embodies a StructuredText fragment.
@@ -468,6 +469,13 @@ class StructuredText implements FragmentInterface
 
         if ("hyperlink" == $type && ($link = self::extractLink($json->data))) {
             return new HyperlinkSpan($start, $end, $link, $label);
+        }
+
+        if ("label" == $type) {
+            if(property_exists($json, 'data') && property_exists($json->data, 'label')) {
+                $label = $json->data->label;
+            }
+            return new LabelSpan($start, $end, $label);
         }
 
         return null;
