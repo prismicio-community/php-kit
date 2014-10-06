@@ -3,8 +3,6 @@
 namespace Prismic\Test;
 
 use Prismic\Api;
-use Prismic\Response;
-use Prismic\Predicates;
 
 class ApiTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,43 +18,37 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnableToDecode()
     {
-        $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
         $response->expects($this->once())->method('getBody')->will($this->returnValue("not a json"));
 
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $request->expects($this->once())->method('send')->will($this->returnValue($response));
+        $httpAdapter = $this->getMock('Ivory\HttpAdapter\HttpAdapterInterface');
+        $httpAdapter->expects($this->once())->method('get')->will($this->returnValue($response));
 
-        $client = $this->getMock('Guzzle\Http\Client');
-        $client->expects($this->once())->method('get')->will($this->returnValue($request));
-
-        Api::get('don\'t care about this value', null, $client);
+        Api::get('don\'t care about this value', null, $httpAdapter);
     }
 
     public function testValidApiCall()
     {
-        $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
         $response->expects($this->once())->method('getBody')->will($this->returnValue(file_get_contents(__DIR__.'/../fixtures/data.json')));
 
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $request->expects($this->once())->method('send')->will($this->returnValue($response));
+        $httpAdapter = $this->getMock('Ivory\HttpAdapter\HttpAdapterInterface');
+        $httpAdapter->expects($this->once())->method('get')->will($this->returnValue($response));
 
-        $client = $this->getMock('Guzzle\Http\Client');
-        $client->expects($this->once())->method('get')->will($this->returnValue($request));
-
-        $api = Api::get('don\'t care about this value', null, $client);
+        $api = Api::get('don\'t care about this value', null, $httpAdapter);
 
         $this->assertInstanceOf('Prismic\Api', $api);
-        $this->assertEquals($client, $api->getClient());
+        $this->assertEquals($httpAdapter, $api->getHttpAdapter());
 
         return $api;
     }
 
     /**
-     * @param Api $response
+     * @param Api $api
      *
      * @depends testValidApiCall
      */

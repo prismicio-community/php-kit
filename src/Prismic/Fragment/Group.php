@@ -21,14 +21,14 @@ use Prismic\Document;
  * through all of them); then picking which subfragment from its name,
  * as defined in the JSON mask for this fragment.
  *
- * For instance: for($groupFragment->getArray() as $groupItem) { echo $groupItem['subfragmentName']->asText(); }
+ * For instance: for($groupFragment->getArray() as $groupDoc) { echo $groupDoc.getText('subfragmentName'); }
  *
- * All subfragments are simply objects that implement FragmentInterface.
+ * Each group doc can be manipulated like a regular Document.
  */
 class Group implements FragmentInterface
 {
     /**
-     * @var array  the array of associative arrays of subfragments
+     * @var array the array of associative arrays of subfragments
      */
     private $array;
 
@@ -54,12 +54,8 @@ class Group implements FragmentInterface
     public function asHtml($linkResolver = null)
     {
         $string = "";
-        foreach ($this->array as $subfragments) {
-            foreach ($subfragments as $subfragment_name => $subfragment) {
-                $string .= "<section data-field=\"$subfragment_name\">" .
-                           $subfragment->asHtml($linkResolver) .
-                           "</section>";
-            }
+        foreach ($this->array as $groupdoc) {
+            $string .= $groupdoc->asHtml($linkResolver);
         }
 
         return $string;
@@ -116,7 +112,7 @@ class Group implements FragmentInterface
             }
         }
 
-        return $subfragments;
+        return new GroupDoc($subfragments);
     }
 
     /**

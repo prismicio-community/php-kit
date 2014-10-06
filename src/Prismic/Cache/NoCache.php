@@ -20,16 +20,29 @@ namespace Prismic\Cache;
 class NoCache implements CacheInterface
 {
     /**
+     * Tests whether the cache has a value for a particular key
+     *
+     * @api
+     *
+     * @param string $key the key of the cache entry
+     * @return boolean true if the cache has a value for this key, otherwise false
+     */
+    public function has($key)
+    {
+        return false;
+    }
+
+    /**
      * Returns the value of a cache entry from its key
      *
      * @api
      *
      * @param  string    $key the key of the cache entry
-     * @return \stdClass the value of the entry
+     * @return mixed the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
      */
     public function get($key)
     {
-        return false;
+        return null;
     }
 
     /**
@@ -40,10 +53,10 @@ class NoCache implements CacheInterface
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
      * @param integer   $ttl   the time until this cache entry expires
+     * @return void
      */
     public function set($key, $value, $ttl = null)
     {
-        return false;
     }
 
     /**
@@ -52,19 +65,20 @@ class NoCache implements CacheInterface
      * @api
      *
      * @param string $key the key of the cache entry
+     * @return void
      */
     public function delete($key)
     {
-        return false;
     }
 
     /**
      * Clears the whole cache
      *
      * @api
+     *
+     * @return void
      */
     public function clear()
     {
-        return false;
     }
 }

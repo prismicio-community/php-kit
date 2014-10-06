@@ -5,6 +5,7 @@ php:
   - 5.4
   - 5.5
   - 5.6
+
 before_script:
   - chmod +x ./tests/install-apcu.sh
   - ./tests/install-apcu.sh
@@ -12,4 +13,9 @@ before_script:
   - phpenv config-add tests/apc.ini
   - composer install --dev --prefer-source
 
-script: phpunit
+script: phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - CODECLIMATE_REPO_TOKEN=4c4f78edc9de922f7745810a2618ac6ccaa7528271a75c646e458d4380ef6c40 vendor/bin/test-reporter --stdout > codeclimate.json
+  - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
+

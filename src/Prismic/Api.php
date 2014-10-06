@@ -10,10 +10,16 @@
 
 namespace Prismic;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\ClientInterface;
+use Ivory\HttpAdapter\Configuration;
+use Ivory\HttpAdapter\CurlHttpAdapter;
+use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
+use Ivory\HttpAdapter\HttpAdapterInterface;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\DefaultCache;
+
+const PREVIEW_COOKIE = "io.prismic.preview";
+
+const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -25,7 +31,7 @@ use \Prismic\Cache\DefaultCache;
 class Api
 {
 
-    const VERSION = "1.0.8";
+    const VERSION = "1.2.1";
 
     /**
      * @var string the API's access token to be used with each API call
@@ -40,23 +46,23 @@ class Api
      */
     private $cache;
     /**
-     * @var ClientInterface
+     * @var HttpAdapterInterface
      */
-    private $client;
+    private $httpAdapter;
 
     /**
      * Private constructor, not be used outside of this class.
      *
-     * @param string               $data
-     * @param string               $accessToken
-     * @param ClientInterface|null $client
-     * @param CacheInterface|null  $cache
+     * @param string                    $data
+     * @param string                    $accessToken
+     * @param HttpAdapterInterface|null $httpAdapter
+     * @param CacheInterface|null       $cache
      */
-    private function __construct($data, $accessToken = null, ClientInterface $client = null, CacheInterface $cache = null)
+    private function __construct($data, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->client = is_null($client) ? self::defaultClient() : $client;
+        $this->httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
         $this->cache = is_null($cache) ? new DefaultCache() : $cache;
     }
 
@@ -90,6 +96,15 @@ class Api
     }
 
     /**
+     * @param $label string the label of the requested ref
+     * @return Ref a reference or null
+     */
+    public function getRef($label) {
+        $refs = $this->refs();
+        return $refs[$label];
+    }
+
+    /**
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookrmark() function.
      *
@@ -117,8 +132,9 @@ class Api
      */
     public function bookmark($name)
     {
-        if (isset($this->bookmarks()->{$name})) {
-            return $this->bookmarks()->{$name};
+        $bookmarks = $this->bookmarks();
+        if (isset($bookmarks[$name])) {
+            return $bookmarks[$name];
         }
 
         return null;
@@ -179,6 +195,37 @@ class Api
         return $rforms;
     }
 
+    public function getExperiments()
+    {
+        return $this->data->getExperiments();
+    }
+
+    /**
+     * Return the URL to display a given preview
+     * @param string $token as received from Prismic server to identify the content to preview
+     * @param \Prismic\LinkResolver $linkResolver the link resolver to build URL for your site
+     * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
+     *                (usually the home page of your site)
+     * @return string the URL you should redirect the user to preview the requested change
+     */
+    public function previewSession($token, $linkResolver, $defaultUrl)
+    {
+        $request = $this->getClient()->get($token);
+        $response = $request->send();
+        $response = json_decode($response->getBody(true));
+        if (isset($response->mainDocument)) {
+            $documents = $this->forms()->everything
+                ->query(Predicates::at("document.id", $response->mainDocument))
+                ->ref($token)
+                ->submit()
+                ->getResults();
+            if (count($documents) > 0) {
+                return $linkResolver->resolveDocument($documents[0]);
+            }
+        }
+        return $defaultUrl;
+    }
+
     /**
      * Returning the URL of the endpoint to initiate OAuth authentication.
      *
@@ -220,13 +267,13 @@ class Api
     }
 
     /**
-     * Accessing the underlaying client object responsible for the CURL requests
+     * Accessing the underlaying HTTP adapter object responsible for the CURL requests
      *
-     * @return ClientInterface the client object itself
+     * @return HttpAdapterInterface the HTTP adapter object itself
      */
-    public function getClient()
+    public function getHttpAdapter()
     {
-        return $this->client;
+        return $this->httpAdapter;
     }
 
     /**
@@ -238,25 +285,27 @@ class Api
      *
      * @param  string $action the URL of your repository API's endpoint
      * @param  string $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  ClientInterface $client by default, the client is a Guzzle with a certain configuration, but you can override it here
+     * @param  HttpAdapterInterface $httpAdapter by default, the HTTP adapter uses CURL with a certain configuration, but you can override it here
      * @param  CacheInterface $cache Cache implementation
      * @throws \RuntimeException
      * @return Api                     the Api object, useable to perform queries
      */
-    public static function get($action, $accessToken = null, ClientInterface $client = null, CacheInterface $cache = null)
+    public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null)
     {
         $cache = is_null($cache) ? new DefaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
         $apiData = $cache->get($cacheKey);
-        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $client, $cache) : null;
+        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpAdapter, $cache) : null;
         if ($api) {
             return $api;
         } else {
             $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-            $client = is_null($client) ? self::defaultClient() : $client;
-            $request = $client->get($url);
-            $response = $request->send();
+            $httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
+            $response = $httpAdapter->get($url);
             $response = json_decode($response->getBody(true));
+            $experiments = isset($response->experiments)
+                         ? Experiments::parse($response->experiments)
+                         : new Experiments(array(), array());
 
             if (!$response) {
                 throw new \RuntimeException('Unable to decode the json response');
@@ -269,15 +318,16 @@ class Api
                     },
                     $response->refs
                 ),
-                $response->bookmarks,
-                $response->types,
+                (array)$response->bookmarks,
+                (array)$response->types,
                 $response->tags,
-                $response->forms,
+                (array)$response->forms,
+                $experiments,
                 $response->oauth_initiate,
                 $response->oauth_token
             );
 
-            $api = new Api($apiData, $accessToken, $client, $cache);
+            $api = new Api($apiData, $accessToken, $httpAdapter, $cache);
             $cache->set($cacheKey, serialize($apiData), 5);
 
             return $api;
@@ -285,18 +335,17 @@ class Api
     }
 
     /**
-     * The default configuration of the client used in the kit; this is entirely overridable by passing
+     * The default configuration of the HTTP adapter used in the kit; this is entirely overridable by passing
      */
-    public static function defaultClient()
+    public static function defaultHttpAdapter()
     {
-        return new Client('', array(
-            Client::CURL_OPTIONS => array(
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT        => 60,
-                CURLOPT_USERAGENT      => 'Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion(),
-                CURLOPT_HTTPHEADER     => array('Accept: application/json')
-            )
-        ));
+        $configuration = new Configuration();
+        $configuration->getUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
+
+        // We need to add the subscriber to have errors on 4.x.x and 5.x.x.
+        $statusCodeSubscriber = new StatusCodeSubscriber();
+        $configuration->getEventDispatcher()->addSubscriber($statusCodeSubscriber);
+
+        return new CurlHttpAdapter($configuration);
     }
 }

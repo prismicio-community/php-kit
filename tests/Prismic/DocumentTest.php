@@ -2,6 +2,7 @@
 
 namespace Prismic\Test;
 
+use Prismic\Cache\DefaultCache;
 use Prismic\Document;
 use Prismic\Api;
 
@@ -10,11 +11,12 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     private static $testRepository = 'http://micro.prismic.io/api';
 
     protected $document;
+    protected $linkResolver;
     protected $micro_api;
 
     protected function setUp()
     {
-        $cache = new \Prismic\Cache\DefaultCache();
+        $cache = new DefaultCache();
         $cache->clear();
         $search = json_decode(file_get_contents(__DIR__.'/../fixtures/search.json'));
         $this->document = Document::parse($search[0]);
@@ -130,7 +132,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
         $docchapterdocs = $docchapter->getGroup('docchapter.docs')->getArray();
         $this->assertEquals(count($docchapterdocs), 2);
-        $this->assertEquals(implode("|", array_keys($docchapterdocs[0])), "linktodoc");
+        $this->assertEquals(implode("|", array_keys($docchapterdocs[0]->getFragments())), "linktodoc");
         $this->assertEquals($docchapterdocs[0]['linktodoc']->getType(), 'doc');
         $this->assertEquals($docchapterdocs[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
 
@@ -147,7 +149,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $timestampFragment = $this->document->getTimestamp('product.publication_time');
         $this->assertEquals($timestampFragment->asText(), '2014-06-18T15:30:00+0000');
         $this->assertEquals($timestampFragment->getValue(), '2014-06-18T15:30:00+0000');
-        $this->assertEquals($timestampFragment->asHtml(), '<datetime>2014-06-18T15:30:00+0000</datetime>');
+        $this->assertEquals($timestampFragment->asHtml(), '<time datetime="2014-06-18T15:30:00+00:00">2014-06-18T15:30:00+0000</time>');
         $dateTime = $timestampFragment->asDateTime();
         $this->assertEquals($dateTime->getTimestamp(), 1403105400);
     }

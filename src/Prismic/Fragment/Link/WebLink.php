@@ -52,7 +52,7 @@ class WebLink implements LinkInterface
      */
     public function asHtml($linkResolver = null)
     {
-        return '<a href="' . $this->url . '">$url</a>';
+        return '<a href="' . $this->url . '">' . $this->url . '</a>';
     }
 
     /**

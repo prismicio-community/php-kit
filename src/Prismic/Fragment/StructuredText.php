@@ -24,6 +24,7 @@ use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
+use Prismic\Fragment\Span\LabelSpan;
 
 /**
  * This class embodies a StructuredText fragment.
@@ -298,7 +299,7 @@ class StructuredText implements FragmentInterface
 
         $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver) {
             // Get length of node's text content
-            $nodeLength = mb_strlen($node->textContent);
+            $nodeLength = mb_strlen($node->textContent, 'UTF-8');
 
             // If this is a text node we have found the right node
             if ($node instanceof \DOMText) {
@@ -353,14 +354,14 @@ class StructuredText implements FragmentInterface
             }
 
             // Skip this node if the span start is beyond it
-            if ($span->getStart() >= $start + mb_strlen($node->textContent)) {
+            if ($span->getStart() >= $start + mb_strlen($node->textContent, 'UTF-8')) {
                 return;
             }
 
             // Loop over child nodes to find the correct one
             if ($node->childNodes) {
                 foreach ($node->childNodes as $child) {
-                    $nodeLength = mb_strlen($child->textContent);
+                    $nodeLength = mb_strlen($child->textContent, 'UTF-8');
                     if ($span->getStart() < $start + $nodeLength) {
                         // This is the right node -- recurse
                         return $iterateChildren($child, $start, $span);
@@ -470,6 +471,13 @@ class StructuredText implements FragmentInterface
             return new HyperlinkSpan($start, $end, $link, $label);
         }
 
+        if ("label" == $type) {
+            if(property_exists($json, 'data') && property_exists($json->data, 'label')) {
+                $label = $json->data->label;
+            }
+            return new LabelSpan($start, $end, $label);
+        }
+
         return null;
     }
 
@@ -507,28 +515,10 @@ class StructuredText implements FragmentInterface
         if (property_exists($json, "label")) {
             $label = $json->label;
         }
-        if ($json->type == 'heading1') {
+        if (preg_match('/heading(\d)/', $json->type, $level)) {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 1, $label);
-        }
-
-        if ($json->type == 'heading2') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 2, $label);
-        }
-
-        if ($json->type == 'heading3') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 3, $label);
-        }
-
-        if ($json->type == 'heading4') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 4, $label);
+            return new HeadingBlock($p->getText(), $p->getSpans(), $level[1], $label);
         }
 
         if ($json->type == 'paragraph') {
@@ -560,7 +550,9 @@ class StructuredText implements FragmentInterface
         }
 
         if ($json->type == 'preformatted') {
-            return new PreformattedBlock($json->text, $json->spans, $label);
+            $p = StructuredText::parseText($json);
+
+            return new PreformattedBlock($p->getText(), $p->getSpans(), $label);
         }
 
         return null;

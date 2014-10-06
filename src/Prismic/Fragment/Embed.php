@@ -78,10 +78,14 @@ class Embed implements FragmentInterface
      */
     public function asHtml($linkResolver = null)
     {
+        $providerAttr = '';
+        if (isset($this->provider)) {
+            $providerAttr = ' data-oembed-provider="' . strtolower($this->provider) . '"';
+        }
         if (isset($this->maybeHtml)) {
             return '<div data-oembed="' . $this->url . '" data-oembed-type="' .
-                    strtolower($this->type) . '" data-oembed-provider="' .
-                    strtolower($this->provider) . '">' . $this->maybeHtml . '</div>';
+                    strtolower($this->type) . '"' . $providerAttr . '>' .
+                    $this->maybeHtml . '</div>';
         } else {
             return "";
         }
@@ -109,11 +113,11 @@ class Embed implements FragmentInterface
     {
         return new Embed(
             $json->oembed->type,
-            $json->oembed->provider_name,
+            isset($json->oembed->{'provider_name'}) ? $json->oembed->provider_name : null,
             $json->oembed->embed_url,
-            isset($json->{'width'}) ? $json->width : null,
-            isset($json->{'height'}) ? $json->height : null,
-            isset($json->{'html'}) ? $json->html : null,
+            isset($json->oembed->{'width'}) ? $json->oembed->width : null,
+            isset($json->oembed->{'height'}) ? $json->oembed->height : null,
+            isset($json->oembed->{'html'}) ? $json->oembed->html : null,
             $json->oembed
         );
     }

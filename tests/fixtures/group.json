@@ -1,0 +1,46 @@
+[
+    {
+        "id": "UinbYMuvzesP4mix",
+        "type": "article",
+        "href": "http://lesbonneschoses-uinbymuvzesp4mie.prismic.io/api/documents/search?ref=UjnQi8uvzXIAAYEM&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UinbYMuvzesP4mix%22%29+%5D%5D",
+        "tags": [],
+        "slugs": [
+            "about-us"
+        ],
+        "data": {
+            "article": {
+                "group_frag": {
+                    "type": "Group",
+                    "value": [
+                        {
+                            "element_one" : {
+                              "type": "Text",
+                              "value" : "Element One"
+                            }
+                        },
+                        {
+                            "element_one" : {
+                              "type": "Text",
+                              "value" : "Element One"
+                            },
+                            "element_two" : {
+                              "type": "Text",
+                              "value" : "Element Two"
+                            }
+                        },
+                        {
+                            "element_one" : {
+                              "type": "Text",
+                              "value" : "Element One"
+                            },
+                            "element_three" : {
+                              "type": "Text",
+                              "value" : "Element Three"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]
