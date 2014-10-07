@@ -186,4 +186,17 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($link);
     }
 
+    public function testLabelSpanWithinStructuredText()
+    {
+        $structuredText = $this->document->getStructuredText('product.labelled_text');
+        $this->assertEquals(
+            'This is some structured text that has a label',
+            $structuredText->asText()
+        );
+        $this->assertEquals(
+            '<p><span class="my-label">This</span> is some structured text that has a label</p>',
+            $structuredText->asHtml()
+        );
+    }
+
 }
