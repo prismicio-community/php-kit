@@ -25,7 +25,7 @@ use \Prismic\Cache\DefaultCache;
 class Api
 {
 
-    const VERSION = "1.0.8";
+    const VERSION = "1.0.9";
 
     /**
      * @var string the API's access token to be used with each API call
