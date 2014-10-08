@@ -3,3 +3,4 @@ composer.lock
 doc
 phpdoc.dist.xml
 .idea
+phpunit.xml
