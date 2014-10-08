@@ -515,28 +515,10 @@ class StructuredText implements FragmentInterface
         if (property_exists($json, "label")) {
             $label = $json->label;
         }
-        if ($json->type == 'heading1') {
+        if (preg_match('/heading(\d)/', $json->type, $level)) {
             $p = StructuredText::parseText($json);
 
-            return new HeadingBlock($p->getText(), $p->getSpans(), 1, $label);
-        }
-
-        if ($json->type == 'heading2') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 2, $label);
-        }
-
-        if ($json->type == 'heading3') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 3, $label);
-        }
-
-        if ($json->type == 'heading4') {
-            $p = StructuredText::parseText($json);
-
-            return new HeadingBlock($p->getText(), $p->getSpans(), 4, $label);
+            return new HeadingBlock($p->getText(), $p->getSpans(), $level[1], $label);
         }
 
         if ($json->type == 'paragraph') {
@@ -570,7 +552,7 @@ class StructuredText implements FragmentInterface
         if ($json->type == 'preformatted') {
             $p = StructuredText::parseText($json);
 
-            return new PreformattedBlock($json->text, $p->getSpans(), $label);
+            return new PreformattedBlock($p->getText(), $p->getSpans(), $label);
         }
 
         return null;
