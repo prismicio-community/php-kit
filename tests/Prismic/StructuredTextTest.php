@@ -199,4 +199,17 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSpanInPreformattedTextIsCorrectlyParsedAsSpan()
+    {
+        $structuredText = $this->document->getStructuredText('product.span_in_pre');
+        $this->assertEquals(
+            'This is some preformatted text containing a span',
+            $structuredText->asText()
+        );
+        $this->assertEquals(
+            '<pre><strong>This</strong> is some preformatted text containing a span</pre>',
+            $structuredText->asHtml()
+        );
+    }
+
 }
