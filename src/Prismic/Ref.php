@@ -59,7 +59,7 @@ class Ref
         $this->ref = $ref;
         $this->label = $label;
         $this->isMasterRef = $isMasterRef;
-        $this->maybeScheduledAt = $maybeScheduledAt;
+        $this->setScheduledAt($maybeScheduledAt);
     }
 
     /**
@@ -103,13 +103,26 @@ class Ref
     }
 
     /**
-     * Returns the date and time at which the ref is scheduled, if it is
+     * Returns the time at which the ref is scheduled, if it is
      *
-     * @return string the date and time at which the ref is scheduled, if it is
+     * @return int|null Unix timestamp for the scheduled release or null if not scheduled
      */
     public function getScheduledAt()
     {
         return $this->maybeScheduledAt;
+    }
+
+    /**
+     * Set the Scheduled at time stamp with a value as returned by the API
+     *
+     * @param int|null $timestamp Javascript timestamp
+     * @return void
+     */
+    private function setScheduledAt($timestamp = null)
+    {
+        if(!is_null($timestamp)) {
+            $this->maybeScheduledAt = (int) floor($timestamp / 1000);
+        }
     }
 
     /**
