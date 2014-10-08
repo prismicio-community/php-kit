@@ -49,4 +49,20 @@ class RefTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ref->getRef(), (string) $ref);
     }
 
+    /**
+     * @dataProvider getRefs
+     */
+    public function testGetScheduledDate($json)
+    {
+        $ref = Ref::parse($json);
+        if(!is_null($ref->getScheduledAt())) {
+            $date = $ref->getScheduledDate();
+            $this->assertInstanceOf('DateTime', $date);
+            $this->assertSame($ref->getScheduledAt(), $date->getTimestamp());
+            $this->assertNotSame($date, $ref->getScheduledDate(), 'Returned date should be a new instance every time');
+        } else {
+            $this->assertNull($ref->getScheduledDate());
+        }
+    }
+
 }

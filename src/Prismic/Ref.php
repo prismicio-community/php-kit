@@ -10,6 +10,8 @@
 
 namespace Prismic;
 
+use DateTime;
+
 /**
  * Embodies a ref to be called on the prismic.io repository. The ref is a prismic.io
  * concept that represents a time on which you wish to query the repository, in the present (the
@@ -110,6 +112,23 @@ class Ref
     public function getScheduledAt()
     {
         return $this->maybeScheduledAt;
+    }
+
+    /**
+     * Return the DateTime of the scheduled release if any
+     *
+     * @return DateTime|null The release date or null
+     */
+    public function getScheduledDate()
+    {
+        if (null === $this->getScheduledAt()) {
+            return null;
+        }
+
+        $date = new DateTime;
+        $date->setTimestamp($this->getScheduledAt());
+
+        return $date;
     }
 
     /**
