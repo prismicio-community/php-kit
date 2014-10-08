@@ -595,6 +595,22 @@
                             ]
                         }
                     ]
+                },
+                "span_in_pre" : {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "preformatted",
+                            "text": "This is some preformatted text containing a span",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "strong"
+                                }
+                            ]
+                        }
+                    ]
                 }
             }
         }
