@@ -50,8 +50,8 @@ class Ref
      * @param string $id               the ID of the release
      * @param string $ref              the ID of the ref
      * @param string $label            the display label of the ref
-     * @param string $isMasterRef      is the ref the master ref?
-     * @param string $maybeScheduledAt the date and time at which the ref is scheduled, if it is
+     * @param bool   $isMasterRef      is the ref the master ref?
+     * @param int    $maybeScheduledAt If scheduled, a javascript timestamp in milliseconds otherwise null
      */
     public function __construct($id, $ref, $label, $isMasterRef, $maybeScheduledAt = null)
     {
