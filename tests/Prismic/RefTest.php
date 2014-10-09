@@ -36,7 +36,19 @@ class RefTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('boolean', $ref->isMasterRef());
         if(!is_null($ref->getScheduledAt())) {
             $this->assertInternalType('int', $ref->getScheduledAt());
-            $this->assertEquals(10, strlen($ref->getScheduledAt()), 'Expected a 10 digit number');
+            $this->assertEquals(13, strlen($ref->getScheduledAt()), 'Expected a 13 digit number');
+        }
+    }
+
+    /**
+     * @dataProvider getRefs
+     */
+    public function testGetScheduledAtTimestamp($json)
+    {
+        $ref = Ref::parse($json);
+        if(!is_null($ref->getScheduledAtTimestamp())) {
+            $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
+            $this->assertEquals(10, strlen($ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
         }
     }
 
@@ -55,10 +67,10 @@ class RefTest extends \PHPUnit_Framework_TestCase
     public function testGetScheduledDate($json)
     {
         $ref = Ref::parse($json);
-        if(!is_null($ref->getScheduledAt())) {
+        if(!is_null($ref->getScheduledAtTimestamp())) {
             $date = $ref->getScheduledDate();
             $this->assertInstanceOf('DateTime', $date);
-            $this->assertSame($ref->getScheduledAt(), $date->getTimestamp());
+            $this->assertSame($ref->getScheduledAtTimestamp(), $date->getTimestamp());
             $this->assertNotSame($date, $ref->getScheduledDate(), 'Returned date should be a new instance every time');
         } else {
             $this->assertNull($ref->getScheduledDate());
