@@ -62,7 +62,8 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->ref($api->master()->getRef())
             ->submit();
 // startgist:a393f555bb9b55c40f8b:prismic-asHtml.php
-        $doc = $response->getResults()[0];
+        $results = $response->getResults();
+        $doc = $results[0];
         // The resolver is defined here:
         // https://github.com/prismicio/php-kit/blob/master/tests/Prismic/FakeLinkResolver.php
         $resolver = new FakeLinkResolver();
