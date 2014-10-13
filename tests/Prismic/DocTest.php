@@ -82,7 +82,8 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbX"))
             ->ref($api->master()->getRef())
             ->submit();
-        $doc = $response->getResults()[0];
+        $results = $response->getResults();
+        $doc = $results[0];
         // The resolver is defined here:
         // https://github.com/prismicio/php-kit/blob/master/tests/Prismic/FakeLinkResolver.php
         $resolver = new FakeLinkResolver();
