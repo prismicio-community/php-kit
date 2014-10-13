@@ -3,4 +3,5 @@ composer.lock
 doc
 phpdoc.dist.xml
 .idea
+node_modules/
 phpunit.xml

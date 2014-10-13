@@ -4,6 +4,7 @@ namespace Prismic\Test;
 
 use Prismic\Api;
 use Prismic\Document;
+use Prismic\Fragment\Link\WebLink;
 
 class FragmentsTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,4 +31,11 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($document->get('product.link')->getUrl(), 'https://prismic-io.s3.amazonaws.com/rudysandbox%2F905e76fb-b327-4862-8a31-8f194608dc91_12well_physed-tmagarticle.jpg');
         $this->assertEquals($document->get('product.link')->getWidth(), 592);
     }
+
+    public function testWebLinkAsHtml()
+    {
+        $link = new WebLink("http://prismic.io");
+        $this->assertEquals('<a href="http://prismic.io">http://prismic.io</a>', $link->asHtml());
+    }
+
 }

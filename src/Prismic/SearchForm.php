@@ -224,7 +224,7 @@ class SearchForm
         if (is_string($q)) {
             $query = $q;
         } else if (is_array($q)) {
-            $query = "[" . join("", array_map(function($predicate) { return $predicate.q(); }, $q)) . "]";
+            $query = "[" . join("", array_map(function($predicate) { return $predicate->q(); }, $q)) . "]";
         } else {
             $query = "[" . $q->q() . "]";
         }
@@ -234,6 +234,7 @@ class SearchForm
     /**
      * Performs the actual submit call, without the unmarshalling.
      *
+     * @throws \RuntimeException if the Form type is not supported
      * @return \stdClass the raw (unparsed) response.
      */
     private function submit_raw()
