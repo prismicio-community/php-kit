@@ -1,0 +1,21 @@
+{
+    "refs": [
+        {
+            "id": "master",
+            "ref": "UgjWQN_mqa8HvPJY",
+            "label": "Master",
+            "isMasterRef": true
+        },
+        {
+            "id": "UkL0hcuvzYUANCrr",
+            "ref": "UgjWRd_mqbYHvPJa",
+            "label": "San Francisco Grand opening"
+        },
+        {
+            "id": "some-id",
+            "ref": "some-ref",
+            "label": "Future Release",
+            "scheduledAt": 1602111600000
+        }
+    ]
+}

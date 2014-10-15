@@ -10,6 +10,8 @@
 
 namespace Prismic;
 
+use DateTime;
+
 /**
  * Embodies a ref to be called on the prismic.io repository. The ref is a prismic.io
  * concept that represents a time on which you wish to query the repository, in the present (the
@@ -50,8 +52,8 @@ class Ref
      * @param string $id               the ID of the release
      * @param string $ref              the ID of the ref
      * @param string $label            the display label of the ref
-     * @param string $isMasterRef      is the ref the master ref?
-     * @param string $maybeScheduledAt the date and time at which the ref is scheduled, if it is
+     * @param bool   $isMasterRef      is the ref the master ref?
+     * @param int    $maybeScheduledAt If scheduled, a javascript timestamp in milliseconds otherwise null
      */
     public function __construct($id, $ref, $label, $isMasterRef, $maybeScheduledAt = null)
     {
@@ -103,13 +105,43 @@ class Ref
     }
 
     /**
-     * Returns the date and time at which the ref is scheduled, if it is
+     * Returns the time at which the ref is scheduled, if it is
      *
-     * @return string the date and time at which the ref is scheduled, if it is
+     * @return int|null Javacript timestamp for the scheduled release or null if not scheduled
      */
     public function getScheduledAt()
     {
         return $this->maybeScheduledAt;
+    }
+
+    /**
+     * Return the scheduled time as a unix timestamp
+     *
+     * @return int|null Unix timestamp for the scheduled release or null if not scheduled
+     */
+    public function getScheduledAtTimestamp()
+    {
+        if (null === $this->getScheduledAt()) {
+            return null;
+        }
+        return (int) floor($this->getScheduledAt() / 1000);
+    }
+
+    /**
+     * Return the DateTime of the scheduled release if any
+     *
+     * @return DateTime|null The release date or null
+     */
+    public function getScheduledDate()
+    {
+        if (null === $this->getScheduledAt()) {
+            return null;
+        }
+
+        $date = new DateTime;
+        $date->setTimestamp($this->getScheduledAtTimestamp());
+
+        return $date;
     }
 
     /**
