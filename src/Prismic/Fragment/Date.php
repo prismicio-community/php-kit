@@ -9,6 +9,7 @@
  */
 
 namespace Prismic\Fragment;
+use DateTime;
 
 /**
  * This class embodies a date fragment.
@@ -54,6 +55,18 @@ class Date implements FragmentInterface
     public function asText()
     {
         return $this->value;
+    }
+
+    /**
+     * Builds a DateTime from the Timestamp fragment, for further manipulation in native PHP.
+     *
+     * @api
+     *
+     * @return string a DateTime for the fragment
+     */
+    public function asDateTime()
+    {
+        return DateTime::createFromFormat('Y-m-d', $this->value);
     }
 
     /**

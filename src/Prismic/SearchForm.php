@@ -108,11 +108,14 @@ class SearchForm
      * Set the repository's ref.
      *
      * @api
-     * @param  string              $ref the ID of the ref we wish to query on.
+     * @param  string|\Prismic\Ref $ref the ref we wish to query on, or its ID.
      * @return \Prismic\SearchForm the current SearchForm object, with the new ref parameter added
      */
     public function ref($ref)
     {
+        if ($ref instanceof \Prismic\Ref) {
+            $ref = $ref->getRef();
+        }
         return $this->set("ref", $ref);
     }
 

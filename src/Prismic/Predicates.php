@@ -10,6 +10,7 @@
 
 namespace Prismic;
 
+use DateTime;
 use \Prismic\SimplePredicate;
 
 class Predicates {
@@ -43,14 +44,26 @@ class Predicates {
     }
 
     public static function dateBefore($fragment, $before) {
+        if ($before instanceof DateTime) {
+            $before = $before->getTimestamp() * 1000;
+        }
         return new SimplePredicate("date.date-before", $fragment, array($before));
     }
 
     public static function dateAfter($fragment, $after) {
+        if ($after instanceof DateTime) {
+            $after = $after->getTimestamp() * 1000;
+        }
         return new SimplePredicate("date.date-after", $fragment, array($after));
     }
 
     public static function dateBetween($fragment, $before, $after) {
+        if ($before instanceof DateTime) {
+            $before = $before->getTimestamp() * 1000;
+        }
+        if ($after instanceof DateTime) {
+            $after = $after->getTimestamp() * 1000;
+        }
         return new SimplePredicate("date.date-between", $fragment, array($before, $after));
     }
 
@@ -66,6 +79,18 @@ class Predicates {
         return new SimplePredicate("date.day-of-month-after", $fragment, array($day));
     }
 
+    public static function dayOfWeek($fragment, $day) {
+        return new SimplePredicate("date.day-of-week", $fragment, array($day));
+    }
+
+    public static function dayOfWeekBefore($fragment, $day) {
+        return new SimplePredicate("date.day-of-week-before", $fragment, array($day));
+    }
+
+    public static function dayOfWeekAfter($fragment, $day) {
+        return new SimplePredicate("date.day-of-week-after", $fragment, array($day));
+    }
+
     public static function month($fragment, $month) {
         return new SimplePredicate("date.month", $fragment, array($month));
     }
@@ -76,6 +101,10 @@ class Predicates {
 
     public static function monthAfter($fragment, $month) {
         return new SimplePredicate("date.month-after", $fragment, array($month));
+    }
+
+    public static function year($fragment, $year) {
+        return new SimplePredicate("date.year", $fragment, array($year));
     }
 
     public static function hour($fragment, $hour) {

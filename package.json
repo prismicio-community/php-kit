@@ -4,7 +4,7 @@
   "url": "https://github.com/prismicio/php-kit",
   "devDependencies": {
     "gulp": "~3.8.8",
-    "gulp-gist": "~1.0.0",
+    "gulp-gist": "~1.0.3",
     "gulp-gh-pages": "~0.3.4"
   }
 }

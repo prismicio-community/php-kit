@@ -230,7 +230,7 @@ class Document
      * @api
      * @param  string $field   name of the fragment, with the document's type, like "product.price"
      * @param  string $pattern with the syntax expected by sprintf; null if not used
-     * @return string the directly usable string, or null if the fragment is of the wrong type or unset
+     * @return \Prismic\Fragment\Number|string the Number fragment, the string representation if $pattern was set, or null if the fragment is of the wrong type or unset
      */
     public function getNumber($field, $pattern = null)
     {
@@ -304,7 +304,6 @@ class Document
             if (isset($pattern)) {
                 return $fragment->formatted($pattern);
             }
-
             return $fragment;
         }
 
@@ -499,6 +498,42 @@ class Document
     }
 
     /**
+     * Returns the Embed fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param  string                  $field name of the fragment, with the document's type, like "product.video"
+     * @return \Prismic\Fragment\Embed the directly usable object, or null if the fragment is of the wrong type or unset
+     */
+    public function getEmbed($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof Embed) {
+            return $fragment;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the Color fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     *
+     * @api
+     * @param  string                  $field name of the fragment, with the document's type, like "product.video"
+     * @return \Prismic\Fragment\Color the directly usable object, or null if the fragment is of the wrong type or unset
+     */
+    public function getColor($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof Color) {
+            return $fragment;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns an HTML serialization for the whole document at once, by serializing all fragments in order.
      *
      * This is a basic serialization, if you want to template your document better, you will need to serialize
@@ -666,7 +701,6 @@ class Document
             if ($json->type === "Group") {
                 return Group::parse($json->value);
             }
-
             return null;
         }
     }

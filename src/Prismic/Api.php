@@ -90,6 +90,15 @@ class Api
     }
 
     /**
+     * @param $label string the label of the requested ref
+     * @return Ref a reference or null
+     */
+    public function getRef($label) {
+        $refs = $this->refs();
+        return $refs[$label];
+    }
+
+    /**
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookrmark() function.
      *
