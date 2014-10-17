@@ -108,7 +108,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
         // "at" predicate: equality of a fragment to a value.
         $at = Predicates::at("document.type", "article");
         // "any" predicate: equality of a fragment to a value.
-        $any = Predicates::any("document.type", ["article", "blog-post"]);
+        $any = Predicates::any("document.type", array("article", "blog-post"));
 
         // "fulltext" predicate: fulltext search in a fragment.
         $fulltext = Predicates::fulltext("my.article.body", "sausage");
