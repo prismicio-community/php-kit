@@ -164,7 +164,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     public function testAsLink()
     {
-        $link = $this->document->getLinkInstance();
+        $link = $this->document->asLink();
         $this->assertInstanceof('Prismic\Fragment\Link\DocumentLink', $link);
         $this->assertSame($this->document->getId(), $link->getId());
         $this->assertSame($this->document->getSlug(), $link->getSlug());
