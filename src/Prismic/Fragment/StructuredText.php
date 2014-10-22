@@ -299,7 +299,7 @@ class StructuredText implements FragmentInterface
 
         $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver) {
             // Get length of node's text content
-            $nodeLength = mb_strlen($node->textContent);
+            $nodeLength = mb_strlen($node->textContent, 'UTF-8');
 
             // If this is a text node we have found the right node
             if ($node instanceof \DOMText) {
@@ -354,14 +354,14 @@ class StructuredText implements FragmentInterface
             }
 
             // Skip this node if the span start is beyond it
-            if ($span->getStart() >= $start + mb_strlen($node->textContent)) {
+            if ($span->getStart() >= $start + mb_strlen($node->textContent, 'UTF-8')) {
                 return;
             }
 
             // Loop over child nodes to find the correct one
             if ($node->childNodes) {
                 foreach ($node->childNodes as $child) {
-                    $nodeLength = mb_strlen($child->textContent);
+                    $nodeLength = mb_strlen($child->textContent, 'UTF-8');
                     if ($span->getStart() < $start + $nodeLength) {
                         // This is the right node -- recurse
                         return $iterateChildren($child, $start, $span);
