@@ -62,7 +62,7 @@ class Experiments {
      * Parses a given experiments. Not meant to be used except for testing.
      *
      * @param  \stdClass $json the json bit retrieved from the API that represents experiments.
-     * @return \Prismic\Variation the manipulable object for that experiments.
+     * @return \Prismic\Experiments e manipulable object for that experiments.
      */
     public static function parse(\stdClass $json)
     {

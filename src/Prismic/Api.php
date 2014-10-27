@@ -188,6 +188,11 @@ class Api
         return $rforms;
     }
 
+    public function getExperiments()
+    {
+        return $this->data->getExperiments();
+    }
+
     /**
      * Returning the URL of the endpoint to initiate OAuth authentication.
      *
@@ -266,6 +271,9 @@ class Api
             $request = $client->get($url);
             $response = $request->send();
             $response = json_decode($response->getBody(true));
+            $experiments = isset($response->experiments)
+                         ? Experiments::parse($response->experiments)
+                         : new Experiments(array(), array());
 
             if (!$response) {
                 throw new \RuntimeException('Unable to decode the json response');
@@ -282,6 +290,7 @@ class Api
                 $response->types,
                 $response->tags,
                 $response->forms,
+                $experiments,
                 $response->oauth_initiate,
                 $response->oauth_token
             );
