@@ -1,0 +1,39 @@
+{
+    "draft": [
+        {
+            "id": "xxxxxxxxxxoGelsX",
+            "name": "Exp 2",
+            "variations": [
+                {
+                    "id": "VDUBBawGAKoGelsZ",
+                    "label": "Base",
+                    "ref": "VDUBBawGALAGelsa"
+                },
+                {
+                    "id": "VDUE-awGALAGemME",
+                    "label": "var 1",
+                    "ref": "VDUUmHIKAZQKk9uq"
+                }
+            ]
+        }
+    ],
+    "running": [
+        {
+            "googleId": "_UQtin7EQAOH5M34RQq6Dg",
+            "id": "VDUBBawGAKoGelsX",
+            "name": "Exp 1",
+            "variations": [
+                {
+                    "id": "VDUBBawGAKoGelsZ",
+                    "label": "Base",
+                    "ref": "VDUBBawGALAGelsa"
+                },
+                {
+                    "id": "VDUE-awGALAGemME",
+                    "label": "var 1",
+                    "ref": "VDUUmHIKAZQKk9uq"
+                }
+            ]
+        }
+    ]
+}
