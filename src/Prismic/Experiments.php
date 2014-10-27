@@ -39,9 +39,10 @@ class Experiments {
         {
             $experiment = $this->findRunningById($splitted[0]);
             if ($experiment == null) return null;
+            $variations = $experiment->getVariations();
             $varIndex = (int)($splitted[1]);
-            if ($varIndex > -1 && $varIndex < count($experiment->getVariations())) {
-                return $experiment->getVariations()[$varIndex]->getRef();
+            if ($varIndex > -1 && $varIndex < count($variations)) {
+                return $variations[$varIndex]->getRef();
             }
         }
         return null;

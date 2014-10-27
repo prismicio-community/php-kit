@@ -22,7 +22,8 @@ class ExperimentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("_UQtin7EQAOH5M34RQq6Dg", $exp1->getGoogleId());
         $this->assertEquals("Exp 1", $exp1->getName());
 
-        $base = $exp1->getVariations()[0];
+        $variations = $exp1->getVariations();
+        $base = $variations[0];
         $this->assertEquals("VDUBBawGAKoGelsZ", $base->getId());
         $this->assertEquals("Base", $base->getLabel());
         $this->assertEquals("VDUBBawGALAGelsa", $base->getRef());
