@@ -16,7 +16,8 @@ class ExperimentTest extends \PHPUnit_Framework_TestCase
 
     public function testParsing()
     {
-        $exp1 = $this->experiments->getRunning()[0];
+        $running = $this->experiments->getRunning();
+        $exp1 = $running[0];
         $this->assertEquals("VDUBBawGAKoGelsX", $exp1->getId());
         $this->assertEquals("_UQtin7EQAOH5M34RQq6Dg", $exp1->getGoogleId());
         $this->assertEquals("Exp 1", $exp1->getName());
