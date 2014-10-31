@@ -17,6 +17,7 @@
         "guzzle/guzzle": "3.9.1"
     },
     "require-dev": {
+        "codeclimate/php-test-reporter": "dev-master",
         "phpunit/phpunit": "~4.1",
         "phpdocumentor/phpdocumentor": "2.*"
     },
