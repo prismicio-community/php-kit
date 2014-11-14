@@ -15,6 +15,10 @@ use Guzzle\Http\ClientInterface;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\DefaultCache;
 
+const PREVIEW_COOKIE = "io.prismic.preview";
+
+const EXPERIMENTS_COOKIE = "io.prismic.experiment";
+
 /**
  * This class embodies a connection to your prismic.io repository's API.
  * Initialize it with Prismic\Api::get(), and use your Prismic\Api::forms() to make API calls
@@ -25,7 +29,7 @@ use \Prismic\Cache\DefaultCache;
 class Api
 {
 
-    const VERSION = "1.0.10";
+    const VERSION = "1.0.12";
 
     /**
      * @var string the API's access token to be used with each API call
@@ -191,6 +195,32 @@ class Api
     public function getExperiments()
     {
         return $this->data->getExperiments();
+    }
+
+    /**
+     * Return the URL to display a given preview
+     * @param string $token as received from Prismic server to identify the content to preview
+     * @param \Prismic\LinkResolver $linkResolver the link resolver to build URL for your site
+     * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
+     *                (usually the home page of your site)
+     * @return string the URL you should redirect the user to preview the requested change
+     */
+    public function previewSession($token, $linkResolver, $defaultUrl)
+    {
+        $request = $this->getClient()->get($token);
+        $response = $request->send();
+        $response = json_decode($response->getBody(true));
+        if (isset($response->mainDocument)) {
+            $documents = $this->forms()->everything
+                ->query(Predicates::at("document.id", $response->mainDocument))
+                ->ref($token)
+                ->submit()
+                ->getResults();
+            if (count($documents) > 0) {
+                return $linkResolver($documents[0]);
+            }
+        }
+        return $defaultUrl;
     }
 
     /**
