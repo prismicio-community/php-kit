@@ -317,7 +317,26 @@ class DocTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("48.877108,2.333879", $coordinates);
     }
 
-    public function testCache() {
+    public function testImage() {
+        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $documents = $api
+            ->forms()->everything
+            ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbO"))
+            ->ref($api->master())
+            ->submit()
+            ->getResults();
+
+        $doc = $documents[0];
+        // startgist:645c5b53467e1e281aa3:prismic-images.php
+        // Accessing image fields
+        $image = $doc->getImage("product.image");
+        // Most of the time you will be using the "main" view
+        $url = $image->getView("main")->getUrl();
+        // endgist
+        $this->assertEquals("https://prismic-io.s3.amazonaws.com/lesbonneschoses/f606ad513fcc2a73b909817119b84d6fd0d61a6d.png", $url);
+    }
+
+public function testCache() {
         // startgist:e0098caad8be5db00db7:prismic-cache.php
         // You can pass any class implementing the CacheInterface to the Api creation
         // http://prismicio.github.io/php-kit/classes/Prismic.Cache.CacheInterface.html

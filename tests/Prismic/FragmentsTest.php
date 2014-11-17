@@ -21,7 +21,10 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
         $masterRef = $api->master()->getRef();
         $results = $api->forms()->everything->query('[[:d = at(document.id, "UssvNAEAAPvPpbr0")]]')->ref($masterRef)->submit()->getResults();
         $linkExpected = 'https://prismic-io.s3.amazonaws.com/frontwebconf%2F48db2b33-5fd4-4cc5-809d-5ca76342beb4_become+a+sponsor+%28frontwebconf%29.pdf';
+        $htmlExpected = '<a href="https://prismic-io.s3.amazonaws.com/frontwebconf%2F48db2b33-5fd4-4cc5-809d-5ca76342beb4_become+a+sponsor+%28frontwebconf%29.pdf">Become a sponsor (FrontWebConf).pdf</a>';
         $this->assertEquals($results[0]->get('footerlinks.link')->getUrl(), $linkExpected);
+        $this->assertEquals($results[0]->get('footerlinks.link')->asText(), $linkExpected);
+        $this->assertEquals($results[0]->get('footerlinks.link')->asHtml(), $htmlExpected);
     }
 
     public function testImageLinksWork()
