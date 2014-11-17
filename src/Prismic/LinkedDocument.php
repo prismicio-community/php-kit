@@ -107,7 +107,7 @@ class LinkedDocument
     {
         return new LinkedDocument(
             $json->id,
-            isset($json->{'slug'}) ? $json->slug : null,
+            isset($json->{'slug'}) ? urldecode($json->slug) : null,
             $json->type,
             $json->tags
         );

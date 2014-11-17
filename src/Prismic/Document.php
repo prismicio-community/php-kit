@@ -737,6 +737,11 @@ class Document
             $linkedDocuments = array_map(function ($linkedDoc) { return LinkedDocument::parse($linkedDoc);  }, $json->linked_documents);
         }
 
-        return new Document($json->id, $json->type, $json->href, $json->tags, $json->slugs, $linkedDocuments, $fragments);
+        $slugs = array();
+        foreach ($json->slugs as $slug) {
+            $slugs[] = urldecode($slug);
+        }
+
+        return new Document($json->id, $json->type, $json->href, $json->tags, $slugs, $linkedDocuments, $fragments);
     }
 }
