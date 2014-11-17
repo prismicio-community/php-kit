@@ -161,4 +161,15 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->document->has('product.badField'), false);
     }
+
+    public function testAsLink()
+    {
+        $link = $this->document->asLink();
+        $this->assertInstanceof('Prismic\Fragment\Link\DocumentLink', $link);
+        $this->assertSame($this->document->getId(), $link->getId());
+        $this->assertSame($this->document->getSlug(), $link->getSlug());
+        $this->assertSame($this->document->getTags(), $link->getTags());
+        $this->assertSame($this->document->getType(), $link->getType());
+        $this->assertFalse($link->isBroken());
+    }
 }

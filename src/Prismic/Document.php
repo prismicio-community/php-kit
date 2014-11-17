@@ -627,6 +627,21 @@ class Document
     }
 
     /**
+     * Return a self referencing link instance
+     *
+     * @return DocumentLink
+     */
+    public function asLink()
+    {
+        return new DocumentLink(
+            $this->getId(),
+            $this->getType(),
+            $this->getTags(),
+            $this->getSlug(),
+            false);
+    }
+
+    /**
      * Parses a given fragment. Not meant to be used except for testing.
      *
      * @param  \stdClass                           $json the json bit retrieved from the API that represents any fragment.
