@@ -22,7 +22,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $nbRefs = count($api->getData()->getRefs());
-        $this->assertEquals($nbRefs, 1);
+        $this->assertEquals($nbRefs, 3);
     }
 
     /* Tests to calling the API */
