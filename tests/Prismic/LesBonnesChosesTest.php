@@ -22,7 +22,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $nbRefs = count($api->getData()->getRefs());
-        $this->assertEquals($nbRefs, 1);
+        $this->assertEquals($nbRefs, 3);
     }
 
     /* Tests to calling the API */
@@ -116,7 +116,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $fakeResponse->next_page = NULL;
         $fakeResponse->prev_page = NULL;
 
-        \apc_store('http://lesbonneschoses.prismic.io/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
+        \apc_store(md5('http://lesbonneschoses.prismic.io/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl'), $fakeResponse, 1000);
 
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 
