@@ -47,14 +47,14 @@ class Predicates {
         if ($before instanceof DateTime) {
             $before = $before->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.date-before", $fragment, array($before));
+        return new SimplePredicate("date.before", $fragment, array($before));
     }
 
     public static function dateAfter($fragment, $after) {
         if ($after instanceof DateTime) {
             $after = $after->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.date-after", $fragment, array($after));
+        return new SimplePredicate("date.after", $fragment, array($after));
     }
 
     public static function dateBetween($fragment, $before, $after) {
