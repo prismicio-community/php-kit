@@ -217,7 +217,7 @@ class Api
                 ->submit()
                 ->getResults();
             if (count($documents) > 0) {
-                return $linkResolver($documents[0]);
+                return $linkResolver->resolveDocument($documents[0]);
             }
         }
         return $defaultUrl;
