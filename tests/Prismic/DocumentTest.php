@@ -147,7 +147,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         $timestampFragment = $this->document->getTimestamp('product.publication_time');
         $this->assertEquals($timestampFragment->asText(), '2014-06-18T15:30:00+0000');
         $this->assertEquals($timestampFragment->getValue(), '2014-06-18T15:30:00+0000');
-        $this->assertEquals($timestampFragment->asHtml(), '<datetime>2014-06-18T15:30:00+0000</datetime>');
+        $this->assertEquals($timestampFragment->asHtml(), '<time datetime="2014-06-18T15:30:00+00:00">2014-06-18T15:30:00+0000</time>');
         $dateTime = $timestampFragment->asDateTime();
         $this->assertEquals($dateTime->getTimestamp(), 1403105400);
     }

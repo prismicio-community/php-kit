@@ -55,7 +55,12 @@ class Timestamp implements FragmentInterface
      */
     public function asHtml($linkResolver = null)
     {
-        return '<datetime>' . htmlentities($this->value) . '</datetime>';
+        $datetime = $this->asDateTime()->format('c');
+
+        return sprintf('<time datetime="%s">%s</time>',
+            $datetime,
+            htmlentities($this->value)
+        );
     }
 
     /**
