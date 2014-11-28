@@ -9,7 +9,7 @@ use Prismic\Predicates;
 class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
 {
 
-    private static $testRepository = 'http://lesbonneschoses.prismic.io/api';
+    private static $testRepository = 'http://lesbonneschoses.cdn.prismic.io/api';
     private static $previewToken = 'MC5VbDdXQmtuTTB6Z0hNWHF3.c--_vVbvv73vv73vv73vv71EA--_vS_vv73vv70T77-9Ke-_ve-_vWfvv70ebO-_ve-_ve-_vQN377-9ce-_vRfvv70';
 
     protected function setUp()
@@ -38,7 +38,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getResultsSize(), 20);
         $this->assertEquals($response->getTotalResultsSize(), 40);
         $this->assertEquals($response->getTotalPages(), 2);
-        $this->assertEquals($response->getNextPage(), "http://lesbonneschoses.prismic.io/api/documents/search?ref=UlfoxUnM08QWYXdl&page=2&pageSize=20");
+        $this->assertEquals($response->getNextPage(), "http://lesbonneschoses.cdn.prismic.io/api/documents/search?ref=UlfoxUnM08QWYXdl&page=2&pageSize=20");
         $this->assertEquals($response->getPrevPage(), NULL);
     }
 
@@ -116,7 +116,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $fakeResponse->next_page = NULL;
         $fakeResponse->prev_page = NULL;
 
-        \apc_store(md5('http://lesbonneschoses.prismic.io/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl'), $fakeResponse, 1000);
+        \apc_store(md5('http://lesbonneschoses.cdn.prismic.io/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl'), $fakeResponse, 1000);
 
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 

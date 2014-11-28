@@ -19,7 +19,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testApi()
     {
         // startgist:d496c58cd598372c4dca:prismic-api.php
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $masterRef = $api->master();
         // endgist
         $this->assertNotNull($api);
@@ -29,7 +29,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     {
         try {
             // startgist:e17afdbcd850666f5250:prismic-apiPrivate.php
-            $api = Api::get("https://lesbonneschoses.prismic.io/api", "MC5-XXXXXXX-vRfvv70");
+            $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", "MC5-XXXXXXX-vRfvv70");
             // This will fail because the token is invalid, but this is how to access a private API
             // endgist
         } catch (ClientErrorResponseException $e) {
@@ -41,7 +41,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     {
         // startgist:02bb6d1e353e9928b145:prismic-references.php
         $previewToken = 'MC5VbDdXQmtuTTB6Z0hNWHF3.c--_vVbvv73vv73vv73vv71EA--_vS_vv73vv70T77-9Ke-_ve-_vWfvv70ebO-_ve-_ve-_vQN377-9ce-_vRfvv70';
-        $api = Api::get("https://lesbonneschoses.prismic.io/api", $previewToken);
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", $previewToken);
         $stPatrickRef = $api->getRef("St-Patrick specials");
         // Now we'll use this reference for all our calls
         $response = $api
@@ -58,7 +58,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testSimpleQuery()
     {
         // startgist:0b3cb9192c22e8f51159:prismic-simplequery.php
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()->everything
             ->query(Predicates::at("document.type", "product"))
@@ -72,7 +72,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testOrderings()
     {
     // startgist:fd35a327963b0b5dcfcd:prismic-orderings.php
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()->everything
             ->ref($api->master())
@@ -89,7 +89,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testPredicates()
     {
         // startgist:6a642512ec2225c35dae:prismic-predicates.php
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()
             ->everything
@@ -120,7 +120,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testAsHtml()
     {
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()
             ->everything
@@ -141,7 +141,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testHtmlSerializer()
     {
         // startgist:3263b52d6dc07b792d26:prismic-htmlSerializer.php
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()
             ->everything
@@ -166,7 +166,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testGetText()
     {
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $documents = $api
             ->forms()->everything
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbl"))
@@ -182,7 +182,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNumber()
     {
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $documents = $api
             ->forms()->everything
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbO"))
@@ -205,7 +205,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testDateTimestamp()
     {
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $results = $api
             ->forms()->everything
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbl"))
@@ -318,7 +318,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testImage() {
-        $api = Api::get("https://lesbonneschoses.prismic.io/api");
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $documents = $api
             ->forms()->everything
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbO"))
@@ -333,7 +333,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
         // Most of the time you will be using the "main" view
         $url = $image->getView("main")->getUrl();
         // endgist
-        $this->assertEquals("https://prismic-io.s3.amazonaws.com/lesbonneschoses/f606ad513fcc2a73b909817119b84d6fd0d61a6d.png", $url);
+        $this->assertEquals("https://lesbonneschoses.cdn.prismic.io/lesbonneschoses/f606ad513fcc2a73b909817119b84d6fd0d61a6d.png", $url);
     }
 
 public function testCache() {
@@ -341,7 +341,7 @@ public function testCache() {
         // You can pass any class implementing the CacheInterface to the Api creation
         // http://prismicio.github.io/php-kit/classes/Prismic.Cache.CacheInterface.html
         $fileCache = new DefaultCache();
-        $api = Api::get("https://lesbonneschoses.prismic.io/api", null /* token */, null /* client */, $fileCache);
+        $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", null /* token */, null /* client */, $fileCache);
         // endgist
         $this->assertNotNull($api);
     }
