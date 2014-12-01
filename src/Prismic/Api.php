@@ -130,8 +130,9 @@ class Api
      */
     public function bookmark($name)
     {
-        if (isset($this->bookmarks()[$name])) {
-            return $this->bookmarks()[$name];
+        $bookmarks = $this->bookmarks();
+        if (isset($bookmarks[$name])) {
+            return $bookmarks[$name];
         }
 
         return null;
