@@ -130,8 +130,8 @@ class Api
      */
     public function bookmark($name)
     {
-        if (isset($this->bookmarks()->{$name})) {
-            return $this->bookmarks()->{$name};
+        if (isset($this->bookmarks()[$name])) {
+            return $this->bookmarks()[$name];
         }
 
         return null;
@@ -316,10 +316,10 @@ class Api
                     },
                     $response->refs
                 ),
-                $response->bookmarks,
-                $response->types,
+                (array)$response->bookmarks,
+                (array)$response->types,
                 $response->tags,
-                $response->forms,
+                (array)$response->forms,
                 $experiments,
                 $response->oauth_initiate,
                 $response->oauth_token

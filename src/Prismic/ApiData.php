@@ -53,20 +53,20 @@ class ApiData
      * A constructor to build the object when you've retrieved all the data you need.
      *
      * @param array     $refs
-     * @param \stdClass $bookmarks
-     * @param \stdClass $types
+     * @param array     $bookmarks
+     * @param array     $types
      * @param array     $tags
-     * @param \stdClass $forms
+     * @param array     $forms
      * @param \Prismic\Experiments $experiments
      * @param string    $oauth_initiate
      * @param string    $oauth_token
      */
     public function __construct(
         array $refs,
-        \stdClass $bookmarks,
-        \stdClass $types,
+        array $bookmarks,
+        array $types,
         array $tags,
-        \stdClass $forms,
+        array $forms,
         Experiments $experiments,
         $oauth_initiate,
         $oauth_token
