@@ -11,7 +11,6 @@
 namespace Prismic\Fragment;
 
 use Prismic\Document;
-use Prismic\WithFragments;
 
 /**
  * This class embodies a Group fragment.
@@ -113,7 +112,7 @@ class Group implements FragmentInterface
             }
         }
 
-        return new WithFragments($subfragments);
+        return new GroupDoc($subfragments);
     }
 
     /**

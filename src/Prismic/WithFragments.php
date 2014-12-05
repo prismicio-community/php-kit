@@ -10,8 +10,6 @@
 
 namespace Prismic;
 
-use ArrayAccess;
-use Exception;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\TextInterface;
 use Prismic\Fragment\Color;
@@ -26,7 +24,7 @@ use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Timestamp;
 
-class WithFragments implements ArrayAccess {
+class WithFragments {
 
     /**
      * @var array all the fragments in the document (please use instance methods to get information that is in there)
@@ -476,24 +474,4 @@ class WithFragments implements ArrayAccess {
         return $html;
     }
 
-    public function offsetExists($offset)
-    {
-        return $offset >= 0 && $offset < count($this->fragments);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->fragments[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new Exception("Document retrieved from Prismic can't be modified");
-    }
-
-    public function offsetUnset($offset)
-    {
-        throw new Exception("Document retrieved from Prismic can't be modified");
-        // TODO: Implement offsetUnset() method.
-    }
 }
