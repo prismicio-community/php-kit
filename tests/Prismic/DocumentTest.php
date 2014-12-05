@@ -130,7 +130,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
         $docchapterdocs = $docchapter->getGroup('docchapter.docs')->getArray();
         $this->assertEquals(count($docchapterdocs), 2);
-        $this->assertEquals(implode("|", array_keys($docchapterdocs[0])), "linktodoc");
+        $this->assertEquals(implode("|", array_keys($docchapterdocs[0]->getFragments())), "linktodoc");
         $this->assertEquals($docchapterdocs[0]['linktodoc']->getType(), 'doc');
         $this->assertEquals($docchapterdocs[0]['linktodoc']->asHtml($this->linkResolver), '<a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a>');
 

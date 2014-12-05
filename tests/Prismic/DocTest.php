@@ -251,13 +251,9 @@ class DocTest extends \PHPUnit_Framework_TestCase
             $docs = $group->getArray();
         }
         foreach ($docs as $doc) {
-            // Desc and Link are Fragments, their type depending on what's declared in the Document Mask
-            if (isset($doc["desc"])) {
-                $desc = $doc["desc"];
-            }
-            if (isset($doc["linktodoc"])) {
-                $link = $doc["linktodoc"];
-            }
+            // GroupDoc can be manipulated like regular documents
+            $desc = $doc->getText("desc");
+            $link = $doc->getLink("linktodoc");
         }
         // endgist
         $html = $docs[0]["desc"]->asHtml();
