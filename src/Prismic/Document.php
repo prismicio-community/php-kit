@@ -37,6 +37,10 @@ class Document extends WithFragments
      */
     private $id;
     /**
+     * @var string the user ID of the document (please use instance methods to get information that is in there)
+     */
+    private $uid;
+    /**
      * @var string the type of the document (please use instance methods to get information that is in there)
      */
     private $type;
@@ -57,6 +61,7 @@ class Document extends WithFragments
      * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
      *
      * @param string $id              the ID of the document
+     * @param string|null $uid        the user ID of the document
      * @param string $type            the type of the document
      * @param string $href            the URL of the document in the repository's API
      * @param array  $tags            the tags used in the document
@@ -64,10 +69,11 @@ class Document extends WithFragments
      * @param array  $linkedDocuments the linked documents, from this document
      * @param array  $fragments       all the fragments in the document
      */
-    public function __construct($id, $type, $href, $tags, $slugs, $linkedDocuments, array $fragments)
+    public function __construct($id, $uid, $type, $href, $tags, $slugs, $linkedDocuments, array $fragments)
     {
         parent::__construct($fragments);
         $this->id = $id;
+        $this->uid = $uid;
         $this->type = $type;
         $this->href = $href;
         $this->tags = $tags;
@@ -130,6 +136,21 @@ class Document extends WithFragments
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the user ID of the document, a unique but human-readable identifier
+     * typically to be used in URLs.
+     *
+     * It can be null, if the uid is not declared in the document mask.
+     *
+     * @api
+     *
+     * @return string the ID of the document
+     */
+    public function getUid()
+    {
+        return $this->uid;
     }
 
     /**
@@ -278,6 +299,8 @@ class Document extends WithFragments
      */
     public static function parse(\stdClass $json)
     {
+        $uid = isset($json->uid) ? $json->uid : null;
+
         $fragments = array();
         foreach ($json->data as $type => $fields) {
             foreach ($fields as $key => $value) {
@@ -307,6 +330,15 @@ class Document extends WithFragments
             $slugs[] = urldecode($slug);
         }
 
-        return new Document($json->id, $json->type, $json->href, $json->tags, $slugs, $linkedDocuments, $fragments);
+        return new Document(
+            $json->id,
+            $uid,
+            $json->type,
+            $json->href,
+            $json->tags,
+            $slugs,
+            $linkedDocuments,
+            $fragments
+        );
     }
 }

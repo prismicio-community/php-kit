@@ -55,7 +55,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
         $results = $api->forms()->products->ref($masterRef)->submit()->getResults();
-        $this->assertEquals(count($results), 16);
+        $this->assertEquals(16, count($results));
     }
 
     public function testSubmitProductsFormWithPredicate()
@@ -63,7 +63,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
         $results = $api->forms()->products->ref($masterRef)->query(Predicates::at('my.product.flavour', 'Chocolate'))->submit()->getResults();
-        $this->assertEquals(count($results), 5);
+        $this->assertEquals(5, count($results));
     }
 
     public function testSubmitProductsFormWithOrderings()
@@ -71,14 +71,14 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
         $results = $api->forms()->products->orderings('[my.product.price]')->ref($masterRef)->submit()->getResults();
-        $this->assertEquals($results[0]->getId(), 'UlfoxUnM0wkXYXbK'); // this is the "Hot Berry Cupcake", the cheapest one.
+        $this->assertEquals('UlfoxUnM0wkXYXbK', $results[0]->getId()); // this is the "Hot Berry Cupcake", the cheapest one.
     }
 
     public function testRetrieveApiWithPrivilege()
     {
         $api = Api::get(self::$testRepository, self::$previewToken);
         $nbRefs = count($api->getData()->getRefs());
-        $this->assertEquals($nbRefs, 3);
+        $this->assertEquals(3, $nbRefs);
     }
 
     public function testSubmitProductsFormInTheFuture()
@@ -87,7 +87,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $refs = $api->refs();
         $future = $refs['Announcement of new SF shop'];
         $results = $api->forms()->products->ref($future->getRef())->submit()->getResults();
-        $this->assertEquals(count($results), 17);
+        $this->assertEquals(17, count($results));
     }
 
     public function testLinkedDocuments()
