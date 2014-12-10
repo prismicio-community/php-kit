@@ -20,7 +20,7 @@ class GroupDoc extends WithFragments implements ArrayAccess
 
     public function offsetExists($offset)
     {
-        return $offset >= 0 && $offset < count($this->getFragments());
+        return $this->has($offset);
     }
 
     public function offsetGet($offset)
