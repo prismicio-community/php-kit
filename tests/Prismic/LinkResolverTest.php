@@ -22,7 +22,7 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $isBroken = false;
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
         $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array());
-        $this->link = new DocumentLink($this->id, $type, $tags, $slugs[0], $isBroken);
+        $this->link = new DocumentLink($this->id, $type, $tags, $slugs[0], array(), $isBroken);
         $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();

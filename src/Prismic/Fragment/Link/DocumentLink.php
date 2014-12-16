@@ -9,6 +9,7 @@
  */
 
 namespace Prismic\Fragment\Link;
+use Prismic\WithFragments;
 
 /**
  * This class embodies a document link; it is what is retrieved from the API when
@@ -20,7 +21,7 @@ namespace Prismic\Fragment\Link;
  * (which happens when the link is a hyperlink in a StructuredText fragment), or the LinkInterface
  * can also be its own fragment (e.g. for a "related" fragment, that links to a related document).
  */
-class DocumentLink implements LinkInterface
+class DocumentLink extends WithFragments implements LinkInterface
 {
     /**
      * @var string the ID of the linked document
@@ -39,6 +40,10 @@ class DocumentLink implements LinkInterface
      */
     private $slug;
     /**
+     * @var array the additional fragment data, if fetchLinks was specified at query time (empty otherwise)
+     */
+    private $fragments;
+    /**
      * @var boolean returns true if the link is towards a document that is not live, for instance
      */
     private $isBroken;
@@ -50,14 +55,16 @@ class DocumentLink implements LinkInterface
      * @param string  $type     the type of the linked document
      * @param array   $tags     an array of strings which are the document's tags
      * @param string  $slug     the current slug of the document
+     * @param array   $fragments the additional fragment data
      * @param boolean $isBroken returns true if the link is towards a document that is not live, for instance
      */
-    public function __construct($id, $type, $tags, $slug, $isBroken)
+    public function __construct($id, $type, $tags, $slug, array $fragments, $isBroken)
     {
         $this->id = $id;
         $this->type = $type;
         $this->tags = $tags;
         $this->slug = $slug;
+        $this->fragments = $fragments;
         $this->isBroken = $isBroken;
     }
 
@@ -73,7 +80,7 @@ class DocumentLink implements LinkInterface
      *
      * @return string the HTML version of the link
      */
-    public function asHtml($linkResolver)
+    public function asHtml($linkResolver = NULL)
     {
         return '<a href="' . $this->getUrl($linkResolver) . '">' . $this->slug . '</a>';
     }
@@ -88,11 +95,13 @@ class DocumentLink implements LinkInterface
      */
     public static function parse($json)
     {
+        $fragments = isset($json->data) ? WithFragments::parseFragments($json->data) : array();
         return new DocumentLink(
             $json->document->id,
             $json->document->type,
             isset($json->document->{'tags'}) ? $json->document->tags : null,
             $json->document->slug,
+            $fragments,
             $json->isBroken
         );
     }

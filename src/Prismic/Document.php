@@ -195,86 +195,7 @@ class Document extends WithFragments
      */
     public function asDocumentLink()
     {
-        return new DocumentLink($this->id, $this->type, $this->tags, $this->getSlug(), false);
-    }
-
-    /**
-     * Parses a given fragment. Not meant to be used except for testing.
-     *
-     * @param  \stdClass                           $json the json bit retrieved from the API that represents any fragment.
-     * @return \Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
-     */
-    public static function parseFragment($json)
-    {
-        if (is_object($json) && property_exists($json, "type")) {
-            if ($json->type === "Image") {
-                $data = $json->value;
-                $views = array();
-                foreach ($json->value->views as $key => $jsonView) {
-                    $views[$key] = ImageView::parse($jsonView);
-                }
-                $mainView = ImageView::parse($data->main, $views);
-
-                return new Image($mainView, $views);
-            }
-
-            if ($json->type === "Color") {
-                return new Color($json->value);
-            }
-
-            if ($json->type === "GeoPoint") {
-                return new GeoPoint($json->value->latitude, $json->value->longitude);
-            }
-
-            if ($json->type === "Number") {
-                return new Number($json->value);
-            }
-
-            if ($json->type === "Date") {
-                return new Date($json->value);
-            }
-
-            if ($json->type === "Timestamp") {
-                return new Timestamp($json->value);
-            }
-
-            if ($json->type === "Text") {
-                return new Text($json->value);
-            }
-
-            if ($json->type === "Select") {
-                return new Text($json->value);
-            }
-
-            if ($json->type === "Embed") {
-                return Embed::parse($json->value);
-            }
-
-            if ($json->type === "Link.web") {
-                return WebLink::parse($json->value);
-            }
-
-            if ($json->type === "Link.document") {
-                return DocumentLink::parse($json->value);
-            }
-
-            if ($json->type === "Link.file") {
-                return FileLink::parse($json->value);
-            }
-
-            if ($json->type === "Link.image") {
-                return ImageLink::parse($json->value);
-            }
-
-            if ($json->type === "StructuredText") {
-                return StructuredText::parse($json->value);
-            }
-
-            if ($json->type === "Group") {
-                return Group::parse($json->value);
-            }
-            return null;
-        }
+        return new DocumentLink($this->id, $this->type, $this->tags, $this->getSlug(), $this->getFragments(), false);
     }
 
     /**
@@ -287,24 +208,7 @@ class Document extends WithFragments
     {
         $uid = isset($json->uid) ? $json->uid : null;
 
-        $fragments = array();
-        foreach ($json->data as $type => $fields) {
-            foreach ($fields as $key => $value) {
-                if (is_array($value)) {
-                    for ($i = 0; $i < count($value); $i++) {
-                        $f = self::parseFragment($value[$i]);
-                        if (isset($f)) {
-                            $fragments[$type . '.' . $key . '[' . $i . ']'] = $f;
-                        }
-                    }
-                }
-                $fragment = self::parseFragment($value);
-
-                if (isset($fragment)) {
-                    $fragments[$type . "." . $key] = $fragment;
-                }
-            }
-        }
+        $fragments = WithFragments::parseFragments($json->data);
 
         $slugs = array();
         foreach ($json->slugs as $slug) {

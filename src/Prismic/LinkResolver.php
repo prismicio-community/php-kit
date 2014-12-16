@@ -119,6 +119,7 @@ abstract class LinkResolver
             $document->getType(),
             $document->getTags(),
             $document->getSlug(),
+            $document->getFragments(),
             false
         );
     }

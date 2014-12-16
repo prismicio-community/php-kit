@@ -10,7 +10,6 @@
 
 namespace Prismic;
 
-use phpDocumentor\Plugin\Scrybe\Converter\RestructuredText\Roles\Doc;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\TextInterface;
 use Prismic\Fragment\Color;
@@ -19,8 +18,12 @@ use Prismic\Fragment\Embed;
 use Prismic\Fragment\GeoPoint;
 use Prismic\Fragment\Group;
 use Prismic\Fragment\Image;
+use Prismic\Fragment\ImageView;
 use Prismic\Fragment\Link\DocumentLink;
+use Prismic\Fragment\Link\FileLink;
+use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\LinkInterface;
+use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\Number;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\StructuredText;
@@ -430,7 +433,12 @@ class WithFragments {
     public function getLink($field)
     {
         $fragment = $this->get($field);
-        if (isset($fragment) && ($fragment instanceof LinkInterface)) {
+        if (isset($fragment) && (
+                $fragment instanceof LinkInterface ||
+                $fragment instanceof DocumentLink ||
+                $fragment instanceof WebLink ||
+                $fragment instanceof ImageLink
+            )) {
             return $fragment;
         }
 
@@ -511,6 +519,114 @@ class WithFragments {
         };
 
         return $html;
+    }
+
+    /**
+     * Parses a given fragment. For internal usage.
+     *
+     * @param  \stdClass                           $json the json bit retrieved from the API that represents any fragment.
+     * @return \Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
+     */
+    public static function parseFragment($json)
+    {
+        if (is_object($json) && property_exists($json, "type")) {
+            if ($json->type === "Image") {
+                $data = $json->value;
+                $views = array();
+                foreach ($json->value->views as $key => $jsonView) {
+                    $views[$key] = ImageView::parse($jsonView);
+                }
+                $mainView = ImageView::parse($data->main, $views);
+
+                return new Image($mainView, $views);
+            }
+
+            if ($json->type === "Color") {
+                return new Color($json->value);
+            }
+
+            if ($json->type === "GeoPoint") {
+                return new GeoPoint($json->value->latitude, $json->value->longitude);
+            }
+
+            if ($json->type === "Number") {
+                return new Number($json->value);
+            }
+
+            if ($json->type === "Date") {
+                return new Date($json->value);
+            }
+
+            if ($json->type === "Timestamp") {
+                return new Timestamp($json->value);
+            }
+
+            if ($json->type === "Text") {
+                return new Text($json->value);
+            }
+
+            if ($json->type === "Select") {
+                return new Text($json->value);
+            }
+
+            if ($json->type === "Embed") {
+                return Embed::parse($json->value);
+            }
+
+            if ($json->type === "Link.web") {
+                return WebLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.document") {
+                return DocumentLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.file") {
+                return FileLink::parse($json->value);
+            }
+
+            if ($json->type === "Link.image") {
+                return ImageLink::parse($json->value);
+            }
+
+            if ($json->type === "StructuredText") {
+                return StructuredText::parse($json->value);
+            }
+
+            if ($json->type === "Group") {
+                return Group::parse($json->value);
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Parse fragments from a json document. For internal usage.
+     *
+     * @param $json
+     * @return array
+     */
+    public static function parseFragments($json)
+    {
+        $fragments = array();
+        foreach ($json as $type => $fields) {
+            foreach ($fields as $key => $value) {
+                if (is_array($value)) {
+                    for ($i = 0; $i < count($value); $i++) {
+                        $f = self::parseFragment($value[$i]);
+                        if (isset($f)) {
+                            $fragments[$type . '.' . $key . '[' . $i . ']'] = $f;
+                        }
+                    }
+                }
+                $fragment = self::parseFragment($value);
+
+                if (isset($fragment)) {
+                    $fragments[$type . "." . $key] = $fragment;
+                }
+            }
+        }
+        return $fragments;
     }
 
 }
