@@ -120,6 +120,21 @@ class SearchForm
     }
 
     /**
+     * Set the after parameter: the id of the document to start the results from (excluding that document).
+     *
+     * @api
+     * @param  string            $documentId
+     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     */
+    public function after($documentId)
+    {
+        $data = $this->data;
+        $data['pageSize'] = $documentId;
+
+        return new SearchForm($this->api, $this->form, $data);
+    }
+
+    /**
      * Set the query's page size, for the pagination.
      *
      * @api
