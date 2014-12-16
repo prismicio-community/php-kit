@@ -18,11 +18,11 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $this->id = 'Ue0EDd_mqb8Dhk3j';
         $type = 'product';
         $tags = array('macaron');
-        $slug = 'ABCD';
+        $slugs = array('ABCD');
         $isBroken = false;
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
-        $this->document = new Document($this->id, null, $type, $href, $tags, $slug, array(), array());
-        $this->link = new DocumentLink($this->id, $type, $tags, $slug, $isBroken);
+        $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array());
+        $this->link = new DocumentLink($this->id, $type, $tags, $slugs[0], $isBroken);
         $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();

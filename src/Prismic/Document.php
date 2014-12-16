@@ -66,10 +66,9 @@ class Document extends WithFragments
      * @param string $href            the URL of the document in the repository's API
      * @param array  $tags            the tags used in the document
      * @param array  $slugs           the slugs used in the document, in the past and today; today's slug is the head
-     * @param array  $linkedDocuments the linked documents, from this document
      * @param array  $fragments       all the fragments in the document
      */
-    public function __construct($id, $uid, $type, $href, $tags, $slugs, $linkedDocuments, array $fragments)
+    public function __construct($id, $uid, $type, $href, array $tags, array $slugs, array $fragments)
     {
         parent::__construct($fragments);
         $this->id = $id;
@@ -78,7 +77,6 @@ class Document extends WithFragments
         $this->href = $href;
         $this->tags = $tags;
         $this->slugs = $slugs;
-        $this->linkedDocuments = $linkedDocuments;
     }
 
     /**
@@ -95,18 +93,6 @@ class Document extends WithFragments
         }
 
         return null;
-    }
-
-    /**
-     * Returns the linked documents, from this document
-     *
-     * @api
-     *
-     * @return string the linked documents, from this document
-     */
-    public function getLinkedDocuments()
-    {
-        return $this->linkedDocuments;
     }
 
     /**
@@ -320,11 +306,6 @@ class Document extends WithFragments
             }
         }
 
-        $linkedDocuments = array();
-        if (isset($json->linked_documents)) {
-            $linkedDocuments = array_map(function ($linkedDoc) { return LinkedDocument::parse($linkedDoc);  }, $json->linked_documents);
-        }
-
         $slugs = array();
         foreach ($json->slugs as $slug) {
             $slugs[] = urldecode($slug);
@@ -337,7 +318,6 @@ class Document extends WithFragments
             $json->href,
             $json->tags,
             $slugs,
-            $linkedDocuments,
             $fragments
         );
     }

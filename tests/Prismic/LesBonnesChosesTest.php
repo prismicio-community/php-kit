@@ -96,8 +96,8 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $masterRef = $api->master()->getRef();
         $results = $api->forms()->everything->ref($masterRef)->query(Predicates::any('document.type', array("doc", "docchapter")))->submit()->getResults();
         $linkedDocuments = $results[0]->getLinkedDocuments();
-        $this->assertEquals(count($linkedDocuments), 1);
-        $this->assertEquals($linkedDocuments[0]->getId(), "U0w8OwEAACoAQEvB");
+        $this->assertEquals(1, count($linkedDocuments));
+        $this->assertEquals("U0w8OwEAACoAQEvB", $linkedDocuments[0]->getId());
     }
 
     public function testImmutableObjectCache()

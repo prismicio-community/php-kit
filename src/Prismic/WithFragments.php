@@ -10,6 +10,7 @@
 
 namespace Prismic;
 
+use phpDocumentor\Plugin\Scrybe\Converter\RestructuredText\Roles\Doc;
 use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\TextInterface;
 use Prismic\Fragment\Color;
@@ -18,8 +19,10 @@ use Prismic\Fragment\Embed;
 use Prismic\Fragment\GeoPoint;
 use Prismic\Fragment\Group;
 use Prismic\Fragment\Image;
+use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\LinkInterface;
 use Prismic\Fragment\Number;
+use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Timestamp;
@@ -33,6 +36,42 @@ class WithFragments {
 
     function __construct(array $fragments) {
         $this->fragments = $fragments;
+    }
+
+    /**
+     * Returns the linked documents, from this document
+     *
+     * @api
+     *
+     * @return string the linked documents, from this document
+     */
+    public function getLinkedDocuments()
+    {
+        $result = array();
+        foreach ($this->fragments as $key => $fragment) {
+            if ($fragment instanceof DocumentLink) {
+                array_push($result, $fragment);
+            }
+            if ($fragment instanceof Group) {
+                foreach ($fragment->getArray() as $groupDoc) {
+                    $result = array_merge($result, $groupDoc->getLinkedDocuments());
+                }
+            }
+            if ($fragment instanceof StructuredText) {
+                foreach ($fragment->getBlocks() as $block) {
+                    if ($block instanceof TextInterface) {
+                        foreach ($block->getSpans() as $span) {
+                            if ($span instanceof HyperlinkSpan) {
+                                if ($span->getLink() instanceof DocumentLink) {
+                                    array_push($result, $span->getLink());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
     /**
