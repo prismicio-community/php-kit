@@ -128,10 +128,19 @@ class SearchForm
      */
     public function after($documentId)
     {
-        $data = $this->data;
-        $data['pageSize'] = $documentId;
+        return $this->set("after", $documentId);
+    }
 
-        return new SearchForm($this->api, $this->form, $data);
+    /**
+     * Set the fields parameter: additional fields to retrieve for DocumentLink
+     *
+     * @api
+     * @param  array            $fields
+     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     */
+    public function fetch($fields)
+    {
+        return $this->set("fetch", $fields);
     }
 
     /**
@@ -143,10 +152,7 @@ class SearchForm
      */
     public function pageSize($pageSize)
     {
-        $data = $this->data;
-        $data['pageSize'] = $pageSize;
-
-        return new SearchForm($this->api, $this->form, $data);
+        return $this->set("pageSize", $pageSize);
     }
 
     /**
@@ -158,10 +164,7 @@ class SearchForm
      */
     public function page($page)
     {
-        $data = $this->data;
-        $data['page'] = $page;
-
-        return new SearchForm($this->api, $this->form, $data);
+        return $this->set("page", $page);
     }
 
     /**
@@ -173,10 +176,7 @@ class SearchForm
      */
     public function orderings($orderings)
     {
-        $data = $this->data;
-        $data['orderings'] = $orderings;
-
-        return new SearchForm($this->api, $this->form, $data);
+        return $this->set("orderings", $orderings);
     }
 
     /**
