@@ -52,15 +52,17 @@ class DocumentLink extends WithFragments implements LinkInterface
      * Constructs a document link.
      *
      * @param string  $id       the ID of the linked document
+     * @param string  $uid      the UID of the linked document (can be null)
      * @param string  $type     the type of the linked document
      * @param array   $tags     an array of strings which are the document's tags
      * @param string  $slug     the current slug of the document
      * @param array   $fragments the additional fragment data
      * @param boolean $isBroken returns true if the link is towards a document that is not live, for instance
      */
-    public function __construct($id, $type, $tags, $slug, array $fragments, $isBroken)
+    public function __construct($id, $uid, $type, $tags, $slug, array $fragments, $isBroken)
     {
         $this->id = $id;
+        $this->uid = $uid;
         $this->type = $type;
         $this->tags = $tags;
         $this->slug = $slug;
@@ -95,9 +97,11 @@ class DocumentLink extends WithFragments implements LinkInterface
      */
     public static function parse($json)
     {
+        $uid = isset($json->document->uid) ? $json->document->uid : null;
         $fragments = isset($json->data) ? WithFragments::parseFragments($json->data) : array();
         return new DocumentLink(
             $json->document->id,
+            $uid,
             $json->document->type,
             isset($json->document->{'tags'}) ? $json->document->tags : null,
             $json->document->slug,

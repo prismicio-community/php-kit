@@ -116,6 +116,7 @@ abstract class LinkResolver
     {
         return new Fragment\Link\DocumentLink(
             $document->getId(),
+            $document->getUid(),
             $document->getType(),
             $document->getTags(),
             $document->getSlug(),
