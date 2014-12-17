@@ -2,6 +2,7 @@
 
 namespace Prismic\Test;
 
+use Prismic\Cache\DefaultCache;
 use Prismic\Document;
 use Prismic\Api;
 
@@ -10,11 +11,12 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     private static $testRepository = 'http://micro.prismic.io/api';
 
     protected $document;
+    protected $linkResolver;
     protected $micro_api;
 
     protected function setUp()
     {
-        $cache = new \Prismic\Cache\DefaultCache();
+        $cache = new DefaultCache();
         $cache->clear();
         $search = json_decode(file_get_contents(__DIR__.'/../fixtures/search.json'));
         $this->document = Document::parse($search[0]);

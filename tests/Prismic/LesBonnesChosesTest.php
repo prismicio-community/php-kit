@@ -128,7 +128,14 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get('http://micro.prismic.io/api');
         $masterRef = $api->master()->getRef();
-        $documents = $api->forms()->everything->ref($masterRef)->query('[[:d = at(document.id, "UvLDWgEAABoHHn1R")]]')->submit()->getResults();
-        $this->assertEquals($documents[0]->getLink('cta.link')->getId(), "U0w8OwEAACoAQEvB");
+        $documents = $api->forms()->everything
+            ->ref($masterRef)
+            // ->fetchLinks("download.title")
+            ->query('[[:d = at(document.id, "UvLDWgEAABoHHn1R")]]')
+            ->submit()->getResults();
+        $link = $documents[0]->getLink('cta.link');
+        $this->assertEquals($link->getId(), "U0w8OwEAACoAQEvB");
+        // $this->assertEquals($link->getText('download.title'), "Download meta-micro");
     }
+
 }

@@ -140,6 +140,18 @@ class DocumentLink extends WithFragments implements LinkInterface
     }
 
     /**
+     * Returns the UID of the linked document.
+     *
+     * @api
+     *
+     * @return string|null the UID of the linked document
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
      * Builds an unformatted text version of the raw link: simply, the document's ID.
      *
      * @api

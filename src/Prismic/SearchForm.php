@@ -132,7 +132,7 @@ class SearchForm
     }
 
     /**
-     * Set the fields parameter: additional fields to retrieve for DocumentLink
+     * Set the fetch parameter: restrict the fields to retrieve for a document
      *
      * @api
      * @param  array            $fields
@@ -141,6 +141,18 @@ class SearchForm
     public function fetch($fields)
     {
         return $this->set("fetch", $fields);
+    }
+
+    /**
+     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink
+     *
+     * @api
+     * @param  array            $fields
+     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     */
+    public function fetchLinks($fields)
+    {
+        return $this->set("fetchLinks", $fields);
     }
 
     /**

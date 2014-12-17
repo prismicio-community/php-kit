@@ -56,7 +56,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Api $response
+     * @param Api $api
      *
      * @depends testValidApiCall
      */
