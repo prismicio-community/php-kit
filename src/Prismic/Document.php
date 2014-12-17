@@ -195,7 +195,7 @@ class Document extends WithFragments
      */
     public function asDocumentLink()
     {
-        return new DocumentLink($this->id, $this->type, $this->tags, $this->getSlug(), $this->getFragments(), false);
+        return new DocumentLink($this->id, $this->uid, $this->type, $this->tags, $this->getSlug(), $this->getFragments(), false);
     }
 
     /**

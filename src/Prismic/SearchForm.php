@@ -140,6 +140,9 @@ class SearchForm
      */
     public function fetch($fields)
     {
+        if (is_array($fields)) {
+            $fields = join(",", $fields);
+        }
         return $this->set("fetch", $fields);
     }
 
@@ -152,6 +155,9 @@ class SearchForm
      */
     public function fetchLinks($fields)
     {
+        if (is_array($fields)) {
+            $fields = join(",", $fields);
+        }
         return $this->set("fetchLinks", $fields);
     }
 

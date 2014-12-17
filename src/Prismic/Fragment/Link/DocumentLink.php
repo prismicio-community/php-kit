@@ -40,10 +40,6 @@ class DocumentLink extends WithFragments implements LinkInterface
      */
     private $slug;
     /**
-     * @var array the additional fragment data, if fetchLinks was specified at query time (empty otherwise)
-     */
-    private $fragments;
-    /**
      * @var boolean returns true if the link is towards a document that is not live, for instance
      */
     private $isBroken;
@@ -61,12 +57,12 @@ class DocumentLink extends WithFragments implements LinkInterface
      */
     public function __construct($id, $uid, $type, $tags, $slug, array $fragments, $isBroken)
     {
+        parent::__construct($fragments);
         $this->id = $id;
         $this->uid = $uid;
         $this->type = $type;
         $this->tags = $tags;
         $this->slug = $slug;
-        $this->fragments = $fragments;
         $this->isBroken = $isBroken;
     }
 
@@ -98,7 +94,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     public static function parse($json)
     {
         $uid = isset($json->document->uid) ? $json->document->uid : null;
-        $fragments = isset($json->data) ? WithFragments::parseFragments($json->data) : array();
+        $fragments = isset($json->document->data) ? WithFragments::parseFragments($json->document->data) : array();
         return new DocumentLink(
             $json->document->id,
             $uid,
