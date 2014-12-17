@@ -100,7 +100,7 @@ class SearchForm
 
             return new SearchForm($this->api, $this->form, $data);
         } else {
-            return null;
+            return $this;
         }
     }
 
@@ -124,7 +124,7 @@ class SearchForm
      *
      * @api
      * @param  string            $documentId
-     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
      */
     public function after($documentId)
     {
@@ -136,7 +136,7 @@ class SearchForm
      *
      * @api
      * @param  array            $fields
-     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
      */
     public function fetch($fields)
     {
