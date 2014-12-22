@@ -23,6 +23,10 @@ class Predicates {
         return new SimplePredicate("any", $fragment, array($values));
     }
 
+    public static function in($fragment, $values) {
+        return new SimplePredicate("in", $fragment, array($values));
+    }
+
     public static function fulltext($fragment, $value) {
         return new SimplePredicate("fulltext", $fragment, array($value));
     }
