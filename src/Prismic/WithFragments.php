@@ -30,6 +30,10 @@ use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Timestamp;
 
+/**
+ * A parent class for all classes having fragments: Document, DocumentLink, GroupDoc
+ * @package Prismic
+ */
 class WithFragments {
 
     /**

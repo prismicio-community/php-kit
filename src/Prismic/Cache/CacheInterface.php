@@ -29,7 +29,7 @@ interface CacheInterface
      * @api
      *
      * @param  string    $key the key of the cache entry
-     * @return \stdClass the value of the entry
+     * @return \stdClass the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
      */
     public function get($key);
 

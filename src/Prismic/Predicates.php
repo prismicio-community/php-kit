@@ -13,6 +13,10 @@ namespace Prismic;
 use DateTime;
 use \Prismic\SimplePredicate;
 
+/**
+ * A set of helpers to build predicates
+ * @package Prismic
+ */
 class Predicates {
 
     public static function at($fragment, $value) {
