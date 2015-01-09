@@ -22,7 +22,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->cache->set('key', 'value');
         $this->assertEquals($this->cache->get('key'), 'value');
         $this->cache->delete('key');
-        $this->assertFalse($this->cache->get('key'));
+        $this->assertNull($this->cache->get('key'));
     }
 
     public function testSetValueClear()
@@ -34,8 +34,8 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->cache->get('key1'), 'value1');
         $this->assertEquals($this->cache->get('key2'), 'value2');
         $this->cache->clear();
-        $this->assertFalse($this->cache->get('key'));
-        $this->assertFalse($this->cache->get('key1'));
-        $this->assertFalse($this->cache->get('key2'));
+        $this->assertNull($this->cache->get('key'));
+        $this->assertNull($this->cache->get('key1'));
+        $this->assertNull($this->cache->get('key2'));
     }
 }

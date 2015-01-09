@@ -22,11 +22,15 @@ class DefaultCache implements CacheInterface
      * @api
      *
      * @param  string    $key the key of the cache entry
-     * @return \stdClass the value of the entry
+     * @return mixed the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
      */
     public function get($key)
     {
-        return \apc_fetch($key);
+        $value = \apc_fetch($key, $success);
+        if (!$success) {
+            return null;
+        }
+        return $value;
     }
 
     /**
@@ -37,10 +41,11 @@ class DefaultCache implements CacheInterface
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
      * @param integer   $ttl   the time until this cache entry expires
+     * @return void
      */
     public function set($key, $value, $ttl = 0)
     {
-        return \apc_store($key, $value, $ttl);
+        \apc_store($key, $value, $ttl);
     }
 
     /**
@@ -49,19 +54,22 @@ class DefaultCache implements CacheInterface
      * @api
      *
      * @param string $key the key of the cache entry
+     * @return void
      */
     public function delete($key)
     {
-        return \apc_delete($key);
+        \apc_delete($key);
     }
 
     /**
      * Clears the whole cache
      *
      * @api
+     *
+     * @return void
      */
     public function clear()
     {
-        return \apc_clear_cache("user");
+        \apc_clear_cache("user");
     }
 }
