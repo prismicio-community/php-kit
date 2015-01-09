@@ -268,6 +268,51 @@ class SearchForm
     }
 
     /**
+     * Get the URL for this form
+     *
+     * @return string the URL
+     */
+    private function url()
+    {
+        $url = $this->form->getAction() . '?' . http_build_query($this->data);
+        $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
+        return $url;
+    }
+
+    /**
+     * Turn a URL into a cache key
+     *
+     * @param string $url the URL to convert
+     * @return string the cache key
+     */
+    private static function url_to_cache_key($url)
+    {
+        return md5($url);
+    }
+
+    /**
+     * Get the cache key for this form
+     *
+     * @return string the cache key
+     */
+    private function cache_key()
+    {
+        return self::url_to_cache_key($this->url());
+    }
+
+    /**
+     * Checks if the results for this form are already cached
+     *
+     * @api
+     *
+     * @return boolean true if the results for this form are fresh in the cache, false otherwise
+     */
+    public function isCached()
+    {
+        return $this->api->getCache()->get($this->cache_key()) !== null;
+    }
+
+    /**
      * Performs the actual submit call, without the unmarshalling.
      *
      * @throws \RuntimeException if the Form type is not supported
@@ -279,9 +324,8 @@ class SearchForm
             $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
             $this->form->getAction()
         ) {
-            $url = $this->form->getAction() . '?' . http_build_query($this->data);
-            $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
-            $cacheKey = md5($url);
+            $url = $this->url();
+            $cacheKey = self::url_to_cache_key($url);
 
             $response = $this->api->getCache()->get($cacheKey);
 
