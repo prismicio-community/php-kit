@@ -93,9 +93,9 @@ class DocTest extends \PHPUnit_Framework_TestCase
         $response = $api
             ->forms()
             ->everything
-            ->query(array(
+            ->query(
                 Predicates::at("document.type", "product"),
-                Predicates::at("my.blog-post.date", 1401580800000)))
+                Predicates::at("my.blog-post.date", 1401580800000))
             ->ref($api->master()->getRef())
             ->submit();
         // endgist

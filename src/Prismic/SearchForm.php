@@ -247,23 +247,24 @@ class SearchForm
 
     /**
      * Set the query's predicates themselves.
+     * You can pass a String representing a query as parameter, or one or multiple Predicates to build an "AND" query
      *
-     * @api
-     *
-     * @param  string|\Prismic\Predicate|array  $q the query as a string, a Predicate, or an array of Predicate.
      * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
      */
-    public function query($q)
+    public function query()
     {
-        $fields = $this->form->getFields();
-        $field = $fields['q'];
-        if (is_string($q)) {
-            $query = $q;
-        } else if (is_array($q)) {
-            $query = "[" . join("", array_map(function($predicate) { return $predicate->q(); }, $q)) . "]";
-        } else {
-            $query = "[" . $q->q() . "]";
+        $numargs = func_num_args();
+        if ($numargs == 0) return $this;
+        $first = func_get_arg(0);
+        if ($numargs == 1 && is_string($first)) {
+            return $this->set("q", $first);
         }
+        if ($numargs == 1 && is_array($first)) {
+            $predicates = $first;
+        } else {
+            $predicates = func_get_args();
+        }
+        $query = "[" . join("", array_map(function($predicate) { return $predicate->q(); }, $predicates)) . "]";
         return $this->set("q", $query);
     }
 
