@@ -192,8 +192,10 @@ class SearchForm
      * @param  string              $orderings
      * @return \Prismic\SearchForm the current SearchForm object, with the new orderings parameter added
      */
-    public function orderings($orderings)
+    public function orderings()
     {
+        if (func_num_args() == 0) return $this;
+        $orderings = "[" . join(",", array_map(function($order) { return preg_replace('/(^\[|\]$)/', '', $order); }, func_get_args())) . "]";
         return $this->set("orderings", $orderings);
     }
 
