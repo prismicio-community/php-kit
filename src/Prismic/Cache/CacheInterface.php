@@ -13,7 +13,7 @@ namespace Prismic\Cache;
 /**
  * This is the interface you're supposed to implement if you want to
  * use your own caching strategy with the kit.
- * The way it works is pretty simple: implement the 4 methods with your
+ * The way it works is pretty simple: implement the methods with your
  * implementation, and pass an instance of your class as the $cache parameter
  * in your Prismic\Api::get call.
  * Two implementations are included in the PHP kit out-of-the-box:
@@ -23,6 +23,16 @@ namespace Prismic\Cache;
  */
 interface CacheInterface
 {
+    /**
+     * Tests whether the cache has a value for a particular key
+     *
+     * @api
+     *
+     * @param string $key the key of the cache entry
+     * @return boolean true if the cache has a value for this key, otherwise false
+     */
+    public function has($key);
+
     /**
      * Returns the value of a cache entry from its key
      *
