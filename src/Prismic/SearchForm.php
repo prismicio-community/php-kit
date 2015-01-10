@@ -286,24 +286,13 @@ class SearchForm
     }
 
     /**
-     * Turn a URL into a cache key
-     *
-     * @param string $url the URL to convert
-     * @return string the cache key
-     */
-    private static function url_to_cache_key($url)
-    {
-        return md5($url);
-    }
-
-    /**
      * Get the cache key for this form
      *
      * @return string the cache key
      */
     private function cache_key()
     {
-        return self::url_to_cache_key($this->url());
+        return $this->url();
     }
 
     /**
@@ -331,7 +320,7 @@ class SearchForm
             $this->form->getAction()
         ) {
             $url = $this->url();
-            $cacheKey = self::url_to_cache_key($url);
+            $cacheKey = $this->cache_key();
 
             $response = $this->api->getCache()->get($cacheKey);
 
