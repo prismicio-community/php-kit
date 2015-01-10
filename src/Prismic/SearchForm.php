@@ -12,7 +12,7 @@ namespace Prismic;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
- * then you can chain instance method calls to precise your need, and the query gets launched with
+ * then you can chain instance method calls to build your query, and the query gets launched with
  * Prismic\SearchForm.submit.
  *
  * For instance, here's how you query all of the repository:
