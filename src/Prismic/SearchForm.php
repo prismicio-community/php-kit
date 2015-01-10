@@ -41,7 +41,7 @@ class SearchForm
     private $data;
 
     /**
-     * Constructs a SearchForm object, is not meant for
+     * Constructs a SearchForm object
      * @param \Prismic\Api  $api  the API object containing all the information to know where to query
      * @param \Prismic\Form $form the REST form we're querying on in the API
      * @param array         $data the parameters we're getting ready to submit
