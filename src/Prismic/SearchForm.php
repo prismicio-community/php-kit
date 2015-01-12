@@ -12,7 +12,7 @@ namespace Prismic;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
- * then you can chain instance method calls to precise your need, and the query gets launched with
+ * then you can chain instance method calls to build your query, and the query gets launched with
  * Prismic\SearchForm.submit.
  *
  * For instance, here's how you query all of the repository:
@@ -22,6 +22,9 @@ namespace Prismic;
  * $result = $api->form('products')->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
  *
  * Note that setting the ref is mandatory, or your submit call will fail.
+ *
+ * Note also that SearchForm objects are immutable; the chainable methods all
+ * return new SearchForm objects.
  *
  * @api
  */
@@ -41,7 +44,7 @@ class SearchForm
     private $data;
 
     /**
-     * Constructs a SearchForm object, is not meant for
+     * Constructs a SearchForm object
      * @param \Prismic\Api  $api  the API object containing all the information to know where to query
      * @param \Prismic\Form $form the REST form we're querying on in the API
      * @param array         $data the parameters we're getting ready to submit
@@ -73,7 +76,7 @@ class SearchForm
      * @param  string $key the name of the parameter
      * @param  string $value the value of the parameter
      * @throws \RuntimeException
-     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new parameter added
      */
     public function set($key, $value)
     {
@@ -97,11 +100,11 @@ class SearchForm
                     $data[$key] = $value;
                 }
             }
-
-            return new SearchForm($this->api, $this->form, $data);
         } else {
-            return $this;
+            $data = $this->data;
         }
+
+        return new SearchForm($this->api, $this->form, $data);
     }
 
     /**
@@ -109,7 +112,7 @@ class SearchForm
      *
      * @api
      * @param  string|\Prismic\Ref $ref the ref we wish to query on, or its ID.
-     * @return \Prismic\SearchForm the current SearchForm object, with the new ref parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new ref parameter added
      */
     public function ref($ref)
     {
@@ -124,7 +127,7 @@ class SearchForm
      *
      * @api
      * @param  string            $documentId
-     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new after parameter added
      */
     public function after($documentId)
     {
@@ -136,7 +139,7 @@ class SearchForm
      *
      * @api
      * @param  array            $fields
-     * @return \Prismic\SearchForm the current SearchForm object, with the new parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetch parameter added
      */
     public function fetch($fields)
     {
@@ -151,7 +154,7 @@ class SearchForm
      *
      * @api
      * @param  array            $fields
-     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
      */
     public function fetchLinks($fields)
     {
@@ -166,7 +169,7 @@ class SearchForm
      *
      * @api
      * @param  int                 $pageSize
-     * @return \Prismic\SearchForm the current SearchForm object, with the new pageSize parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new pageSize parameter added
      */
     public function pageSize($pageSize)
     {
@@ -178,7 +181,7 @@ class SearchForm
      *
      * @api
      * @param  int                 $page
-     * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new page parameter added
      */
     public function page($page)
     {
@@ -190,7 +193,7 @@ class SearchForm
      *
      * @api
      * @param  string              $orderings
-     * @return \Prismic\SearchForm the current SearchForm object, with the new orderings parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new orderings parameter added
      */
     public function orderings()
     {
@@ -251,7 +254,7 @@ class SearchForm
      * Set the query's predicates themselves.
      * You can pass a String representing a query as parameter, or one or multiple Predicates to build an "AND" query
      *
-     * @return \Prismic\SearchForm the current SearchForm object, with the new page parameter added
+     * @return \Prismic\SearchForm a clone of the SearchForm object with the new predicate or predicates added
      */
     public function query()
     {
