@@ -20,6 +20,19 @@ namespace Prismic\Cache;
 class NoCache implements CacheInterface
 {
     /**
+     * Tests whether the cache has a value for a particular key
+     *
+     * @api
+     *
+     * @param string $key the key of the cache entry
+     * @return boolean true if the cache has a value for this key, otherwise false
+     */
+    public function has($key)
+    {
+        return false;
+    }
+
+    /**
      * Returns the value of a cache entry from its key
      *
      * @api

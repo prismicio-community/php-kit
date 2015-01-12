@@ -315,7 +315,7 @@ class SearchForm
      */
     public function isCached()
     {
-        return $this->api->getCache()->get($this->cache_key()) !== null;
+        return $this->api->getCache()->has($this->cache_key());
     }
 
     /**
