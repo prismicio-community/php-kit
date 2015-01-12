@@ -66,7 +66,7 @@ class Date implements FragmentInterface
      */
     public function asDateTime()
     {
-        return DateTime::createFromFormat('Y-m-d', $this->value);
+        return DateTime::createFromFormat('Y-m-d', $this->value)->setTime(0, 0, 0);
     }
 
     /**
