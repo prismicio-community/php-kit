@@ -100,6 +100,20 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("U0w8OwEAACoAQEvB", $linkedDocuments[0]->getId());
     }
 
+    public function testAfter()
+    {
+        $api = Api::get(self::$testRepository);
+        $masterRef = $api->master()->getRef();
+        $results = $api->forms()->products
+            ->orderings('[my.product.price]')
+            ->after('UlfoxUnM0wkXYXbI')
+            ->ref($masterRef)
+            ->submit()
+            ->getResults();
+        $this->assertEquals(count($results), 10);
+        $this->assertEquals($results[0]->getId(), "UlfoxUnM0wkXYXbG");
+    }
+
     public function testImmutableObjectCache()
     {
         $api = Api::get(self::$testRepository);
