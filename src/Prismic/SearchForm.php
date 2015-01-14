@@ -286,16 +286,6 @@ class SearchForm
     }
 
     /**
-     * Get the cache key for this form
-     *
-     * @return string the cache key
-     */
-    private function cache_key()
-    {
-        return $this->url();
-    }
-
-    /**
      * Checks if the results for this form are already cached
      *
      * @api
@@ -304,7 +294,7 @@ class SearchForm
      */
     public function isCached()
     {
-        return $this->api->getCache()->has($this->cache_key());
+        return $this->api->getCache()->has($this->url());
     }
 
     /**
@@ -320,7 +310,7 @@ class SearchForm
             $this->form->getAction()
         ) {
             $url = $this->url();
-            $cacheKey = $this->cache_key();
+            $cacheKey = $this->url();
 
             $response = $this->api->getCache()->get($cacheKey);
 
