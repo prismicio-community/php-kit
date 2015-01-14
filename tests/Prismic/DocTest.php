@@ -32,6 +32,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", "MC5-XXXXXXX-vRfvv70");
             // This will fail because the token is invalid, but this is how to access a private API
             // endgist
+            $this->fail('The API->get call should have thrown');
         } catch (ClientErrorResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 401);
         }
