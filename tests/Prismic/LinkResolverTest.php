@@ -23,15 +23,15 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
         $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array());
         $this->link = new DocumentLink($this->id, null, $type, $tags, $slugs[0], array(), $isBroken);
-        $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
         $response->expects($this->once())->method('getBody')->will($this->returnValue(file_get_contents(__DIR__.'/../fixtures/data.json')));
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $request->expects($this->any())->method('send')->will($this->returnValue($response));
-        $client = $this->getMock('Guzzle\Http\Client');
-        $client->expects($this->any())->method('get')->will($this->returnValue($request));
-        $this->api = Api::get('don\'t care about this value', null, $client, $cache);
+
+        $httpAdapter = $this->getMock('Ivory\HttpAdapter\HttpAdapterInterface');
+        $httpAdapter->expects($this->any())->method('get')->will($this->returnValue($response));
+
+        $this->api = Api::get('don\'t care about this value', null, $httpAdapter, $cache);
     }
 
     public function testResolveDocumentLink()

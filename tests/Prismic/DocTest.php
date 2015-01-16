@@ -3,7 +3,7 @@
 namespace Prismic\Test;
 
 use DateTime;
-use Guzzle\Http\Exception\ClientErrorResponseException;
+use Ivory\HttpAdapter\HttpAdapterException;
 use Prismic\Api;
 use Prismic\Cache\DefaultCache;
 use Prismic\Document;
@@ -33,7 +33,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             // This will fail because the token is invalid, but this is how to access a private API
             // endgist
             $this->fail('The API->get call should have thrown');
-        } catch (ClientErrorResponseException $e) {
+        } catch (HttpAdapterException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 401);
         }
     }
