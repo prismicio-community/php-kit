@@ -12,6 +12,7 @@
 
     "require": {
         "php": ">=5.3.3",
+        "ext-curl": "*",
         "ext-json": "*",
         "egeloen/http-adapter": "~0.1"
     },
