@@ -16,7 +16,7 @@ use Prismic\Fragment\Block\ImageBlock;
 use Prismic\Fragment\Block\ListItemBlock;
 use Prismic\Fragment\Block\ParagraphBlock;
 use Prismic\Fragment\Block\PreformattedBlock;
-use Prismic\Fragment\Block\TextInterface;
+use Prismic\Fragment\Block\TextBlock;
 use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\FileLink;
 use Prismic\Fragment\Link\ImageLink;
@@ -73,7 +73,7 @@ class StructuredText implements FragmentInterface
     public function asText()
     {
         $result = array_map(function ($block) {
-            return $block instanceof TextInterface ? $block->getText() : '';
+            return $block instanceof TextBlock ? $block->getText() : '';
         }, $this->blocks);
 
         return join("\n\n", $result);

@@ -13,25 +13,12 @@ namespace Prismic\Fragment\Block;
 /**
  * This class embodies a heading (title) block inside a StructuredText fragment.
  */
-class HeadingBlock implements TextInterface
+class HeadingBlock extends TextBlock
 {
-    /**
-     * @var string the unformatted text of the heading
-     */
-    private $text;
-    /**
-     * @var array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
-     */
-    private $spans;
     /**
      * @var string the heading's level (currently, either 1, 2 or 3)
      */
     private $level;
-    /**
-     * @var string the label (optional, may be null)
-     */
-    private $label;
-
 
     /**
      * Constructs an heading block.
@@ -43,34 +30,8 @@ class HeadingBlock implements TextInterface
      */
     public function __construct($text, $spans, $level, $label = NULL)
     {
-        $this->text = $text;
-        $this->spans = $spans;
         $this->level = $level;
-        $this->label = $label;
-    }
-
-    /**
-     * Returns the unformatted text.
-     *
-     * @api
-     *
-     * @return string the unformatted text.
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Returns the formatting (em, strong, links, ...)
-     *
-     * @api
-     *
-     * @return array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting
-     */
-    public function getSpans()
-    {
-        return $this->spans;
+        parent::__construct($text, $spans, $label);
     }
 
     /**
@@ -85,15 +46,4 @@ class HeadingBlock implements TextInterface
         return $this->level;
     }
 
-    /**
-     * Returns the label
-     *
-     * @api
-     *
-     * @return string the label
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
 }

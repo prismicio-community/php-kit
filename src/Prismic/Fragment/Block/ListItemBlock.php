@@ -13,25 +13,12 @@ namespace Prismic\Fragment\Block;
 /**
  * This class embodies a list item block inside a StructuredText fragment.
  */
-class ListItemBlock implements TextInterface
+class ListItemBlock extends TextBlock
 {
-
-    /**
-     * @var string the unformatted text of the list item
-     */
-    private $text;
-    /**
-     * @var array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
-     */
-    private $spans;
     /**
      * @var boolean true if part of an ordered list, false if unordered
      */
     private $ordered;
-    /**
-     * @var string the label (optional, may be null)
-     */
-    private $label;
 
     /**
      * Constructs a list item block.
@@ -41,36 +28,10 @@ class ListItemBlock implements TextInterface
      * @param boolean $ordered true if part of an ordered list, false if unordered
      * @param $label string
      */
-    public function __construct($text, $spans, $ordered, $label = NULL)
+    public function __construct($text, $spans, $ordered, $label = null)
     {
-        $this->text = $text;
-        $this->spans = $spans;
         $this->ordered = $ordered;
-        $this->label = $label;
-    }
-
-    /**
-     * Returns the unformatted text.
-     *
-     * @api
-     *
-     * @return string the unformatted text.
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Returns the formatting (em, strong, links, ...)
-     *
-     * @api
-     *
-     * @return array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting
-     */
-    public function getSpans()
-    {
-        return $this->spans;
+        parent::__construct($text, $spans, $label);
     }
 
     /**
@@ -85,15 +46,4 @@ class ListItemBlock implements TextInterface
         return $this->ordered;
     }
 
-    /**
-     * Returns the label
-     *
-     * @api
-     *
-     * @return string the label
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
 }

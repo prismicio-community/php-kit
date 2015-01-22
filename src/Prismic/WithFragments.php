@@ -11,7 +11,7 @@
 namespace Prismic;
 
 use Prismic\Fragment\Block\ImageBlock;
-use Prismic\Fragment\Block\TextInterface;
+use Prismic\Fragment\Block\TextBlock;
 use Prismic\Fragment\Color;
 use Prismic\Fragment\Date;
 use Prismic\Fragment\Embed;
@@ -66,7 +66,7 @@ class WithFragments {
             }
             if ($fragment instanceof StructuredText) {
                 foreach ($fragment->getBlocks() as $block) {
-                    if ($block instanceof TextInterface) {
+                    if ($block instanceof TextBlock) {
                         foreach ($block->getSpans() as $span) {
                             if ($span instanceof HyperlinkSpan) {
                                 if ($span->getLink() instanceof DocumentLink) {
@@ -169,7 +169,7 @@ class WithFragments {
         if (isset($fragment) && $fragment instanceof StructuredText) {
             $text = "";
             foreach ($fragment->getBlocks() as $block) {
-                if ($block instanceof TextInterface) {
+                if ($block instanceof TextBlock) {
                     $text = $text . $block->getText();
                     $text = $text . "\n";
                 }
