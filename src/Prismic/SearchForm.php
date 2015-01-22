@@ -135,33 +135,39 @@ class SearchForm
     }
 
     /**
-     * Set the fetch parameter: restrict the fields to retrieve for a document
+     * Set the fetch parameter: restrict the fields to retrieve for a document. You can pass in parameter
+     * an array of strings, or several strings.
      *
      * @api
-     * @param  array            $fields
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetch parameter added
      */
-    public function fetch($fields)
+    public function fetch()
     {
-        if (is_array($fields)) {
-            $fields = join(",", $fields);
+        $numargs = func_num_args();
+        if ($numargs == 1 && is_array(func_get_arg(0))) {
+            $fields = func_get_arg(0);
+        } else {
+            $fields = func_get_args();
         }
-        return $this->set("fetch", $fields);
+        return $this->set("fetch", join(",", $fields));
     }
 
     /**
-     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink
+     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink, You can pass in parameter
+     * an array of strings, or several strings.
      *
      * @api
-     * @param  array            $fields
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
      */
-    public function fetchLinks($fields)
+    public function fetchLinks()
     {
-        if (is_array($fields)) {
-            $fields = join(",", $fields);
+        $numargs = func_num_args();
+        if ($numargs == 1 && is_array(func_get_arg(0))) {
+            $fields = func_get_arg(0);
+        } else {
+            $fields = func_get_args();
         }
-        return $this->set("fetchLinks", $fields);
+        return $this->set("fetchLinks", join(",", $fields));
     }
 
     /**
@@ -259,7 +265,7 @@ class SearchForm
     public function query()
     {
         $numargs = func_num_args();
-        if ($numargs == 0) return $this;
+        if ($numargs == 0) return clone $this;
         $first = func_get_arg(0);
         if ($numargs == 1 && is_string($first)) {
             return $this->set("q", $first);
@@ -339,19 +345,4 @@ class SearchForm
         throw new \RuntimeException("Form type not supported");
     }
 
-    /**
-     * Clean the query
-     *
-     * @param string $str
-     *
-     * @return string
-     */
-    private static function strip($str)
-    {
-        $trimmed = trim($str);
-        $drop1 = substr($trimmed, 1, strlen($trimmed));
-        $dropR1 = substr($drop1, 0, strlen($drop1) - 1);
-
-        return $dropR1;
-    }
 }
