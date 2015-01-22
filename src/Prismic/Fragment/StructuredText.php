@@ -391,7 +391,7 @@ class StructuredText implements FragmentInterface
         return $doc->saveHTML();
     }
 
-    private static function spanToDom($doc, $span, $content, $linkResolver)
+    public static function spanToDom($doc, $span, $content, $linkResolver)
     {
         // Decide element type and attributes based on span class
         $attributes = array();

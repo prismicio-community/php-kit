@@ -243,8 +243,6 @@ class WithFragments {
     {
         $fragment = $this->get($field);
         if (isset($fragment) && $fragment instanceof Text) {
-            $value = strtolower($fragment->getValue());
-
             return in_array(strtolower($fragment->getValue()), array(
                 'yes',
                 'true',
