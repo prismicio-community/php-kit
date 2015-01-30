@@ -291,7 +291,7 @@ class StructuredText implements FragmentInterface
     public static function insertSpans($text, $spans, $linkResolver = null)
     {
         if (empty($spans)) {
-            return htmlentities($text);
+            return htmlentities($text, null, 'UTF-8');
         }
 
         $doc = new \DOMDocument;
@@ -314,7 +314,7 @@ class StructuredText implements FragmentInterface
                 $meat = $node->splitText($span->getStart() - $start);
                 $tail = $meat->splitText($span->getEnd() - $span->getStart());
 
-                $spanNode = StructuredText::spanToDom($node->ownerDocument, $span, htmlentities($meat->textContent), $linkResolver);
+                $spanNode = StructuredText::spanToDom($node->ownerDocument, $span, htmlentities($meat->textContent, null, 'UTF-8'), $linkResolver);
 
                 if ($spanNode != null) {
                     // Replace the original meat text node with the span
