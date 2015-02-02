@@ -15,7 +15,8 @@ use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use \Prismic\Cache\CacheInterface;
-use \Prismic\Cache\DefaultCache;
+use \Prismic\Cache\ApcCache;
+use \Prismic\Cache\NoCache;
 
 const PREVIEW_COOKIE = "io.prismic.preview";
 
@@ -63,7 +64,7 @@ class Api
         $this->data        = $data;
         $this->accessToken = $accessToken;
         $this->httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
-        $this->cache = is_null($cache) ? new DefaultCache() : $cache;
+        $this->cache = is_null($cache) ? self::defaultCache() : $cache;
     }
 
     /**
@@ -291,7 +292,7 @@ class Api
      */
     public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null)
     {
-        $cache = is_null($cache) ? new DefaultCache() : $cache;
+        $cache = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
         $apiData = $cache->get($cacheKey);
         $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpAdapter, $cache) : null;
@@ -331,6 +332,17 @@ class Api
 
             return $api;
         }
+    }
+
+    /**
+     * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
+     */
+    public static function defaultCache()
+    {
+        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+            return new ApcCache();
+        }
+        return new NoCache();
     }
 
     /**

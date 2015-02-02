@@ -2,13 +2,15 @@
 
 namespace Prismic\Test;
 
+use Prismic\Cache\ApcCache;
+
 class CacheTest extends \PHPUnit_Framework_TestCase
 {
     private $cache;
 
     protected function setUp()
     {
-        $this->cache = new \Prismic\Cache\DefaultCache();
+        $this->cache = new ApcCache();
     }
 
     public function testSetGetValue()

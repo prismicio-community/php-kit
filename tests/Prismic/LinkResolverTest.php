@@ -3,6 +3,7 @@
 namespace Prismic\Test;
 
 use Prismic\API;
+use Prismic\Cache\ApcCache;
 use Prismic\Document;
 use Prismic\Fragment\Link\DocumentLink;
 
@@ -12,7 +13,7 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $cache = new \Prismic\Cache\DefaultCache();
+        $cache = new ApcCache();
         $cache->clear();
         $this->linkResolver = new FakeLinkResolver();
         $this->id = 'Ue0EDd_mqb8Dhk3j';

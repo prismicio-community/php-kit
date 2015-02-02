@@ -14,7 +14,7 @@ namespace Prismic\Cache;
  * The default implementation that is passed in the Api object when created:
  * it is based on APC, and therefore requires APC to be installed on the server.
  */
-class DefaultCache implements CacheInterface
+class ApcCache implements CacheInterface
 {
     /**
      * Tests whether the cache has a value for a particular key

@@ -5,7 +5,7 @@ namespace Prismic\Test;
 use DateTime;
 use Ivory\HttpAdapter\HttpAdapterException;
 use Prismic\Api;
-use Prismic\Cache\DefaultCache;
+use Prismic\Cache\ApcCache;
 use Prismic\Document;
 use Prismic\Predicates;
 
@@ -337,7 +337,7 @@ public function testCache() {
         // startgist:e0098caad8be5db00db7:prismic-cache.php
         // You can pass any class implementing the CacheInterface to the Api creation
         // http://prismicio.github.io/php-kit/classes/Prismic.Cache.CacheInterface.html
-        $fileCache = new DefaultCache();
+        $fileCache = new ApcCache();
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", null /* token */, null /* client */, $fileCache);
         // endgist
         $this->assertNotNull($api);

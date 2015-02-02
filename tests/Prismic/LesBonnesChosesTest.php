@@ -3,6 +3,7 @@
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Cache\ApcCache;
 use Prismic\Response;
 use Prismic\Predicates;
 
@@ -14,7 +15,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $cache = new \Prismic\Cache\DefaultCache();
+        $cache = new ApcCache();
         $cache->clear();
     }
 
