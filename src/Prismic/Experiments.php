@@ -33,7 +33,7 @@ class Experiments {
     public function refFromCookie($cookie)
     {
         if ($cookie == null) return null;
-        $splitted = preg_split("/%20/", trim($cookie));
+        $splitted = preg_split("/\040/", $cookie);
 
         if (count($splitted) >= 2)
         {
