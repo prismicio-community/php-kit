@@ -72,7 +72,7 @@ class Predicates {
         if ($after instanceof DateTime) {
             $after = $after->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.date-between", $fragment, array($before, $after));
+        return new SimplePredicate("date.between", $fragment, array($before, $after));
     }
 
     public static function dayOfMonth($fragment, $day) {
