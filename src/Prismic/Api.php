@@ -211,7 +211,7 @@ class Api
      */
     public function previewSession($token, $linkResolver, $defaultUrl)
     {
-        $response = $this->getHttpAdapter()->url($token);
+        $response = $this->getHttpAdapter()->get($token);
         $response = json_decode($response->getBody(true));
         if (isset($response->mainDocument)) {
             $documents = $this->forms()->everything
