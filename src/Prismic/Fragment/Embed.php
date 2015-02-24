@@ -92,7 +92,19 @@ class Embed implements FragmentInterface
     }
 
     /**
-     * Builds a text version of the Embed fragment.
+     * Get the the OEmbed resource's JSON.
+     *
+     * @api
+     *
+     * @return \stdClass
+     */
+    public function asJson()
+    {
+        return $this->oembedJson;
+    }
+
+    /**
+     * Get the full JSON oEmbed code.
      *
      * @api
      *
