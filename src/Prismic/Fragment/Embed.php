@@ -92,7 +92,79 @@ class Embed implements FragmentInterface
     }
 
     /**
-     * Builds a text version of the Embed fragment.
+     * Get the the OEmbed type
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get the the OEmbed provider
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * Get the the OEmbed url
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Get the the OEmbed width
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getWidth()
+    {
+        return $this->maybeWidth;
+    }
+
+    /**
+     * Get the the OEmbed height
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getHeight()
+    {
+        return $this->maybeHeight;
+    }
+
+    /**
+    * Get the the OEmbed resource's JSON.
+    *
+    * @api
+    *
+    * @return \stdClass
+    */
+    public function getOEmbedJson()
+    {
+        return $this->oembedJson;
+    }
+
+    /**
+     * Get the full JSON oEmbed code.
      *
      * @api
      *
