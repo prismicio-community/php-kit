@@ -347,6 +347,7 @@ class Api
 
     /**
      * The default configuration of the HTTP adapter used in the kit; this is entirely overridable by passing
+     * an instance of Ivory\HttpAdapter\HttpAdapterInterface to Api.get
      */
     public static function defaultHttpAdapter()
     {
