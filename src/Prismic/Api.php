@@ -352,7 +352,7 @@ class Api
     public static function defaultHttpAdapter()
     {
         $configuration = new Configuration();
-        $configuration->getUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
+        $configuration->setUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
 
         // We need to add the subscriber to have errors on 4.x.x and 5.x.x.
         $statusCodeSubscriber = new StatusCodeSubscriber();
