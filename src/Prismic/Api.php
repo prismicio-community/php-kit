@@ -10,6 +10,7 @@
 
 namespace Prismic;
 
+use Ivory\HttpAdapter\ConfigurationInterface;
 use Ivory\HttpAdapter\Configuration;
 use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
@@ -346,10 +347,15 @@ class Api
     }
 
     /**
-     * The default configuration of the HTTP adapter used in the kit; this is entirely overridable by passing
-     * an instance of Ivory\HttpAdapter\HttpAdapterInterface to Api.get
+     * Get the default HTTP adapter configuration object
+     *
+     * This can be used for example to modify but not completely replace the
+     * default configuration (e.g. to prefix the user agent string), or to use
+     * the default configuration for a non-default HTTP adapter.
+     *
+     * @return \Ivory\HttpAdapter\ConfigurationInterface Configuration object
      */
-    public static function defaultHttpAdapter()
+    public static function defaultHttpAdapterConfiguration()
     {
         $configuration = new Configuration();
         $configuration->setUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
@@ -358,6 +364,23 @@ class Api
         $statusCodeSubscriber = new StatusCodeSubscriber();
         $configuration->getEventDispatcher()->addSubscriber($statusCodeSubscriber);
 
+        return $configuration;
+    }
+
+    /**
+     * Get the default HTTP adapter used in the kit; this is entirely
+     * overridable by passing an instance of
+     * Ivory\HttpAdapter\HttpAdapterInterface to Api.get
+     *
+     * @param ConfigurationInterface|null $configuruation Configuration object;
+     * use default if null
+     * @return HttpAdapterInterface HTTP adapter
+     */
+    public static function defaultHttpAdapter(ConfigurationInterface $configuration = null)
+    {
+        if ($configuration === null) {
+            $configuration = self::defaultHttpAdapterConfiguration();
+        }
         return new CurlHttpAdapter($configuration);
     }
 }
