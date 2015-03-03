@@ -14,6 +14,7 @@ use Ivory\HttpAdapter\Configuration;
 use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
 use \Prismic\Cache\NoCache;
@@ -50,6 +51,10 @@ class Api
      * @var HttpAdapterInterface
      */
     private $httpAdapter;
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
 
     /**
      * Private constructor, not be used outside of this class.
@@ -65,6 +70,7 @@ class Api
         $this->accessToken = $accessToken;
         $this->httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
         $this->cache = is_null($cache) ? self::defaultCache() : $cache;
+        $this->dispatcher = new EventDispatcher();
     }
 
     /**
@@ -264,6 +270,17 @@ class Api
     public function getCache()
     {
         return $this->cache;
+    }
+
+    /**
+     * Accessing the event dispatcher
+     *
+     * @return EventDispatcher the event dispatcher
+     *
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
     /**
