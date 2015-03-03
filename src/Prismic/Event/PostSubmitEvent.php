@@ -50,6 +50,16 @@ class PostSubmitEvent extends Event
     }
 
     /**
+     * Get the object representing the JSON response from Prismic
+     *
+     * @return stdClass JSON
+     */
+    public function getJson()
+    {
+        return $this->json;
+    }
+
+    /**
      * Was the response a cache hit?
      *
      * @return boolean true if the response came from the cache
