@@ -17,6 +17,7 @@ use Prismic\Fragment\Date;
 use Prismic\Fragment\Embed;
 use Prismic\Fragment\GeoPoint;
 use Prismic\Fragment\Group;
+use Prismic\Fragment\SliceZone;
 use Prismic\Fragment\Image;
 use Prismic\Fragment\ImageView;
 use Prismic\Fragment\Link\DocumentLink;
@@ -598,6 +599,11 @@ class WithFragments {
             if ($json->type === "Group") {
                 return Group::parse($json->value);
             }
+
+            if ($json->type === "SliceZone") {
+                return SliceZone::parse($json->value);
+            }
+
             return null;
         }
     }

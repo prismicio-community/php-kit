@@ -41,4 +41,13 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<a href="http://prismic.io">http://prismic.io</a>', $link->asHtml());
     }
 
+    public function testSlices()
+    {
+        $response = json_decode(file_get_contents(__DIR__.'/../fixtures/slices.json'));
+        $document = Document::parse($response->results[0]);
+        $slices = $document->get('article.blocks');
+        $this->assertEquals($slices->asText(), "C'est un bloc content");
+        $this->assertEquals($slices->asHtml(), "<section data-field=\"illustration\"><img src=\"https://wroomdev.s3.amazonaws.com/toto/db3775edb44f9818c54baa72bbfc8d3d6394b6ef_hsf_evilsquall.jpg\" alt=\"\" width=\"4285\" height=\"709\"></section><section data-field=\"title\"><span class=\"text\">c'est un bloc features</span></section><p>C'est un bloc content</p>");
+    }
+
 }

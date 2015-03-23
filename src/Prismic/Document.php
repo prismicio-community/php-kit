@@ -25,6 +25,7 @@ use Prismic\Fragment\Link\WebLink;
 use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Group;
+use Prismic\Fragment\SliceZone;
 
 /**
  * Embodies a document retrieved from the API, which we'll be able to manipulate.
