@@ -10,6 +10,7 @@
 
 namespace Prismic\Fragment;
 
+use Prismic\Fragment\Block\BlockInterface;
 use Prismic\Fragment\Block\EmbedBlock;
 use Prismic\Fragment\Block\HeadingBlock;
 use Prismic\Fragment\Block\ImageBlock;
@@ -21,6 +22,7 @@ use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\FileLink;
 use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\WebLink;
+use Prismic\Fragment\Span\SpanInterface;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
@@ -288,7 +290,7 @@ class StructuredText implements FragmentInterface
      *
      * @return string the HTML version of the block
      */
-    public static function insertSpans($text, $spans, $linkResolver = null)
+    public static function insertSpans($text, array $spans, $linkResolver = null)
     {
         if (empty($spans)) {
             return htmlentities($text, null, 'UTF-8');
@@ -357,6 +359,14 @@ class StructuredText implements FragmentInterface
 
     }
 
+    /**
+     * Return the HTML representation of $element
+     *
+     * @param BlockInterface|SpanInterface $element block or span to serialize
+     * @param string $content inner html of the element
+     * @param LinkResolver $linkResolver
+     * @param HtmlSerializer $htmlSerializer
+     */
     private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
         if (!is_null($htmlSerializer)) {
             $custom = $htmlSerializer($element, $content);
@@ -391,7 +401,15 @@ class StructuredText implements FragmentInterface
         return $doc->saveHTML();
     }
 
-    public static function spanToDom($doc, $span, $content, $linkResolver)
+    /**
+     * Create a DOM node from a Span. For internal use only.
+     *
+     * @param \DOMDocument $doc the document to create the node in
+     * @param Span $span
+     * @param string $content
+     * @param LinkResolver $linkResolver
+     */
+    public static function spanToDom(\DOMDocument $doc, SpanInterface $span, $content, $linkResolver)
     {
         // Decide element type and attributes based on span class
         $attributes = array();
