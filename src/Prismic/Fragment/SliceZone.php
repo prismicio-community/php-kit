@@ -96,7 +96,12 @@ class SliceZone implements FragmentInterface
         $slices = array();
         foreach ($json as $slicejson) {
             if (property_exists($slicejson, "slice_type") && property_exists($slicejson, "slice_type")) {
-                array_push($slices, new Slice($slicejson->slice_type, WithFragments::parseFragment($slicejson->value)));
+                if (property_exists($slicejson, "slice_label")) {
+                    $label = $slicejson->slice_label;
+                } else {
+                    $label = null;
+                }
+                array_push($slices, new Slice($slicejson->slice_type, $label, WithFragments::parseFragment($slicejson->value)));
             }
         }
 

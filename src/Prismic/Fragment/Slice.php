@@ -24,11 +24,13 @@ class Slice implements FragmentInterface
      * Constructs a Slice object.
      *
      * @param string            $sliceType   the type of the slice as describe in the document mask
+     * @param string            $label  the optional label (may be null)
      * @param Prismic\Fragment  $value       the inner fragment
      */
-    public function __construct($sliceType, $value)
+    public function __construct($sliceType, $label, $value)
     {
         $this->sliceType = $sliceType;
+        $this->label = $label;
         $this->value = $value;
     }
 
@@ -68,6 +70,18 @@ class Slice implements FragmentInterface
     public function getSliceType()
     {
         return $this->sliceType;
+    }
+
+    /**
+     * Returns the slice label as declared in the Document Mask.
+     *
+     * @api
+     *
+     * @return  fragment the inner value of the fragment
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     /**
