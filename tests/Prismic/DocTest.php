@@ -18,7 +18,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testApi()
     {
-        // startgist:d496c58cd598372c4dca:prismic-api.php
+        // startgist:92d13d20c32f20771fd4:prismic-api.php
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $masterRef = $api->master();
         // endgist
@@ -28,7 +28,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testApiPrivate()
     {
         try {
-            // startgist:e17afdbcd850666f5250:prismic-apiPrivate.php
+            // startgist:770d45dd11dcd3758d45:prismic-apiPrivate.php
             $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", "MC5-XXXXXXX-vRfvv70");
             // This will fail because the token is invalid, but this is how to access a private API
             // endgist
@@ -40,7 +40,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testApiReferences()
     {
-        // startgist:02bb6d1e353e9928b145:prismic-references.php
+        // startgist:194ff19cce10a0efc06c:prismic-references.php
         $previewToken = 'MC5VbDdXQmtuTTB6Z0hNWHF3.c--_vVbvv73vv73vv73vv71EA--_vS_vv73vv70T77-9Ke-_ve-_vWfvv70ebO-_ve-_ve-_vQN377-9ce-_vRfvv70';
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api", $previewToken);
         $stPatrickRef = $api->getRef("St-Patrick specials");
@@ -58,7 +58,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testSimpleQuery()
     {
-        // startgist:0b3cb9192c22e8f51159:prismic-simplequery.php
+        // startgist:fcf889892537d1db5601:prismic-simplequery.php
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()->everything
@@ -72,7 +72,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testOrderings()
     {
-    // startgist:fd35a327963b0b5dcfcd:prismic-orderings.php
+    // startgist:b69742d9a4141e1ddc84:prismic-orderings.php
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()->everything
@@ -89,7 +89,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testPredicates()
     {
-        // startgist:6a642512ec2225c35dae:prismic-predicates.php
+        // startgist:00f2eea266ee1557e6fc:prismic-predicates.php
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()
@@ -105,7 +105,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testAllPredicates()
     {
-        // startgist:5e6f8edbf33d5f48353a:prismic-allPredicates.php
+        // startgist:7a6da96d9e6f94269057:prismic-allPredicates.php
         // "at" predicate: equality of a fragment to a value.
         $at = Predicates::at("document.type", "article");
         // "any" predicate: equality of a fragment to a value.
@@ -128,7 +128,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbX"))
             ->ref($api->master()->getRef())
             ->submit();
-        // startgist:a393f555bb9b55c40f8b:prismic-asHtml.php
+        // startgist:d20fd1ff6d35d596ac63:prismic-asHtml.php
         $results = $response->getResults();
         $doc = $results[0];
         // The resolver is defined here:
@@ -141,7 +141,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testHtmlSerializer()
     {
-        // startgist:3263b52d6dc07b792d26:prismic-htmlSerializer.php
+        // startgist:df627c93ba2b303d7566:prismic-htmlSerializer.php
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
         $response = $api
             ->forms()
@@ -175,7 +175,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->submit()
             ->getResults();
         $doc = $documents[0];
-        // startgist:3c0a7a0781c8f8e0df77:prismic-getText.php
+        // startgist:9b3e2339057f78098a9e:prismic-getText.php
         $author = $doc->getText("blog-post.author");
         // endgist
         $this->assertEquals($author, "John M. Martelle, Fine Pastry Magazine");
@@ -192,7 +192,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->getResults();
 
         $doc = $documents[0];
-        // startgist:dda699a3184d9d887414:prismic-getNumber.php
+        // startgist:3bad4be2b4110ade4f85:prismic-getNumber.php
         // Number predicates
         $gt = Predicates::gt("my.product.price", 10);
         $lt = Predicates::lt("my.product.price", 20);
@@ -212,7 +212,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbl"))
             ->ref($api->master())->submit()->getResults();
         $doc = $results[0];
-        // startgist:713bded80cb0b2a5ed4d:prismic-dateTimestamp.php
+        // startgist:c6a5d3d570a585ea6941:prismic-dateTimestamp.php
         // Date and Timestamp predicates
         $dateBefore = Predicates::dateBefore("my.product.releaseDate", new DateTime('2014-6-1'));
         $dateAfter = Predicates::dateAfter("my.product.releaseDate", new DateTime('2014-1-1'));
@@ -245,7 +245,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testGroup() {
         $json = "{\"id\":\"abcd\",\"type\":\"article\",\"href\":\"\",\"slugs\":[],\"tags\":[],\"data\":{\"article\":{\"documents\":{\"type\":\"Group\",\"value\":[{\"linktodoc\":{\"type\":\"Link.document\",\"value\":{\"document\":{\"id\":\"UrDejAEAAFwMyrW9\",\"type\":\"doc\",\"tags\":[],\"slug\":\"installing-meta-micro\"},\"isBroken\":false}},\"desc\":{\"type\":\"StructuredText\",\"value\":[{\"type\":\"paragraph\",\"text\":\"A detailed step by step point of view on how installing happens.\",\"spans\":[]}]}},{\"linktodoc\":{\"type\":\"Link.document\",\"value\":{\"document\":{\"id\":\"UrDmKgEAALwMyrXA\",\"type\":\"doc\",\"tags\":[],\"slug\":\"using-meta-micro\"},\"isBroken\":false}}}]}}}}";
         $doc = Document::parse(json_decode($json));
-        // startgist:d5af2d2931614bbbc2d5:prismic-group.php
+        // startgist:71569b416f5f625884b2:prismic-group.php
         $group = $doc->getGroup("article.documents");
         $docs = array();
         if ($group) {
@@ -264,7 +264,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testLink() {
         $json = "{\"id\":\"abcd\",\"type\":\"article\",\"href\":\"\",\"slugs\":[],\"tags\":[],\"data\":{\"article\":{\"source\":{\"type\":\"Link.document\",\"value\":{\"document\":{\"id\":\"UlfoxUnM0wkXYXbE\",\"type\":\"product\",\"tags\":[\"Macaron\"],\"slug\":\"dark-chocolate-macaron\"},\"isBroken\":false}}}}}";
         $doc = Document::parse(json_decode($json));
-        // startgist:103b79b033ea2ddb9909:prismic-link.php
+        // startgist:d155c5360e9dfafc64da:prismic-link.php
         // The resolver is defined here:
         // https://github.com/prismicio/php-kit/blob/master/tests/Prismic/FakeLinkResolver.php
         $resolver = new FakeLinkResolver();
@@ -280,7 +280,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testEmbed() {
         $json = "{\"id\":\"abcd\",\"type\":\"article\",\"href\":\"\",\"slugs\":[],\"tags\":[],\"data\":{\"article\":{\"video\":{\"type\":\"Embed\",\"value\":{\"oembed\":{\"provider_url\":\"http://www.youtube.com/\",\"type\":\"video\",\"thumbnail_height\":360,\"height\":270,\"thumbnail_url\":\"http://i1.ytimg.com/vi/baGfM6dBzs8/hqdefault.jpg\",\"width\":480,\"provider_name\":\"YouTube\",\"html\":\"<iframe width=\\\"480\\\" height=\\\"270\\\" src=\\\"http://www.youtube.com/embed/baGfM6dBzs8?feature=oembed\\\" frameborder=\\\"0\\\" allowfullscreen></iframe>\",\"author_name\":\"Siobhan Wilson\",\"version\":\"1.0\",\"author_url\":\"http://www.youtube.com/user/siobhanwilsonsongs\",\"thumbnail_width\":480,\"title\":\"Siobhan Wilson - All Dressed Up\",\"embed_url\":\"https://www.youtube.com/watch?v=baGfM6dBzs8\"}}}}}}";
         $doc = Document::parse(json_decode($json));
-        // startgist:fcbcdfbf683128da9408:prismic-embed.php
+        // startgist:8ff313944f2731a168ba:prismic-embed.php
         $video = $doc->getEmbed("article.video");
         // Html is the code to include to embed the object, and depends on the embedded service
         $html = $video->asHtml();
@@ -291,7 +291,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testColor() {
         $json = "{\"id\":\"abcd\",\"type\":\"article\",\"href\":\"\",\"slugs\":[],\"tags\":[],\"data\":{\"article\":{\"background\":{\"type\":\"Color\",\"value\":\"#000000\"}}}}";
         $doc = Document::parse(json_decode($json));
-        // startgist:07de3df0c3859ff3b580:prismic-color.php
+        // startgist:074c0e5b84fd12593541:prismic-color.php
         $bgcolor = $doc->getColor("article.background")->asText();
         // endgist
         $this->assertEquals("#000000", $bgcolor);
@@ -300,7 +300,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     public function testGeoPoint() {
         $json = "{\"id\":\"abcd\",\"type\":\"article\",\"href\":\"\",\"slugs\":[],\"tags\":[],\"data\":{\"article\":{\"location\":{\"type\":\"GeoPoint\",\"value\":{\"latitude\":48.877108,\"longitude\":2.333879}}}}}";
         $doc = Document::parse(json_decode($json));
-        // startgist:19186e1e19895de7fceb:prismic-geopoint.php
+        // startgist:4a4024327fc8454bc809:prismic-geopoint.php
         // "near" predicate for GeoPoint fragments
         $near = Predicates::near("my.store.location", 48.8768767, 2.3338802, 10);
 
@@ -324,7 +324,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
             ->getResults();
 
         $doc = $documents[0];
-        // startgist:645c5b53467e1e281aa3:prismic-images.php
+        // startgist:c202e1c27ddedf88aa7f:prismic-images.php
         // Accessing image fields
         $image = $doc->getImage("product.image");
         // Most of the time you will be using the "main" view
@@ -334,7 +334,7 @@ class DocTest extends \PHPUnit_Framework_TestCase
     }
 
 public function testCache() {
-        // startgist:e0098caad8be5db00db7:prismic-cache.php
+        // startgist:56e7aa7b1be64e09f76f:prismic-cache.php
         // You can pass any class implementing the CacheInterface to the Api creation
         // http://prismicio.github.io/php-kit/classes/Prismic.Cache.CacheInterface.html
         $fileCache = new ApcCache();
