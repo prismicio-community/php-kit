@@ -55,7 +55,9 @@ class Group implements FragmentInterface
     {
         $string = "";
         foreach ($this->array as $groupdoc) {
+            $string .= '<div class="group-doc">';
             $string .= $groupdoc->asHtml($linkResolver);
+            $string .= '</div>';
         }
 
         return $string;

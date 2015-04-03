@@ -141,7 +141,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
         };
         $this->assertEquals(implode(' ', array_map($getSlug, $docchapterdocs)), "with-jquery with-bootstrap");
 
-        $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section>');
+        $this->assertEquals($docchapter->getGroup('docchapter.docs')->asHtml($this->linkResolver), '<div class="group-doc"><section data-field="linktodoc"><a href="http://host/doc/UrDofwEAALAdpbNH">with-jquery</a></section></div><div class="group-doc"><section data-field="linktodoc"><a href="http://host/doc/UrDp8AEAAPUdpbNL">with-bootstrap</a></section></div>');
     }
 
     public function testGetTimestamp()
