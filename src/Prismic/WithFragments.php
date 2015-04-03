@@ -468,6 +468,25 @@ class WithFragments {
     }
 
     /**
+     * Returns the SliceZone fragment as a manipulable object,
+     * and null of the fragment is of the wrong type, or if it doesn't exist.
+     * This is the point of entry to then loop or search through the elements inside the Group fragment.
+     *
+     * @api
+     * @param  string                  $field name of the fragment, with the document's type, like "product.gallery"
+     * @return \Prismic\Fragment\SliceZone the directly usable object, or null if the fragment is of the wrong type or unset
+     */
+    public function getSliceZone($field)
+    {
+        $fragment = $this->get($field);
+        if (isset($fragment) && $fragment instanceof SliceZone) {
+            return $fragment;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the Embed fragment as a manipulable object,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
