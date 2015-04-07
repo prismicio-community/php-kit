@@ -47,7 +47,7 @@ class Slice implements FragmentInterface
     {
         $classes = array('slice');
         if ($this->label != null) array_push($classes, $this->label);
-        return '<div class="' . implode(' ', $classes)  . '">'
+        return '<div data-slicetype="' . $this->sliceType . '" class="' . implode(' ', $classes)  . '">'
             . $this->value->asHtml($linkResolver)
             . '</div>';
     }
