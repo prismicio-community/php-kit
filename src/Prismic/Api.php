@@ -33,7 +33,7 @@ const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 class Api
 {
 
-    const VERSION = "1.5.1";
+    const VERSION = "1.5.2";
 
     /**
      * @var string the API's access token to be used with each API call
