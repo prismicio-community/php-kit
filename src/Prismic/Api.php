@@ -39,7 +39,7 @@ const EXPERIMENTS_COOKIE = Api::EXPERIMENTS_COOKIE;
 class Api
 {
 
-    const VERSION = "1.5.2";
+    const VERSION = "1.5.3";
 
     const PREVIEW_COOKIE = "io.prismic.preview";
 
