@@ -19,9 +19,15 @@ use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
 use \Prismic\Cache\NoCache;
 
-const PREVIEW_COOKIE = "io.prismic.preview";
+/**
+ * @deprecated deprecated since version 1.5.3, use Api::PREVIEW_COOKIE;
+ */
+const PREVIEW_COOKIE = Api::PREVIEW_COOKIE;
 
-const EXPERIMENTS_COOKIE = "io.prismic.experiment";
+/**
+ * @deprecated deprecated since version 1.5.3, use Api::EXPERIMENTS_COOKIE;
+ */
+const EXPERIMENTS_COOKIE = Api::EXPERIMENTS_COOKIE;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -34,6 +40,10 @@ class Api
 {
 
     const VERSION = "1.5.2";
+
+    const PREVIEW_COOKIE = "io.prismic.preview";
+
+    const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 
     /**
      * @var string the API's access token to be used with each API call
