@@ -204,7 +204,12 @@ class StructuredText implements FragmentInterface
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
-     * @param lambda $htmlSerializer an optional function to generate custom HTML code
+     * @param callable $htmlSerializer An optional callable to generate custom
+     * HTML code. It is passed $element, $content, $linkResolver and should
+     * return an HTML string when $element is a BlockInterface or a DOMElement
+     * when $element is a SpanInterface. It can return null to defer to the
+     * built-in serializer.
+     *
      * @return string the HTML version of the StructuredText fragment
      */
     public function asHtml($linkResolver = null, $htmlSerializer = null)
@@ -265,7 +270,7 @@ class StructuredText implements FragmentInterface
      * @param \Prismic\Fragment\Block\BlockInterface $block a given block
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
-     * @param lambda $htmlSerializer
+     * @param callable $htmlSerializer
      * @return string the HTML version of the block
      */
     public static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
@@ -276,7 +281,7 @@ class StructuredText implements FragmentInterface
             $block instanceof ListItemBlock ||
             $block instanceof PreformattedBlock)
         {
-            $content = StructuredText::insertSpans($block->getText(), $block->getSpans(), $linkResolver);
+            $content = StructuredText::insertSpans($block->getText(), $block->getSpans(), $linkResolver, $htmlSerializer);
         }
         return StructuredText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
@@ -287,10 +292,11 @@ class StructuredText implements FragmentInterface
      * @param string                 $text          the raw text of the block
      * @param array                  $spans         the spans of the block, as an array of \Prismic\Fragment\Span\SpanInterface objects
      * @param \Prismic\LinkResolver  $linkResolver  the link resolver
+     * @param callable               $htmlSerializer the HTML serializer
      *
      * @return string the HTML version of the block
      */
-    public static function insertSpans($text, array $spans, $linkResolver = null)
+    public static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
     {
         if (empty($spans)) {
             return htmlentities($text, null, 'UTF-8');
@@ -299,7 +305,7 @@ class StructuredText implements FragmentInterface
         $doc = new \DOMDocument;
         $doc->appendChild($doc->createTextNode($text));
 
-        $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver) {
+        $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver, $htmlSerializer) {
             // Get length of node's text content
             $nodeLength = mb_strlen($node->textContent, 'UTF-8');
 
@@ -316,9 +322,13 @@ class StructuredText implements FragmentInterface
                 $meat = $node->splitText($span->getStart() - $start);
                 $tail = $meat->splitText($span->getEnd() - $span->getStart());
 
-                $spanNode = StructuredText::spanToDom($node->ownerDocument, $span, htmlentities($meat->textContent, null, 'UTF-8'), $linkResolver);
+                // Get a new DOM node
+                $spanNode = StructuredText::spanToDom($span, htmlentities($meat->textContent, null, 'UTF-8'), $linkResolver, $htmlSerializer);
 
                 if ($spanNode != null) {
+                    // Import to this document
+                    $spanNode = $node->ownerDocument->importNode($spanNode, true);
+
                     // Replace the original meat text node with the span
                     $meat->parentNode->replaceChild($spanNode, $meat);
                 }
@@ -365,11 +375,11 @@ class StructuredText implements FragmentInterface
      * @param BlockInterface|SpanInterface $element block or span to serialize
      * @param string $content inner html of the element
      * @param LinkResolver $linkResolver
-     * @param HtmlSerializer $htmlSerializer
+     * @param callable $htmlSerializer
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
+    private static function serialize($element, $content, $linkResolver, $htmlSerializer = null) {
         if (!is_null($htmlSerializer)) {
-            $custom = $htmlSerializer($element, $content);
+            $custom = $htmlSerializer($element, $content, $linkResolver);
             if (!is_null($custom)) {
                 return $custom;
             }
@@ -397,20 +407,27 @@ class StructuredText implements FragmentInterface
 
         // Spans
         $doc = new \DOMDocument;
-        $doc->appendChild(StructuredText::spanToDom($doc, $element, $content, $linkResolver));
+        $doc->appendChild(StructuredText::spanToDom($element, $content, $linkResolver, $htmlSerializer));
         return $doc->saveHTML();
     }
 
     /**
      * Create a DOM node from a Span. For internal use only.
      *
-     * @param \DOMDocument $doc the document to create the node in
      * @param Span $span
      * @param string $content
      * @param LinkResolver $linkResolver
+     * @param callable $htmlSerializer
      */
-    public static function spanToDom(\DOMDocument $doc, SpanInterface $span, $content, $linkResolver)
+    public static function spanToDom(SpanInterface $span, $content, $linkResolver, $htmlSerializer = null)
     {
+        if (!is_null($htmlSerializer)) {
+            $custom = $htmlSerializer($span, $content, $linkResolver);
+            if (!is_null($custom)) {
+                return $custom;
+            }
+        }
+
         // Decide element type and attributes based on span class
         $attributes = array();
         if ($span instanceof StrongSpan) {
@@ -439,6 +456,7 @@ class StructuredText implements FragmentInterface
 
         // Make the new span element, and put the text from the meat
         // inside
+        $doc = new \DOMDocument;
         $spanNode = $doc->createElement($nodeName, $content);
         foreach ($attributes as $k => $v) {
             $spanNode->setAttribute($k, $v);
