@@ -10,7 +10,6 @@
 
 namespace Prismic\Fragment;
 
-use Prismic\Fragment\Block\BlockInterface;
 use Prismic\Fragment\Block\EmbedBlock;
 use Prismic\Fragment\Block\HeadingBlock;
 use Prismic\Fragment\Block\ImageBlock;
@@ -22,7 +21,6 @@ use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Link\FileLink;
 use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\WebLink;
-use Prismic\Fragment\Span\SpanInterface;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
@@ -296,67 +294,79 @@ class StructuredText implements FragmentInterface
             return htmlentities($text, null, 'UTF-8');
         }
 
-        $doc = new \DOMDocument;
-        $doc->appendChild($doc->createTextNode($text));
-
-        $iterateChildren = function ($node, $start, $span) use (&$iterateChildren, $linkResolver) {
-            // Get length of node's text content
-            $nodeLength = mb_strlen($node->textContent, 'UTF-8');
-
-            // If this is a text node we have found the right node
-            if ($node instanceof \DOMText) {
-                if ($span->getEnd() - $span->getStart() > $nodeLength) {
-                    // The span is too long for the node -- we have improperly
-                    // nested spans
-                    //throw new \Exception("Improperly nested span of type " . get_class($span) . " starting at offset {$span->getStart()}");
-                    return;
-                }
-
-                // Split the text node into a head, meat and tail
-                $meat = $node->splitText($span->getStart() - $start);
-                $tail = $meat->splitText($span->getEnd() - $span->getStart());
-
-                $spanNode = StructuredText::spanToDom($node->ownerDocument, $span, htmlentities($meat->textContent, null, 'UTF-8'), $linkResolver);
-
-                if ($spanNode != null) {
-                    // Replace the original meat text node with the span
-                    $meat->parentNode->replaceChild($spanNode, $meat);
-                }
-
-                return;
-            }
-
-            // Skip this node if the span start is beyond it
-            if ($span->getStart() >= $start + mb_strlen($node->textContent, 'UTF-8')) {
-                return;
-            }
-
-            // Loop over child nodes to find the correct one
-            if ($node->childNodes) {
-                foreach ($node->childNodes as $child) {
-                    $nodeLength = mb_strlen($child->textContent, 'UTF-8');
-                    if ($span->getStart() < $start + $nodeLength) {
-                        // This is the right node -- recurse
-                        return $iterateChildren($child, $start, $span);
-                    }
-                    $start += $nodeLength;
-                }
-            }
-
-            // Not found
-            return;
-        };
+        $tagsStart = array();
+        $tagsEnd = array();
 
         foreach ($spans as $span) {
-            if ($span->getEnd() < $span->getStart()) {
-                //throw new \Exception("Span of type " . get_class($span) . " starting at {$span->getStart()} ends at {$span->getEnd()} (before it begins)");
-                continue;
+            if (!array_key_exists($span->getStart(), $tagsStart)) {
+                $tagsStart[$span->getStart()] = array();
             }
-            $iterateChildren($doc, 0, $span);
+            if (!array_key_exists($span->getEnd(), $tagsEnd)) {
+                $tagsEnd[$span->getEnd()] = array();
+            }
+
+            array_push($tagsStart[$span->getStart()], $span);
+            array_push($tagsEnd[$span->getEnd()], $span);
         }
 
-        return trim($doc->saveHTML());
+        $c = null;
+        $html = "";
+        $stack = array();
+        for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
+            if (array_key_exists($pos, $tagsEnd)) {
+                foreach ($tagsEnd[$pos] as $endTag) {
+                    // Close a tag
+                    $tag = array_pop($stack);
+                    // Continue only if block contains content.
+                    if ($tag && $tag["span"]) {
+                        $innerHtml = trim(StructuredText::serialize($tag["span"], $tag["text"], $linkResolver, null));
+                        // $doc = new \DOMDocument;
+                        //$spanNode = $doc->appendChild(StructuredText::spanToDom($doc, $tag["span"], $tag["text"], $linkResolver));
+                        //$innerHtml = trim($doc->saveHTML());
+                      if (count($stack) == 0) {
+                          // The tag was top level
+                          $html .= $innerHtml;
+                      } else {
+                          // Add the content to the parent tag
+                          $last = end($stack);
+                          $last["test"] = $last["text"] . $innerHtml;
+                      }
+                    }
+                }
+            }
+            if (array_key_exists($pos, $tagsStart)) {
+                // Sort bigger tags first to ensure the right tag hierarchy
+                $sspans = $tagsStart[$pos];
+                $spanSort = function ($a, $b) {
+                    return ($b->getEnd() - $b->getStart()) - ($a->getEnd() - $a->getStart());
+                };
+                usort($sspans, $spanSort);
+                foreach ($sspans as $span) {
+                    // Open a tag
+                    array_push($stack, array(
+                        "span" => $span,
+                        "text" => ""
+                    ));
+                }
+            }
+            if ($pos < strlen($text)) {
+                $c = mb_substr($text, $pos, 1, 'UTF-8');
+                if (count($stack) == 0) {
+                    // Top-level text
+                    $html .= htmlentities($c, null, 'UTF-8');
+                } else {
+                    // Inner text of a span
+                    $last_idx = count($stack) - 1;
+                    $last = $stack[$last_idx];
+                    $stack[$last_idx] = array(
+                        "span" => $last["span"],
+                        "text" => $last["text"] . htmlentities($c, null, 'UTF-8')
+                    );
+                }
+            }
+        }
 
+        return $html;
     }
 
     /**
@@ -397,8 +407,14 @@ class StructuredText implements FragmentInterface
 
         // Spans
         $doc = new \DOMDocument;
-        $doc->appendChild(StructuredText::spanToDom($doc, $element, $content, $linkResolver));
-        return $doc->saveHTML();
+        $node = StructuredText::spanToDom($doc, $element, $content, $linkResolver);
+        if ($node === null) {
+            // Happens for broken links
+            return $content;
+        } else {
+            $doc->appendChild($node);
+           return $doc->saveHTML();
+        }
     }
 
     /**
@@ -409,7 +425,7 @@ class StructuredText implements FragmentInterface
      * @param string $content
      * @param LinkResolver $linkResolver
      */
-    public static function spanToDom(\DOMDocument $doc, SpanInterface $span, $content, $linkResolver)
+    public static function spanToDom(\DOMDocument $doc, $span, $content, $linkResolver)
     {
         // Decide element type and attributes based on span class
         $attributes = array();
