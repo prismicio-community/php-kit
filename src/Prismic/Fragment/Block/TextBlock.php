@@ -39,7 +39,7 @@ abstract class TextBlock implements BlockInterface
     public function __construct($text, $spans, $label = NULL)
     {
         $this->text = $text;
-        $this->spans = $spans;
+        $this->spans = $spans ? $spans : array();
         $this->label = $label;
     }
 

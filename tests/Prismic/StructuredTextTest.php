@@ -62,6 +62,14 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->structuredText->getHeadings());
     }
 
+    public function testHeadingBlockEmptySpansRendering()
+    {
+        $text = "This is a test.";
+        $bloc = new \Prismic\Fragment\Block\HeadingBlock($text, null, 1);
+        $structuredText = new \Prismic\Fragment\StructuredText(array($bloc));
+        $this->assertEquals('<h1>'.$text.'</h1>', $structuredText->asHtml());
+    }
+
     public function testPreformattedBlockFormatRendering()
     {
         $text = "This is a test.";
