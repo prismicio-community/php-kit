@@ -180,7 +180,7 @@ class WithFragments {
         } elseif (isset($fragment) && $fragment instanceof Number) {
             return $fragment->getValue();
         } elseif (isset($fragment) && $fragment instanceof Color) {
-            return $fragment->getHex();
+            return $fragment->getHexValue();
         } elseif (isset($fragment) && $fragment instanceof Text) {
             return $fragment->getValue();
         } elseif (isset($fragment) && $fragment instanceof Date) {
