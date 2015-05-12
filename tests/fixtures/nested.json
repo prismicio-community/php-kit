@@ -1,0 +1,44 @@
+[
+  {
+    "id": "xxx",
+    "uid": "equipe",
+    "type": "article",
+    "href": "http://example.com",
+    "tags": [],
+    "slugs": [],
+    "linked_documents": [],
+    "data": {
+      "article": {
+        "content": {
+          "type": "StructuredText",
+          "value": [
+            {
+              "type": "paragraph",
+              "text": "SOME Thingyy: 12345678",
+              "spans": [
+                {
+                  "start": 0,
+                  "end": 12,
+                  "type": "strong"
+                }, {
+                  "start": 0,
+                  "end": 12,
+                  "type": "em"
+                }, {
+                  "start": 12,
+                  "end": 13,
+                  "type": "em"
+                }, {
+                  "start": 14,
+                  "end": 22,
+                  "type": "em"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+]
+

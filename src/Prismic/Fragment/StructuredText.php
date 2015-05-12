@@ -288,7 +288,7 @@ class StructuredText implements FragmentInterface
      *
      * @return string the HTML version of the block
      */
-    public static function insertSpans($text, array $spans, $linkResolver = null)
+    public static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
     {
         if (empty($spans)) {
             return htmlentities($text, null, 'UTF-8');
@@ -319,17 +319,15 @@ class StructuredText implements FragmentInterface
                     $tag = array_pop($stack);
                     // Continue only if block contains content.
                     if ($tag && $tag["span"]) {
-                        $innerHtml = trim(StructuredText::serialize($tag["span"], $tag["text"], $linkResolver, null));
-                        // $doc = new \DOMDocument;
-                        //$spanNode = $doc->appendChild(StructuredText::spanToDom($doc, $tag["span"], $tag["text"], $linkResolver));
-                        //$innerHtml = trim($doc->saveHTML());
+                        $innerHtml = trim(StructuredText::serialize($tag["span"], $tag["text"], $linkResolver, $htmlSerializer));
                       if (count($stack) == 0) {
                           // The tag was top level
                           $html .= $innerHtml;
                       } else {
                           // Add the content to the parent tag
-                          $last = end($stack);
-                          $last["test"] = $last["text"] . $innerHtml;
+                          $last = array_pop($stack);
+                          $last["text"] = $last["text"] . $innerHtml;
+                          array_push($stack, $last);
                       }
                     }
                 }
@@ -406,61 +404,37 @@ class StructuredText implements FragmentInterface
         }
 
         // Spans
-        $doc = new \DOMDocument;
-        $node = StructuredText::spanToDom($doc, $element, $content, $linkResolver);
-        if ($node === null) {
-            // Happens for broken links
-            return $content;
-        } else {
-            $doc->appendChild($node);
-           return $doc->saveHTML();
-        }
-    }
-
-    /**
-     * Create a DOM node from a Span. For internal use only.
-     *
-     * @param \DOMDocument $doc the document to create the node in
-     * @param Span $span
-     * @param string $content
-     * @param LinkResolver $linkResolver
-     */
-    public static function spanToDom(\DOMDocument $doc, $span, $content, $linkResolver)
-    {
-        // Decide element type and attributes based on span class
         $attributes = array();
-        if ($span instanceof StrongSpan) {
+        if ($element instanceof StrongSpan) {
             $nodeName = 'strong';
-        } elseif ($span instanceof EmSpan) {
+        } elseif ($element instanceof EmSpan) {
             $nodeName = 'em';
-        } elseif ($span instanceof HyperlinkSpan) {
+        } elseif ($element instanceof HyperlinkSpan) {
             $nodeName = 'a';
-            if ($span->getLink() instanceof DocumentLink) {
-                $attributes['href'] = $linkResolver ? $linkResolver($span->getLink()) : '';
+            if ($element->getLink() instanceof DocumentLink) {
+                $attributes['href'] = $linkResolver ? $linkResolver($element->getLink()) : '';
             } else {
-                $attributes['href'] = $span->getLink()->getUrl();
+                $attributes['href'] = $element->getLink()->getUrl();
             }
             if ($attributes['href'] === null) {
                 // We have no link (LinkResolver said it is not valid,
                 // or something else went wrong). Abort this span.
-                return null;
+                return $content;
             }
         } else {
             //throw new \Exception("Unknown span type " . get_class($span));
             $nodeName = 'span';
         }
-        if ($span->getLabel() != NULL) {
-            $attributes['class'] = $span->getLabel();
+        if ($element->getLabel() != NULL) {
+            $attributes['class'] = $element->getLabel();
         }
 
-        // Make the new span element, and put the text from the meat
-        // inside
-        $spanNode = $doc->createElement($nodeName, $content);
+        $html = '<' . $nodeName;
         foreach ($attributes as $k => $v) {
-            $spanNode->setAttribute($k, $v);
+            $html .= (' ' . $k . '="' . $v . '"');
         }
-
-        return $spanNode;
+        $html .= ('>' . $content . '</' . $nodeName . '>');
+        return $html;
     }
 
     /**
