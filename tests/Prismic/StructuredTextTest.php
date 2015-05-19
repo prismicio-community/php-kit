@@ -5,8 +5,9 @@ namespace Prismic\Test;
 use Prismic\Document;
 use Prismic\Api;
 use Prismic\Fragment\Block\ImageBlock;
+use Prismic\Fragment\Block\StrongSpan;
 
-class StructuredTextTest extends \PHPUnit_Framework_TestCase
+class StructuredTextTest Extends \PHPUnit_Framework_TestCase
 {
     protected $document;
 
@@ -174,13 +175,21 @@ class StructuredTextTest extends \PHPUnit_Framework_TestCase
             if ($element instanceof ImageBlock) {
                 return nl2br($element->getView()->asHtml($linkResolver));
             }
+            if ($element instanceof \Prismic\Fragment\Span\StrongSpan) {
+                $cls = 'foobar';
+                if ($element->getLabel() != NULL) {
+                    $cls .= (' ' . $element->getLabel());
+                }
+                $lbl = $element->getLabel() || '';
+                return '<strong class="' . $cls . '">' . $content . '</strong>';
+            }
             return null;
         };
         $structuredText = $this->document->getStructuredText('product.linked_images');
         $link = $structuredText->getFirstImage()->getView()->getLink();
         $this->assertInstanceOf('\Prismic\Fragment\Link\LinkInterface', $link);
         $this->assertEquals(
-            '<p class="intro">Here is some introductory text.</p><p>The following image is linked.</p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a><p><strong class="warn">More important stuff</strong></p><p>The next is linked to a valid document:</p><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a><p>The next is linked to a broken document:</p><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"><p>One more image, this one is not linked:</p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199">',
+            '<p class="intro">Here is some introductory text.</p><p>The following image is linked.</p><a href="http://google.com/"><img src="http://fpoimg.com/129x260" alt="" width="260" height="129"></a><p><strong class="foobar warn">More important stuff</strong></p><p>The next is linked to a valid document:</p><a href="http://host/doc/UxCQFFFFFFFaaYAH"><img src="http://fpoimg.com/400x400" alt="" width="400" height="400"></a><p>The next is linked to a broken document:</p><img src="http://fpoimg.com/250x250" alt="" width="250" height="250"><p>One more image, this one is not linked:</p><img src="http://fpoimg.com/199x300" alt="" width="300" height="199">',
             $structuredText->asHtml($linkResolver, $htmlSerializer)
         );
     }

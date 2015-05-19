@@ -274,7 +274,7 @@ class StructuredText implements FragmentInterface
             $block instanceof ListItemBlock ||
             $block instanceof PreformattedBlock)
         {
-            $content = StructuredText::insertSpans($block->getText(), $block->getSpans(), $linkResolver);
+            $content = StructuredText::insertSpans($block->getText(), $block->getSpans(), $linkResolver, $htmlSerializer);
         }
         return StructuredText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
