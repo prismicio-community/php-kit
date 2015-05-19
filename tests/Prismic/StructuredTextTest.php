@@ -171,7 +171,7 @@ class StructuredTextTest Extends \PHPUnit_Framework_TestCase
     public function testStructuredTextCustomHtmlSerializer()
     {
         $linkResolver = new FakeLinkResolver();
-        $htmlSerializer = function($element, $content) use ($linkResolver) {
+        $htmlSerializer = function($element, $content, $linkResolver) {
             if ($element instanceof ImageBlock) {
                 return nl2br($element->getView()->asHtml($linkResolver));
             }

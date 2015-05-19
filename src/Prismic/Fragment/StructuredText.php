@@ -377,7 +377,7 @@ class StructuredText implements FragmentInterface
      */
     private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
         if (!is_null($htmlSerializer)) {
-            $custom = $htmlSerializer($element, $content);
+            $custom = $htmlSerializer($element, $content, $linkResolver);
             if (!is_null($custom)) {
                 return $custom;
             }
