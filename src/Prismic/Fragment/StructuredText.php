@@ -202,7 +202,7 @@ class StructuredText implements FragmentInterface
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
-     * @param lambda $htmlSerializer an optional function to generate custom HTML code
+     * @param callable $htmlSerializer an optional function to generate custom HTML code
      * @return string the HTML version of the StructuredText fragment
      */
     public function asHtml($linkResolver = null, $htmlSerializer = null)
@@ -263,7 +263,7 @@ class StructuredText implements FragmentInterface
      * @param \Prismic\Fragment\Block\BlockInterface $block a given block
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
-     * @param lambda $htmlSerializer
+     * @param callable $htmlSerializer
      * @return string the HTML version of the block
      */
     public static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
@@ -373,7 +373,7 @@ class StructuredText implements FragmentInterface
      * @param BlockInterface|SpanInterface $element block or span to serialize
      * @param string $content inner html of the element
      * @param LinkResolver $linkResolver
-     * @param HtmlSerializer $htmlSerializer
+     * @param callable $htmlSerializer
      */
     private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
         if (!is_null($htmlSerializer)) {
