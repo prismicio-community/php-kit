@@ -346,6 +346,61 @@ class Api
     }
 
     /**
+     * Submit several requests in parrallel
+     */
+    public function submit()
+    {
+        $numargs = func_num_args();
+        if ($numargs == 1 && is_array(func_get_arg(0))) {
+            $forms = func_get_arg(0);
+        } else {
+            $forms = func_get_args();
+        }
+        $responses = array();
+
+        // Get what we can from the cache
+        $all_urls = array();
+        $urls = array();
+        foreach ($forms as $i => $form) {
+            $url = $form->url();
+            array_push($all_urls, $url);
+            $json = $this->getCache()->get($url);
+            if ($json) {
+                $responses[$i] = Response::parse($json);
+            } else {
+                $responses[$i] = null;
+                array_push($urls, $url);
+            }
+        }
+
+        // Query the server for the rest
+        if (count($urls) > 0) {
+            $raw_responses = $this->getHttpAdapter()->sendRequests($urls);
+            foreach ($raw_responses as $response) {
+                $url = $response->getParameter('request')->getUrl();
+                $cacheControl = $response->getHeader('Cache-Control');
+                $cacheDuration = null;
+                if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
+                    $cacheDuration = (int) $groups[1];
+                }
+                $json = json_decode($response->getBody(true));
+                if (!isset($json)) {
+                    throw new \RuntimeException("Unable to decode json response");
+                }
+                if ($cacheDuration !== null) {
+                    $expiration = $cacheDuration;
+                    $this->getCache()->set($url, $json, $expiration);
+                }
+
+                $idx = array_search($url, $all_urls);
+                $responses[$idx] = Response::parse($json);
+            }
+        }
+
+        return $responses;
+    }
+
+    /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
      */
     public static function defaultCache()

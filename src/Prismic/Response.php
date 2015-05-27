@@ -159,4 +159,27 @@ class Response
     {
         return $this->prevPage;
     }
+
+    /**
+     * Parsing a Responses from a json, unmarshalling them into PHP objects.
+     *
+     * @param  \stdClass          $json the JSON retrieved from the call
+     * @return \Prismic\Documents the result of the call
+     */
+    public static function parse(\stdClass $json)
+    {
+        $results = array_map(function ($doc) { return Document::parse($doc);  }, $json->results);
+
+        return new Response(
+            $results,
+            $json->page,
+            $json->results_per_page,
+            $json->results_size,
+            $json->total_results_size,
+            $json->total_pages,
+            $json->next_page,
+            $json->prev_page
+        );
+    }
+
 }

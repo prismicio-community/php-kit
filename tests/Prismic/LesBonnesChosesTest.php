@@ -51,6 +51,21 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($results), 16);
     }
 
+    public function testParrallelRequests()
+    {
+        $api = Api::get(self::$testRepository);
+        $masterRef = $api->master()->getRef();
+        $productsQuery = $api->forms()->everything->ref($masterRef)->query(Predicates::at('document.type', 'product'));
+        $storesQuery = $api->forms()->everything->ref($masterRef)->query(Predicates::at('document.type', 'store'));
+
+        $responses = $api->submit($productsQuery, $storesQuery);
+        $products = $responses[0]->getResults();
+        $stores = $responses[1]->getResults();
+        // var_dump($responses);
+        $this->assertEquals(count($products), 16);
+        $this->assertEquals(count($stores), 5);
+    }
+
     public function testSubmitProductsForm()
     {
         $api = Api::get(self::$testRepository);

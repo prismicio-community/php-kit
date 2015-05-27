@@ -209,28 +209,6 @@ class SearchForm
     }
 
     /**
-     * Parsing the results gotten from such an API call, and unmarshalling them into PHP objects.
-     *
-     * @param  \stdClass          $json the JSON retrieved from the call
-     * @return \Prismic\Documents the result of the call
-     */
-    private static function parseResult($json)
-    {
-        $results = array_map(function ($doc) { return Document::parse($doc);  }, $json->results);
-
-        return new Response(
-            $results,
-            $json->page,
-            $json->results_per_page,
-            $json->results_size,
-            $json->total_results_size,
-            $json->total_pages,
-            $json->next_page,
-            $json->prev_page
-        );
-    }
-
-    /**
      * Submit the current API call, and unmarshals the result into PHP objects.
      *
      * @return \Prismic\Documents the result of the call
@@ -238,7 +216,7 @@ class SearchForm
      */
     public function submit()
     {
-        return self::parseResult($this->submit_raw());
+        return Response::parse($this->submit_raw());
     }
 
     /**
@@ -284,7 +262,7 @@ class SearchForm
      *
      * @return string the URL
      */
-    private function url()
+    public function url()
     {
         $url = $this->form->getAction() . '?' . http_build_query($this->data);
         $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
