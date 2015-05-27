@@ -61,7 +61,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $responses = $api->submit($productsQuery, $storesQuery);
         $products = $responses[0]->getResults();
         $stores = $responses[1]->getResults();
-        // var_dump($responses);
+
         $this->assertEquals(count($products), 16);
         $this->assertEquals(count($stores), 5);
     }
