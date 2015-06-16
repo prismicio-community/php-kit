@@ -298,10 +298,11 @@ class Api
      * @param  string $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
      * @param  HttpAdapterInterface $httpAdapter by default, the HTTP adapter uses CURL with a certain configuration, but you can override it here
      * @param  CacheInterface $cache Cache implementation
+     * @param  int $apiCacheTTL max time to keep the API object in cache (in seconds)
      * @throws \RuntimeException
      * @return Api                     the Api object, useable to perform queries
      */
-    public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null)
+    public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null, $apiCacheTTL = 5)
     {
         $cache = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
@@ -339,7 +340,7 @@ class Api
             );
 
             $api = new Api($apiData, $accessToken, $httpAdapter, $cache);
-            $cache->set($cacheKey, serialize($apiData), 5);
+            $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
 
             return $api;
         }
