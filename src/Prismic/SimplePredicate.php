@@ -15,7 +15,7 @@ use Prismic\Predicate;
 class SimplePredicate implements Predicate
 {
 
-    public function __construct($name, $fragment, $args)
+    public function __construct($name, $fragment, array $args = array())
     {
         $this->name = $name;
         $this->fragment = $fragment;

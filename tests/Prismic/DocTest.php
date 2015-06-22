@@ -110,6 +110,10 @@ class DocTest extends \PHPUnit_Framework_TestCase
         $at = Predicates::at("document.type", "article");
         // "any" predicate: equality of a fragment to a value.
         $any = Predicates::any("document.type", array("article", "blog-post"));
+        // "has" predicate: field is defined
+        $has = Predicates::has("my.article.author");
+        // "missing" predicate: field is empty
+        $missing = Predicates::missing("my.article.author");
 
         // "fulltext" predicate: fulltext search in a fragment.
         $fulltext = Predicates::fulltext("my.article.body", "sausage");

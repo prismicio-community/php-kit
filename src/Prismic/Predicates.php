@@ -31,6 +31,14 @@ class Predicates {
         return new SimplePredicate("in", $fragment, array($values));
     }
 
+    public static function has($fragment) {
+        return new SimplePredicate("has", $fragment);
+    }
+
+    public static function missing($fragment) {
+        return new SimplePredicate("missing", $fragment);
+    }
+
     public static function fulltext($fragment, $value) {
         return new SimplePredicate("fulltext", $fragment, array($value));
     }

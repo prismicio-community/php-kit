@@ -21,6 +21,12 @@ class PredicatesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('[:d = any(document.tags, ["Macaron", "Cupcakes"])]', $p->q());
     }
 
+    public function testHasPredicate()
+    {
+        $p = Predicates::has("my.article.author");
+        $this->assertEquals('[:d = has(my.article.author)]', $p->q());
+    }
+
     public function testNumberLT()
     {
         $p = Predicates::lt("my.product.price", 4.2);
