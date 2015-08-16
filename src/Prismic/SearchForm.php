@@ -10,6 +10,9 @@
 
 namespace Prismic;
 
+use Prismic\Event\PreSubmitEvent;
+use Prismic\Event\PostSubmitEvent;
+
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
  * then you can chain instance method calls to build your query, and the query gets launched with
@@ -293,15 +296,23 @@ class SearchForm
             $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
             $this->form->getAction()
         ) {
+            $dispatcher = $this->api->getDispatcher();
+            $preSubmitEvent = new PreSubmitEvent($this);
+            $dispatcher->dispatch(Events::PRE_SUBMIT, $preSubmitEvent);
+
             $url = $this->url();
             $cacheKey = $this->url();
 
             $response = $this->api->getCache()->get($cacheKey);
 
             if ($response) {
+                $postSubmitEvent = new PostSubmitEvent($this, $response, true);
+                $dispatcher->dispatch(Events::POST_SUBMIT, $postSubmitEvent);
+
                 return $response;
             } else {
                 $response = $this->api->getHttpAdapter()->get($url);
+
                 $cacheControl = $response->getHeader('Cache-Control');
                 $cacheDuration = null;
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
@@ -311,6 +322,10 @@ class SearchForm
                 if (!isset($json)) {
                     throw new \RuntimeException("Unable to decode json response");
                 }
+
+                $postSubmitEvent = new PostSubmitEvent($this, $json, false);
+                $dispatcher->dispatch(Events::POST_SUBMIT, $postSubmitEvent);
+
                 if ($cacheDuration !== null) {
                     $expiration = $cacheDuration;
                     $this->api->getCache()->set($cacheKey, $json, $expiration);
