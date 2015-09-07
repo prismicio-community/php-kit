@@ -23,10 +23,10 @@ class ListItemBlock extends TextBlock
     /**
      * Constructs a list item block.
      *
-     * @param string $text the unformatted text
-     * @param array $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param string  $text    the unformatted text
+     * @param array   $spans   an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
      * @param boolean $ordered true if part of an ordered list, false if unordered
-     * @param $label string
+     * @param string  $label   can be null
      */
     public function __construct($text, $spans, $ordered, $label = null)
     {

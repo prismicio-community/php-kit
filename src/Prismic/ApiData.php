@@ -45,21 +45,21 @@ class ApiData
      */
     private $oauth_token;
     /**
-     * @var \Prismic\Experiments list of both drafts and running experiments from Prismic
+     * @var Experiments list of both drafts and running experiments from Prismic
      */
     private $experiments;
 
     /**
      * A constructor to build the object when you've retrieved all the data you need.
      *
-     * @param array     $refs
-     * @param array     $bookmarks
-     * @param array     $types
-     * @param array     $tags
-     * @param array     $forms
-     * @param \Prismic\Experiments $experiments
-     * @param string    $oauth_initiate
-     * @param string    $oauth_token
+     * @param array       $refs
+     * @param array       $bookmarks
+     * @param array       $types
+     * @param array       $tags
+     * @param array       $forms
+     * @param Experiments $experiments
+     * @param string      $oauth_initiate
+     * @param string      $oauth_token
      */
     public function __construct(
         array $refs,
@@ -131,6 +131,11 @@ class ApiData
         return $this->forms;
     }
 
+    /**
+     * Get the Experiments
+     *
+     * @return Experiments
+     */
     public function getExperiments()
     {
         return $this->experiments;

@@ -10,17 +10,31 @@
 
 namespace Prismic;
 
+/**
+ * Class Experiments
+ *
+ * @package Prismic
+ */
 class Experiments {
 
+    /** @var array */
     private $draft;
+    /** @var array */
     private $running;
 
+    /**
+     * @param array $draft
+     * @param array $running
+     */
     public function __construct(array $draft, array $running)
     {
         $this->draft = $draft;
         $this->running = $running;
     }
 
+    /**
+     * @return Experiment|null
+     */
     public function getCurrent()
     {
         if (count($this->running) > 0)
@@ -30,6 +44,11 @@ class Experiments {
         return null;
     }
 
+    /**
+     * @param string|null $cookie
+     *
+     * @return Ref|null
+     */
     public function refFromCookie($cookie)
     {
         if ($cookie == null) return null;
@@ -48,11 +67,17 @@ class Experiments {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function getDraft()
     {
         return $this->draft;
     }
 
+    /**
+     * @return array
+     */
     public function getRunning()
     {
         return $this->running;
@@ -62,7 +87,7 @@ class Experiments {
      * Parses a given experiments. Not meant to be used except for testing.
      *
      * @param  \stdClass $json the json bit retrieved from the API that represents experiments.
-     * @return \Prismic\Experiments e manipulable object for that experiments.
+     * @return \Prismic\Experiments the manipulable object for the experiments.
      */
     public static function parse(\stdClass $json)
     {
@@ -72,8 +97,14 @@ class Experiments {
         );
     }
 
+    /**
+     * @param string $id
+     *
+     * @return Experiment|null
+     */
     private function findRunningById($id)
     {
+        /** @var Experiment $exp */
         foreach ($this->running as $exp)
         {
             if ($exp->getGoogleId() == $id) {
@@ -84,13 +115,28 @@ class Experiments {
     }
 }
 
+/**
+ * Class Experiment
+ *
+ * @package Prismic
+ */
 class Experiment {
 
+    /** @var string */
     private $id;
+    /** @var string */
     private $googleId;
+    /** @var string */
     private $name;
+    /** @var array */
     private $variations;
 
+    /**
+     * @param string $id
+     * @param string $googleId
+     * @param string $name
+     * @param array  $variations
+     */
     public function __construct($id, $googleId, $name, array $variations)
     {
         $this->id = $id;
@@ -99,18 +145,30 @@ class Experiment {
         $this->variations = $variations;
     }
 
+    /**
+     * @return string
+     */
     public function getId() {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getGoogleId() {
         return $this->googleId;
     }
 
+    /**
+     * @return string
+     */
     public function getName() {
         return $this->name;
     }
 
+    /**
+     * @return array
+     */
     public function getVariations() {
         return $this->variations;
     }
@@ -119,6 +177,7 @@ class Experiment {
      * Parses a given experiment. Not meant to be used except for testing.
      *
      * @param  \stdClass $json the json bit retrieved from the API that represents a experiment.
+     *
      * @return \Prismic\Variation the manipulable object for that experiment.
      */
     public static function parse(\stdClass $json)
@@ -135,13 +194,25 @@ class Experiment {
 
 }
 
+/**
+ * Class Variation
+ *
+ * @package Prismic
+ */
 class Variation
 {
-
+    /** @var string */
     private $id;
+    /** @var string */
     private $ref;
+    /** @var string */
     private $label;
 
+    /**
+     * @param string $id
+     * @param string $ref
+     * @param string $label
+     */
     public function __construct($id, $ref, $label)
     {
         $this->id = $id;
@@ -149,14 +220,23 @@ class Variation
         $this->label = $label;
     }
 
+    /**
+     * @return string
+     */
     public function getId() {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getRef() {
         return $this->ref;
     }
 
+    /**
+     * @return string
+     */
     public function getLabel() {
         return $this->label;
     }
@@ -165,6 +245,7 @@ class Variation
      * Parses a given variation. Not meant to be used except for testing.
      *
      * @param  \stdClass $json the json bit retrieved from the API that represents a variation.
+     *
      * @return \Prismic\Variation the manipulable object for that variation.
      */
     public static function parse(\stdClass $json)

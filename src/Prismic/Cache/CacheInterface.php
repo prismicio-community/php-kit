@@ -25,7 +25,7 @@ namespace Prismic\Cache;
  * length.
  *
  * Two implementations are included in the PHP kit out-of-the-box:
- * DefaultCache (which works with APC) and NoCache (which doesn't cache).
+ * ApcCache (which works with APC) and NoCache (which doesn't cache).
  *
  * @api
  */
@@ -58,7 +58,7 @@ interface CacheInterface
      *
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
-     * @param integer   $ttl   the time (in seconds) until this cache entry expires
+     * @param int       $ttl   the time (in seconds) until this cache entry expires
      * @return void
      */
     public function set($key, $value, $ttl = 0);

@@ -20,11 +20,11 @@ class StrongSpan implements SpanInterface
 {
 
     /**
-     * @var integer the start of the span
+     * @var int the start of the span
      */
     private $start;
     /**
-     * @var integer the end of the span
+     * @var int the end of the span
      */
     private $end;
     /**
@@ -35,9 +35,9 @@ class StrongSpan implements SpanInterface
     /**
      * Constructs an strong span
      *
-     * @param integer $start the start of the span
-     * @param integer $end the end of the span
-     * @param $label
+     * @param int    $start the start of the span
+     * @param int    $end   the end of the span
+     * @param string $label can be null
      */
     public function __construct($start, $end, $label = NULL)
     {
@@ -51,7 +51,7 @@ class StrongSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the start of the span
+     * @return int the start of the span
      */
     public function getStart()
     {
@@ -63,7 +63,7 @@ class StrongSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the end of the span
+     * @return int the end of the span
      */
     public function getEnd()
     {

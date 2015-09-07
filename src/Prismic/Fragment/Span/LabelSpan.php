@@ -18,12 +18,12 @@ namespace Prismic\Fragment\Span;
 class LabelSpan implements SpanInterface
 {
     /**
-     * @var integer the start of the span
+     * @var int the start of the span
      */
     private $start;
 
     /**
-     * @var integer the end of the span
+     * @var int the end of the span
      */
     private $end;
 
@@ -35,8 +35,8 @@ class LabelSpan implements SpanInterface
     /**
      * Constructs a label span
      *
-     * @param integer $start the start of the span
-     * @param integer $end the end of the span
+     * @param int     $start the start of the span
+     * @param int     $end   the end of the span
      * @param string  $label The value of the label in the writing room
      */
     public function __construct($start, $end, $label)
@@ -51,7 +51,7 @@ class LabelSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the start of the span
+     * @return int the start of the span
      */
     public function getStart()
     {
@@ -63,7 +63,7 @@ class LabelSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the end of the span
+     * @return int the end of the span
      */
     public function getEnd()
     {

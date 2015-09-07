@@ -11,6 +11,7 @@
 namespace Prismic\Fragment;
 
 use DOMDocument;
+use Prismic\Fragment\Link\LinkInterface;
 
 /**
  * This class embodies an image view.
@@ -33,27 +34,27 @@ class ImageView
      */
     private $copyright;
     /**
-     * @var integer the image view's width
+     * @var int the image view's width
      */
     private $width;
     /**
-     * @var integer the image view's height
+     * @var int the image view's height
      */
     private $height;
     /**
-     * @var \Prismic\Fragment\Link\LinkInterface the link to point to, or null
+     * @var LinkInterface the link to point to, or null
      */
     private $link;
 
     /**
      * Constructs an image view.
      *
-     * @param string  $url          the image view's URL
-     * @param string  $alt          the image view's alternative text
-     * @param string  $copyright    the image view's copyright
-     * @param string  $width        the image view's width
-     * @param string  $height       the image view's height
-     * @param string  $link         the image view's link to point to
+     * @param string         $url       the image view's URL
+     * @param string         $alt       the image view's alternative text
+     * @param string         $copyright the image view's copyright
+     * @param int            $width     the image view's width
+     * @param int            $height    the image view's height
+     * @param LinkInterface  $link      the image view's link to point to
      */
     public function __construct($url, $alt, $copyright, $width, $height, $link)
     {
@@ -106,7 +107,7 @@ class ImageView
      *
      * @api
      *
-     * @return integer  the image view's ratio
+     * @return int  the image view's ratio
      */
     public function ratio()
     {
@@ -154,7 +155,7 @@ class ImageView
      *
      * @api
      *
-     * @return integer  the image view's width
+     * @return int  the image view's width
      */
     public function getWidth()
     {
@@ -166,7 +167,7 @@ class ImageView
      *
      * @api
      *
-     * @return integer  the image view's height
+     * @return int  the image view's height
      */
     public function getHeight()
     {
@@ -178,7 +179,7 @@ class ImageView
      *
      * @api
      *
-     * @return \Prismic\Fragment\Link\LinkInterface the link to point to
+     * @return LinkInterface the link to point to
      */
     public function getLink()
     {

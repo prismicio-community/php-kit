@@ -28,23 +28,23 @@ class Response
      */
     private $results;
     /**
-     * @var integer the page number for this query
+     * @var int the page number for this query
      */
     private $page;
     /**
-     * @var integer the requested number of results per page on this query
+     * @var int the requested number of results per page on this query
      */
     private $resultsPerPage;
     /**
-     * @var integer the size of the current page
+     * @var int the size of the current page
      */
     private $resultsSize;
     /**
-     * @var integer the total number of documents, all pages together
+     * @var int the total number of documents, all pages together
      */
     private $totalResultsSize;
     /**
-     * @var integer the number of pages for this query
+     * @var int the number of pages for this query
      */
     private $totalPages;
     /**
@@ -60,13 +60,13 @@ class Response
      * Constructs a Response object.
      *
      * @param array  $results           the list of returned documents
-     * @param string $page              the page number for this query
-     * @param string $resultsPerPage    the requested number of results per page on this query
-     * @param string $resultsSize       the ID of the release
-     * @param string $totalResultsSize  the ID of the release
-     * @param string $totalPages        the ID of the release
-     * @param string $nextPage          the ID of the release
-     * @param string $prevPage          the ID of the release
+     * @param int    $page              the page number for this query
+     * @param int    $resultsPerPage    the requested number of results per page on this query
+     * @param int    $resultsSize       the size of the current page
+     * @param int    $totalResultsSize  the total number of documents, all pages together
+     * @param int    $totalPages        the number of pages for this query
+     * @param string $nextPage          the RESTful URL of the search request for the next page; null otherwise
+     * @param string $prevPage          the RESTful URL of the search request for the previous page; null otherwise
      */
     public function __construct($results, $page, $resultsPerPage, $resultsSize, $totalResultsSize, $totalPages, $nextPage, $prevPage)
     {
@@ -93,7 +93,7 @@ class Response
     /**
      * Returns the page number for this query.
     *
-    * @return integer the page number for this query
+    * @return int the page number for this query
      */
     public function getPage()
     {
@@ -103,7 +103,7 @@ class Response
     /**
      * Returns the requested number of results per page on this query.
     *
-    * @return integer the requested number of results per page on this query
+    * @return int the requested number of results per page on this query
      */
     public function getResultsPerPage()
     {
@@ -113,7 +113,7 @@ class Response
     /**
      * Returns the size of the current page.
     *
-    * @return integer the size of the current page
+    * @return int the size of the current page
      */
     public function getResultsSize()
     {
@@ -123,7 +123,7 @@ class Response
     /**
      * Returns the total number of documents, all pages together.
     *
-    * @return integer the total number of documents, all pages together
+    * @return int the total number of documents, all pages together
      */
     public function getTotalResultsSize()
     {
@@ -133,7 +133,7 @@ class Response
     /**
      * Returns the number of pages for this query.
     *
-    * @return integer the number of pages for this query
+    * @return int the number of pages for this query
      */
     public function getTotalPages()
     {
@@ -163,8 +163,9 @@ class Response
     /**
      * Parsing a Responses from a json, unmarshalling them into PHP objects.
      *
-     * @param  \stdClass          $json the JSON retrieved from the call
-     * @return \Prismic\Documents the result of the call
+     * @param  \stdClass $json the JSON retrieved from the call
+
+     * @return \Prismic\Response the result of the call
      */
     public static function parse(\stdClass $json)
     {

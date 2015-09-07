@@ -66,7 +66,7 @@ class Api
      * Private constructor, not be used outside of this class.
      *
      * @param string                    $data
-     * @param string                    $accessToken
+     * @param string|null               $accessToken
      * @param HttpAdapterInterface|null $httpAdapter
      * @param CacheInterface|null       $cache
      */
@@ -108,7 +108,8 @@ class Api
     }
 
     /**
-     * @param $label string the label of the requested ref
+     * @param string $label the label of the requested ref
+     *
      * @return Ref a reference or null
      */
     public function getRef($label) {
@@ -118,7 +119,7 @@ class Api
 
     /**
      * Returns the list of all bookmarks on the repository. If you're looking
-     * for a document from it's bookmark name, you should use the bookrmark() function.
+     * for a document from it's bookmark name, you should use the bookmark() function.
      *
      * @api
      *
@@ -140,7 +141,7 @@ class Api
      *
      * @param string $name the bookmark name to use
      *
-     * @return string the ID string for a given bookmark name
+     * @return string|null the ID string for a given bookmark name
      */
     public function bookmark($name)
     {
@@ -207,6 +208,9 @@ class Api
         return $rforms;
     }
 
+    /**
+     * @return Experiments
+     */
     public function getExperiments()
     {
         return $this->data->getExperiments();
@@ -278,7 +282,7 @@ class Api
     }
 
     /**
-     * Accessing the underlaying HTTP adapter object responsible for the CURL requests
+     * Accessing the underlying HTTP adapter object responsible for the CURL requests
      *
      * @return HttpAdapterInterface the HTTP adapter object itself
      */
@@ -294,13 +298,15 @@ class Api
      *
      * @api
      *
-     * @param  string $action the URL of your repository API's endpoint
-     * @param  string $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  string               $action      the URL of your repository API's endpoint
+     * @param  string               $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
      * @param  HttpAdapterInterface $httpAdapter by default, the HTTP adapter uses CURL with a certain configuration, but you can override it here
-     * @param  CacheInterface $cache Cache implementation
-     * @param  int $apiCacheTTL max time to keep the API object in cache (in seconds)
+     * @param  CacheInterface       $cache       Cache implementation
+     * @param  int                  $apiCacheTTL max time to keep the API object in cache (in seconds)
+     *
      * @throws \RuntimeException
-     * @return Api                     the Api object, useable to perform queries
+     *
+     * @return Api the Api object, usable to perform queries
      */
     public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null, $apiCacheTTL = 5)
     {
@@ -347,7 +353,9 @@ class Api
     }
 
     /**
-     * Submit several requests in parrallel
+     * Submit several requests in parallel
+     *
+     * @return array
      */
     public function submit()
     {
@@ -403,6 +411,8 @@ class Api
 
     /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
+     *
+     * @return ApcCache|NoCache
      */
     public static function defaultCache()
     {
@@ -438,8 +448,7 @@ class Api
      * overridable by passing an instance of
      * Ivory\HttpAdapter\HttpAdapterInterface to Api.get
      *
-     * @param ConfigurationInterface|null $configuruation Configuration object;
-     * use default if null
+     * @param ConfigurationInterface|null $configuration Configuration object; use default if null
      * @return HttpAdapterInterface HTTP adapter
      */
     public static function defaultHttpAdapter(ConfigurationInterface $configuration = null)
