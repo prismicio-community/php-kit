@@ -61,13 +61,13 @@ class Document extends WithFragments
     /**
      * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
      *
-     * @param string $id              the ID of the document
-     * @param string|null $uid        the user ID of the document
-     * @param string $type            the type of the document
-     * @param string $href            the URL of the document in the repository's API
-     * @param array  $tags            the tags used in the document
-     * @param array  $slugs           the slugs used in the document, in the past and today; today's slug is the head
-     * @param array  $fragments       all the fragments in the document
+     * @param string      $id        the ID of the document
+     * @param string|null $uid       the user ID of the document
+     * @param string      $type      the type of the document
+     * @param string      $href      the URL of the document in the repository's API
+     * @param array       $tags      the tags used in the document
+     * @param array       $slugs     the slugs used in the document, in the past and today; today's slug is the head
+     * @param array       $fragments all the fragments in the document
      */
     public function __construct($id, $uid, $type, $href, array $tags, array $slugs, array $fragments)
     {
@@ -85,7 +85,7 @@ class Document extends WithFragments
      *
      * @api
      *
-     * @return string the current slug of the document
+     * @return string|null the current slug of the document
      */
     public function getSlug()
     {
@@ -100,7 +100,9 @@ class Document extends WithFragments
      * Checks if a given slug is a past or current slug of the document
      *
      * @api
+     *
      * @param  string  $slug the slug to check
+     *
      * @return boolean true if the slug is a past or current slug of the document, false otherwise
      */
     public function containsSlug($slug)
@@ -192,7 +194,7 @@ class Document extends WithFragments
     /**
      * Convert the document to a DocumentLink
      *
-     * @return \Prismic\Fragment\Link\DocumentLink the newly created DocumentLink
+     * @return DocumentLink the newly created DocumentLink
      */
     public function asDocumentLink()
     {
@@ -203,7 +205,8 @@ class Document extends WithFragments
      * Parses a given document. Not meant to be used except for testing.
      *
      * @param  \stdClass         $json the json bit retrieved from the API that represents a document.
-     * @return \Prismic\Document the manipulable object for that document.
+     *
+     * @return Document the manipulable object for that document.
      */
     public static function parse(\stdClass $json)
     {

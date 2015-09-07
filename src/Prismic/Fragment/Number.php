@@ -16,14 +16,14 @@ namespace Prismic\Fragment;
 class Number implements FragmentInterface
 {
     /**
-     * @var integer the integer value of the number
+     * @var int the integer value of the number
      */
     private $value;
 
     /**
      * Constructs a Number fragment.
      *
-     * @param integer $value the integer value of the number
+     * @param int $value the integer value of the number
      */
     public function __construct($value)
     {
@@ -36,6 +36,8 @@ class Number implements FragmentInterface
      * @api
      *
      * @param string $pattern the pattern, as would be expected by sprintf
+     *
+     * @return string
      */
     public function format($pattern)
     {
@@ -47,7 +49,7 @@ class Number implements FragmentInterface
      *
      * @api
      *
-     * @return integer the text version of the Number fragment
+     * @return int the text version of the Number fragment
      */
     public function asText()
     {
@@ -73,7 +75,7 @@ class Number implements FragmentInterface
      *
      * @api
      *
-     * @return integer the number's value
+     * @return int the number's value
      */
     public function getValue()
     {

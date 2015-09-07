@@ -20,11 +20,11 @@ namespace Prismic\Fragment\Link;
 class ImageLink extends FileLink
 {
     /**
-     * @var integer the height of the image
+     * @var int the height of the image
      */
     private $height;
     /**
-     * @var integer the width of the image
+     * @var int the width of the image
      */
     private $width;
 
@@ -35,8 +35,8 @@ class ImageLink extends FileLink
      * @param string $kind     the kind of resource it is (document, image, ...)
      * @param string $size     the size of the resource, in bytes
      * @param string $filename the resource's original filename, in bytes
-     * @param string $height   the height of the image
-     * @param string $width    the width of the image
+     * @param int    $height   the height of the image
+     * @param int    $width    the width of the image
      */
     public function __construct($url, $kind, $size, $filename, $height, $width)
     {
@@ -50,7 +50,7 @@ class ImageLink extends FileLink
      *
      * @api
      *
-     * @return integer the height of the image
+     * @return int the height of the image
      */
     public function getHeight()
     {
@@ -62,7 +62,7 @@ class ImageLink extends FileLink
      *
      * @api
      *
-     * @return integer the width of the image
+     * @return int the width of the image
      */
     public function getWidth()
     {
@@ -70,8 +70,8 @@ class ImageLink extends FileLink
     }
 
     /**
-     * Parses a proper bit of unmarshaled JSON into an ImageLink object.
-     * This is used internally during the unmarshaling of API calls.
+     * Parses a proper bit of unmarshalled JSON into an ImageLink object.
+     * This is used internally during the unmarshalling of API calls.
      *
      * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *

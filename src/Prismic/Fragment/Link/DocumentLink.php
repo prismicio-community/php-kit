@@ -9,6 +9,7 @@
  */
 
 namespace Prismic\Fragment\Link;
+
 use Prismic\WithFragments;
 
 /**
@@ -47,13 +48,13 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Constructs a document link.
      *
-     * @param string  $id       the ID of the linked document
-     * @param string  $uid      the UID of the linked document (can be null)
-     * @param string  $type     the type of the linked document
-     * @param array   $tags     an array of strings which are the document's tags
-     * @param string  $slug     the current slug of the document
+     * @param string  $id        the ID of the linked document
+     * @param string  $uid       the UID of the linked document (can be null)
+     * @param string  $type      the type of the linked document
+     * @param array   $tags      an array of strings which are the document's tags
+     * @param string  $slug      the current slug of the document
      * @param array   $fragments the additional fragment data
-     * @param boolean $isBroken returns true if the link is towards a document that is not live, for instance
+     * @param boolean $isBroken  returns true if the link is towards a document that is not live, for instance
      */
     public function __construct($id, $uid, $type, $tags, $slug, array $fragments, $isBroken)
     {
@@ -84,8 +85,8 @@ class DocumentLink extends WithFragments implements LinkInterface
     }
 
     /**
-     * Parses a proper bit of unmarshaled JSON into a DocumentLink object.
-     * This is used internally during the unmarshaling of API calls.
+     * Parses a proper bit of unmarshalled JSON into a DocumentLink object.
+     * This is used internally during the unmarshalling of API calls.
      *
      * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *

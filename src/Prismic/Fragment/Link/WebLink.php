@@ -70,9 +70,9 @@ class WebLink implements LinkInterface
     /**
      * Returns the URL of the resource we're linking to online
      *
-     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
-     *
      * @api
+     *
+     * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *
      * @return string the URL of the resource we're linking to online
      */
@@ -94,8 +94,8 @@ class WebLink implements LinkInterface
     }
 
     /**
-     * Parses a proper bit of unmarshaled JSON into a WebLink object.
-     * This is used internally during the unmarshaling of API calls.
+     * Parses a proper bit of unmarshalled JSON into a WebLink object.
+     * This is used internally during the unmarshalling of API calls.
      *
      * @param \stdClass $json the raw JSON that needs to be transformed into native objects.
      *

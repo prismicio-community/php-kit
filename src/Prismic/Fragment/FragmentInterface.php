@@ -25,7 +25,7 @@ interface FragmentInterface
     public function asText();
 
     /**
-     * Return the value of the fagment as HTML.
+     * Return the value of the fragment as HTML.
      *
      * @api
      *

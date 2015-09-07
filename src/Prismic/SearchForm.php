@@ -31,11 +31,11 @@ namespace Prismic;
 class SearchForm
 {
     /**
-     * @var Prismic\Api the API object containing all the information to know where to query
+     * @var \Prismic\Api the API object containing all the information to know where to query
      */
     private $api;
     /**
-     * @var Prismic\Form the REST form we're querying on in the API
+     * @var \Prismic\Form the REST form we're querying on in the API
      */
     private $form;
     /**
@@ -73,15 +73,19 @@ class SearchForm
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
      * @api
+     *
      * @param  string $key the name of the parameter
      * @param  string $value the value of the parameter
+     *
      * @throws \RuntimeException
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new parameter added
      */
     public function set($key, $value)
     {
         if (isset($key) && isset($value)) {
             $fields = $this->form->getFields();
+            /** @var FieldForm $field */
             $field = $fields[$key];
 
             if (is_int($value) && $field->getType() != "Integer") {
@@ -111,7 +115,9 @@ class SearchForm
      * Set the repository's ref.
      *
      * @api
+     *
      * @param  string|\Prismic\Ref $ref the ref we wish to query on, or its ID.
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new ref parameter added
      */
     public function ref($ref)
@@ -126,7 +132,9 @@ class SearchForm
      * Set the after parameter: the id of the document to start the results from (excluding that document).
      *
      * @api
-     * @param  string            $documentId
+     *
+     * @param string $documentId
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new after parameter added
      */
     public function after($documentId)
@@ -139,6 +147,7 @@ class SearchForm
      * an array of strings, or several strings.
      *
      * @api
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetch parameter added
      */
     public function fetch()
@@ -157,6 +166,7 @@ class SearchForm
      * an array of strings, or several strings.
      *
      * @api
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
      */
     public function fetchLinks()
@@ -174,7 +184,8 @@ class SearchForm
      * Set the query's page size, for the pagination.
      *
      * @api
-     * @param  int                 $pageSize
+     *
+     * @param  int $pageSize
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new pageSize parameter added
      */
     public function pageSize($pageSize)
@@ -186,7 +197,9 @@ class SearchForm
      * Set the query's page, for the pagination.
      *
      * @api
-     * @param  int                 $page
+     *
+     * @param  int $page
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new page parameter added
      */
     public function page($page)
@@ -198,7 +211,7 @@ class SearchForm
      * Set the query's ordering, setting in what order the documents must be retrieved.
      *
      * @api
-     * @param  string              $orderings
+     *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new orderings parameter added
      */
     public function orderings()
@@ -209,9 +222,10 @@ class SearchForm
     }
 
     /**
-     * Submit the current API call, and unmarshals the result into PHP objects.
+     * Submit the current API call, and unmarshalls the result into PHP objects.
      *
-     * @return \Prismic\Documents the result of the call
+     * @return \Prismic\Response the result of the call
+     *
      * @throws \RuntimeException
      */
     public function submit()
@@ -226,7 +240,8 @@ class SearchForm
      * allowed) since all we care about is one of the returned non-result
      * fields.
      *
-     * @return integer           Total number of results
+     * @return int Total number of results
+     *
      * @throws \RuntimeException
      */
     public function count()
@@ -285,6 +300,7 @@ class SearchForm
      * Performs the actual submit call, without the unmarshalling.
      *
      * @throws \RuntimeException if the Form type is not supported
+     *
      * @return \stdClass the raw (unparsed) response.
      */
     private function submit_raw()

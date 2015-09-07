@@ -66,7 +66,7 @@ class FieldForm
     /**
      * Returns whether the parameter can be used multiple times.
      *
-     * @return boolean true if the paramater can be used multiple times, false otherwise.
+     * @return boolean true if the parameter can be used multiple times, false otherwise.
      */
     public function isMultiple()
     {

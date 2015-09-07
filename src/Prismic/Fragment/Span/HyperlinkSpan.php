@@ -10,6 +10,8 @@
 
 namespace Prismic\Fragment\Span;
 
+use Prismic\Fragment\Link\LinkInterface;
+
 /**
  * This class embodies a link span.
  * A span comes in a array of spans, which is served with a raw text. If the raw text is
@@ -20,15 +22,15 @@ class HyperlinkSpan implements SpanInterface
 {
 
     /**
-     * @var integer the start of the span
+     * @var int the start of the span
      */
     private $start;
     /**
-     * @var integer the end of the span
+     * @var int the end of the span
      */
     private $end;
     /**
-     * @var \Prismic\Fragment\Link\LinkInterface the link to point to
+     * @var LinkInterface the link to point to
      */
     private $link;
     /**
@@ -39,10 +41,10 @@ class HyperlinkSpan implements SpanInterface
     /**
      * Constructs a link span
      *
-     * @param integer $start the start of the span
-     * @param integer $end the end of the span
-     * @param \Prismic\Fragment\Link\LinkInterface $link the link to point to
-     * @param $label
+     * @param int           $start the start of the span
+     * @param int           $end   the end of the span
+     * @param LinkInterface $link  the link to point to
+     * @param string        $label can be null
      */
     public function __construct($start, $end, $link, $label = NULL)
     {
@@ -57,7 +59,7 @@ class HyperlinkSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the start of the span
+     * @return int the start of the span
      */
     public function getStart()
     {
@@ -69,7 +71,7 @@ class HyperlinkSpan implements SpanInterface
      *
      * @api
      *
-     * @return integer the end of the span
+     * @return int the end of the span
      */
     public function getEnd()
     {
@@ -81,7 +83,7 @@ class HyperlinkSpan implements SpanInterface
      *
      * @api
      *
-     * @return \Prismic\Fragment\Link\LinkInterface the link to point to
+     * @return LinkInterface the link to point to
      */
     public function getLink()
     {

@@ -10,6 +10,8 @@
 
 namespace Prismic;
 
+use Prismic\Fragment\Link\DocumentLink;
+
 /**
  * The LinkResolver convert prismic.io's links into your application's ones.
  * Since prismic.io can't possibly know how to resolve internal links into usable
@@ -31,17 +33,18 @@ abstract class LinkResolver
      * Returns the application-specific URL related to this document link, or
      * null if the link is deemed invalid
      *
-     * @param Fragment\Link\DocumentLink $link The document link
+     * @param DocumentLink $link The document link
      *
-     * @return String or null
+     * @return string|null
      */
     abstract public function resolve($link);
 
     /**
      * What happens when the link resolver gets called.
      *
-     * @param Fragment\Link\DocumentLink $link The document link
-     * @return String
+     * @param DocumentLink $link The document link
+
+     * @return string
      */
     public function __invoke($link)
     {
@@ -53,7 +56,7 @@ abstract class LinkResolver
      *
      * @param Document $document The document
      *
-     * @return String
+     * @return string
      */
     public function resolveDocument($document)
     {
@@ -63,9 +66,9 @@ abstract class LinkResolver
     /**
      * Returns the application-specific URL related to this document link
      *
-     * @param Fragment\Link\DocumentLink $link The document link
+     * @param DocumentLink $link The document link
      *
-     * @return String
+     * @return string
      */
     public function resolveLink($link)
     {
@@ -77,7 +80,7 @@ abstract class LinkResolver
      *
      * @param API      $api      The API
      * @param Document $document The document to test
-     * @param String   $bookmark The bookmark to test
+     * @param string   $bookmark The bookmark to test
      *
      * @return true if the given document corresponds to the given bookmark
      */
@@ -89,9 +92,9 @@ abstract class LinkResolver
     /**
      * Returns true if the given document link corresponds to the given bookmark
      *
-     * @param API                        $api      The API
-     * @param Fragment\Link\DocumentLink $link     The document link to test
-     * @param String                     $bookmark The bookmark to test
+     * @param API          $api      The API
+     * @param DocumentLink $link     The document link to test
+     * @param string       $bookmark The bookmark to test
      *
      * @return true if the given document corresponds to the given bookmark
      */
@@ -110,11 +113,11 @@ abstract class LinkResolver
      *
      * @param Document $document The document
      *
-     * @return Fragment\Link\DocumentLink The document link
+     * @return DocumentLink The document link
      */
     private function asLink($document)
     {
-        return new Fragment\Link\DocumentLink(
+        return new DocumentLink(
             $document->getId(),
             $document->getUid(),
             $document->getType(),

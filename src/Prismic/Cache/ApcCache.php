@@ -53,7 +53,7 @@ class ApcCache implements CacheInterface
      *
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
-     * @param integer   $ttl   the time until this cache entry expires
+     * @param int       $ttl   the time until this cache entry expires
      * @return void
      */
     public function set($key, $value, $ttl = 0)
