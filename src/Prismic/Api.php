@@ -13,8 +13,11 @@ namespace Prismic;
 use Ivory\HttpAdapter\ConfigurationInterface;
 use Ivory\HttpAdapter\Configuration;
 use Ivory\HttpAdapter\CurlHttpAdapter;
+use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use Ivory\HttpAdapter\MultiHttpAdapterException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
 use \Prismic\Cache\NoCache;
@@ -384,10 +387,16 @@ class Api
 
         // Query the server for the rest
         if (count($urls) > 0) {
-            $raw_responses = $this->getHttpAdapter()->sendRequests($urls);
+            try {
+                $raw_responses = $this->getHttpAdapter()->sendRequests($urls);
+            } catch (MultiHttpAdapterException $e) {
+                $raw_responses = $e->getResponses();
+                $exceptions = $e->getExceptions();
+            }
+
             foreach ($raw_responses as $response) {
-                $url = $response->getParameter('request')->getUrl();
-                $cacheControl = $response->getHeader('Cache-Control');
+                $url = $response->getParameter('request')->getUri()->__toString();
+                $cacheControl = $response->getHeader('Cache-Control')[0];
                 $cacheDuration = null;
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
                     $cacheDuration = (int) $groups[1];
@@ -436,10 +445,6 @@ class Api
         $configuration = new Configuration();
         $configuration->setUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
 
-        // We need to add the subscriber to have errors on 4.x.x and 5.x.x.
-        $statusCodeSubscriber = new StatusCodeSubscriber();
-        $configuration->getEventDispatcher()->addSubscriber($statusCodeSubscriber);
-
         return $configuration;
     }
 
@@ -456,6 +461,13 @@ class Api
         if ($configuration === null) {
             $configuration = self::defaultHttpAdapterConfiguration();
         }
-        return new CurlHttpAdapter($configuration);
+        $dispatcher = new EventDispatcher();
+        $adapter = new EventDispatcherHttpAdapter(new CurlHttpAdapter($configuration), $dispatcher);
+
+        // We need to add the subscriber to have errors on 4.x.x and 5.x.x.
+        $statusCodeSubscriber = new StatusCodeSubscriber();
+        $dispatcher->addSubscriber($statusCodeSubscriber);
+
+        return $adapter;
     }
 }

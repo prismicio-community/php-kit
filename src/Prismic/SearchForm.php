@@ -318,7 +318,7 @@ class SearchForm
                 return $response;
             } else {
                 $response = $this->api->getHttpAdapter()->get($url);
-                $cacheControl = $response->getHeader('Cache-Control');
+                $cacheControl = $response->getHeader('Cache-Control')[0];
                 $cacheDuration = null;
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
                     $cacheDuration = (int) $groups[1];
