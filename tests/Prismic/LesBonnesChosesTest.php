@@ -39,7 +39,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getResultsSize(), 20);
         $this->assertEquals($response->getTotalResultsSize(), 40);
         $this->assertEquals($response->getTotalPages(), 2);
-        $this->assertEquals($response->getNextPage(), "http://lesbonneschoses.cdn.prismic.io/api/documents/search?ref=UlfoxUnM08QWYXdl&page=2&pageSize=20");
+        $this->assertEquals($response->getNextPage(), "http://d2aw36oac6sa9o.cloudfront.net/api/documents/search?ref=UlfoxUnM08QWYXdl&page=2&pageSize=20");
         $this->assertEquals($response->getPrevPage(), NULL);
     }
 
@@ -146,7 +146,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $fakeResponse->next_page = NULL;
         $fakeResponse->prev_page = NULL;
 
-        \apc_store('http://lesbonneschoses.cdn.prismic.io/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
+        \apc_store('http://d2aw36oac6sa9o.cloudfront.net/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
 
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 
