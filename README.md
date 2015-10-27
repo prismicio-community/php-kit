@@ -35,7 +35,7 @@ use Prismic\Api;
 
 ```
 
-The kit is compatible and tested with PHP5.3 and above.
+The kit is compatible and tested with PHP 5.4 and above.
 
 #### Get started with prismic.io
 
