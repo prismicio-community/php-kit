@@ -106,4 +106,77 @@ class Image implements FragmentInterface
     {
         return $this->views;
     }
+
+    /**
+     * Returns the URL of the main view.
+     *
+     * @api
+     *
+     * @return string  the image view's URL
+     */
+    public function getUrl()
+    {
+        return $this->main->url;
+    }
+
+    /**
+     * Returns the alternative text of the main view.
+     *
+     * @api
+     *
+     * @return string  the image view's alternative text
+     */
+    public function getAlt()
+    {
+        return $this->main->alt;
+    }
+
+    /**
+     * Returns the copyright text of the image view.
+     *
+     * @api
+     *
+     * @return string  the main view's copyright text
+     */
+    public function getCopyright()
+    {
+        return $this->main->copyright;
+    }
+
+    /**
+     * Returns the width of the image view.
+     *
+     * @api
+     *
+     * @return int  the main view's width
+     */
+    public function getWidth()
+    {
+        return $this->main->width;
+    }
+
+    /**
+     * Returns the height of the image view.
+     *
+     * @api
+     *
+     * @return int  the main view's height
+     */
+    public function getHeight()
+    {
+        return $this->main->height;
+    }
+
+    /**
+     * Returns the link to point to
+     *
+     * @api
+     *
+     * @return LinkInterface the link to point to
+     */
+    public function getLink()
+    {
+        return $this->main->link;
+    }
+
 }
