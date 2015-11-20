@@ -116,7 +116,7 @@ class Image implements FragmentInterface
      */
     public function getUrl()
     {
-        return $this->main->url;
+        return $this->main->getUrl();
     }
 
     /**
@@ -128,7 +128,7 @@ class Image implements FragmentInterface
      */
     public function getAlt()
     {
-        return $this->main->alt;
+        return $this->main->getAlt();
     }
 
     /**
@@ -140,7 +140,7 @@ class Image implements FragmentInterface
      */
     public function getCopyright()
     {
-        return $this->main->copyright;
+        return $this->main->getCopyright();
     }
 
     /**
@@ -152,7 +152,7 @@ class Image implements FragmentInterface
      */
     public function getWidth()
     {
-        return $this->main->width;
+        return $this->main->getWidth();
     }
 
     /**
@@ -164,7 +164,7 @@ class Image implements FragmentInterface
      */
     public function getHeight()
     {
-        return $this->main->height;
+        return $this->main->getHeight();
     }
 
     /**
@@ -176,7 +176,7 @@ class Image implements FragmentInterface
      */
     public function getLink()
     {
-        return $this->main->link;
+        return $this->main->getLink();
     }
 
 }
