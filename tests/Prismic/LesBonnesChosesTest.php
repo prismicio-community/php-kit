@@ -77,8 +77,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     public function testSubmitProductsFormWithPredicate()
     {
         $api = Api::get(self::$testRepository);
-        $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->ref($masterRef)->query(Predicates::at('my.product.flavour', 'Chocolate'))->submit()->getResults();
+        $results = $api->query(Predicates::at('my.product.flavour', 'Chocolate'))->getResults();
         $this->assertEquals(5, count($results));
     }
 
@@ -86,7 +85,10 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     {
         $api = Api::get(self::$testRepository);
         $masterRef = $api->master()->getRef();
-        $results = $api->forms()->products->orderings('[my.product.price]')->ref($masterRef)->submit()->getResults();
+        $results = $api->query(
+            Predicates::at("document.type", "product"),
+            array('orderings' => '[my.product.price]')
+        )->getResults();
         $this->assertEquals('UlfoxUnM0wkXYXbK', $results[0]->getId()); // this is the "Hot Berry Cupcake", the cheapest one.
     }
 
@@ -109,8 +111,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
     public function testLinkedDocuments()
     {
         $api = Api::get("https://micro.prismic.io/api");
-        $masterRef = $api->master()->getRef();
-        $results = $api->forms()->everything->ref($masterRef)->query(Predicates::any('document.type', array("doc", "docchapter")))->submit()->getResults();
+        $results = $api->query(Predicates::any('document.type', array("doc", "docchapter")))->getResults();
         $linkedDocuments = $results[0]->getLinkedDocuments();
         $this->assertEquals(1, count($linkedDocuments));
         $this->assertEquals("U0w8OwEAACoAQEvB", $linkedDocuments[0]->getId());

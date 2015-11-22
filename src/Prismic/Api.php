@@ -421,6 +421,83 @@ class Api
     }
 
     /**
+     * Shortcut to query on the default reference.
+     * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
+     *
+     * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
+     * @param  array                             $options   query options: pageSize, orderings, etc.
+     *
+     * @return \Prismic\Response   the response, including documents and pagination information
+     */
+    public function query($q, $options = array()) {
+        if (isset($_COOKIE[Api::PREVIEW_COOKIE])) {
+            $ref = $_COOKIE[Api::PREVIEW_COOKIE];
+        } else if (isset($_COOKIE[Api::EXPERIMENTS_COOKIE])) {
+            $ref = $_COOKIE[Api::EXPERIMENTS_COOKIE];
+        } else {
+            $ref = $this->master()->getRef();
+        }
+        $form = $this->forms()->everything->ref($this->master()->getRef());
+        if ($q != null && $q != "") {
+            $form = $form->query($q);
+        }
+        foreach ($options as $key => $value) {
+            $form = $form->set($key, $value);
+        }
+        return $form->submit();
+    }
+
+    /**
+     * Return the first document matching the query
+     * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
+     *
+     * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
+     *
+     * @return \Prismic\Document     the resulting document, or null
+     */
+    public function queryFirst($q) {
+        $documents = $this->query($q)->getResults();
+        if (count($documents) > 0) {
+            return $documents[0];
+        }
+        return null;
+    }
+
+    /**
+     * Search a document by its id
+     *
+     * @param string   $id          the requested id
+     *
+     * @return \Prismic\Document    the resulting document (null if no match)
+     */
+    public function getByID($id) {
+        return $this->queryFirst(Predicates::at("document.id", $id));
+    }
+
+    /**
+     * Search a document by its uid
+     *
+     * @param string   $type          the custom type of the requested document
+     * @param string   $id            the requested uid
+     *
+     * @return \Prismic\Document    the resulting document (null if no match)
+     */
+    public function getByUID($type, $uid) {
+        return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid));
+    }
+
+    /**
+     * Return a set of document from their ids
+     *
+     * @param array   $ids          array of strings, the requested ids
+     *
+     * @return \Prismic\Response   the response, including documents and pagination information
+     */
+    public function getByIDs($ids) {
+        return $this->query(Predicates::in("document.id", $ids));
+    }
+
+    /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
      *
      * @return ApcCache|NoCache
@@ -472,4 +549,5 @@ class Api
 
         return $adapter;
     }
+
 }

@@ -320,14 +320,8 @@ class DocTest extends \PHPUnit_Framework_TestCase
 
     public function testImage() {
         $api = Api::get("https://lesbonneschoses.cdn.prismic.io/api");
-        $documents = $api
-            ->forms()->everything
-            ->query(Predicates::at("document.id", "UlfoxUnM0wkXYXbO"))
-            ->ref($api->master())
-            ->submit()
-            ->getResults();
+        $doc = $api->getByID("UlfoxUnM0wkXYXbO");
 
-        $doc = $documents[0];
         // startgist:c202e1c27ddedf88aa7f:prismic-images.php
         // Accessing image fields
         $image = $doc->getImage("product.image");
