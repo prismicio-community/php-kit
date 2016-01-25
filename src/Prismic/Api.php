@@ -437,7 +437,7 @@ class Api
         } else {
             $ref = $this->master()->getRef();
         }
-        $form = $this->forms()->everything->ref($this->master()->getRef());
+        $form = $this->forms()->everything->ref($ref);
         if ($q != null && $q != "") {
             $form = $form->query($q);
         }
