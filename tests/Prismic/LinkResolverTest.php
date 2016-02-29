@@ -2,6 +2,11 @@
 
 namespace Prismic\Test;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+
 use Prismic\API;
 use Prismic\Cache\ApcCache;
 use Prismic\Document;
@@ -24,15 +29,23 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
         $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array());
         $this->link = new DocumentLink($this->id, null, $type, $tags, $slugs[0], array(), $isBroken);
-        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $response->expects($this->once())->method('getBody')->will($this->returnValue(file_get_contents(__DIR__.'/../fixtures/data.json')));
+        $response = file_get_contents(__DIR__.'/../fixtures/data.json');
 
-        $httpAdapter = $this->getMock('Ivory\HttpAdapter\HttpAdapterInterface');
-        $httpAdapter->expects($this->any())->method('get')->will($this->returnValue($response));
+        $mock = new MockHandler([
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response),
+            new Response(200, [], $response)
+        ]);
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
 
-        $this->api = Api::get('don\'t care about this value', null, $httpAdapter, $cache);
+        $this->api = Api::get('dont care about this value', null, $client, $cache);
     }
 
     public function testResolveDocumentLink()

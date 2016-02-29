@@ -15,8 +15,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "egeloen/http-adapter": "~0.8.0",
-        "symfony/event-dispatcher": "~2.0"
+        "symfony/event-dispatcher": "~2.0",
+        "guzzlehttp/guzzle": "^6.1"
     },
     "require-dev": {
         "codeclimate/php-test-reporter": "dev-master",

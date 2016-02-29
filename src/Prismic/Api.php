@@ -10,13 +10,8 @@
 
 namespace Prismic;
 
-use Ivory\HttpAdapter\ConfigurationInterface;
-use Ivory\HttpAdapter\Configuration;
-use Ivory\HttpAdapter\CurlHttpAdapter;
-use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
-use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
-use Ivory\HttpAdapter\HttpAdapterInterface;
-use Ivory\HttpAdapter\MultiHttpAdapterException;
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
@@ -61,23 +56,23 @@ class Api
      */
     private $cache;
     /**
-     * @var HttpAdapterInterface
+     * @var Client
      */
-    private $httpAdapter;
+    private $httpClient;
 
     /**
      * Private constructor, not be used outside of this class.
      *
      * @param string                    $data
      * @param string|null               $accessToken
-     * @param HttpAdapterInterface|null $httpAdapter
+     * @param HttpClient|null           $httpAdapter
      * @param CacheInterface|null       $cache
      */
-    private function __construct($data, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null)
+    private function __construct($data, $accessToken = null, Client $httpClient = null, CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
+        $this->httpClient = is_null($httpClient) ? new Client() : $httpClient;
         $this->cache = is_null($cache) ? self::defaultCache() : $cache;
     }
 
@@ -229,14 +224,12 @@ class Api
      */
     public function previewSession($token, $linkResolver, $defaultUrl)
     {
-        $response = $this->getHttpAdapter()->get($token);
+        $response = $this->getHttpClient()->get($token);
         $response = json_decode($response->getBody(true));
         if (isset($response->mainDocument)) {
-            $documents = $this->forms()->everything
-                ->query(Predicates::at("document.id", $response->mainDocument))
-                ->ref($token)
-                ->submit()
-                ->getResults();
+            $documents = $this
+                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token])
+                       ->getResults();
             if (count($documents) > 0) {
                 if ($url = $linkResolver->resolveDocument($documents[0])) {
                     return $url;
@@ -287,13 +280,13 @@ class Api
     }
 
     /**
-     * Accessing the underlying HTTP adapter object responsible for the CURL requests
+     * Accessing the underlying Guzzle HTTP client
      *
-     * @return HttpAdapterInterface the HTTP adapter object itself
+     * @return HttpAdapterInterface
      */
-    public function getHttpAdapter()
+    public function getHttpClient()
     {
-        return $this->httpAdapter;
+        return $this->httpClient;
     }
 
     /**
@@ -303,28 +296,28 @@ class Api
      *
      * @api
      *
-     * @param  string               $action      the URL of your repository API's endpoint
-     * @param  string               $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  HttpAdapterInterface $httpAdapter by default, the HTTP adapter uses CURL with a certain configuration, but you can override it here
-     * @param  CacheInterface       $cache       Cache implementation
-     * @param  int                  $apiCacheTTL max time to keep the API object in cache (in seconds)
+     * @param  string           $action      the URL of your repository API's endpoint
+     * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  Client           $httpClient  Custom Guzzle http client
+     * @param  CacheInterface   $cache       Cache implementation
+     * @param  int              $apiCacheTTL max time to keep the API object in cache (in seconds)
      *
      * @throws \RuntimeException
      *
      * @return Api the Api object, usable to perform queries
      */
-    public static function get($action, $accessToken = null, HttpAdapterInterface $httpAdapter = null, CacheInterface $cache = null, $apiCacheTTL = 5)
+    public static function get($action, $accessToken = null, $httpClient = null, CacheInterface $cache = null, $apiCacheTTL = 5)
     {
         $cache = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
         $apiData = $cache->get($cacheKey);
-        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpAdapter, $cache) : null;
+        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpClient, $cache) : null;
         if ($api) {
             return $api;
         } else {
             $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-            $httpAdapter = is_null($httpAdapter) ? self::defaultHttpAdapter() : $httpAdapter;
-            $response = $httpAdapter->get($url);
+            $httpClient = is_null($httpClient) ? new Client() : $httpClient;
+            $response = $httpClient->get($url);
             $response = json_decode($response->getBody(true));
             $experiments = isset($response->experiments)
                          ? Experiments::parse($response->experiments)
@@ -350,7 +343,7 @@ class Api
                 $response->oauth_token
             );
 
-            $api = new Api($apiData, $accessToken, $httpAdapter, $cache);
+            $api = new Api($apiData, $accessToken, $httpClient, $cache);
             $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
 
             return $api;
@@ -373,8 +366,9 @@ class Api
         $responses = array();
 
         // Get what we can from the cache
-        $all_urls = array();
-        $urls = array();
+        $all_urls = [];
+        $promises = [];
+        $urls = [];
         foreach ($forms as $i => $form) {
             $url = $form->url();
             array_push($all_urls, $url);
@@ -384,20 +378,16 @@ class Api
             } else {
                 $responses[$i] = null;
                 array_push($urls, $url);
+                $promises[$url] = $this->getHttpClient()->getAsync($url);
             }
         }
 
         // Query the server for the rest
-        if (count($urls) > 0) {
-            try {
-                $raw_responses = $this->getHttpAdapter()->sendRequests($urls);
-            } catch (MultiHttpAdapterException $e) {
-                $raw_responses = $e->getResponses();
-                $exceptions = $e->getExceptions();
-            }
+        if (count($promises) > 0) {
+            $raw_responses = Promise\unwrap($promises);
 
-            foreach ($raw_responses as $response) {
-                $url = $response->getParameter('request')->getUri()->__toString();
+            foreach ($urls as $url) {
+                $response = $raw_responses[$url];
                 $cacheControl = $response->getHeader('Cache-Control')[0];
                 $cacheDuration = null;
                 if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
@@ -508,46 +498,6 @@ class Api
             return new ApcCache();
         }
         return new NoCache();
-    }
-
-    /**
-     * Get the default HTTP adapter configuration object
-     *
-     * This can be used for example to modify but not completely replace the
-     * default configuration (e.g. to prefix the user agent string), or to use
-     * the default configuration for a non-default HTTP adapter.
-     *
-     * @return \Ivory\HttpAdapter\ConfigurationInterface Configuration object
-     */
-    public static function defaultHttpAdapterConfiguration()
-    {
-        $configuration = new Configuration();
-        $configuration->setUserAgent('Prismic-php-kit/' . self::VERSION . ' PHP/' . phpversion());
-
-        return $configuration;
-    }
-
-    /**
-     * Get the default HTTP adapter used in the kit; this is entirely
-     * overridable by passing an instance of
-     * Ivory\HttpAdapter\HttpAdapterInterface to Api.get
-     *
-     * @param ConfigurationInterface|null $configuration Configuration object; use default if null
-     * @return HttpAdapterInterface HTTP adapter
-     */
-    public static function defaultHttpAdapter(ConfigurationInterface $configuration = null)
-    {
-        if ($configuration === null) {
-            $configuration = self::defaultHttpAdapterConfiguration();
-        }
-        $dispatcher = new EventDispatcher();
-        $adapter = new EventDispatcherHttpAdapter(new CurlHttpAdapter($configuration), $dispatcher);
-
-        // We need to add the subscriber to have errors on 4.x.x and 5.x.x.
-        $statusCodeSubscriber = new StatusCodeSubscriber();
-        $dispatcher->addSubscriber($statusCodeSubscriber);
-
-        return $adapter;
     }
 
 }
