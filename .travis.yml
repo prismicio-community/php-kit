@@ -2,15 +2,14 @@ language: php
 sudo: false
 
 php:
-  - 5.4
   - 5.5
   - 5.6
+  - 7.0
 
 before_script:
-  - chmod +x ./tests/install-apcu.sh
-  - ./tests/install-apcu.sh
-  - phpenv config-add tests/$TRAVIS_PHP_VERSION.ini
-  - phpenv config-add tests/apc.ini
+  - if [[ $TRAVIS_PHP_VERSION =~ 5.[56] ]] ; then echo yes | pecl install apcu-4.0.10; fi;
+  - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then echo yes | pecl install apcu; fi;
+  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' ]]; then phpenv config-add ./tests/apc.ini; fi;
   - composer install --dev --prefer-source
 
 script: phpunit --coverage-clover build/logs/clover.xml
