@@ -12,7 +12,7 @@ namespace Prismic\Cache;
 
 /**
  * The default implementation that is passed in the Api object when created:
- * it is based on APC, and therefore requires APC to be installed on the server.
+ * it is based on APCU, and therefore requires APCU to be installed on the server.
  */
 class ApcCache implements CacheInterface
 {
@@ -26,7 +26,7 @@ class ApcCache implements CacheInterface
      */
     public function has($key)
     {
-        return \apc_exists($key);
+        return \apcu_exists($key);
     }
 
     /**
@@ -39,7 +39,7 @@ class ApcCache implements CacheInterface
      */
     public function get($key)
     {
-        $value = \apc_fetch($key, $success);
+        $value = \apcu_fetch($key, $success);
         if (!$success) {
             return null;
         }
@@ -58,7 +58,7 @@ class ApcCache implements CacheInterface
      */
     public function set($key, $value, $ttl = 0)
     {
-        \apc_store($key, $value, $ttl);
+        \apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -71,7 +71,7 @@ class ApcCache implements CacheInterface
      */
     public function delete($key)
     {
-        \apc_delete($key);
+        \apcu_delete($key);
     }
 
     /**
@@ -83,6 +83,6 @@ class ApcCache implements CacheInterface
      */
     public function clear()
     {
-        \apc_clear_cache("user");
+        \apcu_clear_cache();
     }
 }
