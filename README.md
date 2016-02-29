@@ -20,7 +20,8 @@ $ composer require prismic/php-sdk
 
 The recommended way to get started is with a sample project:
 
-* 
+* [Sample blog](https://github.com/prismicio/php-websitestarter) using Slim Framework
+* [Sample Symfony app](https://github.com/prismicio/php-symfony-starter)
 
 #### Usage
 
