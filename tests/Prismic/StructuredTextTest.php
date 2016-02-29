@@ -234,9 +234,12 @@ class StructuredTextTest Extends \PHPUnit_Framework_TestCase
         $json = json_decode(file_get_contents(__DIR__.'/../fixtures/nested.json'));
         $document = Document::parse($json[0]);
         $structuredText = $document->getStructuredText('article.content');
-        $this->assertEquals(
-            '<p><em><strong>SOME Thingyy</strong></em><em>:</em> <em>12345678</em></p>',
-            $structuredText->asHtml()
+        $this->assertContains(
+            $structuredText->asHtml(),
+            array(
+                '<p><strong><em>SOME Thingyy</em></strong><em>:</em> <em>12345678</em></p>',
+                '<p><em><strong>SOME Thingyy</strong></em><em>:</em> <em>12345678</em></p>',
+            )
         );
     }
 
