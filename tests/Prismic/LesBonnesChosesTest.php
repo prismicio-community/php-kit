@@ -146,7 +146,7 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $fakeResponse->next_page = NULL;
         $fakeResponse->prev_page = NULL;
 
-        \apc_store('https://d2aw36oac6sa9o.cloudfront.net/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
+        \apcu_store('https://d2aw36oac6sa9o.cloudfront.net/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
 
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 
