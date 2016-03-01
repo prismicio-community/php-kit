@@ -136,6 +136,9 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $masterRef = $api->master()->getRef();
         $results1 = $api->forms()->everything->ref($masterRef)->submit();
 
+        $info = \apcu_cache_info();
+        fwrite(STDERR, print_r($info, TRUE));
+
         $fakeResponse = new \stdClass;
         $fakeResponse->results = array();
         $fakeResponse->page = 1;
@@ -147,6 +150,9 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $fakeResponse->prev_page = NULL;
 
         \apcu_store('https://d2aw36oac6sa9o.cloudfront.net/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
+
+        $info = \apcu_cache_info();
+        fwrite(STDERR, print_r($info, TRUE));
 
         $results2 = $api->forms()->everything->ref($masterRef)->submit();
 
