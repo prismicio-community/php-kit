@@ -130,35 +130,6 @@ class LesBonnesChosesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($results[0]->getId(), "UlfoxUnM0wkXYXbG");
     }
 
-    public function testImmutableObjectCache()
-    {
-        $api = Api::get(self::$testRepository);
-        $masterRef = $api->master()->getRef();
-        $results1 = $api->forms()->everything->ref($masterRef)->submit();
-
-        $info = \apcu_cache_info();
-        fwrite(STDERR, print_r($info, TRUE));
-
-        $fakeResponse = new \stdClass;
-        $fakeResponse->results = array();
-        $fakeResponse->page = 1;
-        $fakeResponse->results_per_page = 0;
-        $fakeResponse->results_size = 0;
-        $fakeResponse->total_results_size = 0;
-        $fakeResponse->total_pages = 0;
-        $fakeResponse->next_page = NULL;
-        $fakeResponse->prev_page = NULL;
-
-        \apcu_store('https://d2aw36oac6sa9o.cloudfront.net/api/documents/search?page=1&pageSize=20&ref=UlfoxUnM08QWYXdl', $fakeResponse, 1000);
-
-        $info = \apcu_cache_info();
-        fwrite(STDERR, print_r($info, TRUE));
-
-        $results2 = $api->forms()->everything->ref($masterRef)->submit();
-
-        $this->assertTrue($results1 != $results2);
-    }
-
     public function testFetchLinks()
     {
         $api = Api::get(self::$testRepository);
