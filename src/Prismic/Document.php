@@ -198,6 +198,16 @@ class Document extends WithFragments
     }
 
     /**
+     * Returns the raw json data received from the server.
+     * Most of the time it's better to use a different helper, but it can be useful for example
+     * for newer features not yet integrated in the kit
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Convert the document to a DocumentLink
      *
      * @return DocumentLink the newly created DocumentLink
