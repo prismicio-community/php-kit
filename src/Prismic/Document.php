@@ -57,6 +57,10 @@ class Document extends WithFragments
      * @var array the slugs used in the document, in the past and today; today's slug is the head (please use instance methods to get information that is in there)
      */
     private $slugs;
+    /**
+     * @var the raw json retrieved from the server
+     */
+    private $data;
 
     /**
      * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
@@ -67,9 +71,10 @@ class Document extends WithFragments
      * @param string      $href      the URL of the document in the repository's API
      * @param array       $tags      the tags used in the document
      * @param array       $slugs     the slugs used in the document, in the past and today; today's slug is the head
+     * @param json        $data      the raw json retrieved from the server
      * @param array       $fragments all the fragments in the document
      */
-    public function __construct($id, $uid, $type, $href, array $tags, array $slugs, array $fragments)
+    public function __construct($id, $uid, $type, $href, array $tags, array $slugs, array $fragments, $data)
     {
         parent::__construct($fragments);
         $this->id = $id;
@@ -78,6 +83,7 @@ class Document extends WithFragments
         $this->href = $href;
         $this->tags = $tags;
         $this->slugs = $slugs;
+        $this->data = $data;
     }
 
     /**
@@ -226,7 +232,8 @@ class Document extends WithFragments
             $json->href,
             $json->tags,
             $slugs,
-            $fragments
+            $fragments,
+            $json
         );
     }
 }

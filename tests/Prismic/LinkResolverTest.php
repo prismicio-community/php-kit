@@ -27,7 +27,7 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $slugs = array('ABCD');
         $isBroken = false;
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
-        $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array());
+        $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array(), null);
         $this->link = new DocumentLink($this->id, null, $type, $tags, $slugs[0], array(), $isBroken);
         $response = file_get_contents(__DIR__.'/../fixtures/data.json');
 
