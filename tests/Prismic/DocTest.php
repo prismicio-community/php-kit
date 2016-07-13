@@ -158,9 +158,9 @@ class DocTest extends \PHPUnit_Framework_TestCase
         // The resolver is defined here:
         // https://github.com/prismicio/php-kit/blob/master/tests/Prismic/FakeLinkResolver.php
         $resolver = new FakeLinkResolver();
-        $htmlSerializer = function($element, $content) use ($resolver) {
+        $htmlSerializer = function($element, $content, $linkResolver) {
             if ($element instanceof ImageBlock) {
-                return nl2br($element->getView()->asHtml($resolver));
+                return nl2br($element->getView()->asHtml($linkResolver));
             }
             return null;
         };
