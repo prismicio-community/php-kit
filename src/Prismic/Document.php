@@ -10,6 +10,8 @@
 
 namespace Prismic;
 
+use DateTime;
+use DateTimeImmutable;
 use Prismic\Fragment\Color;
 use Prismic\Fragment\Date;
 use Prismic\Fragment\Timestamp;
@@ -205,6 +207,34 @@ class Document extends WithFragments
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Return the DateTime this document was first published
+     * This property may not be available if the feature has not been enabled
+     * for the repository. In this case, null will be returned
+     *
+     * @return DateTime|null
+     */
+    public function getFirstPublicationDate()
+    {
+        if (isset($this->data->first_publication_date) && null !== $this->data->first_publication_date) {
+            return DateTimeImmutable::createFromFormat(DateTime::ISO8601, $this->data->first_publication_date);
+        }
+    }
+
+    /**
+     * Return the DateTime this document was last published
+     * This property may not be available if the feature has not been enabled
+     * for the repository. In this case, null will be returned
+     *
+     * @return DateTime|null
+     */
+    public function getLastPublicationDate()
+    {
+        if (isset($this->data->last_publication_date) && null !== $this->data->last_publication_date) {
+            return DateTimeImmutable::createFromFormat(DateTime::ISO8601, $this->data->last_publication_date);
+        }
     }
 
     /**
