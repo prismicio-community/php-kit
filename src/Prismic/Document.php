@@ -211,8 +211,7 @@ class Document extends WithFragments
 
     /**
      * Return the DateTime this document was first published
-     * This property may not be available if the feature has not been enabled
-     * for the repository. In this case, null will be returned
+     * This property will be null if the document was first published before the feature was released.
      *
      * @return DateTime|null
      */
@@ -221,12 +220,12 @@ class Document extends WithFragments
         if (isset($this->data->first_publication_date) && null !== $this->data->first_publication_date) {
             return DateTimeImmutable::createFromFormat(DateTime::ISO8601, $this->data->first_publication_date);
         }
+        return null;
     }
 
     /**
      * Return the DateTime this document was last published
-     * This property may not be available if the feature has not been enabled
-     * for the repository. In this case, null will be returned
+     * This property will be null if the document was last published before the feature was released.
      *
      * @return DateTime|null
      */
@@ -235,6 +234,7 @@ class Document extends WithFragments
         if (isset($this->data->last_publication_date) && null !== $this->data->last_publication_date) {
             return DateTimeImmutable::createFromFormat(DateTime::ISO8601, $this->data->last_publication_date);
         }
+        return null;
     }
 
     /**
