@@ -422,8 +422,12 @@ class Api
     public function query($q, $options = array()) {
         if (isset($_COOKIE[Api::PREVIEW_COOKIE])) {
             $ref = $_COOKIE[Api::PREVIEW_COOKIE];
+        } else if (isset($_COOKIE[str_replace('.', '_', Api::PREVIEW_COOKIE)])) {
+            $ref = $_COOKIE[str_replace('.', '_', Api::PREVIEW_COOKIE)];
         } else if (isset($_COOKIE[Api::EXPERIMENTS_COOKIE])) {
             $ref = $_COOKIE[Api::EXPERIMENTS_COOKIE];
+        } else if (isset($_COOKIE[str_replace('.', '_', Api::EXPERIMENTS_COOKIE)])) {
+            $ref = $_COOKIE[str_replace('.', '_', Api::EXPERIMENTS_COOKIE)];
         } else {
             $ref = $this->master()->getRef();
         }
