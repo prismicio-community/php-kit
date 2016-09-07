@@ -44,7 +44,7 @@ class WebLink implements LinkInterface
      * Builds an HTML version of the raw link, pointing to the right URL,
      * and with the resource's URL as the hypertext.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -58,7 +58,7 @@ class WebLink implements LinkInterface
     /**
      * Builds an unformatted text version of the raw link: simply, the URL.
      *
-     * @api
+     * 
      *
      * @return string an unformatted text version of the raw link
      */
@@ -70,7 +70,7 @@ class WebLink implements LinkInterface
     /**
      * Returns the URL of the resource we're linking to online
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *
@@ -84,7 +84,7 @@ class WebLink implements LinkInterface
     /**
      * Returns the content type, if known
      *
-     * @api
+     * 
      *
      * @return string the content type, if known
      */

@@ -34,7 +34,7 @@ class Date implements FragmentInterface
     /**
      * Builds a HTML version of the date.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -48,7 +48,7 @@ class Date implements FragmentInterface
     /**
      * Builds a text version of the date.
      *
-     * @api
+     * 
      *
      * @return string the text version of the date
      */
@@ -60,7 +60,7 @@ class Date implements FragmentInterface
     /**
      * Builds a DateTime from the Timestamp fragment, for further manipulation in native PHP.
      *
-     * @api
+     * 
      *
      * @return string a DateTime for the fragment
      */
@@ -74,7 +74,7 @@ class Date implements FragmentInterface
      *
      * @param string  $pattern  the pattern, as expected by the date function in PHP
      *
-     * @api
+     * 
      *
      * @return string the date, formatted
      */
@@ -86,7 +86,7 @@ class Date implements FragmentInterface
     /**
      * Returns the date as an epoch date.
      *
-     * @api
+     * 
      *
      * @return string the date as an epoch date
      */
@@ -98,7 +98,7 @@ class Date implements FragmentInterface
     /**
      * Returns the date's value.
      *
-     * @api
+     * 
      *
      * @return string the date's value
      */

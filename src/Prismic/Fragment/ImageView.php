@@ -69,7 +69,7 @@ class ImageView
     /**
      * Builds a HTML version of the image view.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      * @param array                 $attributes   associative array of HTML attributes to add to the <img> tag
@@ -105,7 +105,7 @@ class ImageView
     /**
      * Returns the ratio of the image view.
      *
-     * @api
+     * 
      *
      * @return int  the image view's ratio
      */
@@ -117,7 +117,7 @@ class ImageView
     /**
      * Returns the URL of the image view.
      *
-     * @api
+     * 
      *
      * @return string  the image view's URL
      */
@@ -129,7 +129,7 @@ class ImageView
     /**
      * Returns the alternative text of the image view.
      *
-     * @api
+     * 
      *
      * @return string  the image view's alternative text
      */
@@ -141,7 +141,7 @@ class ImageView
     /**
      * Returns the copyright text of the image view.
      *
-     * @api
+     * 
      *
      * @return string  the image view's copyright text
      */
@@ -153,7 +153,7 @@ class ImageView
     /**
      * Returns the width of the image view.
      *
-     * @api
+     * 
      *
      * @return int  the image view's width
      */
@@ -165,7 +165,7 @@ class ImageView
     /**
      * Returns the height of the image view.
      *
-     * @api
+     * 
      *
      * @return int  the image view's height
      */
@@ -177,7 +177,7 @@ class ImageView
     /**
      * Returns the link to point to
      *
-     * @api
+     * 
      *
      * @return LinkInterface the link to point to
      */

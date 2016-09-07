@@ -24,35 +24,35 @@ namespace Prismic;
 class Response
 {
     /**
-     * @var array the list of returned documents
+     * array the list of returned documents
      */
     private $results;
     /**
-     * @var int the page number for this query
+     * int the page number for this query
      */
     private $page;
     /**
-     * @var int the requested number of results per page on this query
+     * int the requested number of results per page on this query
      */
     private $resultsPerPage;
     /**
-     * @var int the size of the current page
+     * int the size of the current page
      */
     private $resultsSize;
     /**
-     * @var int the total number of documents, all pages together
+     * int the total number of documents, all pages together
      */
     private $totalResultsSize;
     /**
-     * @var int the number of pages for this query
+     * int the number of pages for this query
      */
     private $totalPages;
     /**
-     * @var string the RESTful URL of the search request for the next page; null otherwise
+     * string the RESTful URL of the search request for the next page; null otherwise
      */
     private $nextPage;
     /**
-     * @var string the RESTful URL of the search request for the previous page; null otherwise
+     * string the RESTful URL of the search request for the previous page; null otherwise
      */
     private $prevPage;
 
@@ -92,8 +92,8 @@ class Response
 
     /**
      * Returns the page number for this query.
-    *
-    * @return int the page number for this query
+     *
+     * @return int the page number for this query
      */
     public function getPage()
     {
@@ -102,8 +102,8 @@ class Response
 
     /**
      * Returns the requested number of results per page on this query.
-    *
-    * @return int the requested number of results per page on this query
+     *
+     * @return int the requested number of results per page on this query
      */
     public function getResultsPerPage()
     {
@@ -112,8 +112,8 @@ class Response
 
     /**
      * Returns the size of the current page.
-    *
-    * @return int the size of the current page
+     *
+     * @return int the size of the current page
      */
     public function getResultsSize()
     {
@@ -163,9 +163,9 @@ class Response
     /**
      * Parsing a Responses from a json, unmarshalling them into PHP objects.
      *
-     * @param  \stdClass $json the JSON retrieved from the call
+     * @param  $json the JSON retrieved from the call
 
-     * @return \Prismic\Response the result of the call
+     * @return Prismic::Response the result of the call
      */
     public static function parse(\stdClass $json)
     {

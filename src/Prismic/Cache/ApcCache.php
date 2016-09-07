@@ -19,8 +19,6 @@ class ApcCache implements CacheInterface
     /**
      * Tests whether the cache has a value for a particular key
      *
-     * @api
-     *
      * @param string $key the key of the cache entry
      * @return boolean true if the cache has a value for this key, otherwise false
      */
@@ -31,8 +29,6 @@ class ApcCache implements CacheInterface
 
     /**
      * Returns the value of a cache entry from its key
-     *
-     * @api
      *
      * @param  string    $key the key of the cache entry
      * @return mixed the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
@@ -49,8 +45,6 @@ class ApcCache implements CacheInterface
     /**
      * Stores a new cache entry
      *
-     * @api
-     *
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
      * @param int       $ttl   the time until this cache entry expires
@@ -64,8 +58,6 @@ class ApcCache implements CacheInterface
     /**
      * Deletes a cache entry, from its key
      *
-     * @api
-     *
      * @param string $key the key of the cache entry
      * @return void
      */
@@ -76,8 +68,6 @@ class ApcCache implements CacheInterface
 
     /**
      * Clears the whole cache
-     *
-     * @api
      *
      * @return void
      */

@@ -35,7 +35,7 @@ class Timestamp implements FragmentInterface
     /**
      * Builds a DateTime from the Timestamp fragment, for further manipulation in native PHP.
      *
-     * @api
+     * 
      *
      * @return string a DateTime for the fragment
      */
@@ -47,7 +47,7 @@ class Timestamp implements FragmentInterface
     /**
      * Builds a HTML version of the timestamp.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -66,7 +66,7 @@ class Timestamp implements FragmentInterface
     /**
      * Builds a text version of the timestamp.
      *
-     * @api
+     * 
      *
      * @return string the text version of the timestamp
      */
@@ -78,7 +78,7 @@ class Timestamp implements FragmentInterface
     /**
      * Returns the timestamp's value.
      *
-     * @api
+     * 
      *
      * @return string the timestamp's value
      */

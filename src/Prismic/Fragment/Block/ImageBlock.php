@@ -40,7 +40,7 @@ class ImageBlock implements BlockInterface
     /**
      * Returns the ImageView to be manipulated.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\ImageView the ImageView.
      */
@@ -52,7 +52,7 @@ class ImageBlock implements BlockInterface
     /**
      * Returns the label
      *
-     * @api
+     * 
      *
      * @return string the label
      */

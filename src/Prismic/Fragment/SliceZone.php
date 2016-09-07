@@ -37,7 +37,7 @@ class SliceZone implements FragmentInterface
     /**
      * Builds a HTML version of the SliceZone fragment.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -56,7 +56,7 @@ class SliceZone implements FragmentInterface
     /**
      * Builds a text version of the SliceZone fragment.
      *
-     * @api
+     * 
      *
      * @return string the text version of the SliceZone fragment
      */
@@ -76,7 +76,7 @@ class SliceZone implements FragmentInterface
      *
      * Each item is a Slice.
      *
-     * @api
+     * 
      *
      * @return array the array to loop on / access items / etc.
      */

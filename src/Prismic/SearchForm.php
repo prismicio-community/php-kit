@@ -26,27 +26,26 @@ namespace Prismic;
  * Note also that SearchForm objects are immutable; the chainable methods all
  * return new SearchForm objects.
  *
- * @api
  */
 class SearchForm
 {
     /**
-     * @var \Prismic\Api the API object containing all the information to know where to query
+     * Prismic::Api the API object containing all the information to know where to query
      */
     private $api;
     /**
-     * @var \Prismic\Form the REST form we're querying on in the API
+     * Prismic::Form the REST form we're querying on in the API
      */
     private $form;
     /**
-     * @var array the parameters we're getting ready to submit
+     * array the parameters we're getting ready to submit
      */
     private $data;
 
     /**
      * Constructs a SearchForm object
-     * @param \Prismic\Api  $api  the API object containing all the information to know where to query
-     * @param \Prismic\Form $form the REST form we're querying on in the API
+     * @param Prismic::Api  $api  the API object containing all the information to know where to query
+     * @param Prismic::Form $form the REST form we're querying on in the API
      * @param array         $data the parameters we're getting ready to submit
      */
     public function __construct(Api $api, Form $form, array $data)
@@ -72,12 +71,10 @@ class SearchForm
      *
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
-     * @api
-     *
      * @param  string $key the name of the parameter
      * @param  string $value the value of the parameter
      *
-     * @throws \RuntimeException
+     * \throws RuntimeException
      *
      * @return \Prismic\SearchForm a clone of the SearchForm object with the new parameter added
      */
@@ -114,11 +111,9 @@ class SearchForm
     /**
      * Set the repository's ref.
      *
-     * @api
-     *
      * @param  string|\Prismic\Ref $ref the ref we wish to query on, or its ID.
      *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new ref parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new ref parameter added
      */
     public function ref($ref)
     {
@@ -131,11 +126,9 @@ class SearchForm
     /**
      * Set the after parameter: the id of the document to start the results from (excluding that document).
      *
-     * @api
-     *
      * @param string $documentId
      *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new after parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new after parameter added
      */
     public function after($documentId)
     {
@@ -146,9 +139,7 @@ class SearchForm
      * Set the fetch parameter: restrict the fields to retrieve for a document. You can pass in parameter
      * an array of strings, or several strings.
      *
-     * @api
-     *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetch parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new fetch parameter added
      */
     public function fetch()
     {
@@ -165,9 +156,7 @@ class SearchForm
      * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink, You can pass in parameter
      * an array of strings, or several strings.
      *
-     * @api
-     *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
      */
     public function fetchLinks()
     {
@@ -183,10 +172,8 @@ class SearchForm
     /**
      * Set the query's page size, for the pagination.
      *
-     * @api
-     *
      * @param  int $pageSize
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new pageSize parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new pageSize parameter added
      */
     public function pageSize($pageSize)
     {
@@ -196,11 +183,9 @@ class SearchForm
     /**
      * Set the query's page, for the pagination.
      *
-     * @api
-     *
      * @param  int $page
      *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new page parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new page parameter added
      */
     public function page($page)
     {
@@ -210,9 +195,7 @@ class SearchForm
     /**
      * Set the query's ordering, setting in what order the documents must be retrieved.
      *
-     * @api
-     *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new orderings parameter added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new orderings parameter added
      */
     public function orderings()
     {
@@ -224,9 +207,9 @@ class SearchForm
     /**
      * Submit the current API call, and unmarshalls the result into PHP objects.
      *
-     * @return \Prismic\Response the result of the call
+     * @return Prismic::Response the result of the call
      *
-     * @throws \RuntimeException
+     * \throws RuntimeException
      */
     public function submit()
     {
@@ -242,7 +225,7 @@ class SearchForm
      *
      * @return int Total number of results
      *
-     * @throws \RuntimeException
+     * \throws RuntimeException
      */
     public function count()
     {
@@ -253,7 +236,7 @@ class SearchForm
      * Set the query's predicates themselves.
      * You can pass a String representing a query as parameter, or one or multiple Predicates to build an "AND" query
      *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new predicate or predicates added
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new predicate or predicates added
      */
     public function query()
     {
@@ -287,8 +270,6 @@ class SearchForm
     /**
      * Checks if the results for this form are already cached
      *
-     * @api
-     *
      * @return boolean true if the results for this form are fresh in the cache, false otherwise
      */
     public function isCached()
@@ -299,9 +280,9 @@ class SearchForm
     /**
      * Performs the actual submit call, without the unmarshalling.
      *
-     * @throws \RuntimeException if the Form type is not supported
+     * \throws RuntimeException if the Form type is not supported
      *
-     * @return \stdClass the raw (unparsed) response.
+     * @return the raw (unparsed) response.
      */
     private function submit_raw()
     {

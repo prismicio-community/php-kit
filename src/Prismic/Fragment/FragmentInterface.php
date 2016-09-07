@@ -18,7 +18,7 @@ interface FragmentInterface
     /**
      * Return the value of the fragment as text.
      *
-     * @api
+     * 
      *
      * @return string
      */
@@ -27,7 +27,7 @@ interface FragmentInterface
     /**
      * Return the value of the fragment as HTML.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *

@@ -54,7 +54,7 @@ class StructuredText implements FragmentInterface
     /**
      * Returns the array of blocks.
      *
-     * @api
+     * 
      *
      * @return array the array of \Prismic\Fragment\Block\BlockInterface objects
      */
@@ -66,7 +66,7 @@ class StructuredText implements FragmentInterface
     /**
      * Builds a text version of the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @return string the text version of the StructuredText fragment
      */
@@ -82,7 +82,7 @@ class StructuredText implements FragmentInterface
     /**
      * Returns the first preformatted block in the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\Block\PreformattedBlock the first preformatted block in the StructuredText fragment
      */
@@ -97,7 +97,7 @@ class StructuredText implements FragmentInterface
      * Returns an array of all preformatted blocks in the StructuredText fragment,
      * as \Prismic\Fragment\Block\PreformattedBlock objects.
      *
-     * @api
+     * 
      *
      * @return array all preformatted blocks in the StructuredText fragment
      */
@@ -111,7 +111,7 @@ class StructuredText implements FragmentInterface
     /**
      * Returns the first paragraph block in the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\Block\ParagraphBlock the first paragraph block in the StructuredText fragment
      */
@@ -126,7 +126,7 @@ class StructuredText implements FragmentInterface
      * Returns an array of all paragraph blocks in the StructuredText fragment,
      * as \Prismic\Fragment\Block\ParagraphBlock objects.
      *
-     * @api
+     * 
      *
      * @return array all paragraph blocks in the StructuredText fragment
      */
@@ -140,7 +140,7 @@ class StructuredText implements FragmentInterface
     /**
      * Returns the first image block in the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\Block\ImageBlock the first image block in the StructuredText fragment
      */
@@ -155,7 +155,7 @@ class StructuredText implements FragmentInterface
      * Returns an array of all image blocks in the StructuredText fragment,
      * as \Prismic\Fragment\Block\ImageBlock objects.
      *
-     * @api
+     * 
      *
      * @return array all image blocks in the StructuredText fragment
      */
@@ -169,7 +169,7 @@ class StructuredText implements FragmentInterface
     /**
      * Returns the first heading block in the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\Block\HeadingBlock the first heading block in the StructuredText fragment
      */
@@ -184,7 +184,7 @@ class StructuredText implements FragmentInterface
      * Returns an array of all heading blocks in the StructuredText fragment,
      * as \Prismic\Fragment\Block\HeadingBlock objects.
      *
-     * @api
+     * 
      *
      * @return array all heading blocks in the StructuredText fragment
      */
@@ -198,7 +198,7 @@ class StructuredText implements FragmentInterface
     /**
      * Builds a HTML version of the StructuredText fragment.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *

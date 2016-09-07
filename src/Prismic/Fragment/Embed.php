@@ -70,7 +70,7 @@ class Embed implements FragmentInterface
     /**
      * Builds a HTML version of the Embed fragment.
      *
-     * @api
+     *
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -94,7 +94,7 @@ class Embed implements FragmentInterface
     /**
      * Get the the OEmbed type
      *
-     * @api
+     *
      *
      * @return string
      */
@@ -106,7 +106,7 @@ class Embed implements FragmentInterface
     /**
      * Get the the OEmbed provider
      *
-     * @api
+     *
      *
      * @return string
      */
@@ -118,7 +118,7 @@ class Embed implements FragmentInterface
     /**
      * Get the the OEmbed url
      *
-     * @api
+     *
      *
      * @return string
      */
@@ -130,7 +130,7 @@ class Embed implements FragmentInterface
     /**
      * Get the the OEmbed width
      *
-     * @api
+     *
      *
      * @return string
      */
@@ -142,7 +142,7 @@ class Embed implements FragmentInterface
     /**
      * Get the the OEmbed height
      *
-     * @api
+     *
      *
      * @return string
      */
@@ -154,7 +154,7 @@ class Embed implements FragmentInterface
     /**
     * Get the the OEmbed resource's JSON.
     *
-    * @api
+    *
     *
     * @return \stdClass
     */
@@ -166,7 +166,7 @@ class Embed implements FragmentInterface
     /**
      * Get the full JSON oEmbed code.
      *
-     * @api
+     *
      *
      * @return string the text version of the Embed fragment
      */

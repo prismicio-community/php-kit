@@ -13,7 +13,6 @@ namespace Prismic\Fragment;
 /**
  * This class embodies a Color fragment.
  *
- * @api
  */
 class Color implements FragmentInterface
 {
@@ -35,7 +34,7 @@ class Color implements FragmentInterface
     /**
      * Builds a HTML version of the color.
      *
-     * @api
+     *
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -49,7 +48,7 @@ class Color implements FragmentInterface
     /**
      * Builds a text version of the color.
      *
-     * @api
+     *
      *
      * @return string the text version of the color
      */
@@ -61,7 +60,7 @@ class Color implements FragmentInterface
     /**
      * Returns the hexadecimal code of the color.
      *
-     * @api
+     *
      *
      * @return string the hexadecimal code of the color
      */

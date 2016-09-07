@@ -39,7 +39,7 @@ class ParsedText
     /**
      * Returns the raw text
      *
-     * @api
+     * 
      *
      * @return string the raw text
      */
@@ -51,7 +51,7 @@ class ParsedText
     /**
      * Returns the array of \Prismic\Fragment\Span\SpanInterface objects
      *
-     * @api
+     * 
      *
      * @return array the array of \Prismic\Fragment\Span\SpanInterface objects
      */

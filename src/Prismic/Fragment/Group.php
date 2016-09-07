@@ -45,7 +45,7 @@ class Group implements FragmentInterface
     /**
      * Builds a HTML version of the Group fragment.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -66,7 +66,7 @@ class Group implements FragmentInterface
     /**
      * Builds a text version of the Group fragment.
      *
-     * @api
+     * 
      *
      * @return string the text version of the Group fragment
      */
@@ -88,7 +88,7 @@ class Group implements FragmentInterface
      *
      * Each item is an associative array of subfragments.
      *
-     * @api
+     * 
      *
      * @return array the array to loop on / access items / etc.
      */

@@ -42,7 +42,7 @@ class Image implements FragmentInterface
     /**
      * Builds a HTML version of the Image fragment (using just the main view)
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -56,7 +56,7 @@ class Image implements FragmentInterface
     /**
      * Builds a text version of the Image fragment (simply returns its URL)
      *
-     * @api
+     * 
      *
      * @return string the text version of the Image fragment
      */
@@ -68,7 +68,7 @@ class Image implements FragmentInterface
     /**
      * Returns an image view from its name (for instance, "icon", "large", ...)
      *
-     * @api
+     * 
      *
      * @param string $key the name of the view
      *
@@ -86,7 +86,7 @@ class Image implements FragmentInterface
     /**
      * Returns the main image view
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\ImageView the main image view
      */
@@ -98,7 +98,7 @@ class Image implements FragmentInterface
     /**
      * Returns an associative array of all the views for this image but the main one.
      *
-     * @api
+     * 
      *
      * @return array the array of all the \Prismic\Fragment\ImageView objects but the main one
      */
@@ -110,7 +110,7 @@ class Image implements FragmentInterface
     /**
      * Returns the URL of the main view.
      *
-     * @api
+     * 
      *
      * @return string  the image view's URL
      */
@@ -122,7 +122,7 @@ class Image implements FragmentInterface
     /**
      * Returns the alternative text of the main view.
      *
-     * @api
+     * 
      *
      * @return string  the image view's alternative text
      */
@@ -134,7 +134,7 @@ class Image implements FragmentInterface
     /**
      * Returns the copyright text of the image view.
      *
-     * @api
+     * 
      *
      * @return string  the main view's copyright text
      */
@@ -146,7 +146,7 @@ class Image implements FragmentInterface
     /**
      * Returns the width of the image view.
      *
-     * @api
+     * 
      *
      * @return int  the main view's width
      */
@@ -158,7 +158,7 @@ class Image implements FragmentInterface
     /**
      * Returns the height of the image view.
      *
-     * @api
+     * 
      *
      * @return int  the main view's height
      */
@@ -170,7 +170,7 @@ class Image implements FragmentInterface
     /**
      * Returns the link to point to
      *
-     * @api
+     * 
      *
      * @return LinkInterface the link to point to
      */

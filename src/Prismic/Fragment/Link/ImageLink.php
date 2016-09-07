@@ -48,7 +48,7 @@ class ImageLink extends FileLink
     /**
      * Returns the height of the image.
      *
-     * @api
+     * 
      *
      * @return int the height of the image
      */
@@ -60,7 +60,7 @@ class ImageLink extends FileLink
     /**
      * Returns the width of the image.
      *
-     * @api
+     * 
      *
      * @return int the width of the image
      */

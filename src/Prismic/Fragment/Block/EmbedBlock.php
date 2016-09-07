@@ -40,7 +40,7 @@ class EmbedBlock implements BlockInterface
     /**
      * Returns the OEmbed fragment to be manipulated.
      *
-     * @api
+     * 
      *
      * @return \Prismic\Fragment\Embed the OEmbed fragment.
      */
@@ -52,7 +52,7 @@ class EmbedBlock implements BlockInterface
     /**
      * Returns the label
      *
-     * @api
+     * 
      *
      * @return string the label
      */

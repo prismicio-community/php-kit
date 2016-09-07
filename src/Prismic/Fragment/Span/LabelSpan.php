@@ -49,7 +49,7 @@ class LabelSpan implements SpanInterface
     /**
      * Returns the start of the span
      *
-     * @api
+     *
      *
      * @return int the start of the span
      */
@@ -61,7 +61,7 @@ class LabelSpan implements SpanInterface
     /**
      * Returns the end of the span
      *
-     * @api
+     *
      *
      * @return int the end of the span
      */
@@ -73,7 +73,7 @@ class LabelSpan implements SpanInterface
     /**
      * Returns the label
      *
-     * @api
+     *
      *
      * @return string the label
      */

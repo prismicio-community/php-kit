@@ -21,7 +21,7 @@ abstract class TextBlock implements BlockInterface
      */
     private $text;
     /**
-     * @var array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @var array an array of Prismic::Fragment::Span::SpanInterface objects that contain the formatting (em, strong, links, ...)
      */
     private $spans;
     /**
@@ -33,7 +33,7 @@ abstract class TextBlock implements BlockInterface
      * Constructs a paragraph block.
      *
      * @param string $text the unformatted text
-     * @param array $spans an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting (em, strong, links, ...)
+     * @param array $spans an array of Prismic::Fragment::Span::SpanInterface objects that contain the formatting (em, strong, links, ...)
      * @param $label string
      */
     public function __construct($text, $spans, $label = NULL)
@@ -46,7 +46,7 @@ abstract class TextBlock implements BlockInterface
     /**
      * Returns the unformatted text.
      *
-     * @api
+     *
      *
      * @return string the unformatted text.
      */
@@ -58,7 +58,7 @@ abstract class TextBlock implements BlockInterface
     /**
      * Returns the formatting (em, strong, links, ...)
      *
-     * @api
+     *
      *
      * @return array an array of \Prismic\Fragment\Span\SpanInterface objects that contain the formatting
      */
@@ -70,7 +70,7 @@ abstract class TextBlock implements BlockInterface
     /**
      * Returns the label
      *
-     * @api
+     *
      *
      * @return string the label
      */

@@ -37,7 +37,7 @@ class Slice implements FragmentInterface
     /**
      * Builds a HTML version of the Text fragment.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -55,7 +55,7 @@ class Slice implements FragmentInterface
     /**
      * Builds a text version of the Slice fragment.
      *
-     * @api
+     * 
      *
      * @return string the text version of the Text fragment
      */
@@ -67,7 +67,7 @@ class Slice implements FragmentInterface
     /**
      * Returns the slice type as declared in the Document Mask.
      *
-     * @api
+     * 
      *
      * @return  fragment the inner value of the fragment
      */
@@ -79,7 +79,7 @@ class Slice implements FragmentInterface
     /**
      * Returns the slice label as declared in the Document Mask.
      *
-     * @api
+     * 
      *
      * @return  fragment the inner value of the fragment
      */
@@ -91,7 +91,7 @@ class Slice implements FragmentInterface
     /**
      * Returns the inner value of the fragment.
      *
-     * @api
+     * 
      *
      * @return  fragment the inner value of the fragment
      */

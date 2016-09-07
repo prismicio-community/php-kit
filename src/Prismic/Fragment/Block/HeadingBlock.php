@@ -37,7 +37,7 @@ class HeadingBlock extends TextBlock
     /**
      * Returns the heading's level.
      *
-     * @api
+     * 
      *
      * @return string the heading's level.
      */

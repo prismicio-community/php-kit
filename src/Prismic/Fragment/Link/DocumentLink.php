@@ -73,7 +73,7 @@ class DocumentLink extends WithFragments implements LinkInterface
      * If you want to use one of the document's fragments as the hypertext,
      * you will need to query the document in your controller.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -113,7 +113,7 @@ class DocumentLink extends WithFragments implements LinkInterface
      * which should be a URL of your website.
      * Read more about the link resolver at the very end of prismic.io's documentation.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *
@@ -127,7 +127,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Returns the ID of the linked document.
      *
-     * @api
+     * 
      *
      * @return string the ID of the linked document
      */
@@ -139,7 +139,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Returns the UID of the linked document.
      *
-     * @api
+     * 
      *
      * @return string|null the UID of the linked document
      */
@@ -151,7 +151,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Builds an unformatted text version of the raw link: simply, the document's ID.
      *
-     * @api
+     * 
      *
      * @return string an unformatted text version of the raw link
      */
@@ -163,7 +163,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Returns the type of the linked document
      *
-     * @api
+     * 
      *
      * @return string the type of the linked document
      */
@@ -175,7 +175,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Returns an array of strings which are the document's tags
      *
-     * @api
+     * 
      *
      * @return array an array of strings which are the document's tags
      */
@@ -187,7 +187,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Returns the current slug of the document
      *
-     * @api
+     * 
      *
      * @return string the current slug of the document
      */
@@ -199,7 +199,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     /**
      * Checks if the link is broken (towards a document that is not live, for instance)
      *
-     * @api
+     * 
      *
      * @return boolean true if the link is towards a document that is not live, for instance
      */

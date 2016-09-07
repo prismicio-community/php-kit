@@ -27,14 +27,6 @@ namespace Prismic\Cache;
  * Two implementations are included in the PHP kit out-of-the-box:
  * ApcCache (which works with APC) and NoCache (which doesn't cache).
  *
- * @api
- */
-interface CacheInterface
-{
-    /**
-     * Tests whether the cache has a value for a particular key
-     *
-     * @api
      *
      * @param string $key the key of the cache entry
      * @return boolean true if the cache has a value for this key, otherwise false
@@ -44,7 +36,6 @@ interface CacheInterface
     /**
      * Returns the value of a cache entry from its key
      *
-     * @api
      *
      * @param  string    $key the key of the cache entry
      * @return mixed the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
@@ -53,8 +44,6 @@ interface CacheInterface
 
     /**
      * Stores a new cache entry
-     *
-     * @api
      *
      * @param string    $key   the key of the cache entry
      * @param \stdClass $value the value of the entry
@@ -66,8 +55,6 @@ interface CacheInterface
     /**
      * Deletes a cache entry, from its key
      *
-     * @api
-     *
      * @param string $key the key of the cache entry
      * @return void
      */
@@ -75,8 +62,6 @@ interface CacheInterface
 
     /**
      * Clears the whole cache
-     *
-     * @api
      *
      * @return void
      */

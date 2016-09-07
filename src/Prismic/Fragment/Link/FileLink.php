@@ -56,7 +56,7 @@ class FileLink implements LinkInterface
      * Builds an HTML version of the raw link, pointing to the right URL,
      * and with the resource's filename as the hypertext.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -70,7 +70,7 @@ class FileLink implements LinkInterface
     /**
      * Builds an unformatted text version of the raw link: simply, the URL.
      *
-     * @api
+     * 
      *
      * @return string an unformatted text version of the raw link
      */
@@ -84,7 +84,7 @@ class FileLink implements LinkInterface
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *
-     * @api
+     * 
      *
      * @return string the URL of the resource we're linking to
      */
@@ -96,7 +96,7 @@ class FileLink implements LinkInterface
     /**
      * Returns the kind of resource it is (document, image, ...)
      *
-     * @api
+     * 
      *
      * @return string the kind of resource it is (document, image, ...)
      */
@@ -108,7 +108,7 @@ class FileLink implements LinkInterface
     /**
      * Returns the size of the resource, in bytes
      *
-     * @api
+     * 
      *
      * @return string the size of the resource, in bytes
      */
@@ -120,7 +120,7 @@ class FileLink implements LinkInterface
     /**
      * Returns the resource's original filename, in bytes
      *
-     * @api
+     * 
      *
      * @return string the resource's original filename, in bytes
      */

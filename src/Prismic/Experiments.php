@@ -17,9 +17,9 @@ namespace Prismic;
  */
 class Experiments {
 
-    /** @var array */
+    //! array */
     private $draft;
-    /** @var array */
+    //! array */
     private $running;
 
     /**
@@ -33,7 +33,7 @@ class Experiments {
     }
 
     /**
-     * @return Experiment|null
+     * @return Experiment
      */
     public function getCurrent()
     {
@@ -86,8 +86,8 @@ class Experiments {
     /**
      * Parses a given experiments. Not meant to be used except for testing.
      *
-     * @param  \stdClass $json the json bit retrieved from the API that represents experiments.
-     * @return \Prismic\Experiments the manipulable object for the experiments.
+     * @param  $json the json bit retrieved from the API that represents experiments.
+     * @return Prismic::Experiments the manipulable object for the experiments.
      */
     public static function parse(\stdClass $json)
     {
@@ -176,9 +176,9 @@ class Experiment {
     /**
      * Parses a given experiment. Not meant to be used except for testing.
      *
-     * @param  \stdClass $json the json bit retrieved from the API that represents a experiment.
+     * @param  $json the json bit retrieved from the API that represents a experiment.
      *
-     * @return \Prismic\Variation the manipulable object for that experiment.
+     * @return Prismic::Variation the manipulable object for that experiment.
      */
     public static function parse(\stdClass $json)
     {
@@ -244,9 +244,9 @@ class Variation
     /**
      * Parses a given variation. Not meant to be used except for testing.
      *
-     * @param  \stdClass $json the json bit retrieved from the API that represents a variation.
+     * @param  $json the json bit retrieved from the API that represents a variation.
      *
-     * @return \Prismic\Variation the manipulable object for that variation.
+     * @return Prismic::Variation the manipulable object for that variation.
      */
     public static function parse(\stdClass $json)
     {

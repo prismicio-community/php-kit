@@ -35,33 +35,19 @@ use Prismic\Fragment\SliceZone;
 class Document extends WithFragments
 {
 
-    /**
-     * @var string the ID of the document (please use instance methods to get information that is in there)
-     */
+    //! string the ID of the document (please use instance methods to get information that is in there)
     private $id;
-    /**
-     * @var string the user ID of the document (please use instance methods to get information that is in there)
-     */
+    //! string the user ID of the document (please use instance methods to get information that is in there)
     private $uid;
-    /**
-     * @var string the type of the document (please use instance methods to get information that is in there)
-     */
+    //! string the type of the document (please use instance methods to get information that is in there)
     private $type;
-    /**
-     * @var string the URL of the document in the repository's API (please use instance methods to get information that is in there)
-     */
+    //! string the URL of the document in the repository's API (please use instance methods to get information that is in there)
     private $href;
-    /**
-     * @var array the tags used in the document (please use instance methods to get information that is in there)
-     */
+    //! array the tags used in the document (please use instance methods to get information that is in there)
     private $tags;
-    /**
-     * @var array the slugs used in the document, in the past and today; today's slug is the head (please use instance methods to get information that is in there)
-     */
+    //! array the slugs used in the document, in the past and today; today's slug is the head (please use instance methods to get information that is in there)
     private $slugs;
-    /**
-     * @var the raw json retrieved from the server
-     */
+    //! the raw json retrieved from the server
     private $data;
 
     /**
@@ -91,8 +77,6 @@ class Document extends WithFragments
     /**
      * Returns the current slug of the document
      *
-     * @api
-     *
      * @return string|null the current slug of the document
      */
     public function getSlug()
@@ -106,8 +90,6 @@ class Document extends WithFragments
 
     /**
      * Checks if a given slug is a past or current slug of the document
-     *
-     * @api
      *
      * @param  string  $slug the slug to check
      *
@@ -126,8 +108,6 @@ class Document extends WithFragments
     /**
      * Returns the ID of the document
      *
-     * @api
-     *
      * @return string the ID of the document
      */
     public function getId()
@@ -141,8 +121,6 @@ class Document extends WithFragments
      *
      * It can be null, if the uid is not declared in the document mask.
      *
-     * @api
-     *
      * @return string the ID of the document
      */
     public function getUid()
@@ -152,8 +130,6 @@ class Document extends WithFragments
 
     /**
      * Returns the type of the document
-     *
-     * @api
      *
      * @return string the type of the document
      */
@@ -165,8 +141,6 @@ class Document extends WithFragments
     /**
      * Returns the URL of the document in the repository's API
      *
-     * @api
-     *
      * @return string the URL of the document in the repository's API
      */
     public function getHref()
@@ -176,8 +150,6 @@ class Document extends WithFragments
 
     /**
      * Returns the tags in the document
-     *
-     * @api
      *
      * @return array the tags in the document
      */
@@ -189,8 +161,6 @@ class Document extends WithFragments
     /**
      * Returns the slugs used in the document, in the past and today; today's slug is the head.
      * Your can use getSlug() if you need just the current slug.
-     *
-     * @api
      *
      * @return array the slugs used in the document, in the past and today; today's slug is the head
      */
@@ -213,7 +183,7 @@ class Document extends WithFragments
      * Return the DateTime this document was first published
      * This property will be null if the document was first published before the feature was released.
      *
-     * @return DateTime|null
+     * @return DateTime
      */
     public function getFirstPublicationDate()
     {
@@ -227,7 +197,7 @@ class Document extends WithFragments
      * Return the DateTime this document was last published
      * This property will be null if the document was last published before the feature was released.
      *
-     * @return DateTime|null
+     * @return DateTime
      */
     public function getLastPublicationDate()
     {
@@ -250,7 +220,7 @@ class Document extends WithFragments
     /**
      * Parses a given document. Not meant to be used except for testing.
      *
-     * @param  \stdClass         $json the json bit retrieved from the API that represents a document.
+     * @param  $json the json bit retrieved from the API that represents a document.
      *
      * @return Document the manipulable object for that document.
      */

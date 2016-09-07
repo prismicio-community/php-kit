@@ -28,7 +28,7 @@ interface LinkInterface extends FragmentInterface
      * The linkResolver will be needed in case the link is a document link.
      * Read more about the link resolver at the very end of prismic.io's documentation.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver (read prismic.io's API documentation to learn more)
      *

@@ -12,41 +12,25 @@ namespace Prismic;
 
 /**
  * Embodies structured data that can be wished to be used while manipulating a prismic.io API.
- * This is not supposed to be used to call a repository's API, this is solely for manipulation purpose by the class Prismic\Api.
+ * This is not supposed to be used to call a repository's API, this is solely for manipulation purpose by the class Prismic::Api.
  */
 class ApiData
 {
-    /**
-     * @var array an array of the usable refs for this API
-     */
+    //! an array of the usable refs for this API
     private $refs;
-    /**
-     * @var array an array of the available bookmarks
-     */
+    //! an array of the available bookmarks
     private $bookmarks;
-    /**
-     * @var array an array of the available types
-     */
+    //! array an array of the available types
     private $types;
-    /**
-     * @var array an array of the available tags
-     */
+    //! array an array of the available tags
     private $tags;
-    /**
-     * @var array an array of the available forms
-     */
+    //! array an array of the available forms
     private $forms;
-    /**
-     * @var string the URL of the endpoint to initiate the OAuth authentication
-     */
+    //! string the URL of the endpoint to initiate the OAuth authentication
     private $oauth_initiate;
-    /**
-     * @var string the URL of the endpoint to authenticate through OAuth
-     */
+    //! @var string the URL of the endpoint to authenticate through OAuth
     private $oauth_token;
-    /**
-     * @var Experiments list of both drafts and running experiments from Prismic
-     */
+    //! @var Experiments list of both drafts and running experiments from Prismic
     private $experiments;
 
     /**

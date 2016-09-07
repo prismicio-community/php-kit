@@ -38,22 +38,16 @@ use Prismic\Fragment\Timestamp;
  */
 class WithFragments {
 
-    /**
-     * @var array all the fragments in the document (please use instance methods to get information that is in there)
-     */
+    //! array all the fragments in the document (please use instance methods to get information that is in there)
     private $fragments;
 
-    /**
-     * @param array $fragments
-     */
+    //! @param array $fragments
     function __construct(array $fragments) {
         $this->fragments = $fragments;
     }
 
     /**
      * Returns the linked documents, from this document
-     *
-     * @api
      *
      * @return string the linked documents, from this document
      */
@@ -106,11 +100,9 @@ class WithFragments {
      * If you prefer a more type-safe access, that only works if the fragment is of the right type,
      * you can use the getStructuredText, getColor, getDate, etc. methods.
      *
-     * @api
-     *
      * @param string $field name of the fragment, with the document's type, like "product.description"
      *
-     * @return \Prismic\Fragment\FragmentInterface the fragment as an object
+     * @return Prismic::Fragment::FragmentInterface the fragment as an object
      */
     public function get($field)
     {
@@ -130,8 +122,6 @@ class WithFragments {
     /**
      * Checks if a given fragment exists in the document.
      *
-     * @api
-     *
      * @param  string  $field name of the fragment, with the document's type, like "product.description"
      *
      * @return boolean true if the fragment exists, false otherwise
@@ -144,7 +134,7 @@ class WithFragments {
     /**
      * Returns all fragments of the name given
      *
-     * @deprecated deprecated as it was meant to be used with an old concept called "multiples"; prefer to use Group fragments now, that are more powerful.
+     * \deprecated deprecated as it was meant to be used with an old concept called "multiples"; prefer to use Group fragments now, that are more powerful.
      *
      * @param  string $field name of the fragments
      *
@@ -170,8 +160,6 @@ class WithFragments {
      *
      * Works with: StructuredText, Number, Color, Text and Date fragments. If fragment is of the wrong type
      * or doesn't exist, returns an empty string.
-     *
-     * @api
      *
      * @param  string $field name of the fragment, with the document's type, like "product.description"
      *
@@ -207,8 +195,6 @@ class WithFragments {
      * Returns the string for a Number fragment, potentially matching a given pattern,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param  string $field   name of the fragment, with the document's type, like "product.price"
      * @param  string $pattern with the syntax expected by sprintf; null if not used
      *
@@ -231,8 +217,6 @@ class WithFragments {
     /**
      * Returns a GeoPoint fragment or null if the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param  string $field name of the fragment
      *
      * @return GeoPoint Fragment
@@ -248,12 +232,10 @@ class WithFragments {
     }
 
     /**
-     * Returns a boolean for any type of fragment that extends Prismic\Fragment\Text, if the text is
+     * Returns a boolean for any type of fragment that extends Prismic::Fragment::Text, if the text is
      * either 'yes' or 'true', or null of the fragment is of the wrong type, or if it doesn't exist.
      *
      * This works well with Select fragment for instance, where you set your values to "true" or "false".
-     *
-     * @api
      *
      * @param  string  $field name of the fragment, with the document's type, like "product.withchocolate"
      *
@@ -276,8 +258,6 @@ class WithFragments {
      * Returns the string for a Date fragment, potentially matching a given pattern,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param  string $field   name of the fragment, with the document's type, like "product.publishedAt"
      * @param  string $pattern with the syntax expected by the date function; null if not used
      *
@@ -299,11 +279,9 @@ class WithFragments {
     /**
      * Returns the usable Timestamp fragment as an object, ready to be manipulated.
      *
-     * @api
-     *
      * @param  string $field  name of the fragment, with the document's type, like "product.publishedAt"
      *
-     * @return \Prismic\Fragment\Timestamp|null the directly usable Timestamp, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::Timestamp|null the directly usable Timestamp, or null if the fragment is of the wrong type or unset
      */
     public function getTimestamp($field)
     {
@@ -319,10 +297,8 @@ class WithFragments {
      * Returns an HTML serialization for any kind of fragment. This is simply a faster way to write
      * $doc->get($field)->asHtml($linkResolver).
      *
-     * @api
-     *
      * @param  string                $field        name of the fragment, with the document's type, like "product.description"
-     * @param  \Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @param  \Prismic\LinkResolver $linkResolver an extension of the Prismic::LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
      *
      * @return string the directly usable HTML code, or null if the fragment is unset
      */
@@ -340,11 +316,9 @@ class WithFragments {
      * Returns the usable Image fragment as an object, ready to be manipulated.
      * This function also works on StructuredText fragment, and returns the first image in the fragment.
      *
-     * @api
-     *
      * @param  string $field name of the fragment, with the document's type, like "product.picture"
      *
-     * @return \Prismic\Fragment\Image the directly usable HTML code, or null if the fragment is unset
+     * @return Prismic::Fragment::Image the directly usable HTML code, or null if the fragment is unset
      */
     public function getImage($field)
     {
@@ -366,11 +340,9 @@ class WithFragments {
      * Returns all the usable Image fragments in the given StructuredText fragment, ready to be manipulated.
      * This function also works on Image fragments, but only was useful in that case before Group fragments existed.
      *
-     * @api
-     *
      * @param string $field name of the fragment, with the document's type, like "product.picture"
      *
-     * @return array an array of all the Prismic\Fragment\Image objects found
+     * @return array an array of all the Prismic::Fragment::Image objects found
      */
     public function getAllImages($field)
     {
@@ -395,12 +367,10 @@ class WithFragments {
      * Returns the proper view of the given Image fragment, ready to be manipulated.
      * This function also works on StructuredText fragments, to return the first Image, if the view is set to "main".
      *
-     * @api
-     *
      * @param string $field name of the fragment, with the document's type, like "product.picture"
      * @param string $view  name of the view, like "small"
      *
-     * @return \Prismic\Fragment\ImageView the directly usable object symbolizing the view
+     * @return Prismic::Fragment::ImageView the directly usable object symbolizing the view
      */
     public function getImageView($field, $view = null)
     {
@@ -444,11 +414,9 @@ class WithFragments {
      * Returns the StructuredText fragment as a manipulable object,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param string $field name of the fragment, with the document's type, like "product.description"
      *
-     * @return \Prismic\Fragment\StructuredText the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::StructuredText the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getStructuredText($field)
     {
@@ -464,11 +432,9 @@ class WithFragments {
      * Returns the Link fragment as a manipulable object,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param string  $field name of the fragment, with the document's type, like "product.gallery"
      *
-     * @return \Prismic\Fragment\Link\LinkInterface the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::Link::LinkInterface the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getLink($field)
     {
@@ -490,11 +456,9 @@ class WithFragments {
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      * This is the point of entry to then loop or search through the elements inside the Group fragment.
      *
-     * @api
-     *
      * @param  string $field name of the fragment, with the document's type, like "product.gallery"
      *
-     * @return \Prismic\Fragment\Group the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::Group the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getGroup($field)
     {
@@ -511,11 +475,9 @@ class WithFragments {
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      * This is the point of entry to then loop or search through the elements inside the Group fragment.
      *
-     * @api
-     *
      * @param  string $field name of the fragment, with the document's type, like "product.gallery"
      *
-     * @return \Prismic\Fragment\SliceZone the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::SliceZone the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getSliceZone($field)
     {
@@ -531,11 +493,9 @@ class WithFragments {
      * Returns the Embed fragment as a manipulable object,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param  string $field name of the fragment, with the document's type, like "product.video"
      *
-     * @return \Prismic\Fragment\Embed the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::Embed the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getEmbed($field)
     {
@@ -551,11 +511,9 @@ class WithFragments {
      * Returns the Color fragment as a manipulable object,
      * and null of the fragment is of the wrong type, or if it doesn't exist.
      *
-     * @api
-     *
      * @param string $field name of the fragment, with the document's type, like "product.video"
      *
-     * @return \Prismic\Fragment\Color the directly usable object, or null if the fragment is of the wrong type or unset
+     * @return Prismic::Fragment::Color the directly usable object, or null if the fragment is of the wrong type or unset
      */
     public function getColor($field)
     {
@@ -573,9 +531,7 @@ class WithFragments {
      * This is a basic serialization, if you want to template your document better, you will need to serialize
      * at the fragment level; for instance: $doc->get('product.description')->asHtml($linkResolver);
      *
-     * @api
-     *
-     * @param  \Prismic\LinkResolver $linkResolver an extension of the Prismic\LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
+     * @param  Prismic::LinkResolver $linkResolver an extension of the Prismic::LinkResolver class that you taught how to turn a prismic.io document in to a URL in your application
      *
      * @return string the directly usable HTML code
      */
@@ -593,9 +549,9 @@ class WithFragments {
     /**
      * Parses a given fragment. For internal usage.
      *
-     * @param  \stdClass $json the json bit retrieved from the API that represents any fragment.
+     * @param  $json the json bit retrieved from the API that represents any fragment.
      *
-     * @return \Prismic\Fragment\FragmentInterface the manipulable object for that fragment.
+     * @return Prismic::Fragment::FragmentInterface the manipulable object for that fragment.
      */
     public static function parseFragment($json)
     {

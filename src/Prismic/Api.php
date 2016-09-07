@@ -29,46 +29,52 @@ const EXPERIMENTS_COOKIE = Api::EXPERIMENTS_COOKIE;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
- * Initialize it with Prismic\Api::get(), and use your Prismic\Api::forms() to make API calls
+ * Initialize it with Prismic::Api::get(), and use your Prismic::Api::forms() to make API calls
  * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
- *
- * @api
  */
 class Api
 {
 
-    const VERSION = "2.0.0";
+    /**
+     * Kit version number
+     */
+    const VERSION = "3.0.0";
 
+    /**
+     * Name of the cookie that will be used to remember the preview reference
+     */
     const PREVIEW_COOKIE = "io.prismic.preview";
 
+    /**
+     * Name of the cookie that will be used to remember the experiment reference
+     */
     const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 
     /**
-     * @var string the API's access token to be used with each API call
+     * string the API's access token to be used with each API call
      */
     protected $accessToken;
     /**
-     * @var ApiData the raw data of the /api document (prefer to use this class's instance methods)
+     * ApiData the raw data of the /api document (prefer to use this class's instance methods)
      */
     protected $data;
     /**
-     * @var CacheInterface the cache object specifying how to store the cache
+     * CacheInterface the cache object specifying how to store the cache
      */
     private $cache;
     /**
-     * @var Client
+     * Client
      */
     private $httpClient;
 
     /**
      * Private constructor, not be used outside of this class.
-     *
-     * @param string                    $data
-     * @param string|null               $accessToken
-     * @param HttpClient|null           $httpAdapter
-     * @param CacheInterface|null       $cache
      */
-    private function __construct($data, $accessToken = null, Client $httpClient = null, CacheInterface $cache = null)
+    private function __construct(
+      $data /**< string */,
+      $accessToken = null /**< optional access token, if the API is private */,
+      Client $httpClient = null,
+      CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
@@ -78,8 +84,6 @@ class Api
 
     /**
      * Returns all of the repository's references (queryable points in time)
-     *
-     * @api
      *
      * @return array the array of references, with their IDs, labels, ...
      */
@@ -119,8 +123,6 @@ class Api
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookmark() function.
      *
-     * @api
-     *
      * @return array the array of bookmarks
      */
     public function bookmarks()
@@ -134,8 +136,6 @@ class Api
      * that looks like this [:d = at(document.id, "abcdefghijkl")].
      * Most starter projects embed a helper to query a document from their ID string,
      * which makes this even easier.
-     *
-     * @api
      *
      * @param string $name the bookmark name to use
      *
@@ -155,8 +155,6 @@ class Api
      * Returns the master ref repository: the ref which is to be used to query content
      * that is live right now.
      *
-     * @api
-     *
      * @return string the master ref
      */
     public function master()
@@ -169,13 +167,11 @@ class Api
     }
 
     /**
-     * Returns all forms of type Prismic\SearchForm that are available for this repository's API.
+     * Returns all forms of type Prismic::SearchForm that are available for this repository's API.
      * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
      * Learn more about those keywords in prismic.io's documentation on our developers' portal.
      *
-     * @api
-     *
-     * @return \stdClass all forms
+     * @return all forms
      */
     public function forms()
     {
@@ -217,7 +213,7 @@ class Api
     /**
      * Return the URL to display a given preview
      * @param string $token as received from Prismic server to identify the content to preview
-     * @param \Prismic\LinkResolver $linkResolver the link resolver to build URL for your site
+     * @param Prismic::LinkResolver $linkResolver the link resolver to build URL for your site
      * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
      *                (usually the home page of your site)
      * @return string the URL you should redirect the user to preview the requested change
@@ -294,15 +290,13 @@ class Api
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('http://idofyourrepository.prismic.io/api')
      *
-     * @api
-     *
      * @param  string           $action      the URL of your repository API's endpoint
      * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
      * @param  Client           $httpClient  Custom Guzzle http client
      * @param  CacheInterface   $cache       Cache implementation
      * @param  int              $apiCacheTTL max time to keep the API object in cache (in seconds)
      *
-     * @throws \RuntimeException
+     * \throws RuntimeException
      *
      * @return Api the Api object, usable to perform queries
      */
@@ -417,7 +411,7 @@ class Api
      * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
      * @param  array                             $options   query options: pageSize, orderings, etc.
      *
-     * @return \Prismic\Response   the response, including documents and pagination information
+     * @return Prismic::Response   the response, including documents and pagination information
      */
     public function query($q, $options = array()) {
         if (isset($_COOKIE[Api::PREVIEW_COOKIE])) {
@@ -447,7 +441,7 @@ class Api
      *
      * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
      *
-     * @return \Prismic\Document     the resulting document, or null
+     * @return Prismic::Document     the resulting document, or null
      */
     public function queryFirst($q) {
         $documents = $this->query($q)->getResults();
@@ -462,7 +456,7 @@ class Api
      *
      * @param string   $id          the requested id
      *
-     * @return \Prismic\Document    the resulting document (null if no match)
+     * @return Prismic::Document    the resulting document (null if no match)
      */
     public function getByID($id) {
         return $this->queryFirst(Predicates::at("document.id", $id));
@@ -472,9 +466,9 @@ class Api
      * Search a document by its uid
      *
      * @param string   $type          the custom type of the requested document
-     * @param string   $id            the requested uid
+     * @param string   $uid            the requested uid
      *
-     * @return \Prismic\Document    the resulting document (null if no match)
+     * @return Prismic::Document    the resulting document (null if no match)
      */
     public function getByUID($type, $uid) {
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid));
@@ -485,7 +479,7 @@ class Api
      *
      * @param array   $ids          array of strings, the requested ids
      *
-     * @return \Prismic\Response   the response, including documents and pagination information
+     * @return Prismic::Response   the response, including documents and pagination information
      */
     public function getByIDs($ids) {
         return $this->query(Predicates::in("document.id", $ids));
@@ -494,7 +488,7 @@ class Api
     /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
      *
-     * @return ApcCache|NoCache
+     * @return ApcCache::NoCache
      */
     public static function defaultCache()
     {

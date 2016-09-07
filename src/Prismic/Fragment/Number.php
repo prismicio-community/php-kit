@@ -33,7 +33,7 @@ class Number implements FragmentInterface
     /**
      * Formats the number along a given pattern
      *
-     * @api
+     * 
      *
      * @param string $pattern the pattern, as would be expected by sprintf
      *
@@ -47,7 +47,7 @@ class Number implements FragmentInterface
     /**
      * Builds a text version of the Number fragment (simply returns its value)
      *
-     * @api
+     * 
      *
      * @return int the text version of the Number fragment
      */
@@ -59,7 +59,7 @@ class Number implements FragmentInterface
     /**
      * Builds a HTML version of the Number fragment
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -73,7 +73,7 @@ class Number implements FragmentInterface
     /**
      * Returns the number's value.
      *
-     * @api
+     * 
      *
      * @return int the number's value
      */

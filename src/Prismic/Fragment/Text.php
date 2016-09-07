@@ -33,7 +33,7 @@ class Text implements FragmentInterface
     /**
      * Builds a HTML version of the Text fragment.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -47,7 +47,7 @@ class Text implements FragmentInterface
     /**
      * Builds a text version of the Text fragment.
      *
-     * @api
+     * 
      *
      * @return string the text version of the Text fragment
      */
@@ -59,7 +59,7 @@ class Text implements FragmentInterface
     /**
      * Returns the text value of the fragment.
      *
-     * @api
+     * 
      *
      * @return  string  the text value of the fragment
      */

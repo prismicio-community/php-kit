@@ -13,7 +13,7 @@ namespace Prismic\Fragment;
 /**
  * This class embodies a GeoPoint fragment.
  *
- * @api
+ * 
  */
 class GeoPoint implements FragmentInterface
 {
@@ -29,7 +29,7 @@ class GeoPoint implements FragmentInterface
     /**
      * Builds a HTML version of the geopoint.
      *
-     * @api
+     * 
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *

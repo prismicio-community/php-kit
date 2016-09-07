@@ -21,28 +21,27 @@ use DateTime;
  * This is meant to be built during the unmarshaling of the /api document, and is not meant to
  * be used externally except for testing.
  *
- * @api
  */
 class Ref
 {
     /**
-     * @var string the ID of the ref
+     * string the ID of the ref
      */
     private $id;
     /**
-     * @var string the reference of the ref
+     * string the reference of the ref
      */
     private $ref;
     /**
-     * @var string the display label of the ref
+     * string the display label of the ref
      */
     private $label;
     /**
-     * @var boolean is the ref the master ref?
+     * boolean is the ref the master ref?
      */
     private $isMasterRef;
     /**
-     * @var string the date and time at which the ref is scheduled, if it is
+     * string the date and time at which the ref is scheduled, if it is
      */
     private $maybeScheduledAt;
 
@@ -157,8 +156,8 @@ class Ref
     /**
      * Parses a ref.
      *
-     * @param  \stdClass    $json the json bit retrieved from the API that represents a ref.
-     * @return \Prismic\Ref the manipulable object for that ref.
+     * @param  $json the json bit retrieved from the API that represents a ref.
+     * @return Prismic::Ref the manipulable object for that ref.
      */
     public static function parse($json)
     {
