@@ -46,6 +46,9 @@ $doc = $api->getByUID("get-started");
 
 The kit is compatible and tested with PHP 5.4 and above.
 
+Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
+For Symfony 2.7 projects, use version 2.0.3.
+
 ### More information
 
 * [Developer docs](https://developers.prismic.io/)

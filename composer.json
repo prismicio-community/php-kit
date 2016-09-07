@@ -15,13 +15,12 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "symfony/event-dispatcher": "~2.0",
-        "guzzlehttp/guzzle": "^6.1"
+        "symfony/event-dispatcher": "~3.1.4",
+        "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
         "codeclimate/php-test-reporter": "dev-master",
-        "phpunit/phpunit": "~4.1",
-        "phpdocumentor/phpdocumentor": "2.*"
+        "phpunit/phpunit": "~4.1"
     },
     "extra": {
         "branch-alias": {
