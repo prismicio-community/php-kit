@@ -26,7 +26,10 @@ namespace Prismic\Cache;
  *
  * Two implementations are included in the PHP kit out-of-the-box:
  * ApcCache (which works with APC) and NoCache (which doesn't cache).
- *
+ */
+interface CacheInterface
+{
+    /*
      *
      * @param string $key the key of the cache entry
      * @return boolean true if the cache has a value for this key, otherwise false
