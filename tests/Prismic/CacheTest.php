@@ -2,7 +2,7 @@
 
 namespace Prismic\Test;
 
-use Prismic\Cache\ApcCache;
+use Prismic\Cache\FileCache;
 
 class CacheTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = new ApcCache();
+        $this->cache = new FileCache();
     }
 
     public function testSetGetValue()

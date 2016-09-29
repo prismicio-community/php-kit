@@ -14,8 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Prismic\Cache\CacheInterface;
-use \Prismic\Cache\ApcCache;
-use \Prismic\Cache\NoCache;
+use \Prismic\Cache\FileCache;
 
 /**
  * @deprecated deprecated since version 1.5.3, use Api::PREVIEW_COOKIE;
@@ -486,16 +485,13 @@ class Api
     }
 
     /**
-     * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
+     * Use the File cache
      *
-     * @return ApcCache::NoCache
+     * @return FileCache
      */
     public static function defaultCache()
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
-            return new ApcCache();
-        }
-        return new NoCache();
+        return new FileCache();
     }
 
 }

@@ -14,8 +14,25 @@ namespace Prismic\Cache;
  * The default implementation that is passed in the Api object when created:
  * it is based on APCU, and therefore requires APCU to be installed on the server.
  */
-class ApcCache implements CacheInterface
+
+$CACHE_FOLDER = "/tmp/cache";
+
+class FileCache implements CacheInterface
 {
+    private $cache;
+
+    public function __construct() {
+        $res = true;
+        if (!file_exists($CACHE_FOLDER)) {
+            $res = mkdir($CACHE_FOLDER, 0700);
+        }
+        if($res) {
+            $this->cache = new \Doctrine\Common\Cache\PhpFileCache($CACHE_FOLDER);
+        } else {
+            die("Failed to create cache folder");
+        }
+    }
+
     /**
      * Tests whether the cache has a value for a particular key
      *
@@ -24,7 +41,7 @@ class ApcCache implements CacheInterface
      */
     public function has($key)
     {
-        return \apcu_exists($key);
+        return $this->cache->doContains($key);
     }
 
     /**
@@ -35,11 +52,12 @@ class ApcCache implements CacheInterface
      */
     public function get($key)
     {
-        $value = \apcu_fetch($key, $success);
-        if (!$success) {
-            return null;
+        $res = $this->cache->doFetch($key);
+        if ($res == false) {
+          return null;
+        } else {
+          return $res;
         }
-        return $value;
     }
 
     /**
@@ -52,7 +70,7 @@ class ApcCache implements CacheInterface
      */
     public function set($key, $value, $ttl = 0)
     {
-        \apcu_store($key, $value, $ttl);
+        $this->cache->doSave($key, $value, $ttl);
     }
 
     /**
@@ -63,7 +81,7 @@ class ApcCache implements CacheInterface
      */
     public function delete($key)
     {
-        \apcu_delete($key);
+         $this->cache->doDelete($key);
     }
 
     /**
@@ -73,6 +91,6 @@ class ApcCache implements CacheInterface
      */
     public function clear()
     {
-        \apcu_clear_cache();
+        $this->cache->doFlush();
     }
 }

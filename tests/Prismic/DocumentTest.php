@@ -2,7 +2,7 @@
 
 namespace Prismic\Test;
 
-use Prismic\Cache\ApcCache;
+use Prismic\Cache\FileCache;
 use Prismic\Document;
 use Prismic\Api;
 
@@ -16,7 +16,7 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $cache = new ApcCache();
+        $cache = new FileCache();
         $cache->clear();
         $search = json_decode(file_get_contents(__DIR__.'/../fixtures/search.json'));
         $this->document = Document::parse($search[0]);

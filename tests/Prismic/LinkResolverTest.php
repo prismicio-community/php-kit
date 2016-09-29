@@ -8,7 +8,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 
 use Prismic\API;
-use Prismic\Cache\ApcCache;
+use Prismic\Cache\FileCache;
 use Prismic\Document;
 use Prismic\Fragment\Link\DocumentLink;
 
@@ -18,7 +18,7 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $cache = new ApcCache();
+        $cache = new FileCache();
         $cache->clear();
         $this->linkResolver = new FakeLinkResolver();
         $this->id = 'Ue0EDd_mqb8Dhk3j';
