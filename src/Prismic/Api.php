@@ -486,6 +486,17 @@ class Api
     }
 
     /**
+     * Get a single typed document by its type
+     *
+     * @param string   $type        the custom type of the requested document
+     *
+     * @return Prismic::Document    the resulting document (null if no match)
+     */
+    public function getSingle($type) {
+        return $this->queryFirst(Predicates::at("document.type", $type));
+    }
+
+    /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
      *
      * @return ApcCache::NoCache
