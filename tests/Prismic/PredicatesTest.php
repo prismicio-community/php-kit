@@ -14,6 +14,12 @@ class PredicatesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('[:d = at(document.type, "blog-post")]', $predicate->q());
     }
 
+    public function testNotPredicate()
+    {
+        $predicate = Predicates::not("document.type", "blog-post");
+        $this->assertEquals('[:d = not(document.type, "blog-post")]', $predicate->q());
+    }
+
 
     public function testAnyPredicate()
     {
