@@ -405,6 +405,29 @@ class Api
     }
 
     /**
+     * Return the ref currently in use
+     *
+     * In order of preference, returns the preview cookie, the experiments cookie or the master ref otherwise
+     *
+     * @return string
+     */
+    public function ref()
+    {
+        $cookieNames = [
+            str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
+            self::PREVIEW_COOKIE,
+            str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
+            self::EXPERIMENTS_COOKIE,
+        ];
+        foreach ($cookieNames as $cookie) {
+            if (isset($_COOKIE[$cookie])) {
+                return $_COOKIE[$cookie];
+            }
+        }
+        return (string) $this->master()->getRef();
+    }
+
+    /**
      * Shortcut to query on the default reference.
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
@@ -414,17 +437,7 @@ class Api
      * @return Prismic::Response   the response, including documents and pagination information
      */
     public function query($q, $options = array()) {
-        if (isset($_COOKIE[Api::PREVIEW_COOKIE])) {
-            $ref = $_COOKIE[Api::PREVIEW_COOKIE];
-        } else if (isset($_COOKIE[str_replace('.', '_', Api::PREVIEW_COOKIE)])) {
-            $ref = $_COOKIE[str_replace('.', '_', Api::PREVIEW_COOKIE)];
-        } else if (isset($_COOKIE[Api::EXPERIMENTS_COOKIE])) {
-            $ref = $_COOKIE[Api::EXPERIMENTS_COOKIE];
-        } else if (isset($_COOKIE[str_replace('.', '_', Api::EXPERIMENTS_COOKIE)])) {
-            $ref = $_COOKIE[str_replace('.', '_', Api::EXPERIMENTS_COOKIE)];
-        } else {
-            $ref = $this->master()->getRef();
-        }
+        $ref = $this->ref();
         $form = $this->forms()->everything->ref($ref);
         if ($q != null && $q != "") {
             $form = $form->query($q);
