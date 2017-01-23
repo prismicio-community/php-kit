@@ -30,6 +30,16 @@ class Predicates {
 
     /**
      * @param string $fragment
+     * @param string $value
+     *
+     * @return SimplePredicate
+     */
+    public static function not($fragment, $value) {
+        return new SimplePredicate("not", $fragment, array($value));
+    }
+
+    /**
+     * @param string $fragment
      * @param string $values
      *
      * @return SimplePredicate
