@@ -421,7 +421,17 @@ class Api
         ];
         foreach ($cookieNames as $cookie) {
             if (isset($_COOKIE[$cookie])) {
-                return $_COOKIE[$cookie];
+                // For Preview Cookies, the ref is the cookie value
+                $ref = $_COOKIE[$cookie];
+                if(strpos($cookie, 'experiment') !== false) {
+                    // For experiment cookies, the ref must be looked up by the Google ID
+                    $experiments = $this->getExperiments();
+                    $result = $experiments->refFromCookie($_COOKIE[$cookie]);
+                    if(null !== $result) {
+                        $ref = $result;
+                    }
+                }
+                return $ref;
             }
         }
         return (string) $this->master()->getRef();
