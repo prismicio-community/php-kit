@@ -9,11 +9,13 @@ class ApiTest extends \PHPUnit_Framework_TestCase
 
     private $api;
 
+    private $experiments;
+
     public function setUp()
     {
         $this->api = $this->getMockBuilder(Prismic\Api::class)
             ->disableOriginalConstructor()
-            ->setMethods(['master'])
+            ->setMethods(['master', 'getExperiments'])
             ->getMock();
 
         $master = new Prismic\Ref('Master', 'Master-Ref-String', 'Master', true, null);
@@ -21,6 +23,19 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->api
              ->method('master')
              ->willReturn($master);
+
+        $this->experiments = $this->getMockBuilder(Prismic\Experiments::class)
+             ->disableOriginalConstructor()
+             ->setMethods(['refFromCookie'])
+             ->getMock();
+
+        $this->experiments
+             ->method('refFromCookie')
+             ->willReturn('experiment');
+
+        $this->api
+             ->method('getExperiments')
+             ->willReturn($this->experiments);
     }
 
     public function testRef()
