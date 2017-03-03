@@ -28,6 +28,7 @@ use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Group;
 use Prismic\Fragment\SliceZone;
+use Prismic\I18n\I18n;
 
 /**
  * Embodies a document retrieved from the API, which we'll be able to manipulate.
@@ -203,6 +204,20 @@ class Document extends WithFragments
     {
         if (isset($this->data->last_publication_date) && null !== $this->data->last_publication_date) {
             return DateTimeImmutable::createFromFormat(DateTime::ISO8601, $this->data->last_publication_date);
+        }
+        return null;
+    }
+
+    /**
+     * Return the i18n document object
+     * This property will be null if the document was last published before the feature was released.
+     *
+     * @return Object
+     */
+    public function getI18n()
+    {
+        if (isset($this->data->i18n) && null !== $this->data->i18n) {
+            return I18n::parse($this->data->i18n);
         }
         return null;
     }
