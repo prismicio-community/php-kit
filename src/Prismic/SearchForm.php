@@ -175,7 +175,7 @@ class SearchForm
      * @param  int $lang
      * @return Prismic::SearchForm a clone of the SearchForm object with the new lang parameter added
      */
-    public function language($lang)
+    public function lang($lang)
     {
         return $this->set("lang", $lang);
     }
