@@ -1,0 +1,93 @@
+[
+    {
+        "id": "WBBMECcAABESvVA1",
+        "uid": "doc1",
+        "type": "doc",
+        "href": "https://testrepo.prismic.io/api/documents/search?ref=WF6bvCYAAK08dXme&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WBBMECcAABESvVA1%22%29+%5D%5D",
+        "tags": [],
+        "first_publication_date": "2016-10-26T06:23:20+0000",
+        "last_publication_date": "2016-12-26T06:23:20+0000",
+        "slugs": [
+            "doc1"
+        ],
+        "linked_documents": [],
+        "i18n": {
+            "lang": "fr-fr",
+            "related_documents": {
+                "en-us": {
+                    "id": "WLgklCIAAORBTRvh",
+                    "type": "page"
+                }
+            }
+        },
+        "data": {
+            "post": {
+                "title": {
+                    "type": "Text",
+                    "value": "Doc1"
+                }
+            }
+        }
+    },
+    {
+        "id": "WBBMECcAABESvVA2",
+        "uid": "doc2",
+        "type": "doc",
+        "href": "https://testrepo.prismic.io/api/documents/search?ref=WF6bvCYAAK08dXme&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WBBMECcAABESvVA2%22%29+%5D%5D",
+        "tags": [],
+        "first_publication_date": null,
+        "last_publication_date": "2016-12-26T06:23:20+0000",
+        "slugs": [
+            "doc2"
+        ],
+        "linked_documents": [],
+        "i18n": {
+            "lang": "en-us",
+            "related_documents": {
+                "fr-fr": {
+                    "id": "WLVOViIAACIAz0Us",
+                    "uid": "fr",
+                    "type": "post"
+                },
+                "es-es": {
+                    "id": "WL0GRiIEADOVziUr",
+                    "uid": "es",
+                    "type": "post"
+                }
+            }
+        },
+        "data": {
+            "post": {
+                "title": {
+                    "type": "Text",
+                    "value": "Doc2"
+                }
+            }
+        }
+    },
+    {
+        "id": "WBBMECcAABESvVA3",
+        "uid": "doc3",
+        "type": "doc",
+        "href": "https://testrepo.prismic.io/api/documents/search?ref=WF6bvCYAAK08dXme&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WBBMECcAABESvVA3%22%29+%5D%5D",
+        "tags": [],
+        "first_publication_date": null,
+        "last_publication_date": null,
+        "slugs": [
+            "doc3"
+        ],
+        "linked_documents": [],
+        "i18n": {
+            "lang": "en-us",
+            "related_documents": {}
+        },
+        "data": {
+            "post": {
+                "title": {
+                    "type": "Text",
+                    "value": "Doc3"
+                }
+            }
+        }
+    }
+]
