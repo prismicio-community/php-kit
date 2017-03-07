@@ -19,75 +19,55 @@ class I18nTest extends \PHPUnit_Framework_TestCase
     
     public function testGetI18n()
     {
-        $this->i18nArray = array();
-        foreach ($this->documents as $idx => $i18n) {
-            $this->i18nArray[$idx] = $i18n->getI18n();
-            $this->assertInstanceOf('Prismic\I18n\I18n', $this->i18nArray[$idx]);
+        foreach ($this->documents as $document) {
+            $this->assertInstanceOf('Prismic\I18n\I18n', $document->getI18n());
         }
-        
-        return $this->i18nArray;
     }
     
-    /**
-     * @depends testGetI18n
-     */
-    public function testGetLang(Array $i18nArray)
+    public function testGetLang()
     {
-        $this->assertEquals("fr-fr", $i18nArray[0]->getLang());
-        $this->assertEquals("en-us", $i18nArray[1]->getLang());
+        $this->assertEquals("fr-fr", $this->documents[0]->getI18n()->getLang());
+        $this->assertEquals("en-us", $this->documents[1]->getI18n()->getLang());
     }
     
-    /**
-     * @depends testGetI18n
-     */
-    public function testGetRelatedDocs(Array $i18nArray)
+    public function testGetRelatedDocs()
     {
-        $this->assertCount(1, $i18nArray[0]->getRelatedDocs());
-        $this->assertCount(2, $i18nArray[1]->getRelatedDocs());
-        $this->assertCount(0, $i18nArray[2]->getRelatedDocs());
+        $this->assertCount(1, $this->documents[0]->getI18n()->getRelatedDocs());
+        $this->assertCount(2, $this->documents[1]->getI18n()->getRelatedDocs());
+        $this->assertCount(0, $this->documents[2]->getI18n()->getRelatedDocs());
         
-        foreach ($i18nArray[1] as $idx => $relatedDoc) {
+        foreach ($this->documents[1]->getI18n()->getRelatedDocs() as $relatedDoc) {
             $this->assertInstanceOf('Prismic\I18n\RelatedDocument', $relatedDoc);
         }
     }
     
-    /**
-     * @depends testGetI18n
-     */
-    public function testGetRelatedDoc(Array $i18nArray)
+    public function testGetRelatedDoc()
     {
-        $relatedDocument = $i18nArray[0]->getRelatedDoc('en-us');
-        $relatedDocumentWithUid = $i18nArray[1]->getRelatedDoc('fr-fr');
+        $relatedDocument = $this->documents[0]->getI18n()->getRelatedDoc('en-us');
         $this->assertInstanceOf('Prismic\I18n\RelatedDocument', $relatedDocument);
-        $this->assertInstanceOf('Prismic\I18n\RelatedDocument', $relatedDocumentWithUid);
         
-        return array($relatedDocument, $relatedDocumentWithUid);
+        $relatedDocumentWithUid = $this->documents[1]->getI18n()->getRelatedDoc('fr-fr');
+        $this->assertInstanceOf('Prismic\I18n\RelatedDocument', $relatedDocumentWithUid);
     }
     
-    /**
-     * @depends testGetRelatedDoc
-     */
-    public function testGetId(Array $relatedDocArray)
+    public function testGetId()
     {
-        $this->assertEquals('WLgklCIAAORBTRvh', $relatedDocArray[0]->getId());
-        $this->assertEquals('WLVOViIAACIAz0Us', $relatedDocArray[1]->getId());
+        $relatedDocument = $this->documents[0]->getI18n()->getRelatedDoc('en-us');
+        $this->assertEquals('WLgklCIAAORBTRvh', $relatedDocument->getId());
     }
     
-    /**
-     * @depends testGetRelatedDoc
-     */
-    public function testGetUid(Array $relatedDocArray)
+    public function testGetUid()
     {
-        $this->assertNull($relatedDocArray[0]->getUid());
-        $this->assertEquals('fr', $relatedDocArray[1]->getUid());
+        $relatedDocument = $this->documents[0]->getI18n()->getRelatedDoc('en-us');
+        $this->assertNull($relatedDocument->getUid());
+        
+        $relatedDocumentWithUid = $this->documents[1]->getI18n()->getRelatedDoc('fr-fr');
+        $this->assertEquals('fr', $relatedDocumentWithUid->getUid());
     }
     
-    /**
-     * @depends testGetRelatedDoc
-     */
-    public function testGetType(Array $relatedDocArray)
+    public function testGetType()
     {
-        $this->assertEquals('page', $relatedDocArray[0]->getType());
-        $this->assertEquals('post', $relatedDocArray[1]->getType());
+        $relatedDocument = $this->documents[0]->getI18n()->getRelatedDoc('en-us');
+        $this->assertEquals('page', $relatedDocument->getType());
     }
 }
