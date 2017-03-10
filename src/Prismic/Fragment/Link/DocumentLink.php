@@ -41,6 +41,10 @@ class DocumentLink extends WithFragments implements LinkInterface
      */
     private $slug;
     /**
+     * @var string the language code of the document
+     */
+    private $lang;
+    /**
      * @var boolean returns true if the link is towards a document that is not live, for instance
      */
     private $isBroken;
@@ -53,10 +57,11 @@ class DocumentLink extends WithFragments implements LinkInterface
      * @param string  $type      the type of the linked document
      * @param array   $tags      an array of strings which are the document's tags
      * @param string  $slug      the current slug of the document
+     * @param string  $lang      the language code of the document
      * @param array   $fragments the additional fragment data
      * @param boolean $isBroken  returns true if the link is towards a document that is not live, for instance
      */
-    public function __construct($id, $uid, $type, $tags, $slug, array $fragments, $isBroken)
+    public function __construct($id, $uid, $type, $tags, $slug, $lang, array $fragments, $isBroken)
     {
         parent::__construct($fragments);
         $this->id = $id;
@@ -64,6 +69,7 @@ class DocumentLink extends WithFragments implements LinkInterface
         $this->type = $type;
         $this->tags = $tags;
         $this->slug = $slug;
+        $this->lang = $lang;
         $this->isBroken = $isBroken;
     }
 
@@ -95,6 +101,7 @@ class DocumentLink extends WithFragments implements LinkInterface
     public static function parse($json)
     {
         $uid = isset($json->document->uid) ? $json->document->uid : null;
+        $lang = isset($json->document->lang) ? $json->document->lang : null;
         $fragments = isset($json->document->data) ? WithFragments::parseFragments($json->document->data) : array();
         return new DocumentLink(
             $json->document->id,
@@ -102,6 +109,7 @@ class DocumentLink extends WithFragments implements LinkInterface
             $json->document->type,
             isset($json->document->{'tags'}) ? $json->document->tags : null,
             $json->document->slug,
+            $lang,
             $fragments,
             $json->isBroken
         );
@@ -194,6 +202,18 @@ class DocumentLink extends WithFragments implements LinkInterface
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Returns the current language code of the document
+     *
+     * May return null if the document was last published before the i18n feature was added.
+     *
+     * @return string the language code of the document
+     */
+    public function getLang()
+    {
+        return $this->lang;
     }
 
     /**
