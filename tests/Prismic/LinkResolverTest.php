@@ -25,10 +25,11 @@ class LinkResolverTest extends \PHPUnit_Framework_TestCase
         $type = 'product';
         $tags = array('macaron');
         $slugs = array('ABCD');
+        $lang = 'en-us';
         $isBroken = false;
         $href = "http://myrepo.prismic.io/Ue0EDd_mqb8Dhk3j";
-        $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, array(), null);
-        $this->link = new DocumentLink($this->id, null, $type, $tags, $slugs[0], array(), $isBroken);
+        $this->document = new Document($this->id, null, $type, $href, $tags, $slugs, $lang, array(), array(), null);
+        $this->link = new DocumentLink($this->id, null, $type, $tags, $slugs[0], $lang, array(), array(), $isBroken);
         $response = file_get_contents(__DIR__.'/../fixtures/data.json');
 
         $mock = new MockHandler([
