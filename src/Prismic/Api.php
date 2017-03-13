@@ -224,7 +224,7 @@ class Api
         $response = json_decode($response->getBody(true));
         if (isset($response->mainDocument)) {
             $documents = $this
-                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token])
+                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
                        ->getResults();
             if (count($documents) > 0) {
                 if ($url = $linkResolver->resolveDocument($documents[0])) {
@@ -484,6 +484,7 @@ class Api
      * @return Prismic::Document    the resulting document (null if no match)
      */
     public function getByID($id, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
 
@@ -497,6 +498,7 @@ class Api
      * @return Prismic::Document      the resulting document (null if no match)
      */
     public function getByUID($type, $uid, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
 
@@ -509,6 +511,7 @@ class Api
      * @return Prismic::Response    the response, including documents and pagination information
      */
     public function getByIDs($ids, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
 
