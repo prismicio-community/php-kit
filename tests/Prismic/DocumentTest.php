@@ -5,6 +5,7 @@ namespace Prismic\Test;
 use Prismic\Cache\ApcCache;
 use Prismic\Document;
 use Prismic\Api;
+use Prismic\Fragment;
 
 class DocumentTest extends \PHPUnit_Framework_TestCase
 {
@@ -94,6 +95,16 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 
         $url2 = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg';
         $this->assertEquals($this->document->getImageView('product.description', 'main')->getUrl(), $url2);
+    }
+
+    public function testGetUnsetImageViewReturnsNull()
+    {
+        $this->assertNull($this->document->getImageView('product.image', 'unknown-view'));
+    }
+
+    public function testGetAlternativeImageView()
+    {
+        $this->assertInstanceOf(Fragment\ImageView::class, $this->document->getImageView('product.gallery', 'squared'));
     }
 
     public function testGetAllImagesViews()
