@@ -123,6 +123,7 @@ abstract class LinkResolver
             $document->getType(),
             $document->getTags(),
             $document->getSlug(),
+            $document->getLang(),
             $document->getFragments(),
             false
         );

@@ -170,6 +170,17 @@ class SearchForm
     }
 
     /**
+     * Set the language for the query documents.
+     *
+     * @param  int $lang
+     * @return Prismic::SearchForm a clone of the SearchForm object with the new lang parameter added
+     */
+    public function lang($lang)
+    {
+        return $this->set("lang", $lang);
+    }
+
+    /**
      * Set the query's page size, for the pagination.
      *
      * @param  int $pageSize

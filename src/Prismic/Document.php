@@ -28,6 +28,7 @@ use Prismic\Fragment\StructuredText;
 use Prismic\Fragment\Text;
 use Prismic\Fragment\Group;
 use Prismic\Fragment\SliceZone;
+use Prismic\AlternateLanguage;
 
 /**
  * Embodies a document retrieved from the API, which we'll be able to manipulate.
@@ -47,22 +48,28 @@ class Document extends WithFragments
     private $tags;
     //! array the slugs used in the document, in the past and today; today's slug is the head (please use instance methods to get information that is in there)
     private $slugs;
+    //! string the language code of the document (please use instance methods to get information that is in there)
+    private $lang;
+    //! array the alternative language versions of the document (please use instance methods to get information that is in there)
+    private $alternateLanguages;
     //! the raw json retrieved from the server
     private $data;
 
     /**
      * Constructs a Document object. To be used only for testing purposes, as this gets done during the unmarshalling
      *
-     * @param string      $id        the ID of the document
-     * @param string|null $uid       the user ID of the document
-     * @param string      $type      the type of the document
-     * @param string      $href      the URL of the document in the repository's API
-     * @param array       $tags      the tags used in the document
-     * @param array       $slugs     the slugs used in the document, in the past and today; today's slug is the head
-     * @param json        $data      the raw json retrieved from the server
-     * @param array       $fragments all the fragments in the document
+     * @param string      $id                   the ID of the document
+     * @param string|null $uid                  the user ID of the document
+     * @param string      $type                 the type of the document
+     * @param string      $href                 the URL of the document in the repository's API
+     * @param array       $tags                 the tags used in the document
+     * @param array       $slugs                the slugs used in the document, in the past and today; today's slug is the head
+     * @param string      $lang                 the language code of the document
+     * @param array       $alternateLanguages   the alternate language versions of the document
+     * @param json        $data                 the raw json retrieved from the server
+     * @param array       $fragments            all the fragments in the document
      */
-    public function __construct($id, $uid, $type, $href, array $tags, array $slugs, array $fragments, $data)
+    public function __construct($id, $uid, $type, $href, array $tags, array $slugs, $lang, array $alternateLanguages, array $fragments, $data)
     {
         parent::__construct($fragments);
         $this->id = $id;
@@ -71,6 +78,8 @@ class Document extends WithFragments
         $this->href = $href;
         $this->tags = $tags;
         $this->slugs = $slugs;
+        $this->lang = $lang;
+        $this->alternateLanguages = $alternateLanguages;
         $this->data = $data;
     }
 
@@ -170,6 +179,48 @@ class Document extends WithFragments
     }
 
     /**
+     * Return the language code of the document
+     *
+     * It can be null, if the i18n feature is not enabled on the repository.
+     *
+     * @return string the language code of the document
+     */
+    public function getLang()
+    {
+        return $this->lang;
+    }
+    
+    /**
+     * Return the alternative language versions of this document
+     * 
+     * It can be an empty array, if the i18n feature is not enabled on the repository or there are no alternative versions published.
+     *
+     * @return array
+     */
+    public function getAlternateLanguages()
+    {
+        return $this->alternateLanguages;
+    }
+    
+    /**
+     * Return the specified alternate language version of this document
+     * and null if the document doesn't exist
+     * 
+     * @param string $lang language code of the alternate language version, like "en-us" 
+     * 
+     * @return AlternateLanguage the directly usable object, or null if the alternate language version does not exist
+     */
+    public function getAlternateLanguage($lang)
+    {
+        foreach ($this->alternateLanguages as $alternateLanguage) {
+            if ($alternateLanguage->getLang() == $lang) {
+                return $alternateLanguage;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns the raw json data received from the server.
      * Most of the time it's better to use a different helper, but it can be useful for example
      * for newer features not yet integrated in the kit
@@ -214,7 +265,7 @@ class Document extends WithFragments
      */
     public function asDocumentLink()
     {
-        return new DocumentLink($this->id, $this->uid, $this->type, $this->tags, $this->getSlug(), $this->getFragments(), false);
+        return new DocumentLink($this->id, $this->uid, $this->type, $this->tags, $this->getSlug(), $this->lang, $this->getFragments(), false);
     }
 
     /**
@@ -227,6 +278,15 @@ class Document extends WithFragments
     public static function parse(\stdClass $json)
     {
         $uid = isset($json->uid) ? $json->uid : null;
+
+        $lang = isset($json->lang) ? $json->lang : null;
+        
+        $alternateLanguages = array();
+        if (isset($json->alternate_languages)) {
+            foreach ($json->alternate_languages as $alternateLanguage) {
+                $alternateLanguages[] = AlternateLanguage::parse($alternateLanguage);
+            }
+        }
 
         $fragments = WithFragments::parseFragments($json->data);
 
@@ -242,6 +302,8 @@ class Document extends WithFragments
             $json->href,
             $json->tags,
             $slugs,
+            $lang,
+            $alternateLanguages,
             $fragments,
             $json
         );

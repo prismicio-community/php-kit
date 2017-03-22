@@ -224,7 +224,7 @@ class Api
         $response = json_decode($response->getBody(true));
         if (isset($response->mainDocument)) {
             $documents = $this
-                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token])
+                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
                        ->getResults();
             if (count($documents) > 0) {
                 if ($url = $linkResolver->resolveDocument($documents[0])) {
@@ -462,12 +462,13 @@ class Api
      * Return the first document matching the query
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
+     * @param  string|array|\Prismic\Predicate $q        the query, as a string, predicate or array of predicates
+     * @param  array                           $options  query options: pageSize, orderings, etc.
      *
      * @return Prismic::Document     the resulting document, or null
      */
-    public function queryFirst($q) {
-        $documents = $this->query($q)->getResults();
+    public function queryFirst($q, $options = array()) {
+        $documents = $this->query($q, $options)->getResults();
         if (count($documents) > 0) {
             return $documents[0];
         }
@@ -478,45 +479,52 @@ class Api
      * Search a document by its id
      *
      * @param string   $id          the requested id
+     * @param array    $options     query options: pageSize, orderings, etc.
      *
      * @return Prismic::Document    the resulting document (null if no match)
      */
-    public function getByID($id) {
-        return $this->queryFirst(Predicates::at("document.id", $id));
+    public function getByID($id, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
+        return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
 
     /**
      * Search a document by its uid
      *
      * @param string   $type          the custom type of the requested document
-     * @param string   $uid            the requested uid
+     * @param string   $uid           the requested uid
+     * @param array    $options       query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Document    the resulting document (null if no match)
+     * @return Prismic::Document      the resulting document (null if no match)
      */
-    public function getByUID($type, $uid) {
-        return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid));
+    public function getByUID($type, $uid, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
+        return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
 
     /**
      * Return a set of document from their ids
      *
      * @param array   $ids          array of strings, the requested ids
+     * @param array   $options      query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Response   the response, including documents and pagination information
+     * @return Prismic::Response    the response, including documents and pagination information
      */
-    public function getByIDs($ids) {
-        return $this->query(Predicates::in("document.id", $ids));
+    public function getByIDs($ids, $options = array()) {
+        if(!isset($options['lang'])) $options['lang'] = '*';
+        return $this->query(Predicates::in("document.id", $ids), $options);
     }
 
     /**
      * Get a single typed document by its type
      *
      * @param string   $type        the custom type of the requested document
+     * @param array    $options     query options: pageSize, orderings, etc.
      *
      * @return Prismic::Document    the resulting document (null if no match)
      */
-    public function getSingle($type) {
-        return $this->queryFirst(Predicates::at("document.type", $type));
+    public function getSingle($type, $options = array()) {
+        return $this->queryFirst(Predicates::at("document.type", $type), $options);
     }
 
     /**
