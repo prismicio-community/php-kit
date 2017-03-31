@@ -302,10 +302,17 @@ class Api
      */
     public static function get($action, $accessToken = null, $httpClient = null, CacheInterface $cache = null, $apiCacheTTL = 5)
     {
-        $cache = is_null($cache) ? self::defaultCache() : $cache;
+        $cache    = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
-        $apiData = $cache->get($cacheKey);
-        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpClient, $cache) : null;
+
+        $apiData  = $cache->get($cacheKey);
+        $apiData  = is_string($apiData)
+                  ? unserialize($apiData)
+                  : $apiData;
+
+        $api      = $apiData
+                  ? new Api($apiData, $accessToken, $httpClient, $cache)
+                  : null;
         if ($api) {
             return $api;
         } else {
