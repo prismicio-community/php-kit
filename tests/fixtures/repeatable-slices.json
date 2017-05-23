@@ -29,7 +29,7 @@
               {
                 "type": "Slice",
                 "slice_type": "test_slice",
-                "slice_label": 'Label Value',
+                "slice_label": "Label Value",
                 "repeat": [
                   {
                     "text1": {

@@ -90,4 +90,14 @@ class CompositeSlice implements FragmentInterface
         return $this->label;
     }
 
+    /**
+     * Returns the slice type as declared in the Document Mask.
+     *
+     * @return string
+     */
+    public function getSliceType()
+    {
+        return $this->sliceType;
+    }
+
 }
