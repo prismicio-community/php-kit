@@ -1,0 +1,103 @@
+{
+  "page": 1,
+  "results_per_page": 20,
+  "results_size": 1,
+  "total_results_size": 1,
+  "total_pages": 1,
+  "next_page": null,
+  "prev_page": null,
+  "results": [
+    {
+      "id": "WSSeACsAACoA1JTW",
+      "uid": null,
+      "type": "slice-repeat",
+      "href": "https://someplace.prismic.io/api/documents/search?ref=foo",
+      "tags": [],
+      "first_publication_date": null,
+      "last_publication_date": null,
+      "slugs": [
+        "yes"
+      ],
+      "linked_documents": [],
+      "lang": "en-gb",
+      "alternate_languages": [],
+      "data": {
+        "slice-repeat": {
+          "my_zone": {
+            "type": "SliceZone",
+            "value": [
+              {
+                "type": "Slice",
+                "slice_type": "test_slice",
+                "slice_label": null,
+                "repeat": [
+                  {
+                    "text1": {
+                      "type": "Text",
+                      "value": "Value 1"
+                    },
+                    "text2": {
+                      "type": "Text",
+                      "value": "Value 2"
+                    }
+                  },
+                  {
+                    "text1": {
+                      "type": "Text",
+                      "value": "Value 3"
+                    },
+                    "text2": {
+                      "type": "Text",
+                      "value": "Value 4"
+                    }
+                  }
+                ],
+                "non-repeat": {
+                  "nr-text": {
+                    "type": "Text",
+                    "value": "Non-Repeat Text 1"
+                  }
+                }
+              },
+              {
+                "type": "Slice",
+                "slice_type": "test_slice",
+                "slice_label": null,
+                "repeat": [
+                  {
+                    "text1": {
+                      "type": "Text",
+                      "value": "Value 1"
+                    },
+                    "text2": {
+                      "type": "Text",
+                      "value": "Value 2"
+                    }
+                  },
+                  {
+                    "text1": {
+                      "type": "Text",
+                      "value": "Value 3"
+                    },
+                    "text2": {
+                      "type": "Text",
+                      "value": "Value 4"
+                    }
+                  }
+                ],
+                "non-repeat": {
+                  "nr-text": {
+                    "type": "Text",
+                    "value": "Non-Repeat Text 2"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "version": "1fe1bc1",
+  "license": "All Rights Reserved"
+}

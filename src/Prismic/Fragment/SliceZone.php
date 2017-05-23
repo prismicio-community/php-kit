@@ -37,7 +37,7 @@ class SliceZone implements FragmentInterface
     /**
      * Builds a HTML version of the SliceZone fragment.
      *
-     * 
+     *
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -56,7 +56,7 @@ class SliceZone implements FragmentInterface
     /**
      * Builds a text version of the SliceZone fragment.
      *
-     * 
+     *
      *
      * @return string the text version of the SliceZone fragment
      */
@@ -76,7 +76,7 @@ class SliceZone implements FragmentInterface
      *
      * Each item is a Slice.
      *
-     * 
+     *
      *
      * @return array the array to loop on / access items / etc.
      */
@@ -95,7 +95,7 @@ class SliceZone implements FragmentInterface
     {
         $slices = array();
         foreach ($json as $slicejson) {
-            if (property_exists($slicejson, "slice_type") && property_exists($slicejson, "slice_type")) {
+            if (property_exists($slicejson, "slice_type") && property_exists($slicejson, "value")) {
                 if (property_exists($slicejson, "slice_label")) {
                     $label = $slicejson->slice_label;
                 } else {
