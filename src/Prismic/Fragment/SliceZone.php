@@ -95,13 +95,28 @@ class SliceZone implements FragmentInterface
     {
         $slices = array();
         foreach ($json as $slicejson) {
-            if (property_exists($slicejson, "slice_type") && property_exists($slicejson, "value")) {
-                if (property_exists($slicejson, "slice_label")) {
-                    $label = $slicejson->slice_label;
-                } else {
-                    $label = null;
-                }
+            if (!property_exists($slicejson, 'slice_type')) {
+                continue; // Not a slice
+            }
+            $label = null;
+            if (property_exists($slicejson, "slice_label")) {
+                $label = $slicejson->slice_label;
+            }
+            if (property_exists($slicejson, "value")) {
+                // Normal Slice
                 array_push($slices, new Slice($slicejson->slice_type, $label, WithFragments::parseFragment($slicejson->value)));
+                continue;
+            }
+            // Composite Slices
+            $repeat = $nonRepeat = null;
+            if (property_exists($slicejson, 'repeat')) {
+                $repeat = Group::parse($slicejson->repeat);
+            }
+            if (property_exists($slicejson, 'non-repeat')) {
+                $nonRepeat = Group::parseSubfragmentList($slicejson->{'non-repeat'});
+            }
+            if ($repeat || $nonRepeat) {
+                array_push($slices, new CompositeSlice($slicejson->slice_type, $label, $repeat, $nonRepeat));
             }
         }
 
