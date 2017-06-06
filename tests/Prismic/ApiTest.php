@@ -29,10 +29,6 @@ class ApiTest extends \PHPUnit_Framework_TestCase
              ->setMethods(['refFromCookie'])
              ->getMock();
 
-        $this->experiments
-             ->method('refFromCookie')
-             ->willReturn('experiment');
-
         $this->api
              ->method('getExperiments')
              ->willReturn($this->experiments);
@@ -82,8 +78,21 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testCorrectRefIsReturned($cookie, $expect)
     {
+        // Make sure that Prismic\Experiments::refFromCookie returns a 'valid' ref
+        $this->experiments->method('refFromCookie')->willReturn('experiment');
         $_COOKIE = $cookie;
         $this->assertSame($expect, $this->api->ref());
     }
+
+    public function testRefDoesNotReturnStaleExperimentRef()
+    {
+        // Make sure that Prismic\Experiments::refFromCookie returns null, i.e. no experiment running
+        $this->experiments->method('refFromCookie')->willReturn(null);
+        $_COOKIE = [
+            'io.prismic.experiment' => 'Stale Experiment Cookie Value',
+        ];
+        $this->assertSame('Master-Ref-String', $this->api->ref());
+    }
+
 
 }
