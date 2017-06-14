@@ -100,4 +100,24 @@ class CompositeSlice implements FragmentInterface
         return $this->sliceType;
     }
 
+    /**
+     * Returns the non-repeatable fields
+     *
+     * @return string
+     */
+    public function getPrimary()
+    {
+        return $this->nonRepeat;
+    }
+
+    /**
+     * Returns the repeatable fields
+     *
+     * @return string
+     */
+    public function getItems()
+    {
+        return $this->repeat;
+    }
+
 }
