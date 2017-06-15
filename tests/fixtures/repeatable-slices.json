@@ -34,28 +34,28 @@
                   {
                     "text1": {
                       "type": "Text",
-                      "value": "Value 1"
+                      "value": "/RepeatValue1.1/"
                     },
                     "text2": {
                       "type": "Text",
-                      "value": "Value 2"
+                      "value": "/RepeatValue1.2/"
                     }
                   },
                   {
                     "text1": {
                       "type": "Text",
-                      "value": "Value 3"
+                      "value": "/RepeatValue2.1/"
                     },
                     "text2": {
                       "type": "Text",
-                      "value": "Value 4"
+                      "value": "/RepeatValue2.2/"
                     }
                   }
                 ],
                 "non-repeat": {
                   "nr-text": {
                     "type": "Text",
-                    "value": "Non-Repeat Text 1"
+                    "value": "/NonRepeatValue1/"
                   }
                 }
               },

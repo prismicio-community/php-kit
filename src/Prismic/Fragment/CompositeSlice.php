@@ -47,11 +47,7 @@ class CompositeSlice implements FragmentInterface
             }
         }
         if ($this->repeat) {
-            foreach ($this->repeat as $subfragments) {
-                foreach ($subfragments as $name => $fragment) {
-                    $string .= $fragment->asText();
-                }
-            }
+            $string .= $this->repeat->asText();
         }
 
         return $string;
@@ -103,7 +99,7 @@ class CompositeSlice implements FragmentInterface
     /**
      * Returns the non-repeatable fields
      *
-     * @return string
+     * @return GroupDoc|null
      */
     public function getPrimary()
     {
@@ -113,7 +109,7 @@ class CompositeSlice implements FragmentInterface
     /**
      * Returns the repeatable fields
      *
-     * @return string
+     * @return Group|null
      */
     public function getItems()
     {
