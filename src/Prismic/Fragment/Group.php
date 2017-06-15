@@ -45,7 +45,7 @@ class Group implements FragmentInterface
     /**
      * Builds a HTML version of the Group fragment.
      *
-     * 
+     *
      *
      * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
@@ -66,16 +66,16 @@ class Group implements FragmentInterface
     /**
      * Builds a text version of the Group fragment.
      *
-     * 
+     *
      *
      * @return string the text version of the Group fragment
      */
     public function asText()
     {
         $string = "";
-        foreach ($this->array as $subfragments) {
-            foreach ($subfragments as $subfragment_name => $subfragment) {
-                $string .= $subfragment->asText();
+        foreach ($this->array as $groupdoc) {
+            foreach ($groupdoc->getFragments() as $fragment) {
+                $string .= $fragment->asText();
             }
         }
 
@@ -88,7 +88,7 @@ class Group implements FragmentInterface
      *
      * Each item is an associative array of subfragments.
      *
-     * 
+     *
      *
      * @return array the array to loop on / access items / etc.
      */
