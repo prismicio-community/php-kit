@@ -19,4 +19,11 @@ interface SliceInterface extends FragmentInterface
      */
     public function getLabel();
 
+    /**
+     * Whether the slice is composite or not
+     *
+     * @return bool
+     */
+    public function isComposite();
+
 }

@@ -113,4 +113,14 @@ class Slice implements SliceInterface
     {
         return $this->value;
     }
+
+    /**
+     * Whether the slice is composite or not
+     *
+     * @return bool
+     */
+    public function isComposite()
+    {
+        return false;
+    }
 }
