@@ -2,7 +2,7 @@
 
 namespace Prismic\Fragment;
 
-class CompositeSlice implements FragmentInterface
+class CompositeSlice implements SliceInterface
 {
 
     /**
@@ -38,6 +38,11 @@ class CompositeSlice implements FragmentInterface
         $this->nonRepeat = $nonRepeat;
     }
 
+    /**
+     * Return text representation of slice
+     *
+     * @return string
+     */
     public function asText()
     {
         $string = '';
@@ -53,6 +58,11 @@ class CompositeSlice implements FragmentInterface
         return $string;
     }
 
+    /**
+     * Return HTML representation of slice
+     *
+     * @return string
+     */
     public function asHtml($linkResolver = null)
     {
         $classes = array('slice');
