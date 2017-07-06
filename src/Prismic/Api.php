@@ -203,7 +203,7 @@ class Api
     }
 
     /**
-     * @return Experiments
+     * @return \Prismic\Experiments
      */
     public function getExperiments()
     {
@@ -412,6 +412,47 @@ class Api
     }
 
     /**
+     * If a preview cookie is set, return the ref stored in that cookie
+     *
+     * @return string|null
+     */
+    private function getPreviewRef()
+    {
+        $cookieNames = [
+            str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
+            self::PREVIEW_COOKIE,
+        ];
+        foreach ($cookieNames as $cookieName) {
+            if (isset($_COOKIE[$cookieName])) {
+                return $_COOKIE[$cookieName];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * If an experiment cookie is set, return the ref as determined by \Prismic\Experiments::refFromCookie
+     *
+     * @return string|null
+     */
+    private function getExperimentRef()
+    {
+        $cookieNames = [
+            str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
+            self::EXPERIMENTS_COOKIE,
+        ];
+        foreach ($cookieNames as $cookieName) {
+            if (isset($_COOKIE[$cookieName])) {
+                $experiments = $this->getExperiments();
+                return $experiments->refFromCookie($_COOKIE[$cookieName]);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Return the ref currently in use
      *
      * In order of preference, returns the preview cookie, the experiments cookie or the master ref otherwise
@@ -420,26 +461,13 @@ class Api
      */
     public function ref()
     {
-        $cookieNames = [
-            str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
-            self::PREVIEW_COOKIE,
-            str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
-            self::EXPERIMENTS_COOKIE,
-        ];
-        foreach ($cookieNames as $cookie) {
-            if (isset($_COOKIE[$cookie])) {
-                // For Preview Cookies, the ref is the cookie value
-                $ref = $_COOKIE[$cookie];
-                if(strpos($cookie, 'experiment') !== false) {
-                    // For experiment cookies, the ref must be looked up by the Google ID
-                    $experiments = $this->getExperiments();
-                    $result = $experiments->refFromCookie($_COOKIE[$cookie]);
-                    if(null !== $result) {
-                        $ref = $result;
-                    }
-                }
-                return $ref;
-            }
+        $preview = $this->getPreviewRef();
+        if ($preview) {
+            return $preview;
+        }
+        $experiment = $this->getExperimentRef();
+        if ($experiment) {
+            return $experiment;
         }
         return (string) $this->master()->getRef();
     }
