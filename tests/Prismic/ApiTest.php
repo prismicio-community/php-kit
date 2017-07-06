@@ -94,5 +94,31 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Master-Ref-String', $this->api->ref());
     }
 
+    private function getCacheMock()
+    {
+        return $this->getMockBuilder(Prismic\Cache\ApcCache::class)
+                    ->setMethods(['get'])
+                    ->getMock();
+    }
+
+    public function testCachedApiDataIsConditionallyUnserialized()
+    {
+        $data  = new Prismic\ApiData(
+            [], [], [], [], [], new Prismic\Experiments([], []), '', ''
+        );
+        $cache = $this->getCacheMock();
+        $cache->method('get')->willReturn($data);
+        $api = Prismic\Api::get('foo', 'foo', null, $cache);
+        $this->assertInstanceOf(Prismic\Api::class, $api);
+        $this->assertSame($data, $api->getData());
+
+        $serialized = serialize($data);
+        $cache = $this->getCacheMock();
+        $cache->method('get')->willReturn($serialized);
+
+        $api = Prismic\Api::get('foo', 'foo', null, $cache);
+        $this->assertInstanceOf(Prismic\Api::class, $api);
+        $this->assertInstanceOf(Prismic\ApiData::class, $api->getData());
+    }
 
 }
