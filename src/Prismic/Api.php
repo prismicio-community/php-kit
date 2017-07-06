@@ -71,15 +71,15 @@ class Api
      * Private constructor, not be used outside of this class.
      */
     private function __construct(
-      $data /**< string */,
-      $accessToken = null /**< optional access token, if the API is private */,
-      Client $httpClient = null,
-      CacheInterface $cache = null)
-    {
+        ApiData $data,
+        $accessToken = null /**< optional access token, if the API is private */,
+        Client $httpClient = null,
+        CacheInterface $cache = null
+    ) {
         $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->httpClient = is_null($httpClient) ? new Client() : $httpClient;
-        $this->cache = is_null($cache) ? self::defaultCache() : $cache;
+        $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
+        $this->cache       = is_null($cache) ? self::defaultCache() : $cache;
     }
 
     /**
@@ -310,7 +310,7 @@ class Api
                   ? unserialize($apiData)
                   : $apiData;
 
-        $api      = $apiData
+        $api      = $apiData instanceof ApiData
                   ? new Api($apiData, $accessToken, $httpClient, $cache)
                   : null;
         if ($api) {
