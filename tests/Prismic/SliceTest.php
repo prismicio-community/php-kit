@@ -49,6 +49,7 @@ class SliceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Group::class, $slice->getItems());
         $this->assertInternalType('string', $slice->asText());
         $this->assertInternalType('string', $slice->asHtml());
+        $this->assertInternalType('bool', $slice->isComposite());
     }
 
     public function textContentValueProvider()
