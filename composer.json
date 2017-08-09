@@ -15,11 +15,9 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "symfony/event-dispatcher": "^3.1.4",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
-        "codeclimate/php-test-reporter": "dev-master",
         "phpunit/phpunit": "^4.1"
     },
     "extra": {
