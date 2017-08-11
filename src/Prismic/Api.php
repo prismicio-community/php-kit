@@ -12,7 +12,6 @@ namespace Prismic;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
 use \Prismic\Cache\NoCache;

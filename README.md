@@ -1,6 +1,4 @@
 [![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")](https://travis-ci.org/prismicio/php-kit)
-[![Code Climate](https://codeclimate.com/github/prismicio/php-kit/badges/gpa.svg)](https://codeclimate.com/github/prismicio/php-kit)
-[![Test Coverage](https://codeclimate.com/github/prismicio/php-kit/badges/coverage.svg)](https://codeclimate.com/github/prismicio/php-kit)
 
 ## PHP development kit for prismic.io
 
