@@ -35,6 +35,10 @@ class FileLink implements LinkInterface
      * @var string the resource's original filename, in bytes
      */
     private $filename;
+    /**
+     * @var string the target of the link
+     */
+    private $target;
 
     /**
      * Constructs a file link.
@@ -43,13 +47,15 @@ class FileLink implements LinkInterface
      * @param string $kind     the kind of resource it is (document, image, ...)
      * @param string $size     the size of the resource, in bytes
      * @param string $filename the resource's original filename, in bytes
+     * @param string $target   the target of the link
      */
-    public function __construct($url, $kind, $size, $filename)
+    public function __construct($url, $kind, $size, $filename, $target)
     {
         $this->url = $url;
         $this->kind = $kind;
         $this->size = $size;
         $this->filename = $filename;
+        $this->target = $target;
     }
 
     /**
@@ -130,6 +136,18 @@ class FileLink implements LinkInterface
     }
 
     /**
+     * Returns the target of the link
+     *
+     * 
+     *
+     * @return string the target of the link
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
      * Parses a proper bit of unmarshaled JSON into a FileLink object.
      * This is used internally during the unmarshaling of API calls.
      *
@@ -139,11 +157,13 @@ class FileLink implements LinkInterface
      */
     public static function parse($json)
     {
+        $target = property_exists($json, "target") ? $json->target : null;
         return new FileLink(
             $json->file->url,
             $json->file->kind,
             $json->file->size,
-            $json->file->name
+            $json->file->name,
+            $target
         );
     }
 }

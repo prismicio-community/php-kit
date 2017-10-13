@@ -411,6 +411,12 @@ class StructuredText implements FragmentInterface
             $nodeName = 'em';
         } elseif ($element instanceof HyperlinkSpan) {
             $nodeName = 'a';
+            if ($element->getTarget()) {
+                $attributes = array_merge(array(
+                    'target' => $element->getTarget(),
+                    'rel' => 'noopener',
+                ), $attributes);
+            }
             if ($element->getLink() instanceof DocumentLink) {
                 $attributes['href'] = $linkResolver ? $linkResolver($element->getLink()) : '';
             } else {
@@ -460,7 +466,8 @@ class StructuredText implements FragmentInterface
         }
 
         if ("hyperlink" == $type && ($link = self::extractLink($json->data))) {
-            return new HyperlinkSpan($start, $end, $link, $label);
+            $target = $link->getTarget() ? $link->getTarget() : NULL;
+            return new HyperlinkSpan($start, $end, $link, $label, $target);
         }
 
         if ("label" == $type) {

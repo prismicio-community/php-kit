@@ -125,7 +125,8 @@ abstract class LinkResolver
             $document->getSlug(),
             $document->getLang(),
             $document->getFragments(),
-            false
+            false,
+            null
         );
     }
 }

@@ -92,7 +92,16 @@ class ImageView
 
         if ($this->getLink() && ($url = $this->getLink()->getUrl($linkResolver)) !== null) {
             $a = $doc->createElement('a');
-            $a->setAttribute('href', $url);
+            $attributes = array( 'href' => $url );
+            if ($this->getLink()->getTarget()) {
+                $attributes = array_merge(array(
+                    'target' => $this->getLink()->getTarget(),
+                    'rel' => 'noopener',
+                ), $attributes);
+            }
+            foreach ($attributes as $attr => $value) {
+                $a->setAttribute($attr, $value);
+            };
             $a->appendChild($img);
             $doc->appendChild($a);
         } else {
