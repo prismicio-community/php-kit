@@ -1,0 +1,46 @@
+{
+  "id": "U30GzQEAADsAGnmX",
+  "type": "product",
+  "href": "https://rudysandbox.prismic.io/api/documents/search?ref=U30G_QEAAC0AGnoB&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U30GzQEAADsAGnmX%22%29+%5D%5D",
+  "tags": [
+
+  ],
+  "slugs": [
+    "link-to-an",
+    "untitled-document"
+  ],
+  "data": {
+    "product": {
+      "description": {
+        "type": "StructuredText",
+        "value": [
+          {
+            "type": "paragraph",
+            "text": "Link that opens in a new tab.",
+            "spans": [
+              {
+                "start": 10,
+                "end": 28,
+                "type": "hyperlink",
+                "data": {
+                  "type": "Link.web",
+                  "value": {
+                    "url": "https://prismic.io",
+                    "target": "_blank"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "link": {
+        "type": "Link.web",
+        "value": {
+          "url": "https://prismic.io",
+          "target": "_blank"
+        }
+      }
+    }
+  }
+}
