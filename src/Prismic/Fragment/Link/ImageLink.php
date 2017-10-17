@@ -35,12 +35,13 @@ class ImageLink extends FileLink
      * @param string $kind     the kind of resource it is (document, image, ...)
      * @param string $size     the size of the resource, in bytes
      * @param string $filename the resource's original filename, in bytes
+     * @param string $target   the target of the link
      * @param int    $height   the height of the image
      * @param int    $width    the width of the image
      */
-    public function __construct($url, $kind, $size, $filename, $height, $width)
+    public function __construct($url, $kind, $size, $filename, $target, $height, $width)
     {
-        parent::__construct($url, $kind, $size, $filename);
+        parent::__construct($url, $kind, $size, $filename, $target);
         $this->height = $height;
         $this->width = $width;
     }
@@ -79,11 +80,13 @@ class ImageLink extends FileLink
      */
     public static function parse($json)
     {
+        $target = property_exists($json, "target") ? $json->target : null;
         return new ImageLink(
             $json->image->url,
             $json->image->kind,
             $json->image->size,
             $json->image->name,
+            $target,
             $json->image->height,
             $json->image->width
         );

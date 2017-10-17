@@ -40,6 +40,13 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<a href="http://prismic.io">http://prismic.io</a>', $link->asHtml());
     }
 
+    public function testWebLinkAsHtmlTargetBlank()
+    {
+        $weblinks = json_decode(file_get_contents(__DIR__.'/../fixtures/weblinks_targetblank.json'));
+        $document = Document::parse($weblinks);
+        $this->assertEquals($document->get('product.link')->asHtml(), '<a href="https://prismic.io" target="_blank" rel="noopener">https://prismic.io</a>');
+    }
+
     public function testSlices()
     {
         $response = json_decode(file_get_contents(__DIR__.'/../fixtures/slices.json'));

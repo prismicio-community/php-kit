@@ -48,6 +48,10 @@ class DocumentLink extends WithFragments implements LinkInterface
      * @var boolean returns true if the link is towards a document that is not live, for instance
      */
     private $isBroken;
+    /**
+     * @var string the target of the link
+     */
+    private $target;
 
     /**
      * Constructs a document link.
@@ -60,8 +64,9 @@ class DocumentLink extends WithFragments implements LinkInterface
      * @param string  $lang      the language code of the document
      * @param array   $fragments the additional fragment data
      * @param boolean $isBroken  returns true if the link is towards a document that is not live, for instance
+     * @param string $target     the target of the link
      */
-    public function __construct($id, $uid, $type, $tags, $slug, $lang, array $fragments, $isBroken)
+    public function __construct($id, $uid, $type, $tags, $slug, $lang, array $fragments, $isBroken, $target = null)
     {
         parent::__construct($fragments);
         $this->id = $id;
@@ -71,6 +76,7 @@ class DocumentLink extends WithFragments implements LinkInterface
         $this->slug = $slug;
         $this->lang = $lang;
         $this->isBroken = $isBroken;
+        $this->target = $target;
     }
 
     /**
@@ -103,6 +109,7 @@ class DocumentLink extends WithFragments implements LinkInterface
         $uid = isset($json->document->uid) ? $json->document->uid : null;
         $lang = isset($json->document->lang) ? $json->document->lang : null;
         $fragments = isset($json->document->data) ? WithFragments::parseFragments($json->document->data) : array();
+        $target = property_exists($json, "target") ? $json->target : null;
         return new DocumentLink(
             $json->document->id,
             $uid,
@@ -111,7 +118,8 @@ class DocumentLink extends WithFragments implements LinkInterface
             $json->document->slug,
             $lang,
             $fragments,
-            $json->isBroken
+            $json->isBroken,
+            $target
         );
     }
 
@@ -214,6 +222,17 @@ class DocumentLink extends WithFragments implements LinkInterface
     public function getLang()
     {
         return $this->lang;
+    }
+
+    /**
+     * Returns the target of the link
+     *
+     *
+     * @return string the target of the link
+     */
+    public function getTarget()
+    {
+        return $this->target;
     }
 
     /**

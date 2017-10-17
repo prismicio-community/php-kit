@@ -24,6 +24,10 @@ class WebLink implements LinkInterface
      */
     private $url;
     /**
+     * @var string the target, if known
+     */
+    private $target;
+    /**
      * @var string the content type, if known
      */
     private $maybeContentType;
@@ -32,11 +36,13 @@ class WebLink implements LinkInterface
      * Constructs a media link.
      *
      * @param string $url              the URL of the resource we're linking to online
+     * @param string $target           the target, if known
      * @param string $maybeContentType the content type, if known
      */
-    public function __construct($url, $maybeContentType = null)
+    public function __construct($url, $target = null, $maybeContentType = null)
     {
         $this->url = $url;
+        $this->target = $target;
         $this->maybeContentType = $maybeContentType;
     }
 
@@ -52,7 +58,8 @@ class WebLink implements LinkInterface
      */
     public function asHtml($linkResolver = null)
     {
-        return '<a href="' . $this->url . '">' . $this->url . '</a>';
+        $target = $this->target ? ' target="' . $this->target . '" rel="noopener"' : '';
+        return '<a href="' . $this->url . '"' . $target . '>' . $this->url . '</a>';
     }
 
     /**
@@ -82,6 +89,18 @@ class WebLink implements LinkInterface
     }
 
     /**
+     * Returns the target, if known
+     *
+     * 
+     *
+     * @return string the target, if known
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
      * Returns the content type, if known
      *
      * 
@@ -103,6 +122,7 @@ class WebLink implements LinkInterface
      */
     public static function parse($json)
     {
-        return new WebLink($json->url);
+        $target = property_exists($json, "target") ? $json->target : null;
+        return new WebLink($json->url, $target);
     }
 }

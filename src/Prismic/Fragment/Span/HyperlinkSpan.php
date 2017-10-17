@@ -37,6 +37,10 @@ class HyperlinkSpan implements SpanInterface
      * @var string the label (optional, may be null)
      */
     private $label;
+    /**
+     * @var string the target (optional, may be null)
+     */
+    private $target;
 
     /**
      * Constructs a link span
@@ -45,13 +49,15 @@ class HyperlinkSpan implements SpanInterface
      * @param int           $end   the end of the span
      * @param LinkInterface $link  the link to point to
      * @param string        $label can be null
+     * @param string        $target can be null
      */
-    public function __construct($start, $end, $link, $label = NULL)
+    public function __construct($start, $end, $link, $label = NULL, $target = NULL)
     {
         $this->start = $start;
         $this->end = $end;
         $this->link = $link;
         $this->label = $label;
+        $this->target = $target;
     }
 
     /**
@@ -100,5 +106,17 @@ class HyperlinkSpan implements SpanInterface
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * Returns the target
+     *
+     * 
+     *
+     * @return string the target
+     */
+    public function getTarget()
+    {
+        return $this->target;
     }
 }
