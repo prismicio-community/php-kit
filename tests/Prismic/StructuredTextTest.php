@@ -158,6 +158,13 @@ class StructuredTextTest Extends \PHPUnit_Framework_TestCase
         $this->assertEquals($document->getStructuredText('product.description')->asHtml(), '<p>Link that <a target="_blank" rel="noopener" href="https://prismic.io">opens in a new tab</a>.</p>');
     }
 
+    public function testImageRenderingTargetBlank()
+    {
+        $weblinks = json_decode(file_get_contents(__DIR__.'/../fixtures/weblinks_targetblank.json'));
+        $document = Document::parse($weblinks);
+        $this->assertEquals($document->getStructuredText('product.image_with_link')->asHtml(), '<p class="block-img"><a target="_blank" rel="noopener" href="https://prismic.io"><img src="https://prismic-io.s3.amazonaws.com/serializer-example/aa4f6471fd8b920e92914146a4688154a2d727d6_daria-nepriakhina-1277.jpg" alt="" width="500" height="200"></a></p>');
+    }
+
     public function testStructuredTextHtmlHasBreakTags()
     {
         $this->assertRegExp('`can be rough sometimes\.\s*<br\s*/?>\s*This is after a new line\.`s', $this->structuredText->asHtml());
