@@ -70,15 +70,15 @@ class Api
      * Private constructor, not be used outside of this class.
      */
     private function __construct(
-      $data /**< string */,
-      $accessToken = null /**< optional access token, if the API is private */,
-      Client $httpClient = null,
-      CacheInterface $cache = null)
-    {
+        ApiData $data,
+        $accessToken = null /**< optional access token, if the API is private */,
+        Client $httpClient = null,
+        CacheInterface $cache = null
+    ) {
         $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->httpClient = is_null($httpClient) ? new Client() : $httpClient;
-        $this->cache = is_null($cache) ? self::defaultCache() : $cache;
+        $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
+        $this->cache       = is_null($cache) ? self::defaultCache() : $cache;
     }
 
     /**
@@ -301,10 +301,17 @@ class Api
      */
     public static function get($action, $accessToken = null, $httpClient = null, CacheInterface $cache = null, $apiCacheTTL = 5)
     {
-        $cache = is_null($cache) ? self::defaultCache() : $cache;
+        $cache    = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
-        $apiData = $cache->get($cacheKey);
-        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpClient, $cache) : null;
+
+        $apiData  = $cache->get($cacheKey);
+        $apiData  = is_string($apiData)
+                  ? unserialize($apiData)
+                  : $apiData;
+
+        $api      = $apiData instanceof ApiData
+                  ? new Api($apiData, $accessToken, $httpClient, $cache)
+                  : null;
         if ($api) {
             return $api;
         } else {
