@@ -107,15 +107,13 @@ class WithFragments {
     public function get($field)
     {
         $single = null;
-        if (!array_key_exists($field, $this->fragments)) {
-            $multi = $this->getAll($field);
-            if (!empty($multi)) {
-                $single = $multi[0];
-            }
-        } else {
-            $single = $this->fragments[$field];
+        if (array_key_exists($field, $this->fragments)) {
+            return $this->fragments[$field];
         }
-
+        $multi = $this->getAll($field);
+        if (!empty($multi)) {
+            $single = $multi[0];
+        }
         return $single;
     }
 
@@ -206,9 +204,8 @@ class WithFragments {
         if (isset($fragment) && $fragment instanceof Number) {
             if (isset($pattern) && isset($fragment)) {
                 return $fragment->asText($pattern);
-            } else {
-                return $fragment;
             }
+            return $fragment;
         }
 
         return null;

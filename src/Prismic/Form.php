@@ -76,10 +76,9 @@ class Form
             $default = $field->getDefaultValue();
             if (isset($default)) {
                 if ($field->isMultiple()) {
-                    $dft[$key] = array($default);
-                } else {
-                    $dft[$key] = $default;
+                    $default = array($default);
                 }
+                $dft[$key] = $default;
             }
         }
 

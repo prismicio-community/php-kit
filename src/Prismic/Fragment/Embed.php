@@ -86,9 +86,8 @@ class Embed implements FragmentInterface
             return '<div data-oembed="' . $this->url . '" data-oembed-type="' .
                     strtolower($this->type) . '"' . $providerAttr . '>' .
                     $this->maybeHtml . '</div>';
-        } else {
-            return "";
         }
+        return "";
     }
 
     /**
