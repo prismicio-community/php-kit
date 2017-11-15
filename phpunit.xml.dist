@@ -6,7 +6,6 @@
             <directory suffix="Test.php">./tests/Prismic/</directory>
         </testsuite>
     </testsuites>
-
     <filter>
         <whitelist>
             <directory suffix=".php">./src/Prismic/</directory>

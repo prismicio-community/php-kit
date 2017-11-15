@@ -1,8 +1,8 @@
-var gulp = require('gulp'),
-    gist = require('gulp-gist'),
-    deploy = require("gulp-gh-pages");
+var gulp = require('gulp');
+var gist = require('gulp-gist');
+var deploy = require("gulp-gh-pages");
 
-var pkg = require('./package.json');
+// var pkg = require('./package.json');
 
 gulp.task('deploy:doc', function () {
     gulp.src("./doc/**/*")
@@ -22,4 +22,3 @@ gulp.task('dist', ['deploy:doc', 'deploy:gist']);
  */
 
 gulp.task('default', ['deploy:gist']);
-
