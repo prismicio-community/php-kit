@@ -1,0 +1,46 @@
+{
+    "refs": [
+        {
+            "id": "master",
+            "ref": "UgjWQN_mqa8HvPJY",
+            "label": "Master",
+            "isMasterRef": true
+        },
+        {
+            "id": "UkL0hcuvzYUANCrr",
+            "ref": "UgjWRd_mqbYHvPJa",
+            "label": "San Francisco Grand opening"
+        }
+    ],
+    "bookmarks": {
+        "about": "Ue0EDd_mqb8Dhk3j",
+        "jobs": "Ue0EHN_mqbwDhk3l",
+        "stores": "Ue0EVt_mqd8Dhk3n"
+    },
+    "types": {
+        "blog-post": "Blog post",
+        "store": "Store",
+        "article": "Site-level article",
+        "selection": "Products selection",
+        "job-offer": "Job offer",
+        "product": "Product"
+    },
+    "tags": ["Cupcake", "Pie", "Featured", "Macaron"],
+    "forms": {
+        "everything": {
+            "method": "GET",
+            "enctype": "application/x-www-form-urlencoded",
+            "action": "http://lesbonneschoses.prismic.io/api/documents/search",
+            "fields": {
+                "ref": {
+                    "type": "String"
+                },
+                "q": {
+                    "type": "String"
+                }
+            }
+        }
+    },
+    "oauth_initiate": "http://lesbonneschoses.prismic.io/auth",
+    "oauth_token": "http://lesbonneschoses.prismic.io/auth/token"
+}

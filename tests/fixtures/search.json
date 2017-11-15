@@ -1,0 +1,618 @@
+[
+    {
+        "id": "UjHYesuvzT0A_yi6",
+        "type": "product",
+        "href": "http://lesbonneschoses.prismic.io/api/documents/search?ref=UlMgkDLCaosHjz7R&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjHYesuvzT0A_yi6%22%29+%5D%5D",
+        "tags": [
+            "Macaron",
+            "Featured"
+        ],
+        "slugs": [
+            "cool-coconut-macaron",
+            "coconut-macaron"
+        ],
+        "data": {
+            "product": {
+                "name": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "heading1",
+                            "text": "Cool Coconut Macaron",
+                            "spans": []
+                        }
+                    ]
+                },
+                "short_lede": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "heading2",
+                            "text": "An island of flavours",
+                            "spans": []
+                        }
+                    ]
+                },
+                "description": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.",
+                            "spans": []
+                        },
+                        {
+                            "type": "heading1",
+                            "text": "A heading followed by a preformatted text",
+                            "spans": []
+                        },
+                        {
+                            "type": "preformatted",
+                            "text": "If you ever met coconut taste on its bad day, you surely know that coconut, coming from bad-tempered islands, can be rough sometimes.\nThis is after a new line. That is why we like to soften it with a touch of caramel taste in its ganache. The result is the perfect encounter between the finest palm fruit and the most tasty of sugarcane's offspring.",
+                            "spans": []
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "link",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.web",
+                                        "value": {
+                                            "url": "http://apple.com"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "link1",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UjHkUrGIJ7cBlWAb",
+                                                "type": "product",
+                                                "tags": [
+                                                    "Pie"
+                                                ],
+                                                "slug": "apricot-pie"
+                                            },
+                                            "isBroken": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "link2",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.file",
+                                        "value": {
+                                            "file": {
+                                                "name": "medium_1374778510922_coconut.png",
+                                                "kind": "image",
+                                                "url": "http://data.prismic.io/lesbonneschoses%2F1378998378075_medium_1374778510922_coconut.png",
+                                                "size": "1268903"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "qsdqdsqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "sqdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "o-list-item",
+                            "text": "qsdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsdqsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsdqsdqqdq",
+                            "spans": []
+                        },
+                        {
+                            "type": "list-item",
+                            "text": "qsd",
+                            "spans": []
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "width": 900,
+                                "height": 600
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df2A.jpg",
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "width": 800,
+                                "height": 400
+                            }
+                        },
+                        {
+                            "type": "embed",
+                            "oembed": {
+                                "html": "<iframe width=\"459\" height=\"344\" src=\"http://www.youtube.com/embed/MmIKLlRE7n0?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+                                "thumbnail_width": 480,
+                                "width": 459,
+                                "author_url": "http://www.youtube.com/user/88FanHendrick",
+                                "height": 344,
+                                "thumbnail_height": 360,
+                                "provider_name": "YouTube",
+                                "title": "WRC Sebastien Loeb Crash SS15 Rallye de France 2013",
+                                "provider_url": "http://www.youtube.com/",
+                                "author_name": "Jonathan Nascar",
+                                "version": "1.0",
+                                "thumbnail_url": "http://i1.ytimg.com/vi/MmIKLlRE7n0/hqdefault.jpg",
+                                "type": "video",
+                                "embed_url": "http://www.youtube.com/watch?v=MmIKLlRE7n0"
+                            }
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "",
+                            "spans": []
+                        }
+                    ]
+                },
+                "allergens": {
+                    "type": "Text",
+                    "value": "Fruit\nCats"
+                },
+                "birthdate": {
+                    "type": "Date",
+                    "value": "2013-10-23"
+                },
+                "adult": {
+                    "type": "Text",
+                    "value": "yes"
+                },
+                "teenager": {
+                    "type": "Text",
+                    "value": "true"
+                },
+                "french": {
+                    "type": "Text",
+                    "value": "false"
+                },
+                "german": {
+                    "type": "Text",
+                    "value": "YES"
+                },
+                "spanish": {
+                    "type": "Text",
+                    "value": "TRUE"
+                },
+                "farsi": {
+                    "type": "Text",
+                    "value": "fALSE"
+                },
+                "price": {
+                    "type": "Number",
+                    "value": 2.5
+                },
+                "flavour": [
+                    {
+                        "type": "Select",
+                        "value": "Lemon/lime"
+                    },
+                    {
+                        "type": "Select",
+                        "value": "Chocolate"
+                    }
+                ],
+                "gallery": [
+                    {
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/71925289ed70e89812a4040de310f0a8b97a2375.jpg",
+                                "alt": "test alt text with \"quotes\" and it's also got a single quote",
+                                "copyright": "test copyright text",
+                                "dimensions": {
+                                    "width": 1500,
+                                    "height": 500
+                                }
+                            },
+                            "views": {
+                                "squared": {
+                                    "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/2d21ec2fc5bcde736867360885c291770d9ec0c4.jpg",
+                                    "alt": "",
+                                    "copyright": "",
+                                    "dimensions": {
+                                        "width": 500,
+                                        "height": 500
+                                    }
+                                },
+                                "small": {
+                                    "url": "https://wroomdev.s3.amazonaws.com/lesbonneschoses/163483658e10f5bad8ee69c29ed313699ea792b8.jpg",
+                                    "alt": " ",
+                                    "copyright": " ",
+                                    "dimensions": {
+                                        "width": 150,
+                                        "height": 50
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "testimonial_quote": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "With a flavor as self-centered as coconut, it's rather easy to give it the starring role, and not worry about the rest. Les Bonnes Choses did exactly the opposite, marrying it with one of the least expected flavor, and effortlessly creating a whole new experience, a redefinition of the raw material.",
+                            "spans": []
+                        }
+                    ]
+                },
+                "testimonial_author": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "heading3",
+                            "text": "Chef Drobi",
+                            "spans": []
+                        }
+                    ]
+                },
+                "color": {
+                    "type": "Color",
+                    "value": "#d4bf43"
+                },
+                "related": [
+                    {
+                        "type": "Link.document",
+                        "value": {
+                            "document": {
+                                "id": "UjHcxsuvzT0A_yjP",
+                                "type": "product",
+                                "tags": [
+                                    "Macaron"
+                                ],
+                                "slug": "vanilla-macaron"
+                            },
+                            "isBroken": false
+                        }
+                    },
+                    {
+                        "type": "Link.document",
+                        "value": {
+                            "document": {
+                                "id": "UjHZtMuvzT0A_yjA",
+                                "type": "product",
+                                "tags": [
+                                    "Macaron"
+                                ],
+                                "slug": "black-white-macaron"
+                            },
+                            "isBroken": false
+                        }
+                    }
+                ],
+                "listLinks": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "link1",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 5,
+                                    "type": "hyperlink",
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UjHkUrGIJ7cBlWAb",
+                                                "type": "product",
+                                                "tags": [
+                                                    "Pie"
+                                                ],
+                                                "slug": "apricot-pie"
+                                            },
+                                            "isBroken": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "relatedImages": [
+                    {
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
+                                "dimensions": {
+                                    "width": 900,
+                                    "height": 600
+                                }
+                            },
+                            "views": {}
+                        }
+                    },
+                    {
+                        "type": "Image",
+                        "value": {
+                            "main": {
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
+                                "dimensions": {
+                                    "width": 900,
+                                    "height": 600
+                                }
+                            },
+                            "views": {}
+                        }
+                    }
+                ],
+                "video": {
+                    "type": "Embed",
+                    "value": {
+                        "oembed": {
+                            "author_name": "VitaaVEVO",
+                            "provider_url": "http://www.youtube.com/",
+                            "provider_name": "YouTube",
+                            "thumbnail_height": 360,
+                            "height": 344,
+                            "author_url": "http://www.youtube.com/user/VitaaVEVO",
+                            "version": "1.0",
+                            "width": 459,
+                            "html": "<iframe width=\"459\" height=\"344\" src=\"http://www.youtube.com/embed/97Nis75DAgc?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>",
+                            "title": "Vitaa - Game Over ft. Maître Gims",
+                            "type": "video",
+                            "thumbnail_url": "http://i1.ytimg.com/vi/97Nis75DAgc/hqdefault.jpg",
+                            "thumbnail_width": 480,
+                            "embed_url": "http://www.youtube.com/watch?v=97Nis75DAgc"
+                        }
+                    }
+                },
+                "image": {
+                    "type": "Image",
+                    "value": {
+                        "main": {
+                            "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/30214ac0c3a51e7516d13c929086c49f49af7988.png",
+                            "alt": "alt text",
+                            "copyright": "copyright info",
+                            "dimensions": {
+                                "width": 500,
+                                "height": 500
+                            }
+                        },
+                        "views": {
+                            "icon": {
+                                "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/f428de9ed832705617063c9c69eb752f4ab92ac5.png",
+                                "alt": "alt text",
+                                "copyright": "copyright info",
+                                "dimensions": {
+                                    "width": 250,
+                                    "height": 250
+                                }
+                            }
+                        }
+                    }
+                },
+                "linked_images": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "label": "intro",
+                            "spans": [],
+                            "text": "Here is some introductory text.",
+                            "type": "paragraph"
+                        },
+                        {
+                            "spans": [],
+                            "text": "The following image is linked.",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 129,
+                                "width": 260
+                            },
+                            "linkTo": {
+                                "type": "Link.web",
+                                "value": {
+                                    "url": "http://google.com/"
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/129x260"
+                        },
+                        {
+                            "spans": [
+                                {
+                                    "label": "warn",
+                                    "end": 20,
+                                    "start": 0,
+                                    "type": "strong"
+                                }
+                            ],
+                            "text": "More important stuff",
+                            "type": "paragraph"
+                        },
+                        {
+                            "spans": [],
+                            "text": "The next is linked to a valid document:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 400,
+                                "width": 400
+                            },
+                            "linkTo": {
+                                "type": "Link.document",
+                                "value": {
+                                    "document": {
+                                        "id": "UxCQFFFFFFFaaYAH",
+                                        "slug": "something-fantastic",
+                                        "type": "lovely-thing"
+                                    },
+                                    "isBroken": false
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/400x400"
+                        },
+                        {
+                            "spans": [],
+                            "text": "The next is linked to a broken document:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 250,
+                                "width": 250
+                            },
+                            "linkTo": {
+                                "type": "Link.document",
+                                "value": {
+                                    "document": {
+                                        "id": "UxERPAEAAHQcsBUH",
+                                        "slug": "-",
+                                        "type": "event-calendar"
+                                    },
+                                    "isBroken": true
+                                }
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/250x250"
+                        },
+                        {
+                            "spans": [],
+                            "text": "One more image, this one is not linked:",
+                            "type": "paragraph"
+                        },
+                        {
+                            "alt": "",
+                            "copyright": "",
+                            "dimensions": {
+                                "height": 199,
+                                "width": 300
+                            },
+                            "type": "image",
+                            "url": "http://fpoimg.com/199x300"
+                        }
+                    ]
+                },
+                "with_broken_link": {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "spans": [
+                                {
+                                    "data": {
+                                        "type": "Link.document",
+                                        "value": {
+                                            "document": {
+                                                "id": "UxERPAEAAHQcsBUH",
+                                                "slug": "-",
+                                                "type": "event-calendar"
+                                            },
+                                            "isBroken": true
+                                        }
+                                    },
+                                    "end": 53,
+                                    "start": 42,
+                                    "type": "hyperlink"
+                                }
+                            ],
+                            "text": "The last two words of this sentence are a broken link.",
+                            "type": "paragraph"
+                        }
+                    ]
+                },
+                "publication_time" : {
+                    "type" : "Timestamp",
+                    "value" : "2014-06-18T15:30:00+0000"
+                },
+                "labelled_text" : {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "paragraph",
+                            "text": "This is some structured text that has a label",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "label",
+                                    "data": {
+                                        "label": "my-label"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "span_in_pre" : {
+                    "type": "StructuredText",
+                    "value": [
+                        {
+                            "type": "preformatted",
+                            "text": "This is some preformatted text containing a span",
+                            "spans": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "type": "strong"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]

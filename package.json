@@ -1,0 +1,10 @@
+{
+  "name": "prismic.io",
+  "description": "PHP development kit for prismic.io",
+  "url": "https://github.com/prismicio/php-kit",
+  "devDependencies": {
+    "gulp": "~3.8.8",
+    "gulp-gist": "~1.1.0",
+    "gulp-gh-pages": "~0.3.4"
+  }
+}
