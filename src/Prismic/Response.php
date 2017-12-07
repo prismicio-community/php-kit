@@ -169,10 +169,8 @@ class Response
      */
     public static function parse(\stdClass $json)
     {
-        $results = array_map(function ($doc) { return Document::parse($doc);  }, $json->results);
-
         return new Response(
-            $results,
+            $json->results,
             $json->page,
             $json->results_per_page,
             $json->results_size,
