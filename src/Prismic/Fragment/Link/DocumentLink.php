@@ -106,16 +106,16 @@ class DocumentLink extends WithFragments implements LinkInterface
      */
     public static function parse($json)
     {
-        $uid = isset($json->document->uid) ? $json->document->uid : null;
-        $lang = isset($json->document->lang) ? $json->document->lang : null;
-        $fragments = isset($json->document->data) ? WithFragments::parseFragments($json->document->data) : array();
+        $uid = isset($json->uid) ? $json->uid : null;
+        $lang = isset($json->lang) ? $json->lang : null;
+        $fragments = isset($json->data) ? WithFragments::parseFragments($json->data) : array();
         $target = property_exists($json, "target") ? $json->target : null;
         return new DocumentLink(
-            $json->document->id,
+            $json->id,
             $uid,
-            $json->document->type,
-            isset($json->document->{'tags'}) ? $json->document->tags : null,
-            $json->document->slug,
+            $json->type,
+            isset($json->{'tags'}) ? $json->tags : null,
+            $json->slug,
             $lang,
             $fragments,
             $json->isBroken,
