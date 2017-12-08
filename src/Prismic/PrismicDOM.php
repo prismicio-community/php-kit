@@ -11,7 +11,6 @@
 namespace Prismic;
 
 use Prismic\Fragment\StructuredText;
-use Prismic\Fragment\Link\DocumentLink;
 
 class PrismicDOM
 {
@@ -36,10 +35,7 @@ class PrismicDOM
         }
 
         if ($link->link_type === 'Document') {
-            if (!$linkResolver) {
-                return '';
-            }
-            return $linkResolver(DocumentLink::parse($link));
+            return $linkResolver ? $linkResolver($link) : '';
         }
 
         return $link->url ?: '';
