@@ -17,10 +17,9 @@ use Prismic\Fragment\Block\ListItemBlock;
 use Prismic\Fragment\Block\ParagraphBlock;
 use Prismic\Fragment\Block\PreformattedBlock;
 use Prismic\Fragment\Block\TextBlock;
-use Prismic\Fragment\Link\DocumentLink;
-use Prismic\Fragment\Link\FileLink;
-use Prismic\Fragment\Link\ImageLink;
 use Prismic\Fragment\Link\WebLink;
+use Prismic\Fragment\Link\MediaLink;
+use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Fragment\Span\EmSpan;
 use Prismic\Fragment\Span\HyperlinkSpan;
 use Prismic\Fragment\Span\StrongSpan;
@@ -586,15 +585,13 @@ class StructuredText implements FragmentInterface
      */
     public static function extractLink($data)
     {
-        switch ($data->type) {
-            case 'Link.web':
-                return WebLink::parse($data->value);
-            case 'Link.document':
-                return DocumentLink::parse($data->value);
-            case 'Link.file';
-                return FileLink::parse($data->value);
-            case 'Link.image';
-                return ImageLink::parse($data->value);
+        switch ($data->link_type) {
+            case 'Web':
+                return WebLink::parse($data);
+            case 'Media';
+                return MediaLink::parse($data);
+            case 'Document':
+                return DocumentLink::parse($data);
             default:
                 return null;
         }
