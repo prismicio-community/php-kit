@@ -94,5 +94,51 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Master-Ref-String', $this->api->ref());
     }
 
+    /**
+     * @depends testCorrectRefIsReturned
+     */
+    public function testInPreviewIsTrueWhenPreviewCookieIsSet()
+    {
+        $cookieValue = 'Preview Ref Cookie Value';
+        $_COOKIE = [
+            'io.prismic.preview' => $cookieValue,
+        ];
+        $this->assertTrue($this->api->inPreview());
+    }
+
+    /**
+     * @depends testCorrectRefIsReturned
+     */
+    public function testInExperimentIsTrueWhenExperimentCookieIsSet()
+    {
+        $cookieValue = 'Experiment Cookie Value';
+        $this->experiments->method('refFromCookie')->willReturn('Experiment Ref');
+        $_COOKIE = [
+            'io.prismic.experiment' => $cookieValue,
+        ];
+        $this->assertTrue($this->api->inExperiment());
+    }
+
+    /**
+     * @depends testInExperimentIsTrueWhenExperimentCookieIsSet
+     */
+    public function testPreviewRefTrumpsExperimentRefWhenSet()
+    {
+        $this->experiments->method('refFromCookie')->willReturn('Experiment Ref');
+        $_COOKIE = [
+            'io.prismic.experiment' => 'Experiment Cookie Value',
+            'io.prismic.preview'    => 'Preview Ref Cookie Value',
+        ];
+        $this->assertTrue($this->api->inPreview());
+        $this->assertFalse($this->api->inExperiment());
+    }
+
+    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet()
+    {
+        $_COOKIE = [];
+        $this->assertFalse($this->api->inPreview());
+        $this->assertFalse($this->api->inExperiment());
+    }
+
 
 }

@@ -445,6 +445,26 @@ class Api
     }
 
     /**
+     * Whether the current ref in use is a preview, i.e. the user is in preview mode
+     *
+     * @return bool
+     */
+    public function inPreview()
+    {
+        return null !== $this->getPreviewRef();
+    }
+
+    /**
+     * Whether the current ref in use is an experiment.
+     *
+     * @return bool
+     */
+    public function inExperiment()
+    {
+        return null !== $this->getExperimentRef() && false === $this->inPreview();
+    }
+
+    /**
      * Return the ref currently in use
      *
      * In order of preference, returns the preview cookie, the experiments cookie or the master ref otherwise
