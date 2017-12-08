@@ -30,7 +30,7 @@ class PrismicDOM
         return $result;
     }
 
-    public static function asHtml($richText, $linkResolver = NULL)
+    public static function asHtml($richText, $linkResolver = NULL, $htmlSerializer = NULL)
     {
         return 'TODO asHtml';
     }
