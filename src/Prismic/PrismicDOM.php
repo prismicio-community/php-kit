@@ -14,12 +14,28 @@ use Prismic\Fragment\StructuredText;
 
 class PrismicDOM
 {
-    public static function richText($richTextJson)
+    public static function getStructuredText($richText)
     {
-        return StructuredText::parse($richTextJson);
+        return StructuredText::parse($richText);
     }
 
-    public static function date($date = NULL)
+    public static function asText($richText)
+    {
+        $result = '';
+
+        foreach ($richText as $block) {
+            $result .= $block->text . "\n";
+        }
+
+        return $result;
+    }
+
+    public static function asHtml($richText, $linkResolver = NULL)
+    {
+        return 'TODO asHtml';
+    }
+
+    public static function asDate($date = NULL)
     {
         if (!$date) {
             return NULL;
@@ -28,7 +44,7 @@ class PrismicDOM
         return new \DateTime($date);
     }
 
-    public static function linkUrl($link = NULL, $linkResolver = NULL)
+    public static function getLinkUrl($link = NULL, $linkResolver = NULL)
     {
         if (!$link) {
             return '';
