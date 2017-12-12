@@ -10,29 +10,18 @@
 
 namespace Prismic;
 
-use Prismic\Fragment\StructuredText;
+use Prismic\RichText\RichText;
 
 class PrismicDOM
 {
-    public static function getStructuredText($richText)
-    {
-        return StructuredText::parse($richText);
-    }
-
     public static function asText($richText)
     {
-        $result = '';
-
-        foreach ($richText as $block) {
-            $result .= $block->text . "\n";
-        }
-
-        return $result;
+        return RichText::asText($richText);
     }
 
     public static function asHtml($richText, $linkResolver = NULL, $htmlSerializer = NULL)
     {
-        return 'TODO asHtml';
+        return RichText::asHtml($richText, $linkResolver, $htmlSerializer);
     }
 
     public static function asDate($date = NULL)
@@ -40,7 +29,7 @@ class PrismicDOM
         if (!$date) {
             return NULL;
         }
-
+        
         return new \DateTime($date);
     }
 
