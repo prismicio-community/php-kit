@@ -77,7 +77,7 @@ class RichText
             } else {
                 if ($block->type === 'list-item') {
                     $tag = 'ul';
-                } else if ($block->type === 'o-list-item') {
+                } elseif ($block->type === 'o-list-item') {
                     $tag = 'ol';
                 } else {
                     $tag = NULL;
@@ -90,7 +90,7 @@ class RichText
         $html = '';
         foreach ($groups as $group) {
             $maybeTag = $group->getTag();
-            if (isset($maybeTag)) {
+            if ($maybeTag) {
                 $html = $html . '<' . $group->getTag() . '>';
                 foreach ($group->getBlocks() as $block) {
                     $html = $html . RichText::asHtmlBlock($block, $linkResolver, $htmlSerializer);
@@ -114,9 +114,10 @@ class RichText
      * @param lambda $htmlSerializer
      * @return string the HTML version of the block
      */
-    private static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
+    private static function asHtmlBlock($block, $linkResolver = NULL, $htmlSerializer = NULL)
     {
-        $content = "";
+        $content = '';
+
         if ($block->type === 'heading1' ||
             $block->type === 'heading2' ||
             $block->type === 'heading3' ||
@@ -130,6 +131,7 @@ class RichText
         {
             $content = RichText::insertSpans($block->text, $block->spans, $linkResolver, $htmlSerializer);
         }
+
         return RichText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
 
@@ -142,10 +144,10 @@ class RichText
      *
      * @return string the HTML version of the block
      */
-    private static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
+    private static function insertSpans($text, array $spans, $linkResolver = NULL, $htmlSerializer = NULL)
     {
         if (empty($spans)) {
-            return htmlentities($text, null, 'UTF-8');
+            return htmlentities($text, NULL, 'UTF-8');
         }
 
         $tagsStart = array();
@@ -163,8 +165,8 @@ class RichText
             array_push($tagsEnd[$span->end], $span);
         }
 
-        $c = null;
-        $html = "";
+        $c = NULL;
+        $html = '';
         $stack = array();
         for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
             if (array_key_exists($pos, $tagsEnd)) {
@@ -172,15 +174,15 @@ class RichText
                     // Close a tag
                     $tag = array_pop($stack);
                     // Continue only if block contains content.
-                    if ($tag && $tag["span"]) {
-                        $innerHtml = trim(RichText::serialize($tag["span"], $tag["text"], $linkResolver, $htmlSerializer));
+                    if ($tag && $tag['span']) {
+                        $innerHtml = trim(RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer));
                       if (count($stack) == 0) {
                           // The tag was top level
                           $html .= $innerHtml;
                       } else {
                           // Add the content to the parent tag
                           $last = array_pop($stack);
-                          $last["text"] = $last["text"] . $innerHtml;
+                          $last['text'] = $last['text'] . $innerHtml;
                           array_push($stack, $last);
                       }
                     }
@@ -196,8 +198,8 @@ class RichText
                 foreach ($sspans as $span) {
                     // Open a tag
                     array_push($stack, array(
-                        "span" => $span,
-                        "text" => ""
+                        'span' => $span,
+                        'text' => ''
                     ));
                 }
             }
@@ -205,14 +207,14 @@ class RichText
                 $c = mb_substr($text, $pos, 1, 'UTF-8');
                 if (count($stack) == 0) {
                     // Top-level text
-                    $html .= htmlentities($c, null, 'UTF-8');
+                    $html .= htmlentities($c, NULL, 'UTF-8');
                 } else {
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
                     $stack[$last_idx] = array(
-                        "span" => $last["span"],
-                        "text" => $last["text"] . htmlentities($c, null, 'UTF-8')
+                        'span' => $last['span'],
+                        'text' => $last['text'] . htmlentities($c, NULL, 'UTF-8')
                     );
                 }
             }
@@ -230,88 +232,95 @@ class RichText
      * @param HtmlSerializer $htmlSerializer
      */
     private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
-        if (!is_null($htmlSerializer)) {
+        if ($htmlSerializer) {
             $custom = $htmlSerializer($element, $content);
-            if (!is_null($custom)) {
+            if ($custom) {
                 return $custom;
             }
         }
 
-        $classCode = "";
+        $classCode = '';
         $label = $element->label;
-        if (!is_null($label)) {
+        if ($label) {
             $classCode = ' class="' . $label . '"';
         }
+
         // Blocks
-        if ($element->type === 'heading1') {
-            return nl2br('<h1' . $classCode . '>' . $content . '</h1>');
-        } else if ($element->type === 'heading2') {
-            return nl2br('<h2' . $classCode . '>' . $content . '</h2>');
-        } else if ($element->type === 'heading3') {
-            return nl2br('<h3' . $classCode . '>' . $content . '</h3>');
-        } else if ($element->type === 'heading4') {
-            return nl2br('<h4' . $classCode . '>' . $content . '</h4>');
-        } else if ($element->type === 'heading5') {
-            return nl2br('<h5' . $classCode . '>' . $content . '</h5>');
-        } else if ($element->type === 'heading6') {
-            return nl2br('<h6' . $classCode . '>' . $content . '</h6>');
-        } elseif ($element->type === 'paragraph') {
-            return nl2br('<p' . $classCode . '>' . $content . '</p>');
-        } elseif ($element->type === 'list-item' || $element->type === 'o-list-item') {
-            return nl2br('<li' . $classCode . '>' . $content . '</li>');
-        } elseif ($element->type === 'preformatted') {
-            return '<pre' . $classCode . '>' . $content . '</pre>';
-        } elseif ($element->type === 'image') {
-            return nl2br(
-                '<p class="block-img' . (is_null($label) ? '' : (' ' . $label)) . '">' .
-                    '<img src="' . $element->url . '" alt="' . $element->alt . '">' .
-                '</p>'
-            );
-        } elseif ($element->type === 'embed') {
-            $providerAttr = '';
-            if (property_exists($element->oembed, 'provider_name')) {
-                $providerAttr = ' data-oembed-provider="' . strtolower($element->oembed->provider_name) . '"';
-            }
-            if (property_exists($element->oembed, 'html')) {
-                return (
-                    '<div data-oembed="' . $element->oembed->embed_url . '" data-oembed-type="' . strtolower($element->oembed->type) . '"' . $providerAttr . '>' .
-                        $element->oembed->html .
-                    '</div>'
-                );
-            } else {
+        switch ($element->type) {
+            case 'heading1':
+                return nl2br('<h1' . $classCode . '>' . $content . '</h1>');
+            case 'heading2':
+                return nl2br('<h2' . $classCode . '>' . $content . '</h2>');
+            case 'heading3':
+                return nl2br('<h3' . $classCode . '>' . $content . '</h3>');
+            case 'heading4':
+                return nl2br('<h4' . $classCode . '>' . $content . '</h4>');
+            case 'heading5':
+                return nl2br('<h5' . $classCode . '>' . $content . '</h5>');
+            case 'heading6':
+                return nl2br('<h6' . $classCode . '>' . $content . '</h6>');
+            case 'paragraph':
+                return nl2br('<p' . $classCode . '>' . $content . '</p>');
+            case 'preformatted':
+                return '<pre' . $classCode . '>' . $content . '</pre>';
+            case 'list-item':
+            case 'o-list-item':
+                return nl2br('<li' . $classCode . '>' . $content . '</li>');
+            case 'image':
+                return (nl2br(
+                    '<p class="block-img' . ($label ? (' ' . $label) : '') . '">' .
+                        '<img src="' . $element->url . '" alt="' . $element->alt . '">' .
+                    '</p>'
+                ));
+            case 'embed':
+                $providerAttr = '';
+                if ($element->oembed->provider_name) {
+                    $providerAttr = ' data-oembed-provider="' . strtolower($element->oembed->provider_name) . '"';
+                }
+                if ($element->oembed->html) {
+                    return (
+                        '<div data-oembed="' . $element->oembed->embed_url . '" data-oembed-type="' . strtolower($element->oembed->type) . '"' . $providerAttr . '>' .
+                            $element->oembed->html .
+                        '</div>'
+                    );
+                }
                 return '';
-            }
         }
 
         // Spans
         $attributes = array();
-        if ($element->type === 'strong') {
-            $nodeName = 'strong';
-        } elseif ($element->type === 'em') {
-            $nodeName = 'em';
-        } elseif ($element->type === 'hyperlink') {
-            $nodeName = 'a';
-            if (property_exists($element->data, 'target')) {
-                $attributes = array_merge(array(
-                    'target' => $element->data->target,
-                    'rel' => 'noopener',
-                ), $attributes);
-            }
-            if ($element->data->link_type === 'Document') {
-                $attributes['href'] = $linkResolver ? $linkResolver($element->data) : '';
-            } else {
-                $attributes['href'] = $element->data->url;
-            }
-            if ($attributes['href'] === null) {
-                // We have no link (LinkResolver said it is not valid,
-                // or something else went wrong). Abort this span.
-                return $content;
-            }
-        } else {
-            //throw new \Exception("Unknown span type " . get_class($span));
-            $nodeName = 'span';
+        switch ($element->type) {
+            case 'strong':
+                $nodeName = 'strong';
+                break;
+            case 'em':
+                $nodeName = 'em';
+                break;
+            case 'hyperlink':
+                $nodeName = 'a';
+                if ($element->data->target) {
+                    $attributes = array_merge(array(
+                        'target' => $element->data->target,
+                        'rel' => 'noopener',
+                    ), $attributes);
+                }
+                if ($element->data->link_type === 'Document') {
+                    $attributes['href'] = $linkResolver ? $linkResolver($element->data) : '';
+                } else {
+                    $attributes['href'] = $element->data->url;
+                }
+                if ($attributes['href'] === NULL) {
+                    // We have no link (LinkResolver said it is not valid,
+                    // or something else went wrong). Abort this span.
+                    return $content;
+                }
+                break;
+            default:
+                // throw new \Exception("Unknown span type " . get_class($span));
+                $nodeName = 'span';
         }
-        if ($element->label != NULL) {
+        
+        if ($element->label) {
             $attributes['class'] = $element->label;
         }
 

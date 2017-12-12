@@ -41,30 +41,6 @@ class BlockGroup
     }
 
     /**
-     * Supposedly, should render the group as text; really, returns null, as
-     * there's no reason to render it as text.
-     *
-     * @return string null in all cases
-     */
-    public function asText()
-    {
-        return null;
-    }
-
-    /**
-     * Supposedly, should render the group as HTML; really, returns null, as
-     * there's no reason to render it as HTML.
-     *
-     * @param \Prismic\LinkResolver  $linkResolver  a link resolver
-     *
-     * @return string null in all cases
-     */
-    public function asHtml($linkResolver = null)
-    {
-        return null;
-    }
-
-    /**
      * Adds a block to the group of blocks.
      *
      * @param \Prismic\Fragment\Block\BlockInterface  $block  the block to add
