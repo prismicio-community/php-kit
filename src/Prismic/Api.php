@@ -224,7 +224,7 @@ class Api
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
-                       ->getResults();
+                       ->results;
             if (count($documents) > 0) {
                 if ($url = $linkResolver->resolveDocument($documents[0])) {
                     return $url;
@@ -367,7 +367,7 @@ class Api
             array_push($all_urls, $url);
             $json = $this->getCache()->get($url);
             if ($json) {
-                $responses[$i] = Response::parse($json);
+                $responses[$i] = $json;
             } else {
                 $responses[$i] = null;
                 array_push($urls, $url);
@@ -396,7 +396,7 @@ class Api
                 }
 
                 $idx = array_search($url, $all_urls);
-                $responses[$idx] = Response::parse($json);
+                $responses[$idx] = $json;
             }
         }
 
@@ -515,7 +515,7 @@ class Api
      * @return Prismic::Document     the resulting document, or null
      */
     public function queryFirst($q, $options = array()) {
-        $documents = $this->query($q, $options)->getResults();
+        $documents = $this->query($q, $options)->results;
         if (count($documents) > 0) {
             return $documents[0];
         }
