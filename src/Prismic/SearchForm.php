@@ -224,7 +224,7 @@ class SearchForm
      */
     public function submit()
     {
-        return Response::parse($this->submit_raw());
+        return $this->submit_raw();
     }
 
     /**
