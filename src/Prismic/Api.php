@@ -226,7 +226,7 @@ class Api
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
                        ->results;
             if (count($documents) > 0) {
-                if ($url = $linkResolver->resolveDocument($documents[0])) {
+                if ($url = $linkResolver($documents[0])) {
                     return $url;
                 }
             }
