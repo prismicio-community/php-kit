@@ -287,7 +287,7 @@ class Api
     /**
      * This is the endpoint to build your API, and is a static method.
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
-     * Api::get('http://idofyourrepository.prismic.io/api')
+     * Api::get('http://idofyourrepository.prismic.io/api/v2')
      *
      * @param  string           $action      the URL of your repository API's endpoint
      * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private

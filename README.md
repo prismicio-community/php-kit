@@ -38,7 +38,7 @@ Then call the API:
 
 ```php
 <?php
-$api = Api::get("https://your-repo.name.prismic.io/api");
+$api = Api::get("https://your-repo.name.prismic.io/api/v2");
 $doc = $api->getByUID("get-started");
 ```
 
