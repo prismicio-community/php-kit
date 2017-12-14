@@ -32,7 +32,9 @@ class RichText
         $result = '';
 
         foreach ($richText as $block) {
-            $result .= $block->text . "\n";
+            if ($block->text) {
+                $result .= $block->text . "\n";
+            }
         }
 
         return $result;
