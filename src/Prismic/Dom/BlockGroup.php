@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Prismic\RichText;
+namespace Prismic\Dom;
 
 /**
  * This class embodies a group of RichText blocks.
