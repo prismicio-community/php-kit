@@ -7,13 +7,13 @@ namespace Prismic;
  * Since prismic.io can't possibly know how to resolve internal links into usable
  * ones for your application, you have to teach it! That way, you can pass this knowledge
  * as a LinkResolver object into any operation that may have to resolve URLs
- * (such as calling asHtml() on StructuredText or Link fragments).
+ * (such as calling asHtml() on RichText, or asUrl() on Link).
  *
  * If you're using a starter project, it usually comes with a basic linkResolver
  * object, located at a relevant place, and made available everywhere in your application.
  *
  * Read the last paragraph of
- * <a href="https://developers.prismic.io/documentation/UjBe8bGIJ3EKtgBZ/api-documentation">prismic.io's API documentation</a>
+ * <a href="https://prismic.io/docs/php/beyond-the-api/link-resolving">prismic.io's API documentation</a>
  * to better understand the idea.
  */
 abstract class LinkResolver
@@ -21,21 +21,21 @@ abstract class LinkResolver
     /**
      * Returns the application-specific URL related to this document link
      *
-     * @param Json $doc The document link
+     * @param object $link The document link
      *
      * @return string
      */
-    abstract public function resolve($doc);
+    abstract public function resolve($link);
 
     /**
      * What happens when the link resolver gets called.
      *
-     * @param Json $doc The document link
+     * @param object $link The document link
 
      * @return string
      */
-    public function __invoke($doc)
+    public function __invoke($link)
     {
-        return $this->resolve($doc);
+        return $this->resolve($link);
     }
 }
