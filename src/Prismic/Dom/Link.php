@@ -7,13 +7,13 @@ class Link
     public static function asUrl($link = NULL, $linkResolver = NULL)
     {
         if (!$link) {
-            return '';
+            return NULL;
         }
 
         if ($link->link_type === 'Document') {
-            return $linkResolver ? $linkResolver($link) : '';
+            return $linkResolver ? $linkResolver($link) : NULL;
         }
 
-        return $link->url ?: '';
+        return $link->url;
     }
 }
