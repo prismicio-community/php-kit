@@ -30,7 +30,7 @@
         "everything": {
             "method": "GET",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "http://lesbonneschoses.prismic.io/api/documents/search",
+            "action": "http://lesbonneschoses.prismic.io/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String"
