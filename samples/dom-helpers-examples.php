@@ -43,6 +43,5 @@ $linkResolver = new ExampleLinkResolver();
 </article>
 
 <!-- Date asDate -->
-<pre>
-<?php var_dump(Date::asDate($document->data->example_date)); ?>
-</pre>
+<?php $date = Date::asDate($document->data->example_date); ?>
+<time>Date: <?php echo $date->format('Y-m-d H:i:s'); ?></time>

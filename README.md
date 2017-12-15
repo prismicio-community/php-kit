@@ -27,11 +27,9 @@ Include the dependency:
 
 ```php
 <?php
-
 include_once __DIR__.'/../vendor/autoload.php';
 
 use Prismic\Api;
-
 ```
 
 Then call the API:
@@ -46,6 +44,45 @@ The kit is compatible and tested with PHP 5.4 and above.
 
 Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
 For Symfony 2.7 projects, use version 2.0.3.
+
+### DOM helpers usage
+
+In these examples we have a $doc variable corresponding to the fetched Prismic document.
+
+#### Link
+
+```php
+<?php
+include_once __DIR__.'/../vendor/autoload.php';
+
+use Prismic\Dom\Link;
+
+echo Link::asUrl($doc->data->link, $linkResolver);
+```
+
+#### Rich Text
+
+```php
+<?php
+include_once __DIR__.'/../vendor/autoload.php';
+
+use Prismic\Dom\RichText;
+
+echo RichText::asText($doc->data->title);
+echo RichText::asHtml($doc->data->description, $linkResolver);
+```
+
+#### Rich Text
+
+```php
+<?php
+include_once __DIR__.'/../vendor/autoload.php';
+
+use Prismic\Dom\Date;
+
+$date = Date::asDate($doc->data->date);
+echo $date->format('Y-m-d H:i:s');
+```
 
 ### More information
 
