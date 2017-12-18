@@ -15,12 +15,8 @@ class Link
      *
      * @return string|null The URL of the resource we're linking to online
      */
-    public static function asUrl($link = null, $linkResolver = null)
+    public static function asUrl($link, $linkResolver = null)
     {
-        if (!$link) {
-            return null;
-        }
-
         if ($link->link_type === 'Document') {
             return $linkResolver ? $linkResolver($link) : null;
         }
