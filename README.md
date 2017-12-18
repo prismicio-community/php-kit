@@ -32,7 +32,7 @@ include_once __DIR__.'/../vendor/autoload.php';
 use Prismic\Api;
 ```
 
-Then call the API:
+Then call the API: 
 
 ```php
 <?php
@@ -72,7 +72,7 @@ echo RichText::asText($doc->data->title);
 echo RichText::asHtml($doc->data->description, $linkResolver);
 ```
 
-#### Rich Text
+#### Date
 
 ```php
 <?php

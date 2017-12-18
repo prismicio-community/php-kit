@@ -15,9 +15,10 @@ use Prismic\Dom\BlockGroup;
 class RichText
 {
     /**
-     * Builds a text version of the RichText fragment.
+     * Builds a text version of the RichText fragment
      *
-     * 
+     *
+     * @param object $richText the rich text object
      *
      * @return string the text version of the RichText fragment
      */
@@ -35,16 +36,15 @@ class RichText
     }
 
     /**
-     * Builds a HTML version of the RichText fragment.
+     * Builds a HTML version of the RichText fragment
      *
-     * 
      *
-     * @param \Prismic\LinkResolver $linkResolver the link resolver
+     * @param \Prismic\LinkResolver $linkResolver   the link resolver
+     * @param lambda                $htmlSerializer an optional function to generate custom HTML code
      *
-     * @param lambda $htmlSerializer an optional function to generate custom HTML code
      * @return string the HTML version of the RichText fragment
      */
-    public static function asHtml($richText, $linkResolver = NULL, $htmlSerializer = NULL)
+    public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
     {
         $groups = array();
         foreach ($richText as $block) {
@@ -65,7 +65,7 @@ class RichText
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     } else {
-                        $newBlockGroup = new BlockGroup(NULL, array());
+                        $newBlockGroup = new BlockGroup(null, array());
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     }
@@ -76,7 +76,7 @@ class RichText
                 } elseif ($block->type === 'o-list-item') {
                     $tag = 'ol';
                 } else {
-                    $tag = NULL;
+                    $tag = null;
                 }
                 $newBlockGroup = new BlockGroup($tag, array());
                 $newBlockGroup->addBlock($block);
@@ -102,15 +102,16 @@ class RichText
     }
 
     /**
-     * Transforms a block into HTML (for internal use)
+     * Transforms a block into HTML
      *
-     * @param \Prismic\Fragment\Block\BlockInterface $block a given block
-     * @param \Prismic\LinkResolver $linkResolver the link resolver
      *
-     * @param lambda $htmlSerializer
-     * @return string the HTML version of the block
+     * @param object                $block          a given block
+     * @param \Prismic\LinkResolver $linkResolver   the link resolver
+     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     *
+     * @return string the HTML representation of the block
      */
-    private static function asHtmlBlock($block, $linkResolver = NULL, $htmlSerializer = NULL)
+    private static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
     {
         $content = '';
 
@@ -123,8 +124,8 @@ class RichText
             $block->type === 'paragraph' ||
             $block->type === 'list-item' ||
             $block->type === 'o-list-item' ||
-            $block->type === 'preformatted')
-        {
+            $block->type === 'preformatted'
+        ) {
             $content = RichText::insertSpans($block->text, $block->spans, $linkResolver, $htmlSerializer);
         }
 
@@ -132,18 +133,20 @@ class RichText
     }
 
     /**
-     * Transforms a text block into HTML (for internal use)
+     * Transforms a text block into HTML
      *
-     * @param string                 $text          the raw text of the block
-     * @param array                  $spans         the spans of the block, as an array of \Prismic\Fragment\Span\SpanInterface objects
-     * @param \Prismic\LinkResolver  $linkResolver  the link resolver
      *
-     * @return string the HTML version of the block
+     * @param string                $text           the raw text of the block
+     * @param array                 $spans          the spans of the block
+     * @param \Prismic\LinkResolver $linkResolver   the link resolver
+     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     *
+     * @return string the HTML representation of the block
      */
-    private static function insertSpans($text, array $spans, $linkResolver = NULL, $htmlSerializer = NULL)
+    private static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
     {
         if (empty($spans)) {
-            return htmlentities($text, NULL, 'UTF-8');
+            return htmlentities($text, null, 'UTF-8');
         }
 
         $tagsStart = array();
@@ -161,7 +164,7 @@ class RichText
             array_push($tagsEnd[$span->end], $span);
         }
 
-        $c = NULL;
+        $c = null;
         $html = '';
         $stack = array();
         for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
@@ -203,14 +206,14 @@ class RichText
                 $c = mb_substr($text, $pos, 1, 'UTF-8');
                 if (count($stack) == 0) {
                     // Top-level text
-                    $html .= htmlentities($c, NULL, 'UTF-8');
+                    $html .= htmlentities($c, null, 'UTF-8');
                 } else {
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
                     $stack[$last_idx] = array(
                         'span' => $last['span'],
-                        'text' => $last['text'] . htmlentities($c, NULL, 'UTF-8')
+                        'text' => $last['text'] . htmlentities($c, null, 'UTF-8')
                     );
                 }
             }
@@ -220,14 +223,18 @@ class RichText
     }
 
     /**
-     * Return the HTML representation of $element
+     * Transforms an element into HTML
      *
-     * @param BlockInterface|SpanInterface $element block or span to serialize
-     * @param string $content inner html of the element
-     * @param LinkResolver $linkResolver
-     * @param HtmlSerializer $htmlSerializer
+     *
+     * @param object                $element        element to serialize
+     * @param string                $content        inner HTML content of the element
+     * @param \Prismic\LinkResolver $linkResolver   the link resolver
+     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     *
+     * @return string the HTML representation of the element
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer) {
+    private static function serialize($element, $content, $linkResolver, $htmlSerializer)
+    {
         if ($htmlSerializer) {
             $custom = $htmlSerializer($element, $content);
             if ($custom) {
@@ -305,7 +312,7 @@ class RichText
                 } else {
                     $attributes['href'] = $element->data->url;
                 }
-                if ($attributes['href'] === NULL) {
+                if ($attributes['href'] === null) {
                     // We have no link (LinkResolver said it is not valid,
                     // or something else went wrong). Abort this span.
                     return $content;
@@ -315,7 +322,7 @@ class RichText
                 // throw new \Exception("Unknown span type " . get_class($span));
                 $nodeName = 'span';
         }
-        
+
         if ($element->label) {
             $attributes['class'] = $element->label;
         }
