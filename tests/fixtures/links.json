@@ -22,8 +22,8 @@
         "name": "cool-pictures-24.jpg",
         "kind": "image",
         "url": "https://prismic-io.s3.amazonaws.com/levi-templeting%2Fe57968c2-4536-4548-b720-ebb8f3becbcd_cool-pictures-24.jpg",
-        "size": "215840",
-        "height": "1200",
-        "width": "1600"
+        "size": 215840,
+        "height": 1200,
+        "width": 1600
     }
 }
