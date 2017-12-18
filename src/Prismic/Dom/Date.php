@@ -12,12 +12,8 @@ class Date
      *
      * @return \DateTime The DateTime object representing the date
      */
-    public static function asDate($date = null)
+    public static function asDate($date)
     {
-        if (!$date) {
-            return null;
-        }
-
         return new \DateTime($date);
     }
 }
