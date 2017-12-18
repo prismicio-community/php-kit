@@ -243,9 +243,9 @@ class RichText
         }
 
         $classCode = '';
-        $label = $element->label;
-        if ($label) {
-            $classCode = ' class="' . $label . '"';
+
+        if (property_exists($element, 'label')) {
+            $classCode = ' class="' . $element->label . '"';
         }
 
         // Blocks
@@ -271,7 +271,7 @@ class RichText
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
                 return (nl2br(
-                    '<p class="block-img' . ($label ? (' ' . $label) : '') . '">' .
+                    '<p class="block-img' . (property_exists($element, 'label') ? (' ' . $element->label) : '') . '">' .
                         '<img src="' . $element->url . '" alt="' . $element->alt . '">' .
                     '</p>'
                 ));
@@ -301,7 +301,7 @@ class RichText
                 break;
             case 'hyperlink':
                 $nodeName = 'a';
-                if ($element->data->target) {
+                if (property_exists($element->data, 'target')) {
                     $attributes = array_merge(array(
                         'target' => $element->data->target,
                         'rel' => 'noopener',
@@ -323,7 +323,7 @@ class RichText
                 $nodeName = 'span';
         }
 
-        if ($element->label) {
+        if (property_exists($element, 'label')) {
             $attributes['class'] = $element->label;
         }
 
