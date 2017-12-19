@@ -20,7 +20,8 @@
         {
             "type": "heading3",
             "text": "Heading 3",
-            "spans": []
+            "spans": [],
+            "label": "the-label"
         },
         {
             "type": "heading4",
