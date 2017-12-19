@@ -191,7 +191,7 @@ class RichText
                 // Sort bigger tags first to ensure the right tag hierarchy
                 $sspans = $tagsStart[$pos];
                 $spanSort = function ($a, $b) {
-                    return ($b->getEnd() - $b->getStart()) - ($a->getEnd() - $a->getStart());
+                    return ($b->end - $b->start) - ($a->end - $a->start);
                 };
                 usort($sspans, $spanSort);
                 foreach ($sspans as $span) {

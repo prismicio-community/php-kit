@@ -40,7 +40,7 @@
         },
         {
             "type": "paragraph",
-            "text": "Paragraph em and strong",
+            "text": "Paragraph em and strong and strongem",
             "spans": [
                 {
                     "start": 10,
@@ -51,6 +51,16 @@
                     "start": 17,
                     "end": 23,
                     "type": "strong"
+                },
+                {
+                    "start": 28,
+                    "end": 36,
+                    "type": "strong"
+                },
+                {
+                    "start": 28,
+                    "end": 36,
+                    "type": "em"
                 }
             ]
         },
