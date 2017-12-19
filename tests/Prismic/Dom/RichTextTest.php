@@ -53,14 +53,34 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
                 '<iframe width="480" height="270" src="https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>' .
             '</div>'
         );
-        $this->assertEquals($expected, RichText::asHtml($this->richText->description));
         $this->assertEquals($expected, RichText::asHtml($this->richText->description, $this->linkResolver));
+        $this->assertEquals($expected, RichText::asHtml($this->richText->description));
+    }
+
+    public function testDocumentLink()
+    {
+        $expected = '<p>This is a <a href="http://host/doc/WKb3BSwAACgAb2M4">document link</a>.</p>';
+        $actual = RichText::asHtml($this->richText->document_link, $this->linkResolver);
+        $this->assertEquals($expected, $actual);
+
+        $expected = '<p>This is a <a href="">document link</a>.</p>';
+        $actual = RichText::asHtml($this->richText->document_link);
+        $this->assertEquals($expected, $actual);
+
+        $expected = '<p>This is a <a href="http://host/404">broken document link</a>.</p>';
+        $actual = RichText::asHtml($this->richText->broken_document_link, $this->linkResolver);
+        $this->assertEquals($expected, $actual);
+
+        $expected = '<p>This is a <a href="">broken document link</a>.</p>';
+        $actual = RichText::asHtml($this->richText->broken_document_link);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testEmptyRichText()
     {
         $this->assertEquals('', RichText::asText($this->richText->empty));
-        $this->assertEquals('', RichText::asHtml($this->richText->empty));
+
         $this->assertEquals('', RichText::asHtml($this->richText->empty, $this->linkResolver));
+        $this->assertEquals('', RichText::asHtml($this->richText->empty));
     }
 }
