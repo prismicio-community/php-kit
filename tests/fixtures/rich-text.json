@@ -169,5 +169,49 @@
             }
         }
     ],
+    "document_link": [
+        {
+            "type": "paragraph",
+            "text": "This is a document link.",
+            "spans": [
+                {
+                    "start": 10,
+                    "end": 23,
+                    "type": "hyperlink",
+                    "data": {
+                        "id": "WKb3BSwAACgAb2M4",
+                        "type": "image",
+                        "tags": [],
+                        "slug": "image",
+                        "lang": "en-us",
+                        "link_type": "Document",
+                        "isBroken": false
+                    }
+                }
+            ]
+        }
+    ],
+    "broken_document_link": [
+        {
+            "type": "paragraph",
+            "text": "This is a broken document link.",
+            "spans": [
+                {
+                    "start": 10,
+                    "end": 30,
+                    "type": "hyperlink",
+                    "data": {
+                        "id": "WKb3BSwAACgAb2M4",
+                        "type": "image",
+                        "tags": [],
+                        "slug": "image",
+                        "lang": "en-us",
+                        "link_type": "Document",
+                        "isBroken": true
+                    }
+                }
+            ]
+        }
+    ],
     "empty": []
 }
