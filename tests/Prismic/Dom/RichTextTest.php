@@ -32,7 +32,7 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
             '<h4>Heading 4</h4>' .
             '<h5>Heading 5</h5>' .
             '<h6>Heading 6</h6>' .
-            '<p>Paragraph <em>em</em> and <strong>strong</strong></p>' .
+            '<p>Paragraph <em>em</em> and <strong>strong</strong> and <strong><em>strongem</em></strong></p>' .
             '<p>Paragraph <a target="_blank" rel="noopener" href="https://prismic.io">Web link</a> and <a href="https://prismic-io.s3.amazonaws.com/levi-templeting%2F6acedd00-083a-4335-b789-1ccb64b37ead_success-kid-speak-english.jpg">media link</a></p>' .
             '<pre>Preformatted block</pre>' .
             '<ul>' .
@@ -66,7 +66,7 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
             '<h4>Heading 4</h4>' .
             '<h5>Heading 5</h5>' .
             '<h6>Heading 6</h6>' .
-            '<p>Paragraph <em>em</em> and <span class="custom">strong</span></p>' .
+            '<p>Paragraph <em>em</em> and <span class="custom">strong</span> and <span class="custom"><em>strongem</em></span></p>' .
             '<p>Paragraph <a target="_blank" rel="noopener" href="https://prismic.io">Web link</a> and <a href="https://prismic-io.s3.amazonaws.com/levi-templeting%2F6acedd00-083a-4335-b789-1ccb64b37ead_success-kid-speak-english.jpg">media link</a></p>' .
             '<pre>Preformatted block</pre>' .
             '<ul>' .
