@@ -33,7 +33,7 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
             '<h5>Heading 5</h5>' .
             '<h6>Heading 6</h6>' .
             '<p>Paragraph <em>em</em> and <strong>strong</strong></p>' .
-            '<p>Paragraph <a href="https://prismic.io">Web link</a> and <a target="_blank" rel="noopener" href="https://prismic-io.s3.amazonaws.com/levi-templeting%2F6acedd00-083a-4335-b789-1ccb64b37ead_success-kid-speak-english.jpg">media link target blank</a></p>' .
+            '<p>Paragraph <a target="_blank" rel="noopener" href="https://prismic.io">Web link</a> and <a href="https://prismic-io.s3.amazonaws.com/levi-templeting%2F6acedd00-083a-4335-b789-1ccb64b37ead_success-kid-speak-english.jpg">media link</a></p>' .
             '<pre>Preformatted block</pre>' .
             '<ul>' .
                 '<li><em>Help</em></li>' .
@@ -48,9 +48,19 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
             '</ol>' .
             '<p class="block-img">' .
                 '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
-            '</p>'
+            '</p>' .
+            '<div data-oembed="https://www.youtube.com/watch?v=joA7VpZLQaQ" data-oembed-type="video" data-oembed-provider="youtube">' .
+                '<iframe width="480" height="270" src="https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>' .
+            '</div>'
         );
         $this->assertEquals($expected, RichText::asHtml($this->richText->description));
         $this->assertEquals($expected, RichText::asHtml($this->richText->description, $this->linkResolver));
+    }
+
+    public function testEmptyRichText()
+    {
+        $this->assertEquals('', RichText::asText($this->richText->empty));
+        $this->assertEquals('', RichText::asHtml($this->richText->empty));
+        $this->assertEquals('', RichText::asHtml($this->richText->empty, $this->linkResolver));
     }
 }
