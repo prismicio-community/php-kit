@@ -55,7 +55,7 @@
         },
         {
             "type": "paragraph",
-            "text": "Paragraph Web link and media link target blank",
+            "text": "Paragraph Web link and media link",
             "spans": [
                 {
                     "start": 10,
@@ -63,12 +63,13 @@
                     "type": "hyperlink",
                     "data": {
                         "link_type": "Web",
-                        "url": "https://prismic.io"
+                        "url": "https://prismic.io",
+                        "target": "_blank"
                     }
                 },
                 {
                     "start": 23,
-                    "end": 46,
+                    "end": 33,
                     "type": "hyperlink",
                     "data": {
                         "link_type": "Media",
@@ -77,8 +78,7 @@
                         "url": "https://prismic-io.s3.amazonaws.com/levi-templeting%2F6acedd00-083a-4335-b789-1ccb64b37ead_success-kid-speak-english.jpg",
                         "size": 28996,
                         "height": 400,
-                        "width": 400,
-                        "target": "_blank"
+                        "width": 400
                     }
                 }
             ]
@@ -148,6 +148,26 @@
                 "width": 400,
                 "height": 400
             }
+        },
+        {
+            "type": "embed",
+            "oembed": {
+                "type": "video",
+                "embed_url": "https://www.youtube.com/watch?v=joA7VpZLQaQ",
+                "title": "10 Ridiculously Smart & Cheeky Things Lionel Messi Did in 2017 Season ||HD||",
+                "provider_name": "YouTube",
+                "thumbnail_url": "https://i.ytimg.com/vi/joA7VpZLQaQ/hqdefault.jpg",
+                "width": 480,
+                "author_url": "https://www.youtube.com/user/MessiMagicHD",
+                "html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed\" frameborder=\"0\" gesture=\"media\" allow=\"encrypted-media\" allowfullscreen></iframe>",
+                "thumbnail_width": 480,
+                "version": "1.0",
+                "height": 270,
+                "thumbnail_height": 360,
+                "provider_url": "https://www.youtube.com/",
+                "author_name": "Messi Magic™"
+            }
         }
-    ]
+    ],
+    "empty": []
 }
