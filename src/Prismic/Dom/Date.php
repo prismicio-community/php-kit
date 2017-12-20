@@ -14,6 +14,6 @@ class Date
      */
     public static function asDate($date)
     {
-        return new \DateTime($date);
+        return new \DateTime($date, new \DateTimeZone('UTC'));
     }
 }
