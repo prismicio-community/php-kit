@@ -16,24 +16,29 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $this->linkResolver = new FakeLinkResolver();
     }
 
-    public function testAsUrl()
+    public function testWebLinkAsUrl()
     {
-        // Web link
         $expected = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
         $actual = Link::asUrl($this->links->web);
         $this->assertEquals($expected, $actual);
+    }
 
-        // Media link
+    public function testMediaLinkAsUrl()
+    {
         $expected = 'https://prismic-io.s3.amazonaws.com/levi-templeting%2Fe57968c2-4536-4548-b720-ebb8f3becbcd_cool-pictures-24.jpg';
         $actual = Link::asUrl($this->links->media);
         $this->assertEquals($expected, $actual);
+    }
 
-        // Document link
+    public function testDocumentLinkAsUrl()
+    {
         $expected = 'http://host/doc/WKb3BSwAACgAb2M4';
         $actual = Link::asUrl($this->links->document, $this->linkResolver);
         $this->assertEquals($expected, $actual);
+    }
 
-        // Document link without linkResolver
-        $this->assertEquals('', Link::asUrl($this->links->document));
+    public function testDocumentLinkAsUrlWithoutLinkResolver()
+    {
+        $this->assertNull(Link::asUrl($this->links->document));
     }
 }

@@ -113,15 +113,24 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
         $expected = '<p>This is a <a href="http://host/doc/WKb3BSwAACgAb2M4">document link</a>.</p>';
         $actual = RichText::asHtml($this->richText->document_link, $this->linkResolver);
         $this->assertEquals($expected, $actual);
+    }
 
+    public function testDocumentLinkWithoutLinkResolver()
+    {
         $expected = '<p>This is a <a href="">document link</a>.</p>';
         $actual = RichText::asHtml($this->richText->document_link);
         $this->assertEquals($expected, $actual);
+    }
 
+    public function testBrokenDocumentLink()
+    {
         $expected = '<p>This is a <a href="http://host/404">broken document link</a>.</p>';
         $actual = RichText::asHtml($this->richText->broken_document_link, $this->linkResolver);
         $this->assertEquals($expected, $actual);
+    }
 
+    public function testBrokenDocumentLinkWithoutLinkResolver()
+    {
         $expected = '<p>This is a <a href="">broken document link</a>.</p>';
         $actual = RichText::asHtml($this->richText->broken_document_link);
         $this->assertEquals($expected, $actual);
