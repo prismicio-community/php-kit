@@ -40,7 +40,7 @@
         },
         {
             "type": "paragraph",
-            "text": "Paragraph em and strong and strongem",
+            "text": "Paragraph em and strong",
             "spans": [
                 {
                     "start": 10,
@@ -51,16 +51,6 @@
                     "start": 17,
                     "end": 23,
                     "type": "strong"
-                },
-                {
-                    "start": 28,
-                    "end": 36,
-                    "type": "strong"
-                },
-                {
-                    "start": 28,
-                    "end": 36,
-                    "type": "em"
                 }
             ]
         },
@@ -178,6 +168,40 @@
                 "provider_url": "https://www.youtube.com/",
                 "author_name": "Messi Magic™"
             }
+        }
+    ],
+    "nested_spans": [
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum. em strong",
+            "spans": [
+                {
+                    "start": 5,
+                    "end": 10,
+                    "type": "em"
+                },
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum. strong em",
+            "spans": [
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                },
+                {
+                    "start": 5,
+                    "end": 10,
+                    "type": "em"
+                }
+            ]
         }
     ],
     "document_link": [
