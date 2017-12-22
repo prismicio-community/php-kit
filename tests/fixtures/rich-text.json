@@ -173,7 +173,7 @@
     "nested_spans": [
         {
             "type": "paragraph",
-            "text": "Test lorem ipsum. em strong",
+            "text": "Test lorem ipsum.",
             "spans": [
                 {
                     "start": 5,
@@ -189,7 +189,7 @@
         },
         {
             "type": "paragraph",
-            "text": "Test lorem ipsum. strong em",
+            "text": "Test lorem ipsum.",
             "spans": [
                 {
                     "start": 5,
@@ -198,6 +198,70 @@
                 },
                 {
                     "start": 5,
+                    "end": 10,
+                    "type": "em"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum.",
+            "spans": [
+                {
+                    "start": 11,
+                    "end": 16,
+                    "type": "em"
+                },
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum.",
+            "spans": [
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                },
+                {
+                    "start": 11,
+                    "end": 16,
+                    "type": "em"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum.",
+            "spans": [
+                {
+                    "start": 8,
+                    "end": 10,
+                    "type": "em"
+                },
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "Test lorem ipsum.",
+            "spans": [
+                {
+                    "start": 5,
+                    "end": 16,
+                    "type": "strong"
+                },
+                {
+                    "start": 8,
                     "end": 10,
                     "type": "em"
                 }

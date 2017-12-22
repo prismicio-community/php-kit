@@ -111,8 +111,12 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
     public function testNestedSpansAsHtml()
     {
         $expected = (
-            '<p>Test <strong><em>lorem</em> ipsum</strong>. em strong</p>' .
-            '<p>Test <strong><em>lorem</em> ipsum</strong>. strong em</p>'
+            '<p>Test <strong><em>lorem</em> ipsum</strong>.</p>' .
+            '<p>Test <strong><em>lorem</em> ipsum</strong>.</p>' .
+            '<p>Test <strong>lorem <em>ipsum</em></strong>.</p>' .
+            '<p>Test <strong>lorem <em>ipsum</em></strong>.</p>' .
+            '<p>Test <strong>lor<em>em</em> ipsum</strong>.</p>' .
+            '<p>Test <strong>lor<em>em</em> ipsum</strong>.</p>'
         );
         $actual = RichText::asHtml($this->richText->nested_spans);
         $this->assertEquals($expected, $actual);
