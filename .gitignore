@@ -5,3 +5,6 @@ phpdoc.dist.xml
 .idea
 node_modules/
 phpunit.xml
+
+# documentation
+docs/
