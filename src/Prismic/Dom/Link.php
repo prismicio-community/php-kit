@@ -21,6 +21,6 @@ class Link
             return $linkResolver ? $linkResolver($link) : null;
         }
 
-        return $link->url;
+        return property_exists($link, 'url') ? $link->url : null;
     }
 }
