@@ -270,11 +270,11 @@ class RichText
             case 'o-list-item':
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
-                return (nl2br(
+                return (
                     '<p class="block-img' . (property_exists($element, 'label') ? (' ' . $element->label) : '') . '">' .
-                        '<img src="' . $element->url . '" alt="' . $element->alt . '">' .
+                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' .
                     '</p>'
-                ));
+                );
             case 'embed':
                 $providerAttr = '';
                 if ($element->oembed->provider_name) {
