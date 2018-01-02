@@ -27,7 +27,7 @@ class RichText
         $result = '';
 
         foreach ($richText as $block) {
-            if ($block->text) {
+            if (isset($block->text)) {
                 $result .= $block->text . "\n";
             }
         }
@@ -39,6 +39,7 @@ class RichText
      * Builds a HTML version of the RichText fragment
      *
      *
+     * @param object                $richText       the rich text object
      * @param \Prismic\LinkResolver $linkResolver   the link resolver
      * @param lambda                $htmlSerializer an optional function to generate custom HTML code
      *
@@ -47,6 +48,7 @@ class RichText
     public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
     {
         $groups = array();
+
         foreach ($richText as $block) {
             $count = count($groups);
             if ($count > 0) {
@@ -83,7 +85,9 @@ class RichText
                 array_push($groups, $newBlockGroup);
             }
         }
+
         $html = '';
+
         foreach ($groups as $group) {
             $maybeTag = $group->getTag();
             if ($maybeTag) {
@@ -98,6 +102,7 @@ class RichText
                 }
             }
         }
+
         return $html;
     }
 
@@ -159,7 +164,6 @@ class RichText
             if (!array_key_exists($span->end, $tagsEnd)) {
                 $tagsEnd[$span->end] = array();
             }
-
             array_push($tagsStart[$span->start], $span);
             array_push($tagsEnd[$span->end], $span);
         }
@@ -167,6 +171,7 @@ class RichText
         $c = null;
         $html = '';
         $stack = array();
+
         for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
             if (array_key_exists($pos, $tagsEnd)) {
                 foreach ($tagsEnd[$pos] as $endTag) {
@@ -322,16 +327,15 @@ class RichText
                 // throw new \Exception("Unknown span type " . get_class($span));
                 $nodeName = 'span';
         }
-
         if (property_exists($element, 'label')) {
             $attributes['class'] = $element->label;
         }
-
         $html = '<' . $nodeName;
         foreach ($attributes as $k => $v) {
             $html .= (' ' . $k . '="' . $v . '"');
         }
         $html .= ('>' . $content . '</' . $nodeName . '>');
+
         return $html;
     }
 }
