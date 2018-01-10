@@ -15,7 +15,6 @@ before_script:
 
 script:
 - phpunit
-- ./vendor/bin/phpdoc
 
 deploy:
   provider: pages
