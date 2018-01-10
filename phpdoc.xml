@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdoc>
   <parser>
-    <target>doc</target>
+    <target>docs</target>
   </parser>
   <transformer>
-    <target>doc</target>
+    <target>docs</target>
   </transformer>
   <files>
     <directory>src/Prismic</directory>
