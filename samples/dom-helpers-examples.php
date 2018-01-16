@@ -8,7 +8,7 @@ use Prismic\Dom\Link;
 use Prismic\Dom\RichText;
 use Prismic\Dom\Date;
 
-$api = Api::get('https://example.prismic.io/api/v2');
+$api = Api::get('https://your-repository-name.prismic.io/api/v2');
 $document = $api->getSingle('example');
 
 class ExampleLinkResolver extends LinkResolver

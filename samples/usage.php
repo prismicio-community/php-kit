@@ -6,7 +6,7 @@ use Prismic\Api;
 
 $options = array(
     'prismic.ref'   => false,
-    'prismic.api'   => "https://lesbonneschoses.prismic.io/api/v2",
+    'prismic.api'   => "https://your-repository-name.prismic.io/api/v2",
     'prismic.token' => "Your permanent token",
 );
 
