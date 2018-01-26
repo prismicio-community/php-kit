@@ -29,7 +29,7 @@ Then call the API:
 
 ```php
 <?php
-$api = Api::get('https://your-repository-name.prismic.io/api/v2');
+$api = Api::get('https://your-repo-name.prismic.io/api/v2');
 $doc = $api->getByUID('get-started');
 ```
 
