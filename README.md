@@ -6,7 +6,7 @@
 
 ### Install the kit for your project
 
-First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default build-in cache support.
+First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default built-in cache support.
 
 Install with [Composer](https://getcomposer.org/doc/00-intro.md):
 
@@ -41,13 +41,12 @@ For Symfony 2.7 projects, use version 2.0.3.
 ### DOM helpers usage
 
 In these examples we have a $doc variable corresponding to the fetched Prismic document.
+We also have a $linkResolver variable containing the functional link resolver, [read our docs to learn more about Link Resolving](https://prismic.io/docs/php/beyond-the-api/link-resolving).
 
 #### Link
 
 ```php
 <?php
-include_once __DIR__.'/../vendor/autoload.php';
-
 use Prismic\Dom\Link;
 
 echo Link::asUrl($doc->data->link, $linkResolver);
@@ -57,8 +56,6 @@ echo Link::asUrl($doc->data->link, $linkResolver);
 
 ```php
 <?php
-include_once __DIR__.'/../vendor/autoload.php';
-
 use Prismic\Dom\RichText;
 
 echo RichText::asText($doc->data->title);
@@ -69,8 +66,6 @@ echo RichText::asHtml($doc->data->description, $linkResolver);
 
 ```php
 <?php
-include_once __DIR__.'/../vendor/autoload.php';
-
 use Prismic\Dom\Date;
 
 $date = Date::asDate($doc->data->date);
@@ -79,7 +74,8 @@ echo $date->format('Y-m-d H:i:s');
 
 ## More information
 
-* [Developer docs](https://developers.prismic.io)
+* [Developer docs](https://prismic.io/docs/php/getting-started/with-the-php-starter-kit)
+* [PHP Quickstart tutorial](https://prismic.io/quickstart#?lang=php)
 * [PHPDoc](https://prismicio.github.io/php-kit)
 * [Changelog](https://github.com/prismicio/php-kit/releases)
 
