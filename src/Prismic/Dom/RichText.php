@@ -249,7 +249,7 @@ class RichText
 
         $classCode = '';
 
-        if (property_exists($element, 'label')) {
+        if (isset($element->label)) {
             $classCode = ' class="' . $element->label . '"';
         }
 
@@ -276,7 +276,7 @@ class RichText
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
                 return (
-                    '<p class="block-img' . (property_exists($element, 'label') ? (' ' . $element->label) : '') . '">' .
+                    '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
                         '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' .
                     '</p>'
                 );
@@ -306,7 +306,7 @@ class RichText
                 break;
             case 'hyperlink':
                 $nodeName = 'a';
-                if (property_exists($element->data, 'target')) {
+                if (isset($element->data->target)) {
                     $attributes = array_merge(array(
                         'target' => $element->data->target,
                         'rel' => 'noopener',
@@ -327,9 +327,13 @@ class RichText
                 // throw new \Exception("Unknown span type " . get_class($span));
                 $nodeName = 'span';
         }
-        if (property_exists($element, 'label')) {
+
+        if (isset($element->label)) {
             $attributes['class'] = $element->label;
+        } elseif (isset($element->data->label)) {
+            $attributes['class'] = $element->data->label;
         }
+
         $html = '<' . $nodeName;
         foreach ($attributes as $k => $v) {
             $html .= (' ' . $k . '="' . $v . '"');

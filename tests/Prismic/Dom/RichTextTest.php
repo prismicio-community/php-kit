@@ -90,14 +90,14 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
         $htmlSerializer = function($element, $content) {
             if ($element->type === 'heading3') {
                 $classes = 'custom';
-                if (property_exists($element, 'label')) {
+                if (isset($element->label)) {
                     $classes .= ' ' . $element->label;
                 }
                 return '<div><h3 class="' . $classes . '">' . $content . '</h3></div>';
             }
             if ($element->type === 'strong') {
                 $classes = 'custom';
-                if (property_exists($element, 'label')) {
+                if (isset($element->label)) {
                     $classes .= ' ' . $element->label;
                 }
                 return '<span class="' . $classes . '">' . $content . '</span>';
@@ -119,6 +119,13 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
             '<p>Test <strong>lor<em>em</em> ipsum</strong>.</p>'
         );
         $actual = RichText::asHtml($this->richText->nested_spans);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLabeledSpanAsHtml()
+    {
+        $expected = '<p>Paragraph <span class="the-label">labeled span</span>.</p>';
+        $actual = RichText::asHtml($this->richText->labeled_span);
         $this->assertEquals($expected, $actual);
     }
 
