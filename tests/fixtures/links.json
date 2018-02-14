@@ -1,0 +1,29 @@
+{
+    "web": {
+        "link_type": "Web",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    "web_target_blank": {
+        "link_type": "Web",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "target": "_blank"
+    },
+    "document": {
+        "id": "WKb3BSwAACgAb2M4",
+        "type": "image",
+        "tags": [ ],
+        "slug": "image",
+        "lang": "en-us",
+        "link_type": "Document",
+        "isBroken": false
+    },
+    "media": {
+        "link_type": "Media",
+        "name": "cool-pictures-24.jpg",
+        "kind": "image",
+        "url": "https://prismic-io.s3.amazonaws.com/levi-templeting%2Fe57968c2-4536-4548-b720-ebb8f3becbcd_cool-pictures-24.jpg",
+        "size": 215840,
+        "height": 1200,
+        "width": 1600
+    }
+}

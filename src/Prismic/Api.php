@@ -1,12 +1,4 @@
 <?php
-/**
- * This file is part of the Prismic PHP SDK
- *
- * Copyright 2013 Zengularity (http://www.zengularity.com).
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Prismic;
 
@@ -224,9 +216,9 @@ class Api
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
-                       ->getResults();
+                       ->results;
             if (count($documents) > 0) {
-                if ($url = $linkResolver->resolveDocument($documents[0])) {
+                if ($url = $linkResolver($documents[0])) {
                     return $url;
                 }
             }
@@ -287,7 +279,7 @@ class Api
     /**
      * This is the endpoint to build your API, and is a static method.
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
-     * Api::get('http://idofyourrepository.prismic.io/api')
+     * Api::get('https://your-repository-name.prismic.io/api/v2')
      *
      * @param  string           $action      the URL of your repository API's endpoint
      * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
@@ -367,7 +359,7 @@ class Api
             array_push($all_urls, $url);
             $json = $this->getCache()->get($url);
             if ($json) {
-                $responses[$i] = Response::parse($json);
+                $responses[$i] = $json;
             } else {
                 $responses[$i] = null;
                 array_push($urls, $url);
@@ -396,7 +388,7 @@ class Api
                 }
 
                 $idx = array_search($url, $all_urls);
-                $responses[$idx] = Response::parse($json);
+                $responses[$idx] = $json;
             }
         }
 
@@ -515,7 +507,7 @@ class Api
      * @return Prismic::Document     the resulting document, or null
      */
     public function queryFirst($q, $options = array()) {
-        $documents = $this->query($q, $options)->getResults();
+        $documents = $this->query($q, $options)->results;
         if (count($documents) > 0) {
             return $documents[0];
         }
