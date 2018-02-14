@@ -72,6 +72,7 @@ class SearchForm
      */
     public function set($key, $value)
     {
+        $data = $this->data;
         if (isset($key) && isset($value)) {
             $fields = $this->form->getFields();
             /** @var FieldForm $field */
@@ -79,24 +80,20 @@ class SearchForm
 
             if (is_int($value) && $field->getType() != "Integer") {
                 throw new \RuntimeException("Cannot use a Int as value for field " . $key);
-            } else {
-                $data = $this->data;
-                if ($field->isMultiple()) {
-                    $values = isset($data[$key]) ? $data[$key] : array();
-                    if (is_array($values)) {
-                        array_push($values, $value);
-                    } else {
-                        $values = array($value);
-                    }
-                    $data[$key] = $values;
-                } else {
-                    $data[$key] = $value;
-                }
             }
-        } else {
-            $data = $this->data;
-        }
 
+            if ($field->isMultiple()) {
+                $values = isset($data[$key]) ? $data[$key] : array();
+                if (is_array($values)) {
+                    array_push($values, $value);
+                } else {
+                    $values = array($value);
+                }
+                $data[$key] = $values;
+            } else {
+                $data[$key] = $value;
+            }
+        }
         return new SearchForm($this->api, $this->form, $data);
     }
 
@@ -300,26 +297,23 @@ class SearchForm
 
             if ($response) {
                 return $response;
-            } else {
-                $response = $this->api->getHttpClient()->get($url);
-                $cacheControl = $response->getHeader('Cache-Control')[0];
-                $cacheDuration = null;
-                if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
-                    $cacheDuration = (int) $groups[1];
-                }
-                $json = json_decode($response->getBody(true));
-                if (!isset($json)) {
-                    throw new \RuntimeException("Unable to decode json response");
-                }
-                if ($cacheDuration !== null) {
-                    $expiration = $cacheDuration;
-                    $this->api->getCache()->set($cacheKey, $json, $expiration);
-                }
-
-                return $json;
+            } 
+            $response = $this->api->getHttpClient()->get($url);
+            $cacheControl = $response->getHeader('Cache-Control')[0];
+            $cacheDuration = null;
+            if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
+                $cacheDuration = (int) $groups[1];
             }
+            $json = json_decode($response->getBody(true));
+            if (!isset($json)) {
+                throw new \RuntimeException("Unable to decode json response");
+            }
+            if ($cacheDuration !== null) {
+                $expiration = $cacheDuration;
+                $this->api->getCache()->set($cacheKey, $json, $expiration);
+            }
+            return $json;
         }
-
         throw new \RuntimeException("Form type not supported");
     }
 
