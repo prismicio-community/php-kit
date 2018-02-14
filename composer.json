@@ -3,7 +3,14 @@
     "description": "PHP development kit for prismic.io",
 
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-4": {
+            "Prismic\\": "src/Prismic"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Prismic\\Test\\": "tests/Prismic"
+        }
     },
 
     "license": "Apache 2 license",
