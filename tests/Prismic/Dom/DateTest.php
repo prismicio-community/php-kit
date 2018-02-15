@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
-namespace Prismic\Test;
+namespace Prismic\Test\Dom;
 
+use Prismic\Test\TestCase;
 use Prismic\Dom\Date;
 use \DateTime;
 use \DateTimeZone;
 
-class DateTest extends \PHPUnit_Framework_TestCase
+class DateTest extends TestCase
 {
     public function testDateAsDate()
     {

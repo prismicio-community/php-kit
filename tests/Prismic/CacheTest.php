@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Cache\ApcCache;
 
-class CacheTest extends \PHPUnit_Framework_TestCase
+class CacheTest extends TestCase
 {
     private $cache;
 

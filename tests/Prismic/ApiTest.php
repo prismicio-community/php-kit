@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic;
 
-class ApiTest extends \PHPUnit_Framework_TestCase
+class ApiTest extends TestCase
 {
 
     private $api;

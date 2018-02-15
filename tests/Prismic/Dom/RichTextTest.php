@@ -1,18 +1,20 @@
 <?php
+declare(strict_types=1);
 
-namespace Prismic\Test;
+namespace Prismic\Test\Dom;
 
+use Prismic\Test\TestCase;
 use Prismic\Dom\RichText;
 use Prismic\Test\FakeLinkResolver;
 
-class RichTextTest extends \PHPUnit_Framework_TestCase
+class RichTextTest extends TestCase
 {
     private $richText;
     private $linkResolver;
 
     protected function setUp()
     {
-        $this->richText = json_decode(file_get_contents(__DIR__.'/../../fixtures/rich-text.json'));
+        $this->richText = json_decode($this->getJsonFixture('rich-text.json'));
         $this->linkResolver = new FakeLinkResolver();
     }
 

@@ -1,16 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Experiments;
 
-class ExperimentTest extends \PHPUnit_Framework_TestCase
+class ExperimentTest extends TestCase
 {
     private $experiments;
 
     protected function setUp()
     {
-        $experimentsJson = json_decode(file_get_contents(__DIR__.'/../fixtures/experiments.json'));
+        $experimentsJson = \json_decode($this->getJsonFixture('experiments.json'));
         $this->experiments = Experiments::parse($experimentsJson);
     }
 

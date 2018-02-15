@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Api;
 use Prismic\Predicates;
 
-class PredicatesTest extends \PHPUnit_Framework_TestCase
+class PredicatesTest extends TestCase
 {
 
     public function testAtPredicate()

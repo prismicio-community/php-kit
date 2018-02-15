@@ -1,18 +1,20 @@
 <?php
+declare(strict_types=1);
 
-namespace Prismic\Test;
+namespace Prismic\Test\Dom;
 
+use Prismic\Test\TestCase;
 use Prismic\Dom\Link;
 use Prismic\Test\FakeLinkResolver;
 
-class LinkTest extends \PHPUnit_Framework_TestCase
+class LinkTest extends TestCase
 {
     private $links;
     private $linkResolver;
 
     protected function setUp()
     {
-        $this->links = json_decode(file_get_contents(__DIR__.'/../../fixtures/links.json'));
+        $this->links = json_decode($this->getJsonFixture('links.json'));
         $this->linkResolver = new FakeLinkResolver();
     }
 
