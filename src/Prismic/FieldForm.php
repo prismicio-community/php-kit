@@ -1,23 +1,29 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
 
-/**
- * Embodies a field of a RESTful form. This is meant for internal use.
- */
 class FieldForm
 {
 
     /**
-     * @var string the type of the field
+     * Field Type
+     *
+     * @var string
      */
     private $type;
+
     /**
-     * @var boolean can the parameter be used multiple times?
+     * Can the field be used multiple times?
+     *
+     * @var boolean
      */
     private $multiple;
+
     /**
-     * @var string the default value
+     * Default Value
+     *
+     * @var string|null
      */
     private $defaultValue;
 
@@ -28,7 +34,7 @@ class FieldForm
      * @param boolean $multiple     can the parameter be used multiple times
      * @param string  $defaultValue the default value
      */
-    public function __construct($type, $multiple, $defaultValue)
+    public function __construct(string $type, bool $multiple, ?string $defaultValue)
     {
         $this->type = $type;
         $this->multiple = $multiple;
@@ -37,30 +43,24 @@ class FieldForm
 
     /**
      * Returns the type of the field.
-     *
-     * @return string the type of the field.
      */
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
 
     /**
      * Returns the default value.
-     *
-     * @return string the default value.
      */
-    public function getDefaultValue()
+    public function getDefaultValue() :? string
     {
         return $this->defaultValue;
     }
 
     /**
      * Returns whether the parameter can be used multiple times.
-     *
-     * @return boolean true if the parameter can be used multiple times, false otherwise.
      */
-    public function isMultiple()
+    public function isMultiple() : bool
     {
         return $this->multiple;
     }
