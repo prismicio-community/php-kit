@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
 
@@ -7,16 +8,6 @@ use GuzzleHttp\Promise;
 use \Prismic\Cache\CacheInterface;
 use \Prismic\Cache\ApcCache;
 use \Prismic\Cache\NoCache;
-
-/**
- * @deprecated deprecated since version 1.5.3, use Api::PREVIEW_COOKIE;
- */
-const PREVIEW_COOKIE = Api::PREVIEW_COOKIE;
-
-/**
- * @deprecated deprecated since version 1.5.3, use Api::EXPERIMENTS_COOKIE;
- */
-const EXPERIMENTS_COOKIE = Api::EXPERIMENTS_COOKIE;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
