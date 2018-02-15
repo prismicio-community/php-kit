@@ -160,25 +160,9 @@ class Api
         $forms = $this->data->getForms();
         $rforms = new \stdClass();
         foreach ($forms as $key => $form) {
-
-            $fields = array();
-            foreach ($form->fields as $name => $field) {
-                $maybeDefault = isset($field->default) ? $field->default : null;
-                $isMultiple = isset($field->multiple) ? $field->multiple : false;
-                $fields[$name] = new FieldForm($field->type, $isMultiple, $maybeDefault);
-            }
-
-            $f = new Form(
-                isset($form->name) ? $form->name : null,
-                $form->method,
-                isset($form->rel) ? $form->rel : null,
-                $form->enctype,
-                $form->action,
-                $fields
-            );
-
-            $data = $f->defaultData();
-            $rforms->$key = new SearchForm($this, $f, $data);
+            $formObject = Form::withJsonObject($form);
+            $data = $formObject->defaultData();
+            $rforms->$key = new SearchForm($this, $formObject, $data);
         }
 
         return $rforms;
@@ -295,29 +279,11 @@ class Api
             $httpClient = is_null($httpClient) ? new Client() : $httpClient;
             $response = $httpClient->get($url);
             $response = json_decode($response->getBody(true));
-            $experiments = isset($response->experiments)
-                         ? Experiments::parse($response->experiments)
-                         : new Experiments(array(), array());
-
             if (!$response) {
                 throw new \RuntimeException('Unable to decode the json response');
             }
 
-            $apiData = new ApiData(
-                array_map(
-                    function ($ref) {
-                        return Ref::parse($ref);
-                    },
-                    $response->refs
-                ),
-                (array)$response->bookmarks,
-                (array)$response->types,
-                $response->tags,
-                (array)$response->forms,
-                $experiments,
-                $response->oauth_initiate,
-                $response->oauth_token
-            );
+            $apiData = ApiData::withJsonObject($response);
 
             $api = new Api($apiData, $accessToken, $httpClient, $cache);
             $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
