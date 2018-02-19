@@ -26,6 +26,15 @@ class ApiDataTest extends TestCase
         $this->assertInstanceOf(ApiData::class, $data);
     }
 
+    /**
+     * @expectedException Prismic\Exception\RuntimeException
+     * @expectedExceptionMessage Unable to decode JSON response
+     */
+    public function testWithJsonStringThrowsExceptionForInvalidJson()
+    {
+        ApiData::withJsonString('wtf?');
+    }
+
     public function testApiDataHasExpectedValues()
     {
         $this->assertCount(2, $this->data->getRefs());

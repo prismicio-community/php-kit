@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Exception;
 use stdClass;
 
 /**
@@ -11,21 +12,52 @@ use stdClass;
  */
 class ApiData
 {
-    //! an array of the usable refs for this API
+    /**
+     * An array of the usable refs for this API
+     * @var array
+     */
     private $refs;
-    //! an array of the available bookmarks
+
+    /**
+     * An array of the available bookmarks
+     * @var array
+     */
     private $bookmarks;
-    //! array an array of the available types
+
+    /**
+     * An array of the available types
+     * @var array
+     */
     private $types;
-    //! array an array of the available tags
+
+    /**
+     * An array of the available tags
+     * @var array
+     */
     private $tags;
-    //! array an array of the available forms
+
+    /**
+     * An array of the available forms
+     * @var array
+     */
     private $forms;
-    //! string the URL of the endpoint to initiate the OAuth authentication
+
+    /**
+     * The URL of the endpoint to initiate the OAuth authentication
+     * @var string
+     */
     private $oauth_initiate;
-    //! @var string the URL of the endpoint to authenticate through OAuth
+
+    /**
+     * The URL of the endpoint to authenticate through OAuth
+     * @var string
+     */
     private $oauth_token;
-    //! @var Experiments list of both drafts and running experiments from Prismic
+
+    /**
+     * List of both drafts and running experiments from Prismic
+     * @var Experiments
+     */
     private $experiments;
 
     /**
@@ -40,7 +72,7 @@ class ApiData
      * @param string      $oauth_initiate
      * @param string      $oauth_token
      */
-    public function __construct(
+    private function __construct(
         array $refs,
         array $bookmarks,
         array $types,
@@ -65,7 +97,14 @@ class ApiData
      */
     public static function withJsonString(string $json) : self
     {
-        return self::withJsonObject(json_decode($json));
+        $data = json_decode($json);
+        if (!$data) {
+            throw new Exception\RuntimeException(sprintf(
+                'Unable to decode JSON response: %s',
+                json_last_error_msg()
+            ), json_last_error());
+        }
+        return self::withJsonObject($data);
     }
 
     /**
