@@ -57,12 +57,12 @@ class Form
      *
      * @param string $name      the name of the form
      * @param string $method    the method to use
-     * @param string $maybeRel  the rel if there's one
+     * @param string $rel       the rel if there's one
      * @param string $enctype   the encoding type
      * @param string $action    the action
      * @param array  $fields    the list of Prismic::FieldForm objects that can be used
      */
-    public function __construct(
+    private function __construct(
         ?string $name = null,
         string  $method,
         ?string $rel = null,

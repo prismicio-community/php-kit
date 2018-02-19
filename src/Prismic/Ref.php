@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Exception;
 use DateTimeImmutable;
 use stdClass;
 
@@ -148,12 +149,15 @@ class Ref
 
     /**
      * Parses a ref.
-     *
-     * @param  $json the json bit retrieved from the API that represents a ref.
-     * @return Prismic::Ref the manipulable object for that ref.
+     * @throws Exception\InvalidArgumentException if the JSON object has missing properties
      */
     public static function parse(stdClass $json) : self
     {
+        if (!isset($json->id, $json->ref, $json->label)) {
+            throw new Exception\InvalidArgumentException(
+                'The properties id, ref and label should exist in the JSON object for a Ref'
+            );
+        }
         return new Ref(
             $json->id,
             $json->ref,

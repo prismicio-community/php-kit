@@ -5,6 +5,7 @@ namespace Prismic\Test;
 
 use Prismic\Ref;
 use DateTimeImmutable;
+use stdClass;
 
 class RefTest extends TestCase
 {
@@ -81,6 +82,14 @@ class RefTest extends TestCase
         } else {
             $this->assertNull($ref->getScheduledDate());
         }
+    }
+
+    /**
+     * @expectedException Prismic\Exception\ExceptionInterface
+     */
+    public function testExceptionThrownForInvalidJsonObject()
+    {
+        Ref::parse(new stdClass);
     }
 
 }
