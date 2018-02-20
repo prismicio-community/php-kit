@@ -66,8 +66,8 @@ class Api
         ApiData $data,
         ?string $accessToken = null,
         ?ClientInterface $httpClient = null,
-        ?CacheInterface $cache = null)
-    {
+        ?CacheInterface $cache = null
+    ) {
         $this->data        = $data;
         $this->accessToken = $accessToken;
         $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
@@ -80,15 +80,11 @@ class Api
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('https://your-repository-name.prismic.io/api/v2')
      *
-     * @param  string           $action      the URL of your repository API's endpoint
-     * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  ClientInterface  $httpClient  Custom Guzzle http client
-     * @param  CacheInterface   $cache       Cache implementation
-     * @param  int              $apiCacheTTL max time to keep the API object in cache (in seconds)
-     *
-     * @throws ExceptionRuntimeException
-     *
-     * @return Api the Api object, usable to perform queries
+     * @param  string          $action      The URL of your repository API's endpoint
+     * @param  string          $accessToken A permanent access token to use if your repository API is set to private
+     * @param  ClientInterface $httpClient  Custom Guzzle http client
+     * @param  CacheInterface  $cache       Cache implementation
+     * @param  int             $apiCacheTTL Max time to keep the API object in cache (in seconds)
      */
     public static function get(
         string            $action,
@@ -96,13 +92,12 @@ class Api
         ?ClientInterface  $httpClient = null,
         ?CacheInterface   $cache = null,
         int               $apiCacheTTL = 5
-    ) : self
-    {
+    ) : self {
         $cache    = is_null($cache) ? self::defaultCache() : $cache;
         $cacheKey = $action . (empty($accessToken) ? "" : ("#" . $accessToken));
         $apiData  = $cache->get($cacheKey);
 
-        if (is_string($apiData) && !empty($apiData)) {
+        if (is_string($apiData) && ! empty($apiData)) {
             return new self(unserialize($apiData), $accessToken, $httpClient, $cache);
         }
 
@@ -125,18 +120,18 @@ class Api
     public function refs()
     {
         $refs = $this->data->getRefs();
-        $groupBy = array();
+        $groupBy = [];
         foreach ($refs as $ref) {
             if (isset($groupBy[$ref->getLabel()])) {
                 $arr = $groupBy[$ref->getLabel()];
                 array_push($arr, $ref);
                 $groupBy[$ref->getLabel()] = $arr;
             } else {
-                $groupBy[$ref->getLabel()] = array($ref);
+                $groupBy[$ref->getLabel()] = [$ref];
             }
         }
 
-        $results = array();
+        $results = [];
         foreach ($groupBy as $label => $values) {
             $results[$label] = $values[0];
         }
@@ -149,7 +144,8 @@ class Api
      *
      * @return Ref a reference or null
      */
-    public function getRef($label) {
+    public function getRef($label)
+    {
         $refs = $this->refs();
         return $refs[$label];
     }
@@ -302,7 +298,7 @@ class Api
         } else {
             $forms = func_get_args();
         }
-        $responses = array();
+        $responses = [];
 
         // Get what we can from the cache
         $all_urls = [];
@@ -333,7 +329,7 @@ class Api
                     $cacheDuration = (int) $groups[1];
                 }
                 $json = json_decode($response->getBody(true));
-                if (!isset($json)) {
+                if (! isset($json)) {
                     throw new Exception\RuntimeException("Unable to decode json response");
                 }
                 if ($cacheDuration !== null) {
@@ -431,7 +427,7 @@ class Api
     {
         $ref = $this->ref();
         $form = $this->forms()->everything->ref($ref);
-        if (!empty($q)) {
+        if (! empty($q)) {
             $form = $form->query($q);
         }
         foreach ($options as $key => $value) {
@@ -468,7 +464,9 @@ class Api
      */
     public function getByID(string $id, array $options = [])
     {
-        if(!isset($options['lang'])) $options['lang'] = '*';
+        if (! isset($options['lang'])) {
+            $options['lang'] = '*';
+        }
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
 
@@ -481,7 +479,9 @@ class Api
      */
     public function getByUID(string $type, string $uid, array $options = [])
     {
-        if(!isset($options['lang'])) $options['lang'] = '*';
+        if (! isset($options['lang'])) {
+            $options['lang'] = '*';
+        }
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
 
@@ -495,7 +495,9 @@ class Api
      */
     public function getByIDs(array $ids, array $options = [])
     {
-        if(!isset($options['lang'])) $options['lang'] = '*';
+        if (! isset($options['lang'])) {
+            $options['lang'] = '*';
+        }
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
 
@@ -524,5 +526,4 @@ class Api
         }
         return new NoCache();
     }
-
 }

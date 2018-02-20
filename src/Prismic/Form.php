@@ -89,12 +89,12 @@ class Form
          * @var string    $key
          * @var FieldForm $field
          */
-        $dft = array();
+        $dft = [];
         foreach ($this->fields as $key => $field) {
             $default = $field->getDefaultValue();
             if (isset($default)) {
                 if ($field->isMultiple()) {
-                    $default = array($default);
+                    $default = [$default];
                 }
                 $dft[$key] = $default;
             }
@@ -119,7 +119,7 @@ class Form
     {
         $fields = [];
         foreach ($json->fields as $name => $field) {
-            $default  = isset($field->default)  ? $field->default  : null;
+            $default  = isset($field->default) ? $field->default : null;
             $multiple = isset($field->multiple) ? $field->multiple : false;
             $fields[$name] = new FieldForm($field->type, $multiple, $default);
         }

@@ -57,7 +57,4 @@ class ApiDataTest extends TestCase
         $this->assertSame('http://lesbonneschoses.prismic.io/auth', $this->data->getOauthInitiate());
         $this->assertSame('http://lesbonneschoses.prismic.io/auth/token', $this->data->getOauthToken());
     }
-
-
-
 }

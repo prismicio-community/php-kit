@@ -14,7 +14,8 @@ use Prismic\Exception;
  * $result = $api->form('everything')->ref($ref)->submit()
  *
  * And here's an example of a more complex query:
- * $result = $api->form('products')->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
+ * $result = $api->form('products')
+ *               ->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
  *
  * Note that setting the ref is mandatory, or your submit call will fail.
  *
@@ -82,7 +83,7 @@ class SearchForm
             throw new Exception\InvalidArgumentException('Form parameter key must be a non-empty string');
         }
         $fields = $this->form->getFields();
-        if ( ! isset($fields[$key])) {
+        if (! isset($fields[$key])) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Unknown form field parameter "%s"',
                 $key
@@ -92,7 +93,7 @@ class SearchForm
         /** @var FieldForm $field */
         $field = $fields[$key];
 
-        if ($field->getType() === 'String' && !is_string($value)) {
+        if ($field->getType() === 'String' && ! is_string($value)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The field %s expects a string parameter, received %s',
                 $key,
@@ -100,7 +101,7 @@ class SearchForm
             ));
         }
 
-        if ($field->getType() === 'Integer' && !is_numeric($value)) {
+        if ($field->getType() === 'Integer' && ! is_numeric($value)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The field %s expects an integer parameter, received %s',
                 $key,
@@ -206,8 +207,10 @@ class SearchForm
      */
     public function orderings() : self
     {
-        if (func_num_args() == 0) return $this;
-        $orderings = "[" . implode(",", array_map(function($order) {
+        if (func_num_args() == 0) {
+            return $this;
+        }
+        $orderings = "[" . implode(",", array_map(function ($order) {
             return preg_replace('/(^\[|\]$)/', '', $order);
         }, func_get_args())) . "]";
         return $this->set("orderings", $orderings);
@@ -218,7 +221,7 @@ class SearchForm
      */
     public function submit()
     {
-        return $this->submit_raw();
+        return $this->submitRaw();
     }
 
     /**
@@ -234,7 +237,7 @@ class SearchForm
      */
     public function count()
     {
-        return $this->pageSize(1)->submit_raw()->total_results_size;
+        return $this->pageSize(1)->submitRaw()->total_results_size;
     }
 
     /**
@@ -244,7 +247,9 @@ class SearchForm
     public function query() : self
     {
         $numargs = func_num_args();
-        if ($numargs === 0) return clone $this;
+        if ($numargs === 0) {
+            return clone $this;
+        }
         $first = func_get_arg(0);
         if ($numargs === 1 && is_string($first)) {
             return $this->set("q", $first);
@@ -254,7 +259,9 @@ class SearchForm
         } else {
             $predicates = func_get_args();
         }
-        $query = "[" . implode("", array_map(function($predicate) { return $predicate->q(); }, $predicates)) . "]";
+        $query = "[" . implode("", array_map(function ($predicate) {
+            return $predicate->q();
+        }, $predicates)) . "]";
         return $this->set("q", $query);
     }
 
@@ -283,7 +290,7 @@ class SearchForm
      *
      * @return the raw (unparsed) response.
      */
-    private function submit_raw()
+    private function submitRaw()
     {
         if ($this->form->getMethod() !== 'GET' ||
             $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
@@ -306,7 +313,7 @@ class SearchForm
             $cacheDuration = (int) $groups[1];
         }
         $json = json_decode($response->getBody());
-        if (!isset($json)) {
+        if (! isset($json)) {
             throw new Exception\RuntimeException("Unable to decode json response");
         }
         if ($cacheDuration !== null) {
@@ -315,5 +322,4 @@ class SearchForm
         }
         return $json;
     }
-
 }

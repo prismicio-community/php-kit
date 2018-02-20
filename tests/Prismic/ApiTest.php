@@ -200,8 +200,4 @@ class ApiTest extends TestCase
         $this->assertTrue(isset($forms->everything));
         $this->assertInstanceOf(SearchForm::class, $forms->everything);
     }
-
-
-
-
 }

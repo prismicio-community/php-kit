@@ -6,10 +6,6 @@ namespace Prismic;
 use Prismic\Exception;
 use stdClass;
 
-/**
- * Embodies structured data that can be wished to be used while manipulating a prismic.io API.
- * This is not supposed to be used to call a repository's API, this is solely for manipulation purpose by the class Prismic::Api.
- */
 class ApiData
 {
     /**
@@ -98,7 +94,7 @@ class ApiData
     public static function withJsonString(string $json) : self
     {
         $data = json_decode($json);
-        if (!$data) {
+        if (! $data) {
             throw new Exception\RuntimeException(sprintf(
                 'Unable to decode JSON response: %s',
                 json_last_error_msg()
@@ -114,7 +110,7 @@ class ApiData
     {
         $experiments = isset($json->experiments)
                      ? Experiments::parse($json->experiments)
-                     : new Experiments(array(), array());
+                     : new Experiments([], []);
         return new self(
             array_map(
                 function ($ref) {

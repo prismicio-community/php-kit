@@ -14,12 +14,12 @@ class RefTest extends TestCase
 
     public function getRefs()
     {
-        if(!$this->refs) {
+        if (! $this->refs) {
             $this->refs = \json_decode($this->getJsonFixture('refs.json'));
         }
         $out = [];
-        foreach($this->refs->refs as $ref) {
-            $out[] = array($ref);
+        foreach ($this->refs->refs as $ref) {
+            $out[] = [$ref];
         }
         return $out;
     }
@@ -37,7 +37,7 @@ class RefTest extends TestCase
         $this->assertInternalType('string', $ref->getLabel());
         $this->assertStringMatchesFormat('%s', $ref->getLabel());
         $this->assertInternalType('boolean', $ref->isMasterRef());
-        if(!is_null($ref->getScheduledAt())) {
+        if (! is_null($ref->getScheduledAt())) {
             $this->assertInternalType('int', $ref->getScheduledAt());
             $this->assertEquals(13, strlen((string)$ref->getScheduledAt()), 'Expected a 13 digit number');
         }
@@ -50,7 +50,7 @@ class RefTest extends TestCase
     {
         $ref = Ref::parse($json);
 
-        if(!is_null($ref->getScheduledAtTimestamp())) {
+        if (! is_null($ref->getScheduledAtTimestamp())) {
             $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
             $this->assertEquals(10, strlen((string)$ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
         } else {
@@ -74,7 +74,7 @@ class RefTest extends TestCase
     public function testGetScheduledDate($json)
     {
         $ref = Ref::parse($json);
-        if(!is_null($ref->getScheduledAtTimestamp())) {
+        if (! is_null($ref->getScheduledAtTimestamp())) {
             $date = $ref->getScheduledDate();
             $this->assertInstanceOf(DateTimeImmutable::class, $date);
             $this->assertSame($ref->getScheduledAtTimestamp(), $date->getTimestamp());
@@ -91,5 +91,4 @@ class RefTest extends TestCase
     {
         Ref::parse(new stdClass);
     }
-
 }

@@ -153,7 +153,7 @@ class Ref
      */
     public static function parse(stdClass $json) : self
     {
-        if (!isset($json->id, $json->ref, $json->label)) {
+        if (! isset($json->id, $json->ref, $json->label)) {
             throw new Exception\InvalidArgumentException(
                 'The properties id, ref and label should exist in the JSON object for a Ref'
             );

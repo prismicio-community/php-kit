@@ -18,8 +18,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function at($fragment, $value) {
-        return new SimplePredicate("at", $fragment, array($value));
+    public static function at($fragment, $value)
+    {
+        return new SimplePredicate("at", $fragment, [$value]);
     }
 
     /**
@@ -28,8 +29,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function not($fragment, $value) {
-        return new SimplePredicate("not", $fragment, array($value));
+    public static function not($fragment, $value)
+    {
+        return new SimplePredicate("not", $fragment, [$value]);
     }
 
     /**
@@ -38,8 +40,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function any($fragment, $values) {
-        return new SimplePredicate("any", $fragment, array($values));
+    public static function any($fragment, $values)
+    {
+        return new SimplePredicate("any", $fragment, [$values]);
     }
 
     /**
@@ -48,8 +51,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function in($fragment, $values) {
-        return new SimplePredicate("in", $fragment, array($values));
+    public static function in($fragment, $values)
+    {
+        return new SimplePredicate("in", $fragment, [$values]);
     }
 
     /**
@@ -57,7 +61,8 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function has($fragment) {
+    public static function has($fragment)
+    {
         return new SimplePredicate("has", $fragment);
     }
 
@@ -66,7 +71,8 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function missing($fragment) {
+    public static function missing($fragment)
+    {
         return new SimplePredicate("missing", $fragment);
     }
 
@@ -76,8 +82,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function fulltext($fragment, $value) {
-        return new SimplePredicate("fulltext", $fragment, array($value));
+    public static function fulltext($fragment, $value)
+    {
+        return new SimplePredicate("fulltext", $fragment, [$value]);
     }
 
     /**
@@ -86,8 +93,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function similar($documentId, $maxResults) {
-        return new SimplePredicate("similar", $documentId, array($maxResults));
+    public static function similar($documentId, $maxResults)
+    {
+        return new SimplePredicate("similar", $documentId, [$maxResults]);
     }
 
     /**
@@ -96,8 +104,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function lt($fragment, $lowerBound) {
-        return new SimplePredicate("number.lt", $fragment, array($lowerBound));
+    public static function lt($fragment, $lowerBound)
+    {
+        return new SimplePredicate("number.lt", $fragment, [$lowerBound]);
     }
 
     /**
@@ -106,8 +115,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function gt($fragment, $upperBound) {
-        return new SimplePredicate("number.gt", $fragment, array($upperBound));
+    public static function gt($fragment, $upperBound)
+    {
+        return new SimplePredicate("number.gt", $fragment, [$upperBound]);
     }
 
     /**
@@ -117,8 +127,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function inRange($fragment, $lowerBound, $upperBound) {
-        return new SimplePredicate("number.inRange", $fragment, array($lowerBound, $upperBound));
+    public static function inRange($fragment, $lowerBound, $upperBound)
+    {
+        return new SimplePredicate("number.inRange", $fragment, [$lowerBound, $upperBound]);
     }
 
     /**
@@ -127,11 +138,12 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dateBefore($fragment, $before) {
+    public static function dateBefore($fragment, $before)
+    {
         if ($before instanceof DateTime) {
             $before = $before->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.before", $fragment, array($before));
+        return new SimplePredicate("date.before", $fragment, [$before]);
     }
 
     /**
@@ -140,11 +152,12 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dateAfter($fragment, $after) {
+    public static function dateAfter($fragment, $after)
+    {
         if ($after instanceof DateTime) {
             $after = $after->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.after", $fragment, array($after));
+        return new SimplePredicate("date.after", $fragment, [$after]);
     }
 
     /**
@@ -154,14 +167,15 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dateBetween($fragment, $before, $after) {
+    public static function dateBetween($fragment, $before, $after)
+    {
         if ($before instanceof DateTime) {
             $before = $before->getTimestamp() * 1000;
         }
         if ($after instanceof DateTime) {
             $after = $after->getTimestamp() * 1000;
         }
-        return new SimplePredicate("date.between", $fragment, array($before, $after));
+        return new SimplePredicate("date.between", $fragment, [$before, $after]);
     }
 
     /**
@@ -170,8 +184,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfMonth($fragment, $day) {
-        return new SimplePredicate("date.day-of-month", $fragment, array($day));
+    public static function dayOfMonth($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-month", $fragment, [$day]);
     }
 
     /**
@@ -180,8 +195,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfMonthBefore($fragment, $day) {
-        return new SimplePredicate("date.day-of-month-before", $fragment, array($day));
+    public static function dayOfMonthBefore($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-month-before", $fragment, [$day]);
     }
 
     /**
@@ -190,8 +206,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfMonthAfter($fragment, $day) {
-        return new SimplePredicate("date.day-of-month-after", $fragment, array($day));
+    public static function dayOfMonthAfter($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-month-after", $fragment, [$day]);
     }
 
     /**
@@ -200,8 +217,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfWeek($fragment, $day) {
-        return new SimplePredicate("date.day-of-week", $fragment, array($day));
+    public static function dayOfWeek($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-week", $fragment, [$day]);
     }
 
     /**
@@ -210,8 +228,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfWeekBefore($fragment, $day) {
-        return new SimplePredicate("date.day-of-week-before", $fragment, array($day));
+    public static function dayOfWeekBefore($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-week-before", $fragment, [$day]);
     }
 
     /**
@@ -220,8 +239,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function dayOfWeekAfter($fragment, $day) {
-        return new SimplePredicate("date.day-of-week-after", $fragment, array($day));
+    public static function dayOfWeekAfter($fragment, $day)
+    {
+        return new SimplePredicate("date.day-of-week-after", $fragment, [$day]);
     }
 
     /**
@@ -230,8 +250,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function month($fragment, $month) {
-        return new SimplePredicate("date.month", $fragment, array($month));
+    public static function month($fragment, $month)
+    {
+        return new SimplePredicate("date.month", $fragment, [$month]);
     }
 
     /**
@@ -240,8 +261,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function monthBefore($fragment, $month) {
-        return new SimplePredicate("date.month-before", $fragment, array($month));
+    public static function monthBefore($fragment, $month)
+    {
+        return new SimplePredicate("date.month-before", $fragment, [$month]);
     }
 
     /**
@@ -250,8 +272,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function monthAfter($fragment, $month) {
-        return new SimplePredicate("date.month-after", $fragment, array($month));
+    public static function monthAfter($fragment, $month)
+    {
+        return new SimplePredicate("date.month-after", $fragment, [$month]);
     }
 
     /**
@@ -260,8 +283,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function year($fragment, $year) {
-        return new SimplePredicate("date.year", $fragment, array($year));
+    public static function year($fragment, $year)
+    {
+        return new SimplePredicate("date.year", $fragment, [$year]);
     }
 
     /**
@@ -270,8 +294,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function hour($fragment, $hour) {
-        return new SimplePredicate("date.hour", $fragment, array($hour));
+    public static function hour($fragment, $hour)
+    {
+        return new SimplePredicate("date.hour", $fragment, [$hour]);
     }
 
     /**
@@ -280,8 +305,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function hourBefore($fragment, $hour) {
-        return new SimplePredicate("date.hour-before", $fragment, array($hour));
+    public static function hourBefore($fragment, $hour)
+    {
+        return new SimplePredicate("date.hour-before", $fragment, [$hour]);
     }
 
     /**
@@ -290,8 +316,9 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function hourAfter($fragment, $hour) {
-        return new SimplePredicate("date.hour-after", $fragment, array($hour));
+    public static function hourAfter($fragment, $hour)
+    {
+        return new SimplePredicate("date.hour-after", $fragment, [$hour]);
     }
 
     /**
@@ -302,8 +329,8 @@ class Predicates
      *
      * @return SimplePredicate
      */
-    public static function near($fragment, $latitude, $longitude, $radius) {
-        return new SimplePredicate("geopoint.near", $fragment, array($latitude, $longitude, $radius));
+    public static function near($fragment, $latitude, $longitude, $radius)
+    {
+        return new SimplePredicate("geopoint.near", $fragment, [$latitude, $longitude, $radius]);
     }
-
 }

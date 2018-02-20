@@ -51,5 +51,4 @@ class Variation
     {
         return new Variation($json->id, $json->ref, $json->label);
     }
-
 }

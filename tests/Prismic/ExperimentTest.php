@@ -40,7 +40,5 @@ class ExperimentTest extends TestCase
         $this->assertNull($this->experiments->refFromCookie("_UQtin7EQAOH5M34RQq6Dg -1"), "Index overflow negative index");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 0"), "Unknown Google ID");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 1"), "Unknown Google ID");
-
     }
-
 }

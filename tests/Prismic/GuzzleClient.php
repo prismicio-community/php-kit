@@ -17,5 +17,4 @@ class GuzzleClient extends Client
     public function get()
     {
     }
-
 }

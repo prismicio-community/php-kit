@@ -63,7 +63,9 @@ class Experiment
     public static function parse(stdClass $json) : self
     {
         $googleId = (isset($json->googleId) ? $json->googleId : null);
-        $vars = array_map(function ($varJson) { return Variation::parse($varJson); }, $json->variations);
+        $vars = array_map(function ($varJson) {
+            return Variation::parse($varJson);
+        }, $json->variations);
         return new self(
             $json->id,
             $googleId,
@@ -71,5 +73,4 @@ class Experiment
             $vars
         );
     }
-
 }

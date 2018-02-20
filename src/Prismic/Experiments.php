@@ -10,7 +10,8 @@ use stdClass;
  *
  * @package Prismic
  */
-class Experiments {
+class Experiments
+{
 
     /**
      * Array of draft experiments
@@ -35,8 +36,7 @@ class Experiments {
      */
     public function getCurrent() :? Experiment
     {
-        if (count($this->running) > 0)
-        {
+        if (count($this->running) > 0) {
             return $this->running[0];
         }
         return null;
@@ -52,10 +52,9 @@ class Experiments {
         }
         $splitted = explode(" ", $cookie);
 
-        if (count($splitted) >= 2)
-        {
+        if (count($splitted) >= 2) {
             $experiment = $this->findRunningById($splitted[0]);
-            if (!$experiment) {
+            if (! $experiment) {
                 return null;
             }
             $variations = $experiment->getVariations();
@@ -86,8 +85,12 @@ class Experiments {
     public static function parse(stdClass $json)
     {
         return new self(
-            array_map(function ($exp) { return Experiment::parse($exp); }, $json->draft),
-            array_map(function ($exp) { return Experiment::parse($exp); }, $json->running)
+            array_map(function ($exp) {
+                return Experiment::parse($exp);
+            }, $json->draft),
+            array_map(function ($exp) {
+                return Experiment::parse($exp);
+            }, $json->running)
         );
     }
 
@@ -97,8 +100,7 @@ class Experiments {
     private function findRunningById(string $id) :? Experiment
     {
         /** @var Experiment $exp */
-        foreach ($this->running as $exp)
-        {
+        foreach ($this->running as $exp) {
             if ($exp->getGoogleId() === $id) {
                 return $exp;
             }
@@ -106,7 +108,3 @@ class Experiments {
         return null;
     }
 }
-
-
-
-
