@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
 
@@ -8,7 +9,8 @@ use DateTime;
  * A set of helpers to build predicates
  * @package Prismic
  */
-class Predicates {
+class Predicates
+{
 
     /**
      * @param string $fragment

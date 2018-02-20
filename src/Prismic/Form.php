@@ -125,11 +125,11 @@ class Form
         }
 
         return new self(
-            isset($form->name) ? $form->name : null,
-            $form->method,
-            isset($form->rel) ? $form->rel : null,
-            $form->enctype,
-            $form->action,
+            isset($json->name) ? $json->name : null,
+            $json->method,
+            isset($json->rel) ? $json->rel : null,
+            $json->enctype,
+            $json->action,
             $fields
         );
     }

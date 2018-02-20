@@ -24,7 +24,7 @@ class Experiments {
      */
     private $running;
 
-    public function __construct(array $draft, array $running)
+    private function __construct(array $draft, array $running)
     {
         $this->draft   = $draft;
         $this->running = $running;
@@ -43,11 +43,9 @@ class Experiments {
     }
 
     /**
-     * @param string|null $cookie
-     *
-     * @return Ref|null
+     * Given the value of an experiment cookie, return the corresponding Ref as a string
      */
-    public function refFromCookie(?string $cookie)
+    public function refFromCookie(?string $cookie) :? string
     {
         if (empty($cookie)) {
             return null;
@@ -57,7 +55,9 @@ class Experiments {
         if (count($splitted) >= 2)
         {
             $experiment = $this->findRunningById($splitted[0]);
-            if ($experiment == null) return null;
+            if (!$experiment) {
+                return null;
+            }
             $variations = $experiment->getVariations();
             $varIndex = (int)($splitted[1]);
             if ($varIndex > -1 && $varIndex < count($variations)) {

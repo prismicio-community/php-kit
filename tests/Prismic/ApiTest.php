@@ -4,43 +4,108 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic;
+use Prismic\SearchForm;
+use Prismic\Api;
+use Prismic\ApiData;
+use Prismic\Cache\CacheInterface;
+
+use Psr\Http\Message\ResponseInterface;
+use Prophecy\Argument;
 
 class ApiTest extends TestCase
 {
 
-    private $api;
+    /** @var ApiData */
+    private $apiData;
 
-    private $experiments;
+    /** @var \GuzzleHttp\ClientInterface */
+    private $httpClient;
+
+    /** @var CacheInterface */
+    private $cache;
+
+    /**
+     * @see fixtures/data.json
+     */
+    private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
     public function setUp()
     {
-        $this->api = $this->getMockBuilder(Prismic\Api::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['master', 'getExperiments'])
-            ->getMock();
+        unset($_COOKIE);
 
-        $master = new Prismic\Ref('Master', 'Master-Ref-String', 'Master', true, null);
-
-        $this->api
-             ->method('master')
-             ->willReturn($master);
-
-        $this->experiments = $this->getMockBuilder(Prismic\Experiments::class)
-             ->disableOriginalConstructor()
-             ->setMethods(['refFromCookie'])
-             ->getMock();
-
-        $this->api
-             ->method('getExperiments')
-             ->willReturn($this->experiments);
+        $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
+        $this->httpClient = $this->prophesize(GuzzleClient::class);
+        $this->cache = $this->prophesize(CacheInterface::class);
     }
 
-    public function testRef()
+    protected function getApi() : Api
     {
-        $this->assertSame('Master-Ref-String', $this->api->ref());
+        return Api::get(
+            'https://whatever.prismic.io/api/v2',
+            'My-Access-Token',
+            $this->httpClient->reveal(),
+            $this->cache->reveal(),
+            99
+        );
     }
 
-    public function getCookieData()
+    protected function getApiWithDefaultData() : Api
+    {
+        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
+        $cachedData = serialize($this->apiData);
+        $this->cache->get($key)->willReturn($cachedData);
+        $this->httpClient->get()->shouldNotBeCalled();
+
+        return $this->getApi();
+    }
+
+    public function testCachedApiDataWillBeUsedIfAvailable()
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame(serialize($this->apiData), serialize($api->getData()));
+    }
+
+    public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty()
+    {
+        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
+        $this->cache->get($key)->willReturn(null);
+        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $response = $this->prophesize(ResponseInterface::class);
+        $response->getBody()->willReturn($this->getJsonFixture('data.json'));
+        $this->httpClient->get($url)->willReturn($response->reveal());
+
+        $this->cache->set(
+            Argument::type('string'),
+            Argument::type('string'),
+            99
+        )->shouldBeCalled();
+
+        $api = $this->getApi();
+        $this->assertSame(serialize($this->apiData), serialize($api->getData()));
+    }
+
+    public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive()
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame($this->expectedMasterRef, $api->ref());
+    }
+
+    public function testMasterRefIsReturnedByMasterMethod()
+    {
+        $api = $this->getApiWithDefaultData();
+        $ref = $api->master();
+        $this->assertInstanceOf(Prismic\Ref::class, $ref);
+        $this->assertSame($this->expectedMasterRef, (string) $ref);
+    }
+
+    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet()
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertFalse($api->inPreview());
+        $this->assertFalse($api->inExperiment());
+    }
+
+    public function getPreviewRefs()
     {
         return [
             [
@@ -59,87 +124,84 @@ class ApiTest extends TestCase
             ],
             [
                 [
-                    'io.prismic.experiment' => 'experiment',
-                    'other' => 'other',
+                    'io_prismic_preview' => 'preview',
                 ],
-                'experiment'
-            ],
-            [
-                [
-                    'foo' => 'foo',
-                    'other' => 'other',
-                ],
-                'Master-Ref-String'
+                'preview'
             ],
         ];
     }
 
     /**
-     * @dataProvider getCookieData
+     * @dataProvider getPreviewRefs
      */
-    public function testCorrectRefIsReturned($cookie, $expect)
+    public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect)
     {
-        // Make sure that Prismic\Experiments::refFromCookie returns a 'valid' ref
-        $this->experiments->method('refFromCookie')->willReturn('experiment');
         $_COOKIE = $cookie;
-        $this->assertSame($expect, $this->api->ref());
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame($expect, $api->ref());
+    }
+
+    public function testInPreviewIsTrueWhenPreviewCookieIsSet()
+    {
+        $_COOKIE = [
+            'io.prismic.preview' => 'whatever',
+        ];
+        $api = $this->getApiWithDefaultData();
+        $this->assertTrue($api->inPreview());
     }
 
     public function testRefDoesNotReturnStaleExperimentRef()
     {
-        // Make sure that Prismic\Experiments::refFromCookie returns null, i.e. no experiment running
-        $this->experiments->method('refFromCookie')->willReturn(null);
         $_COOKIE = [
             'io.prismic.experiment' => 'Stale Experiment Cookie Value',
         ];
-        $this->assertSame('Master-Ref-String', $this->api->ref());
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame($this->expectedMasterRef, $api->ref());
     }
 
-    /**
-     * @depends testCorrectRefIsReturned
-     */
-    public function testInPreviewIsTrueWhenPreviewCookieIsSet()
+    public function testCorrectExperimentRefIsReturnedWhenCookieIsSet()
     {
-        $cookieValue = 'Preview Ref Cookie Value';
+        $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
+        $expectedRef = 'VDUUmHIKAZQKk9uq'; // The ref at index 1 for the variations in this experiment
         $_COOKIE = [
-            'io.prismic.preview' => $cookieValue,
+            'io.prismic.experiment' => $runningGoogleCookie,
         ];
-        $this->assertTrue($this->api->inPreview());
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame($expectedRef, $api->ref());
+        $this->assertTrue($api->inExperiment());
     }
 
     /**
-     * @depends testCorrectRefIsReturned
-     */
-    public function testInExperimentIsTrueWhenExperimentCookieIsSet()
-    {
-        $cookieValue = 'Experiment Cookie Value';
-        $this->experiments->method('refFromCookie')->willReturn('Experiment Ref');
-        $_COOKIE = [
-            'io.prismic.experiment' => $cookieValue,
-        ];
-        $this->assertTrue($this->api->inExperiment());
-    }
-
-    /**
-     * @depends testInExperimentIsTrueWhenExperimentCookieIsSet
+     * @depends testCorrectExperimentRefIsReturnedWhenCookieIsSet
      */
     public function testPreviewRefTrumpsExperimentRefWhenSet()
     {
-        $this->experiments->method('refFromCookie')->willReturn('Experiment Ref');
+        $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $_COOKIE = [
-            'io.prismic.experiment' => 'Experiment Cookie Value',
+            'io.prismic.experiment' => $runningGoogleCookie,
             'io.prismic.preview'    => 'Preview Ref Cookie Value',
         ];
-        $this->assertTrue($this->api->inPreview());
-        $this->assertFalse($this->api->inExperiment());
+        $api = $this->getApiWithDefaultData();
+        $this->assertTrue($api->inPreview());
+        $this->assertFalse($api->inExperiment());
     }
 
-    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet()
+    public function testBookmarkReturnsCorrectDocumentId()
     {
-        $_COOKIE = [];
-        $this->assertFalse($this->api->inPreview());
-        $this->assertFalse($this->api->inExperiment());
+        $api = $this->getApiWithDefaultData();
+        $this->assertSame('Ue0EDd_mqb8Dhk3j', $api->bookmark('about'));
+        $this->assertNull($api->bookmark('unknown-bookmark'));
     }
+
+    public function testFormsReturnsOnlyFormInstances()
+    {
+        $api = $this->getApiWithDefaultData();
+        $forms = $api->forms();
+        $this->assertTrue(isset($forms->everything));
+        $this->assertInstanceOf(SearchForm::class, $forms->everything);
+    }
+
+
 
 
 }

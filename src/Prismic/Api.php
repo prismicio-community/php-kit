@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise;
-use \Prismic\Cache\CacheInterface;
-use \Prismic\Cache\ApcCache;
-use \Prismic\Cache\NoCache;
+use Prismic\Cache\CacheInterface;
+use Prismic\Cache\ApcCache;
+use Prismic\Cache\NoCache;
+use stdClass;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -20,7 +23,7 @@ class Api
     /**
      * Kit version number
      */
-    const VERSION = "3.0.0";
+    const VERSION = "4.0.0";
 
     /**
      * Name of the cookie that will be used to remember the preview reference
@@ -33,35 +36,85 @@ class Api
     const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 
     /**
-     * string the API's access token to be used with each API call
+     * The API's access token to be used with each API call
+     * @var string|null
      */
     protected $accessToken;
+
     /**
-     * ApiData the raw data of the /api document (prefer to use this class's instance methods)
+     * An instance of ApiData containing information about types, tags and refs etc
+     * @var ApiData
      */
     protected $data;
+
     /**
-     * CacheInterface the cache object specifying how to store the cache
+     * The cache instance
+     * @var CacheInterface
      */
     private $cache;
+
     /**
-     * Client
+     * Guzzle HTTP Client
+     * @var ClientInterface
      */
     private $httpClient;
 
     /**
-     * Private constructor, not be used outside of this class.
+     * Private constructor
      */
     private function __construct(
-      $data /**< string */,
-      $accessToken = null /**< optional access token, if the API is private */,
-      Client $httpClient = null,
-      CacheInterface $cache = null)
+        ApiData $data,
+        ?string $accessToken = null,
+        ?ClientInterface $httpClient = null,
+        ?CacheInterface $cache = null)
     {
         $this->data        = $data;
         $this->accessToken = $accessToken;
-        $this->httpClient = is_null($httpClient) ? new Client() : $httpClient;
-        $this->cache = is_null($cache) ? self::defaultCache() : $cache;
+        $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
+        $this->cache       = is_null($cache) ? self::defaultCache() : $cache;
+    }
+
+    /**
+     * This is the factory method with which to retrieve your API client instance
+     *
+     * If your API is set to "public" or "open", you can instantiate your Api object just like this:
+     * Api::get('https://your-repository-name.prismic.io/api/v2')
+     *
+     * @param  string           $action      the URL of your repository API's endpoint
+     * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
+     * @param  ClientInterface  $httpClient  Custom Guzzle http client
+     * @param  CacheInterface   $cache       Cache implementation
+     * @param  int              $apiCacheTTL max time to keep the API object in cache (in seconds)
+     *
+     * @throws ExceptionRuntimeException
+     *
+     * @return Api the Api object, usable to perform queries
+     */
+    public static function get(
+        string            $action,
+        ?string           $accessToken = null,
+        ?ClientInterface  $httpClient = null,
+        ?CacheInterface   $cache = null,
+        int               $apiCacheTTL = 5
+    ) : self
+    {
+        $cache    = is_null($cache) ? self::defaultCache() : $cache;
+        $cacheKey = $action . (empty($accessToken) ? "" : ("#" . $accessToken));
+        $apiData  = $cache->get($cacheKey);
+
+        if (is_string($apiData) && !empty($apiData)) {
+            return new self(unserialize($apiData), $accessToken, $httpClient, $cache);
+        }
+
+        $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
+        $httpClient = is_null($httpClient) ? new Client() : $httpClient;
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        $response = $httpClient->get($url);
+        $apiData = ApiData::withJsonString((string) $response->getBody());
+        $api = new self($apiData, $accessToken, $httpClient, $cache);
+        $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
+
+        return $api;
     }
 
     /**
@@ -123,7 +176,7 @@ class Api
      *
      * @return string|null the ID string for a given bookmark name
      */
-    public function bookmark($name)
+    public function bookmark(string $name) :? string
     {
         $bookmarks = $this->bookmarks();
         if (isset($bookmarks[$name])) {
@@ -152,13 +205,11 @@ class Api
      * Returns all forms of type Prismic::SearchForm that are available for this repository's API.
      * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
      * Learn more about those keywords in prismic.io's documentation on our developers' portal.
-     *
-     * @return all forms
      */
-    public function forms()
+    public function forms() : stdClass
     {
-        $forms = $this->data->getForms();
-        $rforms = new \stdClass();
+        $forms  = $this->data->getForms();
+        $rforms = new stdClass();
         foreach ($forms as $key => $form) {
             $formObject = Form::withJsonObject($form);
             $data = $formObject->defaultData();
@@ -168,10 +219,7 @@ class Api
         return $rforms;
     }
 
-    /**
-     * @return \Prismic\Experiments
-     */
-    public function getExperiments()
+    public function getExperiments() : Experiments
     {
         return $this->data->getExperiments();
     }
@@ -184,10 +232,10 @@ class Api
      *                (usually the home page of your site)
      * @return string the URL you should redirect the user to preview the requested change
      */
-    public function previewSession($token, $linkResolver, $defaultUrl)
+    public function previewSession(string $token, LinkResolver $linkResolver, string $defaultUrl) : string
     {
         $response = $this->getHttpClient()->get($token);
-        $response = json_decode($response->getBody(true));
+        $response = json_decode($response->getBody());
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
@@ -202,94 +250,43 @@ class Api
     }
 
     /**
-     * Returning the URL of the endpoint to initiate OAuth authentication.
-     *
-     * @return string the URL of the endpoint
+     * Return the URL of the endpoint to initiate OAuth authentication.
      */
-    public function oauthInitiateEndpoint()
+    public function oauthInitiateEndpoint() : string
     {
         return $this->data->getOauthInitiate();
     }
 
     /**
-     * Returning the URL of the endpoint to use OAuth authentication.
-     *
-     * @return string the URL of the endpoint
+     * Return the URL of the endpoint to use OAuth authentication.
      */
-    public function oauthTokenEndpoint()
+    public function oauthTokenEndpoint() : string
     {
         return $this->data->getOauthToken();
     }
 
     /**
      * Accessing raw data returned by the /api endpoint
-     *
-     * @return ApiData the raw data
      */
-    public function getData()
+    public function getData() : ApiData
     {
         return $this->data;
     }
 
     /**
      * Accessing the cache object specifying how to store the cache
-     *
-     * @return CacheInterface the cache object itself
      */
-    public function getCache()
+    public function getCache() : CacheInterface
     {
         return $this->cache;
     }
 
     /**
      * Accessing the underlying Guzzle HTTP client
-     *
-     * @return HttpAdapterInterface
      */
-    public function getHttpClient()
+    public function getHttpClient() : ClientInterface
     {
         return $this->httpClient;
-    }
-
-    /**
-     * This is the endpoint to build your API, and is a static method.
-     * If your API is set to "public" or "open", you can instantiate your Api object just like this:
-     * Api::get('https://your-repository-name.prismic.io/api/v2')
-     *
-     * @param  string           $action      the URL of your repository API's endpoint
-     * @param  string           $accessToken a permanent access token to use to access your content, for instance if your repository API is set to private
-     * @param  Client           $httpClient  Custom Guzzle http client
-     * @param  CacheInterface   $cache       Cache implementation
-     * @param  int              $apiCacheTTL max time to keep the API object in cache (in seconds)
-     *
-     * \throws RuntimeException
-     *
-     * @return Api the Api object, usable to perform queries
-     */
-    public static function get($action, $accessToken = null, $httpClient = null, CacheInterface $cache = null, $apiCacheTTL = 5)
-    {
-        $cache = is_null($cache) ? self::defaultCache() : $cache;
-        $cacheKey = $action . (is_null($accessToken) ? "" : ("#" . $accessToken));
-        $apiData = $cache->get($cacheKey);
-        $api = $apiData ? new Api(unserialize($apiData), $accessToken, $httpClient, $cache) : null;
-        if ($api) {
-            return $api;
-        } else {
-            $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-            $httpClient = is_null($httpClient) ? new Client() : $httpClient;
-            $response = $httpClient->get($url);
-            $response = json_decode($response->getBody(true));
-            if (!$response) {
-                throw new \RuntimeException('Unable to decode the json response');
-            }
-
-            $apiData = ApiData::withJsonObject($response);
-
-            $api = new Api($apiData, $accessToken, $httpClient, $cache);
-            $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
-
-            return $api;
-        }
     }
 
     /**
@@ -337,7 +334,7 @@ class Api
                 }
                 $json = json_decode($response->getBody(true));
                 if (!isset($json)) {
-                    throw new \RuntimeException("Unable to decode json response");
+                    throw new Exception\RuntimeException("Unable to decode json response");
                 }
                 if ($cacheDuration !== null) {
                     $expiration = $cacheDuration;
@@ -354,10 +351,8 @@ class Api
 
     /**
      * If a preview cookie is set, return the ref stored in that cookie
-     *
-     * @return string|null
      */
-    private function getPreviewRef()
+    private function getPreviewRef() :? string
     {
         $cookieNames = [
             str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
@@ -374,10 +369,8 @@ class Api
 
     /**
      * If an experiment cookie is set, return the ref as determined by \Prismic\Experiments::refFromCookie
-     *
-     * @return string|null
      */
-    private function getExperimentRef()
+    private function getExperimentRef() :? string
     {
         $cookieNames = [
             str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
@@ -395,20 +388,16 @@ class Api
 
     /**
      * Whether the current ref in use is a preview, i.e. the user is in preview mode
-     *
-     * @return bool
      */
-    public function inPreview()
+    public function inPreview() : bool
     {
         return null !== $this->getPreviewRef();
     }
 
     /**
-     * Whether the current ref in use is an experiment.
-     *
-     * @return bool
+     * Whether the current ref in use is an experiment
      */
-    public function inExperiment()
+    public function inExperiment() : bool
     {
         return null !== $this->getExperimentRef() && false === $this->inPreview();
     }
@@ -417,10 +406,8 @@ class Api
      * Return the ref currently in use
      *
      * In order of preference, returns the preview cookie, the experiments cookie or the master ref otherwise
-     *
-     * @return string
      */
-    public function ref()
+    public function ref() : string
     {
         $preview = $this->getPreviewRef();
         if ($preview) {
@@ -437,15 +424,14 @@ class Api
      * Shortcut to query on the default reference.
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|\Prismic\Predicate   $q         the query, as a string, predicate or array of predicates
-     * @param  array                             $options   query options: pageSize, orderings, etc.
-     *
-     * @return Prismic::Response   the response, including documents and pagination information
+     * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
+     * @param  array                  $options   query options: pageSize, orderings, etc.
      */
-    public function query($q, $options = array()) {
+    public function query($q, array $options = [])
+    {
         $ref = $this->ref();
         $form = $this->forms()->everything->ref($ref);
-        if ($q != null && $q != "") {
+        if (!empty($q)) {
             $form = $form->query($q);
         }
         foreach ($options as $key => $value) {
@@ -458,12 +444,13 @@ class Api
      * Return the first document matching the query
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|\Prismic\Predicate $q        the query, as a string, predicate or array of predicates
-     * @param  array                           $options  query options: pageSize, orderings, etc.
+     * @param  string|array|Predicate $q        the query, as a string, predicate or array of predicates
+     * @param  array                  $options  query options: pageSize, orderings, etc.
      *
      * @return Prismic::Document     the resulting document, or null
      */
-    public function queryFirst($q, $options = array()) {
+    public function queryFirst($q, array $options = [])
+    {
         $documents = $this->query($q, $options)->results;
         if (count($documents) > 0) {
             return $documents[0];
@@ -479,7 +466,8 @@ class Api
      *
      * @return Prismic::Document    the resulting document (null if no match)
      */
-    public function getByID($id, $options = array()) {
+    public function getByID(string $id, array $options = [])
+    {
         if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
@@ -490,10 +478,9 @@ class Api
      * @param string   $type          the custom type of the requested document
      * @param string   $uid           the requested uid
      * @param array    $options       query options: pageSize, orderings, etc.
-     *
-     * @return Prismic::Document      the resulting document (null if no match)
      */
-    public function getByUID($type, $uid, $options = array()) {
+    public function getByUID(string $type, string $uid, array $options = [])
+    {
         if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
@@ -506,7 +493,8 @@ class Api
      *
      * @return Prismic::Response    the response, including documents and pagination information
      */
-    public function getByIDs($ids, $options = array()) {
+    public function getByIDs(array $ids, array $options = [])
+    {
         if(!isset($options['lang'])) $options['lang'] = '*';
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
@@ -519,7 +507,8 @@ class Api
      *
      * @return Prismic::Document    the resulting document (null if no match)
      */
-    public function getSingle($type, $options = array()) {
+    public function getSingle(string $type, array $options = [])
+    {
         return $this->queryFirst(Predicates::at("document.type", $type), $options);
     }
 
@@ -528,7 +517,7 @@ class Api
      *
      * @return ApcCache::NoCache
      */
-    public static function defaultCache()
+    public static function defaultCache() : CacheInterface
     {
         if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return new ApcCache();

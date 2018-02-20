@@ -49,7 +49,7 @@ class ApiDataTest extends TestCase
         $this->assertCount(4, $this->data->getTags());
         $this->assertContainsOnly('string', $this->data->getTags());
 
-        $this->assertCount(1, $this->data->getForms());
+        $this->assertCount(2, $this->data->getForms());
         $this->assertContainsOnlyInstancesOf(stdClass::class, $this->data->getForms());
 
         $this->assertInstanceOf(Experiments::class, $this->data->getExperiments());

@@ -8,21 +8,18 @@ class FieldForm
 
     /**
      * Field Type
-     *
      * @var string
      */
     private $type;
 
     /**
      * Can the field be used multiple times?
-     *
-     * @var boolean
+     * @var bool
      */
     private $multiple;
 
     /**
      * Default Value
-     *
      * @var string|null
      */
     private $defaultValue;
