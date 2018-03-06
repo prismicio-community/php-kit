@@ -82,6 +82,9 @@ class SearchForm
         if (empty($key)) {
             throw new Exception\InvalidArgumentException('Form parameter key must be a non-empty string');
         }
+        if (! is_scalar($value)) {
+            throw new Exception\InvalidArgumentException('Form parameter value must be scalar');
+        }
         $fields = $this->form->getFields();
         if (! isset($fields[$key])) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -112,13 +115,9 @@ class SearchForm
 
         $data   = $this->data;
         if ($field->isMultiple()) {
-            $values = isset($data[$key]) ? $data[$key] : [];
-            if (is_array($values)) {
-                array_push($values, $value);
-            } else {
-                $values = [$value];
-            }
-            $data[$key] = $values;
+            $data[$key] = isset($data[$key]) ? $data[$key] : [];
+            $data[$key] = is_array($data[$key]) ? $data[$key] : [$data[$key]];
+            $data[$key][] = $value;
         } else {
             $data[$key] = $value;
         }
@@ -232,8 +231,6 @@ class SearchForm
      * fields.
      *
      * @return int Total number of results
-     *
-     * \throws RuntimeException
      */
     public function count()
     {

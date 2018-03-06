@@ -188,7 +188,7 @@ class Api
      *
      * @return string the master ref
      */
-    public function master()
+    public function master() : Ref
     {
         $masters = array_filter($this->data->getRefs(), function ($ref) {
             return $ref->isMasterRef() == true;
