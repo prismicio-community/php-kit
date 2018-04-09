@@ -123,7 +123,7 @@ class Api
         $groupBy = [];
         foreach ($this->data->getRefs() as $ref) {
             $label = $ref->getLabel();
-            if ( ! isset($groupBy[$label])) {
+            if (! isset($groupBy[$label])) {
                 $groupBy[$label] = $ref;
             }
         }
