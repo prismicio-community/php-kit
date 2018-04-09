@@ -90,6 +90,8 @@ class ApiData
 
     /**
      * Return a new ApiData instance from the given JSON string
+     * @param string $json
+     * @return self
      */
     public static function withJsonString(string $json) : self
     {
@@ -105,12 +107,14 @@ class ApiData
 
     /**
      * Return a new ApiData instance from the given JSON decoded object
+     * @param stdClass $json
+     * @return self
      */
     public static function withJsonObject(stdClass $json) : self
     {
         $experiments = isset($json->experiments)
                      ? Experiments::parse($json->experiments)
-                     : new Experiments([], []);
+                     : Experiments::parse(new stdClass);
         return new self(
             array_map(
                 function ($ref) {
@@ -130,6 +134,7 @@ class ApiData
 
     /**
      * Get the refs
+     * @return Ref[]
      */
     public function getRefs() : array
     {

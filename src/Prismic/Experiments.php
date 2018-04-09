@@ -44,6 +44,8 @@ class Experiments
 
     /**
      * Given the value of an experiment cookie, return the corresponding Ref as a string
+     * @param null|string $cookie
+     * @return null|string
      */
     public function refFromCookie(?string $cookie) :? string
     {
@@ -57,6 +59,7 @@ class Experiments
             if (! $experiment) {
                 return null;
             }
+            /** @var Variation[] $variations */
             $variations = $experiment->getVariations();
             $varIndex = (int)($splitted[1]);
             if ($varIndex > -1 && $varIndex < count($variations)) {
@@ -79,10 +82,10 @@ class Experiments
     /**
      * Parses a given experiments. Not meant to be used except for testing.
      *
-     * @param  $json the json bit retrieved from the API that represents experiments.
-     * @return Prismic::Experiments the manipulable object for the experiments.
+     * @param  stdClass $json the json bit retrieved from the API that represents experiments.
+     * @return self the manipulable object for the experiments.
      */
-    public static function parse(stdClass $json)
+    public static function parse(stdClass $json) : self
     {
         return new self(
             array_map(function ($exp) {
@@ -96,6 +99,8 @@ class Experiments
 
     /**
      * Find the running experiment with the given Google ID
+     * @param string $id
+     * @return null|Experiment
      */
     private function findRunningById(string $id) :? Experiment
     {

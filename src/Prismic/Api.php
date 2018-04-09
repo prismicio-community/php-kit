@@ -85,6 +85,7 @@ class Api
      * @param  ClientInterface $httpClient  Custom Guzzle http client
      * @param  CacheInterface  $cache       Cache implementation
      * @param  int             $apiCacheTTL Max time to keep the API object in cache (in seconds)
+     * @return self
      */
     public static function get(
         string            $action,
@@ -156,7 +157,7 @@ class Api
      *
      * @return array the array of bookmarks
      */
-    public function bookmarks()
+    public function bookmarks() : array
     {
         return $this->data->getBookmarks();
     }

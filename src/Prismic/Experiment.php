@@ -55,6 +55,9 @@ class Experiment
         return $this->name;
     }
 
+    /**
+     * @return Variation[]
+     */
     public function getVariations() : array
     {
         return $this->variations;

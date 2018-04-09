@@ -129,6 +129,7 @@ class SearchForm
      * Set the repository ref to query at
      *
      * @param  string|Ref $ref the ref we wish to query on, or its ID.
+     * @return self
      */
     public function ref($ref) : self
     {
@@ -140,6 +141,8 @@ class SearchForm
 
     /**
      * Set the after parameter: the id of the document to start the results from (excluding that document).
+     * @param string $documentId
+     * @return self
      */
     public function after(string $documentId) : self
     {
@@ -179,6 +182,8 @@ class SearchForm
 
     /**
      * Set the language for the query documents.
+     * @param string $lang
+     * @return self
      */
     public function lang(string $lang) : self
     {
@@ -187,6 +192,8 @@ class SearchForm
 
     /**
      * Set the query's page size, for the pagination.
+     * @param int $pageSize
+     * @return self
      */
     public function pageSize(int $pageSize) : self
     {
@@ -195,6 +202,8 @@ class SearchForm
 
     /**
      * Set the query result page number, for the pagination.
+     * @param int $page
+     * @return self
      */
     public function page(int $page) : self
     {
@@ -218,7 +227,7 @@ class SearchForm
     /**
      * Submit the current API call, and unmarshalls the result into PHP objects.
      */
-    public function submit()
+    public function submit() : stdClass
     {
         return $this->submitRaw();
     }

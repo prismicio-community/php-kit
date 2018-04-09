@@ -58,7 +58,7 @@ class Ref
      * @param bool   $isMasterRef      is the ref the master ref?
      * @param int    $maybeScheduledAt If scheduled, a javascript timestamp in milliseconds otherwise null
      */
-    public function __construct(
+    private function __construct(
         string $id,
         string $ref,
         string $label,

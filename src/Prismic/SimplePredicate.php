@@ -3,10 +3,18 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Predicate;
 
 class SimplePredicate implements Predicate
 {
+
+    /** @var string  */
+    private $name;
+
+    /** @var string  */
+    private $fragment;
+
+    /** @var array  */
+    private $args;
 
     /**
      * @param string $name

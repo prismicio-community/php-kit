@@ -105,6 +105,8 @@ class Form
 
     /**
      * Return a new instance from a JSON string
+     * @param string $json
+     * @return self
      */
     public static function withJsonString(string $json) : self
     {
@@ -114,6 +116,8 @@ class Form
 
     /**
      * Return a new instance from unserialized JSON
+     * @param stdClass $json
+     * @return self
      */
     public static function withJsonObject(stdClass $json) : self
     {
