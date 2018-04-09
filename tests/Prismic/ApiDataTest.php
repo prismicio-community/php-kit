@@ -37,7 +37,7 @@ class ApiDataTest extends TestCase
 
     public function testApiDataHasExpectedValues()
     {
-        $this->assertCount(2, $this->data->getRefs());
+        $this->assertCount(3, $this->data->getRefs());
         $this->assertContainsOnlyInstancesOf(Ref::class, $this->data->getRefs());
 
         $this->assertCount(3, $this->data->getBookmarks());

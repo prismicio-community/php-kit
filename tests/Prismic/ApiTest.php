@@ -200,4 +200,22 @@ class ApiTest extends TestCase
         $this->assertTrue(isset($forms->everything));
         $this->assertInstanceOf(SearchForm::class, $forms->everything);
     }
+
+    public function testRefsGroupsRefsByLabel()
+    {
+        $api = $this->getApiWithDefaultData();
+        $refs = $api->refs();
+        $this->assertArrayHasKey('Master', $refs);
+        $this->assertArrayHasKey('San Francisco Grand opening', $refs);
+
+        $this->assertContainsOnlyInstancesOf(Prismic\Ref::class, $refs);
+    }
+
+    public function testRefsContainsOnlyFirstEncounteredRefWithLabel()
+    {
+        $api = $this->getApiWithDefaultData();
+        $refs = $api->refs();
+        $this->assertSame('UgjWRd_mqbYHvPJa', (string) $refs['San Francisco Grand opening']);
+    }
+
 }

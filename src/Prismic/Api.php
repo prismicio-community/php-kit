@@ -116,28 +116,19 @@ class Api
     /**
      * Returns all of the repository's references (queryable points in time)
      *
-     * @return array the array of references, with their IDs, labels, ...
+     * @return Ref[]
      */
-    public function refs()
+    public function refs() : array
     {
-        $refs = $this->data->getRefs();
         $groupBy = [];
-        foreach ($refs as $ref) {
-            if (isset($groupBy[$ref->getLabel()])) {
-                $arr = $groupBy[$ref->getLabel()];
-                array_push($arr, $ref);
-                $groupBy[$ref->getLabel()] = $arr;
-            } else {
-                $groupBy[$ref->getLabel()] = [$ref];
+        foreach ($this->data->getRefs() as $ref) {
+            $label = $ref->getLabel();
+            if ( ! isset($groupBy[$label])) {
+                $groupBy[$label] = $ref;
             }
         }
 
-        $results = [];
-        foreach ($groupBy as $label => $values) {
-            $results[$label] = $values[0];
-        }
-
-        return $results;
+        return $groupBy;
     }
 
     /**
