@@ -163,32 +163,27 @@ class SearchForm
 
     /**
      * Set the fetch parameter: restrict the fields to retrieve for a document
-
-     * You can pass in parameter an array of strings, or several strings.
+     *
+     * Pass multiple string arguments or an array of strings to unpack with the splat operator
+     *
+     * @param string[] $fields
+     * @return self
      */
-    public function fetch() : self
+    public function fetch(string ...$fields) : self
     {
-        $numargs = func_num_args();
-        if ($numargs === 1 && is_array(func_get_arg(0))) {
-            $fields = func_get_arg(0);
-        } else {
-            $fields = func_get_args();
-        }
         return $this->set("fetch", implode(",", $fields));
     }
 
     /**
-     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink, You can pass in parameter
-     * an array of strings, or several strings.
+     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink
+     *
+     * Pass multiple string arguments or an array of strings to unpack with the splat operator
+     *
+     * @param string[] $fields
+     * @return self
      */
-    public function fetchLinks() : self
+    public function fetchLinks(string ...$fields) : self
     {
-        $numargs = func_num_args();
-        if ($numargs === 1 && is_array(func_get_arg(0))) {
-            $fields = func_get_arg(0);
-        } else {
-            $fields = func_get_args();
-        }
         return $this->set("fetchLinks", join(",", $fields));
     }
 
@@ -225,14 +220,15 @@ class SearchForm
     /**
      * Set the query's ordering, setting in what order the documents must be retrieved.
      */
-    public function orderings() : self
+    public function orderings(string ...$fields) : self
     {
-        if (func_num_args() == 0) {
+        $fields = array_filter($fields);
+        if (empty($fields)) {
             return $this;
         }
         $orderings = "[" . implode(",", array_map(function ($order) {
             return preg_replace('/(^\[|\]$)/', '', $order);
-        }, func_get_args())) . "]";
+        }, $fields)) . "]";
         return $this->set("orderings", $orderings);
     }
 

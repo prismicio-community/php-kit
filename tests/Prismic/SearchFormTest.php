@@ -22,6 +22,9 @@ class SearchFormTest extends TestCase
     /** @var CacheInterface */
     private $cache;
 
+    /** @var Form */
+    private $form;
+
     /**
      * @see fixtures/data.json
      */
@@ -30,36 +33,19 @@ class SearchFormTest extends TestCase
     public function setUp()
     {
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
+        $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
         $this->httpClient = $this->prophesize(GuzzleClient::class);
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 
-    protected function getApi() : Api
-    {
-        return Api::get(
-            'https://whatever.prismic.io/api/v2',
-            'My-Access-Token',
-            $this->httpClient->reveal(),
-            $this->cache->reveal(),
-            99
-        );
-    }
-
-    protected function getApiWithDefaultData() : Api
-    {
-        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
-        $cachedData = serialize($this->apiData);
-        $this->cache->get($key)->willReturn($cachedData);
-        $this->httpClient->get()->shouldNotBeCalled();
-
-        return $this->getApi();
-    }
-
     protected function getSearchForm() : SearchForm
     {
-        return $this->getApiWithDefaultData()
-                    ->forms()
-                    ->blogs;
+        return new SearchForm(
+            $this->httpClient->reveal(),
+            $this->cache->reveal(),
+            $this->form,
+            $this->form->defaultData()
+        );
     }
 
     public function testGetDataReturnsArray()
@@ -69,7 +55,7 @@ class SearchFormTest extends TestCase
     }
 
     /**
-     * @expectedException Prismic\Exception\InvalidArgumentException
+     * @expectedException \Prismic\Exception\InvalidArgumentException
      * @expectedExceptionMessage Form parameter key must be a non-empty string
      */
     public function testSetWithAnEmptyKeyThrowsException()
@@ -79,7 +65,7 @@ class SearchFormTest extends TestCase
     }
 
     /**
-     * @expectedException Prismic\Exception\InvalidArgumentException
+     * @expectedException \Prismic\Exception\InvalidArgumentException
      * @expectedExceptionMessage Form parameter value must be scalar
      */
     public function testSetWithANonScalarValueThrowsException()
@@ -89,7 +75,7 @@ class SearchFormTest extends TestCase
     }
 
     /**
-     * @expectedException Prismic\Exception\InvalidArgumentException
+     * @expectedException \Prismic\Exception\InvalidArgumentException
      * @expectedExceptionMessage Unknown form field parameter
      */
     public function testSetWithAnUnknownKeyThrowsException()
@@ -99,7 +85,7 @@ class SearchFormTest extends TestCase
     }
 
     /**
-     * @expectedException Prismic\Exception\InvalidArgumentException
+     * @expectedException \Prismic\Exception\InvalidArgumentException
      * @expectedExceptionMessage expects a string parameter
      */
     public function testSetStringParamWithNonStringThrowsException()
@@ -109,7 +95,7 @@ class SearchFormTest extends TestCase
     }
 
     /**
-     * @expectedException Prismic\Exception\InvalidArgumentException
+     * @expectedException \Prismic\Exception\InvalidArgumentException
      * @expectedExceptionMessage expects an integer parameter
      */
     public function testSetIntParamWithNonNumberThrowsException()
@@ -160,11 +146,131 @@ class SearchFormTest extends TestCase
 
     public function testRefAcceptsRef()
     {
-        $api = $this->getApiWithDefaultData();
-        $master = $api->master();
+        $ref = current($this->apiData->getRefs());
         $form = $this->getSearchForm();
-        $clone = $form->ref($master);
+        $clone = $form->ref($ref);
         $data = $clone->getData();
-        $this->assertSame((string) $master, $data['ref']);
+        $this->assertSame((string) $ref, $data['ref']);
     }
+
+    private function assertScalarOptionIsSet(SearchForm $form, string $key, $expectedValue)
+    {
+        $data = $form->getData();
+        $this->assertArrayHasKey($key, $data);
+        $this->assertSame($expectedValue, $data[$key]);
+    }
+
+    private function assertScalarOptionIsNotSet(SearchForm $form, string $key)
+    {
+        $data = $form->getData();
+        $this->assertArrayNotHasKey($key, $data);
+    }
+
+    public function testAfter()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->after('Whatever'),
+            'after',
+            'Whatever'
+        );
+    }
+
+    public function testLang()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->lang('en-gb'),
+            'lang',
+            'en-gb'
+        );
+    }
+
+    public function testPageSize()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->pageSize(99),
+            'pageSize',
+            99
+        );
+    }
+
+    public function testPage()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->page(99),
+            'page',
+            99
+        );
+    }
+
+    public function testFetchWithStringArgs()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->fetch('one','two','three'),
+            'fetch',
+            'one,two,three'
+        );
+    }
+
+    public function testFetchWithArrayArg()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->fetch(...['one','two','three']),
+            'fetch',
+            'one,two,three'
+        );
+    }
+
+    public function testFetchLinksWithStringArgs()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->fetchLinks('one','two','three'),
+            'fetchLinks',
+            'one,two,three'
+        );
+    }
+
+    public function testOrderingsWithStringArgs()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->orderings('one','two','three'),
+            'orderings',
+            '[one,two,three]'
+        );
+    }
+
+    public function testOrderingsStripsSquareBrackets()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->orderings('[my.foo desc]', '[my.bar]'),
+            'orderings',
+            '[my.foo desc,my.bar]'
+        );
+    }
+
+    public function testOrderingsWillAcceptUnpackedArrays()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->orderings(...['[my.a]', 'my.b', 'my.c desc']),
+            'orderings',
+            '[my.a,my.b,my.c desc]'
+        );
+    }
+
+    public function testOrderingsFiltersEmptyValues()
+    {
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->orderings(...['', 'my.b', '', 'my.c desc']),
+            'orderings',
+            '[my.b,my.c desc]'
+        );
+    }
+
+    public function testOrderingsIsNotSetWhenOnlyEmptyValuesAreProvided()
+    {
+        $this->assertScalarOptionIsNotSet(
+            $this->getSearchForm()->orderings(...['', '']),
+            'orderings'
+        );
+    }
+
 }
