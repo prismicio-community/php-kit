@@ -205,7 +205,7 @@ class SearchFormTest extends TestCase
     public function testFetchWithStringArgs()
     {
         $this->assertScalarOptionIsSet(
-            $this->getSearchForm()->fetch('one','two','three'),
+            $this->getSearchForm()->fetch('one', 'two', 'three'),
             'fetch',
             'one,two,three'
         );
@@ -223,7 +223,7 @@ class SearchFormTest extends TestCase
     public function testFetchLinksWithStringArgs()
     {
         $this->assertScalarOptionIsSet(
-            $this->getSearchForm()->fetchLinks('one','two','three'),
+            $this->getSearchForm()->fetchLinks('one', 'two', 'three'),
             'fetchLinks',
             'one,two,three'
         );
@@ -232,7 +232,7 @@ class SearchFormTest extends TestCase
     public function testOrderingsWithStringArgs()
     {
         $this->assertScalarOptionIsSet(
-            $this->getSearchForm()->orderings('one','two','three'),
+            $this->getSearchForm()->orderings('one', 'two', 'three'),
             'orderings',
             '[one,two,three]'
         );
@@ -272,5 +272,4 @@ class SearchFormTest extends TestCase
             'orderings'
         );
     }
-
 }

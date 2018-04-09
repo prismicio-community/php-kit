@@ -530,5 +530,4 @@ class Api
 
         return $options;
     }
-
 }

@@ -16,5 +16,4 @@ class RequestFailureException extends RuntimeException
     {
         return new static('Api Request Failed', 500, $e);
     }
-
 }

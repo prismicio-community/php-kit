@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-
 class SimplePredicate implements Predicate
 {
 
