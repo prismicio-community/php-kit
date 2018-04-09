@@ -218,4 +218,10 @@ class ApiTest extends TestCase
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $refs['San Francisco Grand opening']);
     }
 
+    public function testGetRefFromLabelReturnsExpectedRef()
+    {
+        $api = $this->getApiWithDefaultData();
+        $ref = $api->getRefFromLabel('San Francisco Grand opening');
+        $this->assertSame('UgjWRd_mqbYHvPJa', (string) $ref);
+    }
 }

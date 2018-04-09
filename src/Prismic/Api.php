@@ -132,11 +132,13 @@ class Api
     }
 
     /**
-     * @param string $label the label of the requested ref
+     * Return the ref identified by the given label
      *
-     * @return Ref a reference or null
+     * @param string $label The label of the requested ref
+     *
+     * @return Ref|null a reference or null
      */
-    public function getRef($label)
+    public function getRefFromLabel(string $label) :? Ref
     {
         $refs = $this->refs();
         return $refs[$label];
