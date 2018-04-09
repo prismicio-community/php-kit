@@ -203,7 +203,7 @@ class Api
         foreach ($forms as $key => $form) {
             $formObject = Form::withJsonObject($form);
             $data = $formObject->defaultData();
-            $rforms->$key = new SearchForm($this, $formObject, $data);
+            $rforms->$key = new SearchForm($this->httpClient, $this->cache, $formObject, $data);
         }
 
         return $rforms;
@@ -417,9 +417,10 @@ class Api
      * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
      * @param  array                  $options   query options: pageSize, orderings, etc.
      */
-    public function query($q, array $options = [])
+    public function query($q, array $options = []) : stdClass
     {
         $ref = $this->ref();
+        /** @var SearchForm $form */
         $form = $this->forms()->everything->ref($ref);
         if (! empty($q)) {
             $form = $form->query($q);
@@ -437,9 +438,9 @@ class Api
      * @param  string|array|Predicate $q        the query, as a string, predicate or array of predicates
      * @param  array                  $options  query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Document     the resulting document, or null
+     * @return stdClass|null     the resulting document, or null
      */
-    public function queryFirst($q, array $options = [])
+    public function queryFirst($q, array $options = []) :? stdClass
     {
         $documents = $this->query($q, $options)->results;
         if (count($documents) > 0) {
@@ -454,13 +455,11 @@ class Api
      * @param string   $id          the requested id
      * @param array    $options     query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Document    the resulting document (null if no match)
+     * @return stdClass|null the resulting document (null if no match)
      */
-    public function getByID(string $id, array $options = [])
+    public function getByID(string $id, array $options = []) :? stdClass
     {
-        if (! isset($options['lang'])) {
-            $options['lang'] = '*';
-        }
+        $options = $this->prepareDefaultQueryOptions($options);
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
 
@@ -470,12 +469,11 @@ class Api
      * @param string   $type          the custom type of the requested document
      * @param string   $uid           the requested uid
      * @param array    $options       query options: pageSize, orderings, etc.
+     * @return stdClass|null the resulting document (null if no match)
      */
-    public function getByUID(string $type, string $uid, array $options = [])
+    public function getByUID(string $type, string $uid, array $options = []) :? stdClass
     {
-        if (! isset($options['lang'])) {
-            $options['lang'] = '*';
-        }
+        $options = $this->prepareDefaultQueryOptions($options);
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
 
@@ -485,13 +483,11 @@ class Api
      * @param array   $ids          array of strings, the requested ids
      * @param array   $options      query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Response    the response, including documents and pagination information
+     * @return stdClass the response, including documents and pagination information
      */
-    public function getByIDs(array $ids, array $options = [])
+    public function getByIDs(array $ids, array $options = []) : stdClass
     {
-        if (! isset($options['lang'])) {
-            $options['lang'] = '*';
-        }
+        $options = $this->prepareDefaultQueryOptions($options);
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
 
@@ -501,9 +497,9 @@ class Api
      * @param string   $type        the custom type of the requested document
      * @param array    $options     query options: pageSize, orderings, etc.
      *
-     * @return Prismic::Document    the resulting document (null if no match)
+     * @return stdClass|null    the resulting document (null if no match)
      */
-    public function getSingle(string $type, array $options = [])
+    public function getSingle(string $type, array $options = []) :? stdClass
     {
         return $this->queryFirst(Predicates::at("document.type", $type), $options);
     }
@@ -520,4 +516,19 @@ class Api
         }
         return new NoCache();
     }
+
+    /**
+     * Given an options array for a query, fill the lang parameter with a default value
+     * @param array $options
+     * @return array
+     */
+    private function prepareDefaultQueryOptions(array $options) : array
+    {
+        if (! isset($options['lang'])) {
+            $options['lang'] = '*';
+        }
+
+        return $options;
+    }
+
 }

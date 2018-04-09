@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace Prismic;
 
 use Prismic\Exception;
+use stdClass;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\ClientInterface;
+use Prismic\Cache\CacheInterface;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -26,10 +30,16 @@ use Prismic\Exception;
 class SearchForm
 {
     /**
-     * The API object containing all the information to know where to query
-     * @var Api
+     * Cache Instance
+     * @var CacheInterface
      */
-    private $api;
+    private $cache;
+
+    /**
+     * Http Client
+     * @var ClientInterface
+     */
+    private $client;
 
     /**
      * The REST form we're querying on in the API
@@ -45,15 +55,17 @@ class SearchForm
 
     /**
      * Constructs a SearchForm object
-     * @param Prismic::Api  $api  the API object containing all the information to know where to query
-     * @param Prismic::Form $form the REST form we're querying on in the API
-     * @param array         $data the parameters we're getting ready to submit
+     * @param ClientInterface $httpClient An HTTP Client for sending Requests
+     * @param CacheInterface $cache A cache for storing responses
+     * @param Form  $form the REST form we're querying on in the API
+     * @param array $data the parameters we're getting ready to submit
      */
-    public function __construct(Api $api, Form $form, array $data)
+    public function __construct(ClientInterface $httpClient, CacheInterface $cache, Form $form, array $data)
     {
-        $this->api  = $api;
-        $this->form = $form;
-        $this->data = $data;
+        $this->client = $httpClient;
+        $this->cache  = $cache;
+        $this->form   = $form;
+        $this->data   = $data;
     }
 
     /**
@@ -122,7 +134,7 @@ class SearchForm
             $data[$key] = $value;
         }
 
-        return new self($this->api, $this->form, $data);
+        return new self($this->client, $this->cache, $this->form, $data);
     }
 
     /**
@@ -286,17 +298,18 @@ class SearchForm
      */
     public function isCached() : bool
     {
-        return $this->api->getCache()->has($this->url());
+        return $this->cache->has($this->url());
     }
 
     /**
      * Performs the actual submit call, without the unmarshalling.
      *
      * @throws Exception\RuntimeException if the Form type is not supported
+     * @throws Exception\RequestFailureException if something went wrong retrieving data from the API
      *
-     * @return the raw (unparsed) response.
+     * @return stdClass Unserialized JSON Response
      */
-    private function submitRaw()
+    private function submitRaw() : stdClass
     {
         if ($this->form->getMethod() !== 'GET' ||
             $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
@@ -307,24 +320,28 @@ class SearchForm
         $url = $this->url();
         $cacheKey = $this->url();
 
-        $response = $this->api->getCache()->get($cacheKey);
+        $cachedJson = $this->cache->get($cacheKey);
 
-        if ($response) {
-            return $response;
+        if ($cachedJson) {
+            return $cachedJson;
         }
-        $response = $this->api->getHttpClient()->get($url);
+        try {
+            $response = $this->client->request('GET', $url);
+        } catch (GuzzleException $guzzleException) {
+            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+        }
         $cacheControl = $response->getHeader('Cache-Control')[0];
         $cacheDuration = null;
         if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
             $cacheDuration = (int) $groups[1];
         }
-        $json = json_decode($response->getBody());
+        $json = \json_decode( (string) $response->getBody());
         if (! isset($json)) {
             throw new Exception\RuntimeException("Unable to decode json response");
         }
         if ($cacheDuration !== null) {
             $expiration = $cacheDuration;
-            $this->api->getCache()->set($cacheKey, $json, $expiration);
+            $this->cache->set($cacheKey, $json, $expiration);
         }
         return $json;
     }
