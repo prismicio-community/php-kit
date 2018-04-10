@@ -12,7 +12,6 @@ before_script:
 script:
   - composer test
   - composer cs-check
-  - ./vendor/bin/phpdoc
 
 deploy:
   provider: pages
