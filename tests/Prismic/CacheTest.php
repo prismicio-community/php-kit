@@ -50,4 +50,22 @@ class CacheTest extends TestCase
         $this->assertNull($this->cache->get('key1'));
         $this->assertNull($this->cache->get('key2'));
     }
+
+    public function testSetGetReturnsExpectedValue()
+    {
+        $data = \json_decode($this->getJsonFixture('data.json'));
+        $this->cache->set('key', $data);
+        $result = $this->cache->get('key');
+        $this->assertEquals($data, $result);
+    }
+
+    public function testLongUrlBasedCacheKeysArePersistedCorrectly()
+    {
+        $data = \json_decode($this->getJsonFixture('data.json'));
+        $url = $data->forms->everything->action;
+        $url .= '?access_token=AVeryLongAccessTokenForPermanentAccessToTheRepository&q=SomeQueryString';
+        $this->cache->set($url, $data);
+        $result = $this->cache->get($url);
+        $this->assertEquals($data, $result);
+    }
 }

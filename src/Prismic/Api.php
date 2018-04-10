@@ -7,6 +7,7 @@ use Prismic\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise;
+use GuzzleHttp\Exception\GuzzleException;
 use Prismic\Cache\CacheInterface;
 use Prismic\Cache\ApcCache;
 use Prismic\Cache\NoCache;
@@ -105,7 +106,7 @@ class Api
         $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
         $httpClient = is_null($httpClient) ? new Client() : $httpClient;
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        $response = $httpClient->get($url);
+        $response = $httpClient->request('GET', $url);
         $apiData = ApiData::withJsonString((string) $response->getBody());
         $api = new self($apiData, $accessToken, $httpClient, $cache);
         $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
@@ -217,15 +218,20 @@ class Api
     /**
      * Return the URL to display a given preview
      * @param string $token as received from Prismic server to identify the content to preview
-     * @param Prismic::LinkResolver $linkResolver the link resolver to build URL for your site
+     * @param LinkResolver $linkResolver the link resolver to build URL for your site
      * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
      *                (usually the home page of your site)
      * @return string the URL you should redirect the user to preview the requested change
      */
     public function previewSession(string $token, LinkResolver $linkResolver, string $defaultUrl) : string
     {
-        $response = $this->getHttpClient()->get($token);
-        $response = json_decode($response->getBody());
+        try {
+            $response = $this->getHttpClient()->request('GET', $token);
+        } catch (GuzzleException $guzzleException) {
+            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+        }
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        $response = \json_decode($response->getBody());
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
@@ -284,7 +290,7 @@ class Api
      *
      * @return array
      */
-    public function submit()
+    public function submit() : array
     {
         $numargs = func_num_args();
         if ($numargs == 1 && is_array(func_get_arg(0))) {

@@ -54,7 +54,7 @@ class ApiTest extends TestCase
         $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
         $cachedData = serialize($this->apiData);
         $this->cache->get($key)->willReturn($cachedData);
-        $this->httpClient->get()->shouldNotBeCalled();
+        $this->httpClient->request()->shouldNotBeCalled();
 
         return $this->getApi();
     }
@@ -72,7 +72,7 @@ class ApiTest extends TestCase
         $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
         $response = $this->prophesize(ResponseInterface::class);
         $response->getBody()->willReturn($this->getJsonFixture('data.json'));
-        $this->httpClient->get($url)->willReturn($response->reveal());
+        $this->httpClient->request('GET', $url)->willReturn($response->reveal());
 
         $this->cache->set(
             Argument::type('string'),
