@@ -9,6 +9,9 @@ use Prismic\SearchForm;
 use Prismic\Form;
 use Prismic\ApiData;
 use Prismic\Cache\CacheInterface;
+use Prismic\Predicates;
+use GuzzleHttp\Psr7\Response;
+use Prophecy\Argument;
 
 class SearchFormTest extends TestCase
 {
@@ -271,5 +274,171 @@ class SearchFormTest extends TestCase
             $this->getSearchForm()->orderings(...['', '']),
             'orderings'
         );
+    }
+
+    public function testStringQueryIsUnprocessedInQuery()
+    {
+        $form = $this->getSearchForm()->query('[:d = at(document.id, "ValidIdentifier")]');
+        $data = $form->getData();
+        $this->assertArrayHasKey('q', $data);
+        $this->assertContains('[:d = at(document.id, "ValidIdentifier")]', $data['q']);
+    }
+
+    public function testSinglePredicateArgumentInQuery()
+    {
+        $predicate = Predicates::at('document.id', 'SomeId');
+        $expect = sprintf('[%s]', $predicate->q());
+        $form = $this->getSearchForm()->query($predicate);
+        $data = $form->getData();
+        $this->assertContains($expect, $data['q']);
+    }
+
+    public function testMultiplePredicatesInQuery()
+    {
+        $predicateA = Predicates::at('document.id', 'SomeId');
+        $predicateB = Predicates::any('document.tags', 'Some Tag');
+        $expect = sprintf('[%s%s]', $predicateA->q(), $predicateB->q());
+        $form = $this->getSearchForm()->query($predicateA, $predicateB);
+        $data = $form->getData();
+        $this->assertContains($expect, $data['q']);
+    }
+
+    public function testUnpackedPredicateArrayInQuery()
+    {
+        $query = [
+            Predicates::at('document.id', 'SomeId'),
+            Predicates::any('document.tags', 'Some Tag'),
+        ];
+        $expect = sprintf('[%s%s]', $query[0]->q(), $query[1]->q());
+        $form = $this->getSearchForm()->query(...$query);
+        $data = $form->getData();
+        $this->assertContains($expect, $data['q']);
+    }
+
+    public function testRegularArrayArgumentInQuery()
+    {
+        $query = [
+            Predicates::at('document.id', 'SomeId'),
+            Predicates::any('document.tags', 'Some Tag'),
+        ];
+        $expect = sprintf('[%s%s]', $query[0]->q(), $query[1]->q());
+        $form = $this->getSearchForm()->query($query);
+        $data = $form->getData();
+        $this->assertContains($expect, $data['q']);
+    }
+
+    public function testEmptyArgumentToQueryHasNoEffect()
+    {
+        $form = $this->getSearchForm()->query('');
+        $data = $form->getData();
+        $field = $this->form->getField('q');
+        $this->assertCount(1, $data['q']);
+        $this->assertContains($field->getDefaultValue(), $data['q']);
+    }
+
+    public function testUrlRemovesPhpArrayKeys()
+    {
+        $form = $this->getSearchForm()->query('query_string');
+        $url = $form->url();
+        $query = parse_url($url, PHP_URL_QUERY);
+        $this->assertSame(2, substr_count($query, 'q='));
+    }
+
+    public function testCachedResponseWillBeReturnedInSubmit()
+    {
+        $cachedJson = \json_decode('{"some":"data"}');
+        $this->cache->get(Argument::type('string'))->willReturn($cachedJson);
+        $response = $this->getSearchForm()->submit();
+        $this->assertSame($cachedJson, $response);
+    }
+
+    /**
+     * @expectedException \Prismic\Exception\RuntimeException
+     * @expectedExceptionMessage Form type not supported
+     */
+    public function testExceptionIsThrownForInvalidForm()
+    {
+        $formJson = '{
+            "method": "POST",
+            "enctype": "application/x-www-form-urlencoded",
+            "action": "https://whatever/api/v2/documents/search",
+            "fields": {}
+        }';
+        $form = Form::withJsonString($formJson);
+        $searchForm = new SearchForm(
+            $this->httpClient->reveal(),
+            $this->cache->reveal(),
+            $form,
+            $form->defaultData()
+        );
+        $searchForm->submit();
+    }
+
+    public function testGuzzleExceptionsAreWrappedInSubmit()
+    {
+        $guzzleException = new \GuzzleHttp\Exception\TransferException('A Guzzle Exception');
+        /** @var \Prophecy\Prophecy\ObjectProphecy $this->httpClient */
+        $this->httpClient->request('GET', Argument::type('string'))->willThrow($guzzleException);
+        $this->cache->get(Argument::type('string'))->willReturn(null);
+        $form = $this->getSearchForm();
+        try {
+            $form->submit();
+            $this->fail('No exception was thrown');
+        } catch (\Prismic\Exception\RequestFailureException $e) {
+            $this->assertSame($guzzleException, $e->getPrevious());
+        }
+    }
+
+    private function prepareResponse(?string $body = null) : Response
+    {
+        $body = $body ? $body : '{"data":"data"}';
+        $response = new Response(
+            200,
+            ['Cache-Control' => 'max-age=999'],
+            $body
+        );
+        $this->httpClient->request('GET', Argument::type('string'))->willReturn($response);
+        return $response;
+    }
+
+    public function testResponseJsonIsReturned()
+    {
+        $this->prepareResponse();
+        $this->cache->get(Argument::type('string'))->willReturn(null);
+        $this->cache->set(
+            Argument::type('string'),
+            Argument::type(\stdClass::class),
+            999
+        )->shouldBeCalled();
+        $form = $this->getSearchForm();
+        $response = $form->submit();
+        $this->assertInstanceOf(\stdClass::class, $response);
+        $this->assertSame('data', $response->data);
+    }
+
+    public function testCountReturnsIntWhenPresentInResponseBody()
+    {
+        $this->prepareResponse('{"total_results_size":10}');
+        $this->cache->get(Argument::type('string'))->willReturn(null);
+        $this->cache->set(
+            Argument::type('string'),
+            Argument::type(\stdClass::class),
+            999
+        )->shouldBeCalled();
+        $form = $this->getSearchForm();
+        $this->assertSame(10, $form->count());
+    }
+
+    /**
+     * @expectedException \Prismic\Exception\RuntimeException
+     * @expectedExceptionMessage Unable to decode json response
+     */
+    public function testExceptionIsThrownForInvalidJson()
+    {
+        $this->prepareResponse('Invalid JSON String');
+        $this->cache->get(Argument::type('string'))->willReturn(null);
+        $this->cache->set()->shouldNotBeCalled();
+        $form = $this->getSearchForm();
+        $form->submit();
     }
 }

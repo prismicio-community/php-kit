@@ -125,7 +125,7 @@ class SearchForm
         }
 
 
-        $data   = $this->data;
+        $data = $this->data;
         if ($field->isMultiple()) {
             $data[$key] = isset($data[$key]) ? $data[$key] : [];
             $data[$key] = is_array($data[$key]) ? $data[$key] : [$data[$key]];
@@ -246,37 +246,59 @@ class SearchForm
      * This uses a copy of the SearchForm with a page size of 1 (the smallest
      * allowed) since all we care about is one of the returned non-result
      * fields.
-     *
-     * @return int Total number of results
      */
-    public function count()
+    public function count() :? int
     {
-        return $this->pageSize(1)->submitRaw()->total_results_size;
+        $response = $this->pageSize(1)->submitRaw();
+        return isset($response->total_results_size)
+               ? (int) $response->total_results_size
+               : null;
     }
 
     /**
-     * Set the query's predicates themselves.
-     * You can pass a String representing a query as parameter, or one or multiple Predicates to build an "AND" query
+     * Set query predicates
+     * You can provide a single string, or one or multiple Predicate instances to build an "AND" query
      */
-    public function query() : self
+    public function query(...$params) : self
     {
-        $numargs = func_num_args();
-        if ($numargs === 0) {
+        // Filter empty args and return early if appropriate
+        $params = array_filter($params);
+        if (empty($params)) {
             return clone $this;
         }
-        $first = func_get_arg(0);
-        if ($numargs === 1 && is_string($first)) {
+        $first = current($params);
+        // Unpack a single array argument
+        if (count($params) === 1 && is_array($first)) {
+            $params = $first;
+        }
+        $this->assertValidQueryParameters($params);
+        if (count($params) === 1 && is_string($first)) {
             return $this->set("q", $first);
         }
-        if ($numargs === 1 && is_array($first)) {
-            $predicates = $first;
-        } else {
-            $predicates = func_get_args();
-        }
         $query = "[" . implode("", array_map(function ($predicate) {
+            /** @var Predicate $predicate */
             return $predicate->q();
-        }, $predicates)) . "]";
+        }, $params)) . "]";
         return $this->set("q", $query);
+    }
+
+    /**
+     * Assert that the parameters used for a query contain either a single string, or an array of Predicates
+     * @param array $params
+     * @throws Exception\InvalidArgumentException
+     */
+    private function assertValidQueryParameters(array $params) : void
+    {
+        if (count($params) === 1 && is_string(current($params))) {
+            return;
+        }
+        foreach ($params as $param) {
+            if (! $param instanceof Predicate) {
+                throw new Exception\InvalidArgumentException(
+                    'Query parameters should consist of a single string or multiple Predicate instances'
+                );
+            }
+        }
     }
 
     /**
@@ -285,6 +307,10 @@ class SearchForm
     public function url() : string
     {
         $url = $this->form->getAction() . '?' . http_build_query($this->data);
+        /**
+         * This expression removes integer array keys,
+         * i.e. ?q[0]=Whatever&q[1]=OtherThing becomes ?q=Whatever&q=OtherThing
+         */
         $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
         return $url;
     }
@@ -300,7 +326,7 @@ class SearchForm
     /**
      * Performs the actual submit call, without the unmarshalling.
      *
-     * @throws Exception\RuntimeException if the Form type is not supported
+     * @throws Exception\RuntimeException if the Form type is not supported or the Response body is invalid
      * @throws Exception\RequestFailureException if something went wrong retrieving data from the API
      *
      * @return stdClass Unserialized JSON Response
@@ -322,6 +348,7 @@ class SearchForm
             return $cachedJson;
         }
         try {
+            /** @var \Psr\Http\Message\ResponseInterface $response */
             $response = $this->client->request('GET', $url);
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
@@ -336,8 +363,7 @@ class SearchForm
             throw new Exception\RuntimeException("Unable to decode json response");
         }
         if ($cacheDuration !== null) {
-            $expiration = $cacheDuration;
-            $this->cache->set($cacheKey, $json, $expiration);
+            $this->cache->set($cacheKey, $json, $cacheDuration);
         }
         return $json;
     }

@@ -48,7 +48,7 @@ class Form
     /**
      * The list of Prismic\FieldForm objects that can be used
      *
-     * @var array
+     * @var FieldForm[]
      */
     private $fields;
 
@@ -180,9 +180,20 @@ class Form
 
     /**
      * Returns the fields
+     * @return FieldForm[]
      */
     public function getFields() : array
     {
         return $this->fields;
+    }
+
+    /**
+     * Return a single field by name
+     */
+    public function getField(string $name) :? FieldForm
+    {
+        return isset($this->fields[$name])
+               ? $this->fields[$name]
+               : null;
     }
 }
