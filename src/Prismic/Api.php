@@ -102,8 +102,13 @@ class Api
 
         $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
         $httpClient = is_null($httpClient) ? new Client() : $httpClient;
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        $response = $httpClient->request('GET', $url);
+        try {
+            /** @var \Psr\Http\Message\ResponseInterface $response */
+            $response = $httpClient->request('GET', $url);
+        } catch (GuzzleException $guzzleException) {
+            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+        }
+
         $apiData = ApiData::withJsonString((string) $response->getBody());
         $api = new self($apiData, $accessToken, $httpClient, $cache);
         $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
