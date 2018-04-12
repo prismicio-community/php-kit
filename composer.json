@@ -43,6 +43,7 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-html build/report"
+        "test-coverage": "phpunit --colors=always --coverage-html build/report",
+        "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php"
     }
 }
