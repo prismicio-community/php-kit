@@ -35,6 +35,8 @@ class RequestFailureException extends RuntimeException
     protected static function fromGuzzleRequestException(RequestException $e) : self
     {
         $response = $e->getResponse();
+        $code     = $response ? $response->getStatusCode() : 0;
+        $reason   = $response ? $response->getReasonPhrase() : 'No Response';
         $request  = $e->getRequest();
         $url      = $request->getUri();
 
@@ -42,12 +44,12 @@ class RequestFailureException extends RuntimeException
             'The %s request to the repository %s resulted in a %d %s error. Complete URL: %s',
             $request->getMethod(),
             $url->getHost(),
-            $response->getStatusCode(),
-            $response->getReasonPhrase(),
+            $code,
+            $reason,
             (string) $url
         );
 
-        $exception = new static($message, $response->getStatusCode(), $e);
+        $exception = new static($message, $code, $e);
         $exception->guzzleException = $e;
         return $exception;
     }

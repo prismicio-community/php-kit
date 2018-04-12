@@ -10,7 +10,10 @@ use Prismic\ApiData;
 use Prismic\Cache\CacheInterface;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
 use Prophecy\Argument;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 class ApiTest extends TestCase
 {
@@ -81,6 +84,7 @@ class ApiTest extends TestCase
         )->shouldBeCalled();
 
         $api = $this->getApi();
+        $this->assertInstanceOf(ClientInterface::class, $api->getHttpClient());
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
@@ -223,5 +227,18 @@ class ApiTest extends TestCase
         $api = $this->getApiWithDefaultData();
         $ref = $api->getRefFromLabel('San Francisco Grand opening');
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $ref);
+    }
+
+    public function testUsefulExceptionIsThrownWhenApiCannotBeReached()
+    {
+        $client = new Client(['connect_timeout' => 0.01]);
+        try {
+            $api = Api::get('http://example.example', null, $client);
+            $this->fail('No exception was thrown');
+        } catch (Prismic\Exception\RequestFailureException $e) {
+            $this->assertContains('example.example', $e->getMessage());
+            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+            $this->assertNull($e->getResponse());
+        }
     }
 }
