@@ -60,9 +60,6 @@ class Api
      */
     private $httpClient;
 
-    /**
-     * Private constructor
-     */
     private function __construct(
         ApiData $data,
         ?string $accessToken = null,
@@ -181,11 +178,11 @@ class Api
      * Returns the master ref repository: the ref which is to be used to query content
      * that is live right now.
      *
-     * @return string the master ref
+     * @return Ref the master ref
      */
     public function master() : Ref
     {
-        $masters = array_filter($this->data->getRefs(), function ($ref) {
+        $masters = array_filter($this->data->getRefs(), function (Ref $ref) {
             return $ref->isMasterRef() == true;
         });
 
@@ -288,6 +285,7 @@ class Api
     /**
      * Submit several requests in parallel
      *
+     * @TODO Discover the use-case for this method and either refactor it or remove it
      * @return array
      */
     public function submit() : array
@@ -422,6 +420,7 @@ class Api
      *
      * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
      * @param  array                  $options   query options: pageSize, orderings, etc.
+     * @return stdClass
      */
     public function query($q, array $options = []) : stdClass
     {
@@ -486,8 +485,8 @@ class Api
     /**
      * Return a set of document from their ids
      *
-     * @param array   $ids          array of strings, the requested ids
-     * @param array   $options      query options: pageSize, orderings, etc.
+     * @param array   $ids     array of strings, the requested ids
+     * @param array   $options query options: pageSize, orderings, etc.
      *
      * @return stdClass the response, including documents and pagination information
      */
@@ -512,8 +511,6 @@ class Api
 
     /**
      * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
-     *
-     * @return ApcCache::NoCache
      */
     public static function defaultCache() : CacheInterface
     {
