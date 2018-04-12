@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Exception;
 
-interface ExceptionInterface
+interface ExceptionInterface extends \Throwable
 {
 
 }
