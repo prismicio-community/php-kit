@@ -69,7 +69,7 @@ class Api
         $this->data        = $data;
         $this->accessToken = $accessToken;
         $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
-        $this->cache       = is_null($cache) ? self::defaultCache() : $cache;
+        $this->cache       = is_null($cache) ? static::defaultCache() : $cache;
     }
 
     /**
@@ -83,7 +83,7 @@ class Api
      * @param  ClientInterface $httpClient  Custom Guzzle http client
      * @param  CacheInterface  $cache       Cache implementation
      * @param  int             $apiCacheTTL Max time to keep the API object in cache (in seconds)
-     * @return self
+     * @return static
      */
     public static function get(
         string            $action,
@@ -92,12 +92,12 @@ class Api
         ?CacheInterface   $cache = null,
         int               $apiCacheTTL = 5
     ) : self {
-        $cache    = is_null($cache) ? self::defaultCache() : $cache;
+        $cache    = is_null($cache) ? static::defaultCache() : $cache;
         $cacheKey = $action . (empty($accessToken) ? "" : ("#" . $accessToken));
         $apiData  = $cache->get($cacheKey);
 
         if (is_string($apiData) && ! empty($apiData)) {
-            return new self(unserialize($apiData), $accessToken, $httpClient, $cache);
+            return new static(unserialize($apiData), $accessToken, $httpClient, $cache);
         }
 
         $url = $accessToken ? Utils::buildUrl($action, [ 'access_token' => $accessToken]) : $action;
@@ -110,7 +110,7 @@ class Api
         }
 
         $apiData = ApiData::withJsonString((string) $response->getBody());
-        $api = new self($apiData, $accessToken, $httpClient, $cache);
+        $api = new static($apiData, $accessToken, $httpClient, $cache);
         $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
 
         return $api;
@@ -350,8 +350,8 @@ class Api
     private function getPreviewRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
-            self::PREVIEW_COOKIE,
+            str_replace(['.',' '], '_', static::PREVIEW_COOKIE),
+            static::PREVIEW_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($_COOKIE[$cookieName])) {
@@ -368,8 +368,8 @@ class Api
     private function getExperimentRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
-            self::EXPERIMENTS_COOKIE,
+            str_replace(['.',' '], '_', static::EXPERIMENTS_COOKIE),
+            static::EXPERIMENTS_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($_COOKIE[$cookieName])) {
