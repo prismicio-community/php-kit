@@ -1,9 +1,6 @@
-/docs/
-phpdoc.dist.xml
 phpunit.xml
 /build/
 
 ### Composer ###
 composer.lock
-composer.phar
 /vendor/
