@@ -6,12 +6,11 @@ namespace Prismic;
 use Prismic\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Promise;
 use GuzzleHttp\Exception\GuzzleException;
-use Prismic\Cache\CacheInterface;
-use Prismic\Cache\ApcCache;
-use Prismic\Cache\NoCache;
 use stdClass;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\CacheException;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -40,17 +39,17 @@ class Api
      * The API's access token to be used with each API call
      * @var string|null
      */
-    protected $accessToken;
+    private $accessToken;
 
     /**
      * An instance of ApiData containing information about types, tags and refs etc
      * @var ApiData
      */
-    protected $data;
+    private $data;
 
     /**
      * The cache instance
-     * @var CacheInterface
+     * @var CacheItemPoolInterface
      */
     private $cache;
 
@@ -60,16 +59,9 @@ class Api
      */
     private $httpClient;
 
-    private function __construct(
-        ApiData $data,
-        ?string $accessToken = null,
-        ?ClientInterface $httpClient = null,
-        ?CacheInterface $cache = null
-    ) {
-        $this->data        = $data;
-        $this->accessToken = $accessToken;
-        $this->httpClient  = is_null($httpClient) ? new Client() : $httpClient;
-        $this->cache       = is_null($cache) ? self::defaultCache() : $cache;
+    private function __construct()
+    {
+
     }
 
     /**
@@ -78,30 +70,47 @@ class Api
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('https://your-repository-name.prismic.io/api/v2')
      *
-     * @param  string          $action      The URL of your repository API's endpoint
-     * @param  string          $accessToken A permanent access token to use if your repository API is set to private
-     * @param  ClientInterface $httpClient  Custom Guzzle http client
-     * @param  CacheInterface  $cache       Cache implementation
-     * @param  int             $apiCacheTTL Max time to keep the API object in cache (in seconds)
+     * @param  string                  $action      The URL of your repository API's endpoint
+     * @param  string                  $accessToken A permanent access token to use if your repository API is set to private
+     * @param  ClientInterface         $httpClient  Custom Guzzle http client
+     * @param  CacheItemPoolInterface  $cache       Cache implementation
      * @return self
      */
     public static function get(
-        string            $action,
-        ?string           $accessToken = null,
-        ?ClientInterface  $httpClient = null,
-        ?CacheInterface   $cache = null,
-        int               $apiCacheTTL = 5
+        string                  $action,
+        ?string                 $accessToken = null,
+        ?ClientInterface        $httpClient = null,
+        ?CacheItemPoolInterface $cache = null
     ) : self {
-        $cache    = is_null($cache) ? self::defaultCache() : $cache;
-        $cacheKey = $action . (empty($accessToken) ? "" : ("#" . $accessToken));
-        $apiData  = $cache->get($cacheKey);
 
-        if (is_string($apiData) && ! empty($apiData)) {
-            return new self(unserialize($apiData), $accessToken, $httpClient, $cache);
+        $api = new static();
+
+        $api->accessToken = empty($accessToken) ? null : $accessToken;
+
+        $api->httpClient = is_null($httpClient)
+                         ? new Client()
+                         : $httpClient;
+
+        $api->cache = is_null($cache)
+                    ? Cache\DefaultCache::factory()
+                    : $cache;
+
+        $url = $action . ($api->accessToken ? '?access_token=' . $api->accessToken : '');
+        $key = static::generateCacheKey($url);
+        try {
+            $cacheItem  = $api->cache->getItem($key);
+        } catch (CacheException $cacheException) {
+            throw new Exception\RuntimeException(
+                'A cache exception occurred whilst retrieving cached api data',
+                0,
+                $cacheException
+            );
+        }
+        if ($cacheItem->isHit()) {
+            $api->data = $cacheItem->get();
+            return $api;
         }
 
-        $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
-        $httpClient = is_null($httpClient) ? new Client() : $httpClient;
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
             $response = $httpClient->request('GET', $url);
@@ -109,11 +118,17 @@ class Api
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
 
-        $apiData = ApiData::withJsonString((string) $response->getBody());
-        $api = new self($apiData, $accessToken, $httpClient, $cache);
-        $cache->set($cacheKey, serialize($apiData), $apiCacheTTL);
+        $api->data = ApiData::withJsonString((string) $response->getBody());
+
+        $cacheItem->set($api->data);
+        $api->cache->save($cacheItem);
 
         return $api;
+    }
+
+    public static function generateCacheKey(string $url) : string
+    {
+        return md5($url);
     }
 
     /**
@@ -274,7 +289,7 @@ class Api
     /**
      * Accessing the cache object specifying how to store the cache
      */
-    public function getCache() : CacheInterface
+    public function getCache() : CacheItemPoolInterface
     {
         return $this->cache;
     }
@@ -285,67 +300,6 @@ class Api
     public function getHttpClient() : ClientInterface
     {
         return $this->httpClient;
-    }
-
-    /**
-     * Submit several requests in parallel
-     *
-     * @TODO Discover the use-case for this method and either refactor it or remove it
-     * @return array
-     */
-    public function submit() : array
-    {
-        $numargs = func_num_args();
-        if ($numargs == 1 && is_array(func_get_arg(0))) {
-            $forms = func_get_arg(0);
-        } else {
-            $forms = func_get_args();
-        }
-        $responses = [];
-
-        // Get what we can from the cache
-        $all_urls = [];
-        $promises = [];
-        $urls = [];
-        foreach ($forms as $i => $form) {
-            $url = $form->url();
-            array_push($all_urls, $url);
-            $json = $this->getCache()->get($url);
-            if ($json) {
-                $responses[$i] = $json;
-            } else {
-                $responses[$i] = null;
-                array_push($urls, $url);
-                $promises[$url] = $this->getHttpClient()->getAsync($url);
-            }
-        }
-
-        // Query the server for the rest
-        if (count($promises) > 0) {
-            $raw_responses = Promise\unwrap($promises);
-
-            foreach ($urls as $url) {
-                $response = $raw_responses[$url];
-                $cacheControl = $response->getHeader('Cache-Control')[0];
-                $cacheDuration = null;
-                if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
-                    $cacheDuration = (int) $groups[1];
-                }
-                $json = json_decode($response->getBody(true));
-                if (! isset($json)) {
-                    throw new Exception\RuntimeException("Unable to decode json response");
-                }
-                if ($cacheDuration !== null) {
-                    $expiration = $cacheDuration;
-                    $this->getCache()->set($url, $json, $expiration);
-                }
-
-                $idx = array_search($url, $all_urls);
-                $responses[$idx] = $json;
-            }
-        }
-
-        return $responses;
     }
 
     /**
@@ -512,17 +466,6 @@ class Api
     public function getSingle(string $type, array $options = []) :? stdClass
     {
         return $this->queryFirst(Predicates::at("document.type", $type), $options);
-    }
-
-    /**
-     * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
-     */
-    public static function defaultCache() : CacheInterface
-    {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
-            return new ApcCache();
-        }
-        return new NoCache();
     }
 
     /**

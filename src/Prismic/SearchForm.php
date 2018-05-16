@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Prismic;
 
 use Prismic\Exception;
+use Psr\Cache\CacheException;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use stdClass;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\ClientInterface;
-use Prismic\Cache\CacheInterface;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -56,11 +58,11 @@ class SearchForm
     /**
      * Constructs a SearchForm object
      * @param ClientInterface $httpClient An HTTP Client for sending Requests
-     * @param CacheInterface $cache A cache for storing responses
+     * @param CacheItemPoolInterface $cache A cache for storing responses
      * @param Form  $form the REST form we're querying on in the API
      * @param array $data the parameters we're getting ready to submit
      */
-    public function __construct(ClientInterface $httpClient, CacheInterface $cache, Form $form, array $data)
+    public function __construct(ClientInterface $httpClient, CacheItemPoolInterface $cache, Form $form, array $data)
     {
         $this->client = $httpClient;
         $this->cache  = $cache;
@@ -233,14 +235,6 @@ class SearchForm
     }
 
     /**
-     * Submit the current API call, and unmarshalls the result into PHP objects.
-     */
-    public function submit() : stdClass
-    {
-        return $this->submitRaw();
-    }
-
-    /**
      * Get the result count for this form
      *
      * This uses a copy of the SearchForm with a page size of 1 (the smallest
@@ -249,7 +243,7 @@ class SearchForm
      */
     public function count() :? int
     {
-        $response = $this->pageSize(1)->submitRaw();
+        $response = $this->pageSize(1)->submit();
         return isset($response->total_results_size)
                ? (int) $response->total_results_size
                : null;
@@ -316,11 +310,21 @@ class SearchForm
     }
 
     /**
-     * Checks if the results for this form are already cached
+     * Return the cache item for the current URL
      */
-    public function isCached() : bool
+    private function getCacheItem() : CacheItemInterface
     {
-        return $this->cache->has($this->url());
+        try {
+            $key = Api::generateCacheKey($this->url());
+            return $this->cache->getItem($key);
+        } catch (CacheException $cacheException) {
+            throw new Exception\RuntimeException(
+                'An error occurred retrieving data from the cache',
+                0,
+                $cacheException
+            );
+        }
+
     }
 
     /**
@@ -331,7 +335,7 @@ class SearchForm
      *
      * @return stdClass Unserialized JSON Response
      */
-    private function submitRaw() : stdClass
+    public function submit() : stdClass
     {
         if ($this->form->getMethod() !== 'GET' ||
             $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
@@ -340,31 +344,32 @@ class SearchForm
             throw new Exception\RuntimeException("Form type not supported");
         }
         $url = $this->url();
-        $cacheKey = $this->url();
 
-        $cachedJson = $this->cache->get($cacheKey);
+        $cacheItem = $this->getCacheItem();
 
-        if ($cachedJson) {
-            return $cachedJson;
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
         }
+
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
             $response = $this->client->request('GET', $url);
+            $json = \json_decode((string) $response->getBody());
+            if (! isset($json)) {
+                throw new Exception\RuntimeException("Unable to decode json response");
+            }
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
+
         $cacheControl = $response->getHeader('Cache-Control')[0];
-        $cacheDuration = null;
         if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
             $cacheDuration = (int) $groups[1];
+            $cacheItem->expiresAfter($cacheDuration);
         }
-        $json = \json_decode((string) $response->getBody());
-        if (! isset($json)) {
-            throw new Exception\RuntimeException("Unable to decode json response");
-        }
-        if ($cacheDuration !== null) {
-            $this->cache->set($cacheKey, $json, $cacheDuration);
-        }
+
+        $cacheItem->set($json);
+        $this->cache->save($cacheItem);
         return $json;
     }
 }

@@ -4,14 +4,17 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Exception\RuntimeException;
 use Prismic\Ref;
 use Prismic\SearchForm;
 use Prismic\Form;
 use Prismic\ApiData;
-use Prismic\Cache\CacheInterface;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Prismic\Predicates;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\Argument;
+use Symfony\Component\Cache\Exception\CacheException;
 
 class SearchFormTest extends TestCase
 {
@@ -22,7 +25,7 @@ class SearchFormTest extends TestCase
     /** @var \GuzzleHttp\ClientInterface */
     private $httpClient;
 
-    /** @var CacheInterface */
+    /** @var CacheItemPoolInterface */
     private $cache;
 
     /** @var Form */
@@ -38,7 +41,7 @@ class SearchFormTest extends TestCase
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
         $this->httpClient = $this->prophesize(GuzzleClient::class);
-        $this->cache = $this->prophesize(CacheInterface::class);
+        $this->cache = $this->prophesize(CacheItemPoolInterface::class);
     }
 
     protected function getSearchForm() : SearchForm
@@ -347,7 +350,10 @@ class SearchFormTest extends TestCase
     public function testCachedResponseWillBeReturnedInSubmit()
     {
         $cachedJson = \json_decode('{"some":"data"}');
-        $this->cache->get(Argument::type('string'))->willReturn($cachedJson);
+        $cacheItem = $this->prophesize(CacheItemInterface::class);
+        $cacheItem->get()->willReturn($cachedJson);
+        $cacheItem->isHit()->willReturn(true);
+        $this->cache->getItem(Argument::type('string'))->willReturn($cacheItem);
         $response = $this->getSearchForm()->submit();
         $this->assertSame($cachedJson, $response);
     }
@@ -379,7 +385,9 @@ class SearchFormTest extends TestCase
         $guzzleException = new \GuzzleHttp\Exception\TransferException('A Guzzle Exception');
         /** @var \Prophecy\Prophecy\ObjectProphecy $this->httpClient */
         $this->httpClient->request('GET', Argument::type('string'))->willThrow($guzzleException);
-        $this->cache->get(Argument::type('string'))->willReturn(null);
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
         $form = $this->getSearchForm();
         try {
             $form->submit();
@@ -404,12 +412,14 @@ class SearchFormTest extends TestCase
     public function testResponseJsonIsReturned()
     {
         $this->prepareResponse();
-        $this->cache->get(Argument::type('string'))->willReturn(null);
-        $this->cache->set(
-            Argument::type('string'),
-            Argument::type(\stdClass::class),
-            999
-        )->shouldBeCalled();
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $item->expiresAfter(999)->shouldBeCalled();
+        $item->set(Argument::type(\stdClass::class))->shouldBeCalled();
+
+        $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
+        $this->cache->save($item->reveal())->shouldBeCalled();
+
         $form = $this->getSearchForm();
         $response = $form->submit();
         $this->assertInstanceOf(\stdClass::class, $response);
@@ -419,12 +429,14 @@ class SearchFormTest extends TestCase
     public function testCountReturnsIntWhenPresentInResponseBody()
     {
         $this->prepareResponse('{"total_results_size":10}');
-        $this->cache->get(Argument::type('string'))->willReturn(null);
-        $this->cache->set(
-            Argument::type('string'),
-            Argument::type(\stdClass::class),
-            999
-        )->shouldBeCalled();
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $item->expiresAfter(999)->shouldBeCalled();
+        $item->set(Argument::type(\stdClass::class))->shouldBeCalled();
+
+        $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
+        $this->cache->save($item->reveal())->shouldBeCalled();
+
         $form = $this->getSearchForm();
         $this->assertSame(10, $form->count());
     }
@@ -436,9 +448,26 @@ class SearchFormTest extends TestCase
     public function testExceptionIsThrownForInvalidJson()
     {
         $this->prepareResponse('Invalid JSON String');
-        $this->cache->get(Argument::type('string'))->willReturn(null);
-        $this->cache->set()->shouldNotBeCalled();
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $item->expiresAfter()->shouldNotBeCalled();
+        $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
+        $this->cache->save()->shouldNotBeCalled();
         $form = $this->getSearchForm();
         $form->submit();
+    }
+
+    public function testGetCacheItemWrapsCacheExceptions()
+    {
+        $e = new CacheException();
+        $this->cache->getItem(Argument::type('string'))->willThrow($e);
+        $form = $this->getSearchForm();
+        try {
+            $form->submit();
+            $this->fail('No exception was thrown');
+        } catch (\Exception $exception) {
+            $this->assertInstanceOf(RuntimeException::class, $exception);
+            $this->assertSame($e, $exception->getPrevious());
+        }
     }
 }

@@ -7,7 +7,8 @@ use Prismic;
 use Prismic\SearchForm;
 use Prismic\Api;
 use Prismic\ApiData;
-use Prismic\Cache\CacheInterface;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
@@ -24,7 +25,7 @@ class ApiTest extends TestCase
     /** @var \GuzzleHttp\ClientInterface */
     private $httpClient;
 
-    /** @var CacheInterface */
+    /** @var CacheItemPoolInterface */
     private $cache;
 
     /**
@@ -38,7 +39,7 @@ class ApiTest extends TestCase
 
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->httpClient = $this->prophesize(GuzzleClient::class);
-        $this->cache = $this->prophesize(CacheInterface::class);
+        $this->cache = $this->prophesize(CacheItemPoolInterface::class);
     }
 
     protected function getApi() : Api
@@ -54,9 +55,12 @@ class ApiTest extends TestCase
 
     protected function getApiWithDefaultData() : Api
     {
-        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
-        $cachedData = serialize($this->apiData);
-        $this->cache->get($key)->willReturn($cachedData);
+        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $key = Api::generateCacheKey($url);
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->get()->willReturn($this->apiData);
+        $item->isHit()->willReturn(true);
+        $this->cache->getItem($key)->willReturn($item->reveal());
         $this->httpClient->request()->shouldNotBeCalled();
 
         return $this->getApi();
@@ -70,18 +74,17 @@ class ApiTest extends TestCase
 
     public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty()
     {
-        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
-        $this->cache->get($key)->willReturn(null);
         $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $key = Api::generateCacheKey($url);
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $item->set(Argument::any())->shouldBeCalled();
+        $this->cache->getItem($key)->willReturn($item->reveal());
+        $this->cache->save($item->reveal())->shouldBeCalled();
         $response = $this->prophesize(ResponseInterface::class);
         $response->getBody()->willReturn($this->getJsonFixture('data.json'));
         $this->httpClient->request('GET', $url)->willReturn($response->reveal());
 
-        $this->cache->set(
-            Argument::type('string'),
-            Argument::type('string'),
-            99
-        )->shouldBeCalled();
 
         $api = $this->getApi();
         $this->assertInstanceOf(ClientInterface::class, $api->getHttpClient());
