@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Dom;
 
@@ -10,12 +11,12 @@ class Link
      * Read more about the link resolver at https://prismic.io/docs/php/beyond-the-api/link-resolving
      *
      *
-     * @param object                $link           The document link
-     * @param \Prismic\LinkResolver $linkResolver   The link resolver
+     * @param object $link The document link
+     * @param callable|\Prismic\LinkResolver $linkResolver The link resolver
      *
      * @return string|null The URL of the resource we're linking to online
      */
-    public static function asUrl($link, $linkResolver = null)
+    public static function asUrl($link, ?callable $linkResolver = null)
     {
         if ($link->link_type === 'Document') {
             return $linkResolver ? $linkResolver($link) : null;

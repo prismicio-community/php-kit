@@ -18,6 +18,9 @@ class RequestFailureException extends RuntimeException
 
     /**
      * Factory to return a Prismic Exception wrapping a Guzzle Exception
+     *
+     * @param GuzzleException $e
+     * @return self
      */
     public static function fromGuzzleException(GuzzleException $e) : self
     {
@@ -31,6 +34,9 @@ class RequestFailureException extends RuntimeException
 
     /**
      * Factory to wrap a Guzzle Request Exception when we should have access to a request and a response
+     *
+     * @param RequestException $e
+     * @return self
      */
     protected static function fromGuzzleRequestException(RequestException $e) : self
     {

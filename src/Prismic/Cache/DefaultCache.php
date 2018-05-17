@@ -20,7 +20,7 @@ class DefaultCache
 
     public static function getApcCache() : CacheItemPoolInterface
     {
-        return new ApcuAdapter(__NAMESPACE__);
+        return new ApcuAdapter(\str_replace('\\', '', __NAMESPACE__));
     }
 
     public static function getArrayCache() : CacheItemPoolInterface

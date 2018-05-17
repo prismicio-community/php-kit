@@ -1,8 +1,6 @@
 <?php
-
+declare(strict_types=1);
 namespace Prismic\Dom;
-
-use Prismic\Dom\BlockGroup;
 
 /**
  * This class embodies a RichText fragment.
@@ -41,11 +39,11 @@ class RichText
      *
      * @param object                $richText       the rich text object
      * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer an optional function to generate custom HTML code
+     * @param callable              $htmlSerializer an optional function to generate custom HTML code
      *
      * @return string the HTML version of the RichText fragment
      */
-    public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
+    public static function asHtml($richText, $linkResolver = null, ?callable $htmlSerializer = null)
     {
         $groups = [];
 
@@ -112,11 +110,11 @@ class RichText
      *
      * @param object                $block          a given block
      * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param callable              $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the block
      */
-    private static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
+    private static function asHtmlBlock($block, $linkResolver = null, ?callable $htmlSerializer = null)
     {
         $content = '';
 
@@ -144,14 +142,14 @@ class RichText
      * @param string                $text           the raw text of the block
      * @param array                 $spans          the spans of the block
      * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param callable              $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the block
      */
-    private static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
+    private static function insertSpans($text, array $spans, $linkResolver = null, ?callable $htmlSerializer = null)
     {
         if (empty($spans)) {
-            return htmlentities($text, null, 'UTF-8');
+            return htmlentities($text, ENT_QUOTES, 'UTF-8');
         }
 
         $tagsStart = [];
@@ -213,14 +211,14 @@ class RichText
                 $c = mb_substr($text, $pos, 1, 'UTF-8');
                 if (count($stack) == 0) {
                     // Top-level text
-                    $html .= htmlentities($c, null, 'UTF-8');
+                    $html .= htmlentities($c, ENT_QUOTES, 'UTF-8');
                 } else {
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
                     $stack[$last_idx] = [
                         'span' => $last['span'],
-                        'text' => $last['text'] . htmlentities($c, null, 'UTF-8')
+                        'text' => $last['text'] . htmlentities($c, ENT_QUOTES, 'UTF-8')
                     ];
                 }
             }
@@ -236,11 +234,11 @@ class RichText
      * @param object                $element        element to serialize
      * @param string                $content        inner HTML content of the element
      * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param callable              $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the element
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer) : string
+    private static function serialize($element, $content, $linkResolver, ?callable $htmlSerializer = null) : string
     {
         if ($htmlSerializer) {
             $custom = $htmlSerializer($element, $content);

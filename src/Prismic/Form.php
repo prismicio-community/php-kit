@@ -189,6 +189,8 @@ class Form
 
     /**
      * Return a single field by name
+     * @param string $name The form field's name
+     * @return FieldForm|null
      */
     public function getField(string $name) :? FieldForm
     {

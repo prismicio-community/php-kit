@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use stdClass;
-use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\CacheException;
 
@@ -61,7 +60,6 @@ class Api
 
     private function __construct()
     {
-
     }
 
     /**
@@ -70,10 +68,10 @@ class Api
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('https://your-repository-name.prismic.io/api/v2')
      *
-     * @param  string                  $action      The URL of your repository API's endpoint
-     * @param  string                  $accessToken A permanent access token to use if your repository API is set to private
-     * @param  ClientInterface         $httpClient  Custom Guzzle http client
-     * @param  CacheItemPoolInterface  $cache       Cache implementation
+     * @param string $action The URL of your repository API's endpoint
+     * @param string $accessToken A permanent access token to use if your repository API is set to private
+     * @param ClientInterface $httpClient Custom Guzzle http client
+     * @param CacheItemPoolInterface $cache Cache implementation
      * @return self
      */
     public static function get(
@@ -239,6 +237,7 @@ class Api
      * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
      *                (usually the home page of your site)
      * @return string the URL you should redirect the user to preview the requested change
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function previewSession(string $token, LinkResolver $linkResolver, string $defaultUrl) : string
     {
@@ -380,9 +379,11 @@ class Api
      * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
      * @param  array                  $options   query options: pageSize, orderings, etc.
      * @return stdClass
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function query($q, array $options = []) : stdClass
     {
+        $options = $this->prepareDefaultQueryOptions($options);
         $ref = $this->ref();
         /** @var SearchForm $form */
         $form = $this->forms()->everything->ref($ref);
@@ -399,10 +400,10 @@ class Api
      * Return the first document matching the query
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|Predicate $q        the query, as a string, predicate or array of predicates
-     * @param  array                  $options  query options: pageSize, orderings, etc.
-     *
-     * @return stdClass|null     the resulting document, or null
+     * @param  string|array|Predicate $q The query, as a string, predicate or array of predicates
+     * @param  array $options Query options: pageSize, orderings, etc.
+     * @return stdClass|null The resulting document, or null
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function queryFirst($q, array $options = []) :? stdClass
     {
@@ -416,52 +417,50 @@ class Api
     /**
      * Search a document by its id
      *
-     * @param string   $id          the requested id
-     * @param array    $options     query options: pageSize, orderings, etc.
-     *
-     * @return stdClass|null the resulting document (null if no match)
+     * @param string $id The requested id
+     * @param array $options Query options: pageSize, orderings, etc.
+     * @return stdClass|null The resulting document (null if no match)
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getByID(string $id, array $options = []) :? stdClass
     {
-        $options = $this->prepareDefaultQueryOptions($options);
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
 
     /**
      * Search a document by its uid
      *
-     * @param string   $type          the custom type of the requested document
-     * @param string   $uid           the requested uid
-     * @param array    $options       query options: pageSize, orderings, etc.
-     * @return stdClass|null the resulting document (null if no match)
+     * @param string $type The custom type of the requested document
+     * @param string $uid The requested uid
+     * @param array $options Query options: pageSize, orderings, etc.
+     * @return stdClass|null The resulting document (null if no match)
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getByUID(string $type, string $uid, array $options = []) :? stdClass
     {
-        $options = $this->prepareDefaultQueryOptions($options);
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
 
     /**
      * Return a set of document from their ids
      *
-     * @param array   $ids     array of strings, the requested ids
-     * @param array   $options query options: pageSize, orderings, etc.
-     *
+     * @param array $ids array of strings, the requested ids
+     * @param array $options query options: pageSize, orderings, etc.
      * @return stdClass the response, including documents and pagination information
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getByIDs(array $ids, array $options = []) : stdClass
     {
-        $options = $this->prepareDefaultQueryOptions($options);
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
 
     /**
      * Get a single typed document by its type
      *
-     * @param string   $type        the custom type of the requested document
-     * @param array    $options     query options: pageSize, orderings, etc.
-     *
-     * @return stdClass|null    the resulting document (null if no match)
+     * @param string $type The custom type of the requested document
+     * @param array $options Query options: pageSize, orderings, etc.
+     * @return stdClass|null The resulting document (null if no match)
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getSingle(string $type, array $options = []) :? stdClass
     {

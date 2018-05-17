@@ -13,7 +13,7 @@ use stdClass;
  * content that is live now, we call this ref the master ref) or in the future (the content that
  * is planned for a future content release).
  *
- * This is meant to be built during the unmarshaling of the /api document, and is not meant to
+ * This is meant to be built during the un-marshaling of the /api document, and is not meant to
  * be used externally except for testing.
  *
  */
@@ -106,7 +106,7 @@ class Ref
 
     /**
      * Returns the time at which the ref is scheduled, if it is
-     * This is a 13 digit Javacript timestamp including miliseconds
+     * This is a 13 digit Javascript timestamp including milliseconds
      */
     public function getScheduledAt() :? int
     {
@@ -149,6 +149,8 @@ class Ref
 
     /**
      * Parses a ref.
+     * @param stdClass $json
+     * @return self
      * @throws Exception\InvalidArgumentException if the JSON object has missing properties
      */
     public static function parse(stdClass $json) : self
