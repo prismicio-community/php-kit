@@ -52,16 +52,16 @@ class Experiments
         if (empty($cookie)) {
             return null;
         }
-        $splitted = explode(" ", $cookie);
+        $parts = explode(" ", $cookie);
 
-        if (count($splitted) >= 2) {
-            $experiment = $this->findRunningById($splitted[0]);
+        if (count($parts) >= 2) {
+            $experiment = $this->findRunningById($parts[0]);
             if (! $experiment) {
                 return null;
             }
             /** @var Variation[] $variations */
             $variations = $experiment->getVariations();
-            $varIndex = (int)($splitted[1]);
+            $varIndex = (int)($parts[1]);
             if ($varIndex > -1 && $varIndex < count($variations)) {
                 return $variations[$varIndex]->getRef();
             }

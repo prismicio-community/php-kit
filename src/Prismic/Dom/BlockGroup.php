@@ -36,7 +36,7 @@ class BlockGroup
     /**
      * Adds a block to the group of blocks.
      *
-     * @param \Prismic\Fragment\Block\BlockInterface  $block  the block to add
+     * @param object $block the block to add
      */
     public function addBlock($block)
     {

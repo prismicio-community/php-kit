@@ -33,7 +33,7 @@ class SearchForm
 {
     /**
      * Cache Instance
-     * @var CacheInterface
+     * @var CacheItemPoolInterface
      */
     private $cache;
 
@@ -144,6 +144,7 @@ class SearchForm
      *
      * @param  string|Ref $ref the ref we wish to query on, or its ID.
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function ref($ref) : self
     {
@@ -157,6 +158,7 @@ class SearchForm
      * Set the after parameter: the id of the document to start the results from (excluding that document).
      * @param string $documentId
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function after(string $documentId) : self
     {
@@ -170,6 +172,7 @@ class SearchForm
      *
      * @param string[] $fields
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function fetch(string ...$fields) : self
     {
@@ -183,6 +186,7 @@ class SearchForm
      *
      * @param string[] $fields
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function fetchLinks(string ...$fields) : self
     {
@@ -193,6 +197,7 @@ class SearchForm
      * Set the language for the query documents.
      * @param string $lang
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function lang(string $lang) : self
     {
@@ -203,6 +208,7 @@ class SearchForm
      * Set the query's page size, for the pagination.
      * @param int $pageSize
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function pageSize(int $pageSize) : self
     {
@@ -213,6 +219,7 @@ class SearchForm
      * Set the query result page number, for the pagination.
      * @param int $page
      * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function page(int $page) : self
     {
@@ -221,6 +228,10 @@ class SearchForm
 
     /**
      * Set the query's ordering, setting in what order the documents must be retrieved.
+     *
+     * @param string[] $fields
+     * @return SearchForm
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function orderings(string ...$fields) : self
     {
@@ -240,6 +251,7 @@ class SearchForm
      * This uses a copy of the SearchForm with a page size of 1 (the smallest
      * allowed) since all we care about is one of the returned non-result
      * fields.
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function count() :? int
     {
@@ -252,6 +264,10 @@ class SearchForm
     /**
      * Set query predicates
      * You can provide a single string, or one or multiple Predicate instances to build an "AND" query
+     *
+     * @param mixed $params
+     * @return self
+     * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function query(...$params) : self
     {
@@ -324,7 +340,6 @@ class SearchForm
                 $cacheException
             );
         }
-
     }
 
     /**
