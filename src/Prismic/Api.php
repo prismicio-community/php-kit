@@ -263,22 +263,6 @@ class Api
     }
 
     /**
-     * Return the URL of the endpoint to initiate OAuth authentication.
-     */
-    public function oauthInitiateEndpoint() : string
-    {
-        return $this->data->getOauthInitiate();
-    }
-
-    /**
-     * Return the URL of the endpoint to use OAuth authentication.
-     */
-    public function oauthTokenEndpoint() : string
-    {
-        return $this->data->getOauthToken();
-    }
-
-    /**
      * Accessing raw data returned by the /api endpoint
      */
     public function getData() : ApiData
