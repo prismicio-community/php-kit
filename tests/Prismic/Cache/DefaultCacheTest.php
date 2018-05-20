@@ -39,5 +39,4 @@ class DefaultCacheTest extends TestCase
         $cache = DefaultCache::getArrayCache();
         $this->assertInstanceOf(ArrayAdapter::class, $cache);
     }
-
 }

@@ -1,9 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
 
-class Document
+class Document implements DocumentInterface
 {
+
+    private $data;
+
+    public function getId() : int
+    {
+        return $this->data->id;
+    }
+
     /**
      * Return the specified alternate language version of a document
      * and null if the document doesn't exist
