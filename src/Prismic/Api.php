@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Document\Hydrator;
 use Prismic\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -23,6 +24,10 @@ class Api
      * Kit version number
      */
     const VERSION = "4.0.0";
+
+    const API_VERSION_1 = '1.0.0';
+
+    const API_VERSION_2 = '2.0.0';
 
     /**
      * Name of the cookie that will be used to remember the preview reference
@@ -57,6 +62,16 @@ class Api
      * @var ClientInterface
      */
     private $httpClient;
+
+    private $hydrator;
+
+    /**
+     * The API version determined by the URL passes to the named constructor
+     * @var string
+     */
+    private $version;
+
+    private $linkResolver;
 
     private function __construct()
     {
@@ -93,6 +108,10 @@ class Api
                     ? Cache\DefaultCache::factory()
                     : $cache;
 
+        $api->version = \preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
+
+        $api->hydrator = new Hydrator($api, [], Document::class);
+
         $url = $action . ($api->accessToken ? '?access_token=' . $api->accessToken : '');
         $key = static::generateCacheKey($url);
         try {
@@ -124,9 +143,29 @@ class Api
         return $api;
     }
 
+    public function setLinkResolver(LinkResolver $linkResolver) : void
+    {
+        $this->linkResolver = $linkResolver;
+    }
+
+    public function getLinkResolver() :? LinkResolver
+    {
+        return $this->linkResolver;
+    }
+
     public static function generateCacheKey(string $url) : string
     {
         return md5($url);
+    }
+
+    public function getApiVersion() : string
+    {
+        return $this->version;
+    }
+
+    public function isV1Api() : bool
+    {
+        return $this->version === static::API_VERSION_1;
     }
 
     /**
@@ -219,7 +258,7 @@ class Api
         foreach ($forms as $key => $form) {
             $formObject = Form::withJsonObject($form);
             $data = $formObject->defaultData();
-            $rforms->$key = new SearchForm($this->httpClient, $this->cache, $formObject, $data);
+            $rforms->$key = new SearchForm($this, $formObject, $data);
         }
 
         return $rforms;
@@ -463,5 +502,10 @@ class Api
         }
 
         return $options;
+    }
+
+    public function getHydrator() : Hydrator
+    {
+        return $this->hydrator;
     }
 }

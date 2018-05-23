@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\DocumentInterface;
 use Prismic\Exception\RuntimeException;
 use Prismic\Ref;
 use Prismic\SearchForm;
@@ -13,6 +14,7 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Prismic\Predicates;
 use GuzzleHttp\Psr7\Response;
+use Prismic\Response as PrismicResponse;
 use Prophecy\Argument;
 use Symfony\Component\Cache\Exception\CacheException;
 
@@ -44,11 +46,58 @@ class SearchFormTest extends TestCase
         $this->cache = $this->prophesize(CacheItemPoolInterface::class);
     }
 
-    protected function getSearchForm() : SearchForm
+    protected function getApi(bool $v1 = false) : Api
+    {
+        $version = $v1 ? 'v1' : 'v2';
+        $api = Api::get(
+            'https://whatever.prismic.io/api/' . $version,
+            'My-Access-Token',
+            $this->httpClient->reveal(),
+            $this->cache->reveal()
+        );
+        $api->setLinkResolver(new FakeLinkResolver());
+        return $api;
+    }
+
+    protected function getApiWithDefaultData(bool $v1 = false) : Api
+    {
+        $version = $v1 ? 'v1' : 'v2';
+        $url = 'https://whatever.prismic.io/api/' . $version . '?access_token=My-Access-Token';
+        $key = Api::generateCacheKey($url);
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->get()->willReturn($this->apiData);
+        $item->isHit()->willReturn(true);
+        $this->cache->getItem($key)->willReturn($item->reveal());
+        $this->httpClient->request()->shouldNotBeCalled();
+
+        return $this->getApi($v1);
+    }
+
+    private function prepareV2SearchResult()
+    {
+        $json = $this->getJsonFixture('search-results.json');
+        $this->prepareCacheWithJsonString($json);
+    }
+
+    private function prepareV1SearchResult()
+    {
+        $json = $this->getJsonFixture('search-results-v1.json');
+        $this->prepareCacheWithJsonString($json);
+    }
+
+    private function prepareCacheWithJsonString(string $json)
+    {
+        $cachedJson = \json_decode($json);
+        $cacheItem = $this->prophesize(CacheItemInterface::class);
+        $cacheItem->get()->willReturn($cachedJson);
+        $cacheItem->isHit()->willReturn(true);
+        $this->cache->getItem(Argument::type('string'))->willReturn($cacheItem);
+    }
+
+    protected function getSearchForm(bool $v1 = false) : SearchForm
     {
         return new SearchForm(
-            $this->httpClient->reveal(),
-            $this->cache->reveal(),
+            $this->getApiWithDefaultData($v1),
             $this->form,
             $this->form->defaultData()
         );
@@ -349,13 +398,9 @@ class SearchFormTest extends TestCase
 
     public function testCachedResponseWillBeReturnedInSubmit()
     {
-        $cachedJson = \json_decode('{"some":"data"}');
-        $cacheItem = $this->prophesize(CacheItemInterface::class);
-        $cacheItem->get()->willReturn($cachedJson);
-        $cacheItem->isHit()->willReturn(true);
-        $this->cache->getItem(Argument::type('string'))->willReturn($cacheItem);
+        $this->prepareV2SearchResult();
         $response = $this->getSearchForm()->submit();
-        $this->assertSame($cachedJson, $response);
+        $this->assertInstanceOf(PrismicResponse::class, $response);
     }
 
     /**
@@ -372,8 +417,7 @@ class SearchFormTest extends TestCase
         }';
         $form = Form::withJsonString($formJson);
         $searchForm = new SearchForm(
-            $this->httpClient->reveal(),
-            $this->cache->reveal(),
+            $this->getApiWithDefaultData(),
             $form,
             $form->defaultData()
         );
@@ -399,7 +443,7 @@ class SearchFormTest extends TestCase
 
     private function prepareResponse(?string $body = null) : Response
     {
-        $body = $body ? $body : '{"data":"data"}';
+        $body = $body ? $body : $this->getJsonFixture('search-results.json');
         $response = new Response(
             200,
             ['Cache-Control' => 'max-age=999'],
@@ -409,7 +453,7 @@ class SearchFormTest extends TestCase
         return $response;
     }
 
-    public function testResponseJsonIsReturned()
+    public function testResponseInstanceIsReturned()
     {
         $this->prepareResponse();
         $item = $this->prophesize(CacheItemInterface::class);
@@ -422,13 +466,12 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $response = $form->submit();
-        $this->assertInstanceOf(\stdClass::class, $response);
-        $this->assertSame('data', $response->data);
+        $this->assertInstanceOf(PrismicResponse::class, $response);
     }
 
     public function testCountReturnsIntWhenPresentInResponseBody()
     {
-        $this->prepareResponse('{"total_results_size":10}');
+        $this->prepareResponse();
         $item = $this->prophesize(CacheItemInterface::class);
         $item->isHit()->willReturn(false);
         $item->expiresAfter(999)->shouldBeCalled();
@@ -438,10 +481,10 @@ class SearchFormTest extends TestCase
         $this->cache->save($item->reveal())->shouldBeCalled();
 
         $form = $this->getSearchForm();
-        $this->assertSame(10, $form->count());
+        $this->assertInternalType('integer', $form->count());
     }
 
-    /**
+        /**
      * @expectedException \Prismic\Exception\RuntimeException
      * @expectedExceptionMessage Unable to decode json response
      */
@@ -469,5 +512,23 @@ class SearchFormTest extends TestCase
             $this->assertInstanceOf(RuntimeException::class, $exception);
             $this->assertSame($e, $exception->getPrevious());
         }
+    }
+
+    public function testSearchResultContainsDocumentInstances()
+    {
+        $this->prepareV2SearchResult();
+        $response = $this->getSearchForm()->submit();
+        $this->assertInstanceOf(PrismicResponse::class, $response);
+        $results = $response->getResults();
+        $this->assertContainsOnlyInstancesOf(DocumentInterface::class, $results);
+    }
+
+    public function testSearchResultContainsDocumentInstancesForV1Api()
+    {
+        $this->prepareV1SearchResult();
+        $response = $this->getSearchForm(true)->submit();
+        $this->assertInstanceOf(PrismicResponse::class, $response);
+        $results = $response->getResults();
+        $this->assertContainsOnlyInstancesOf(DocumentInterface::class, $results);
     }
 }

@@ -1,17 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic\LinkResolver;
+use Prismic\Document\Fragment\Link\DocumentLink;
+use Prismic\LinkResolverAbstract;
 
-class FakeLinkResolver extends LinkResolver
+class FakeLinkResolver extends LinkResolverAbstract
 {
-    public function resolve($link) :? string
+    protected function resolveDocumentLink(DocumentLink $link) :? string
     {
-        if ($link->isBroken) {
-            return 'http://host/404';
+        if ($link->isBroken()) {
+            return null;
         }
 
-        return 'http://host/doc/'.$link->id;
+        return 'http://localhost/' . $link->getId();
     }
 }

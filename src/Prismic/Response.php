@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Document\Hydrator;
 use Prismic\Exception;
+use stdClass;
 
 class Response
 {
@@ -43,15 +45,24 @@ class Response
      */
     private $results;
 
-    public static function fromJsonString(string $json) : self
+    private function __construct()
+    {
+    }
+
+    public static function fromJsonString(string $json, Hydrator $hydrator) : self
     {
         $data = \json_decode($json);
-        if (! $json) {
+        if (! $data) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Failed to decode json payload: %s',
                 \json_last_error_msg()
             ). \json_last_error());
         }
+        return static::fromJsonObject($data, $hydrator);
+    }
+
+    public static function fromJsonObject(stdClass $data, Hydrator $hydrator) : self
+    {
         $instance = new static;
 
         $instance->page         = $data->page;
@@ -60,7 +71,11 @@ class Response
         $instance->pageCount    = $data->total_pages;
         $instance->nextPage     = $data->next_page;
         $instance->prevPage     = $data->prev_page;
-        $instance->results      = $data->results;
+
+        $instance->results      = [];
+        foreach ($data->results as $object) {
+            $instance->results[] = $hydrator->hydrate($object);
+        }
 
         return $instance;
     }
@@ -95,8 +110,11 @@ class Response
         return $this->prevPage;
     }
 
+    /**
+     * @return DocumentInterface[]
+     */
     public function getResults() : array
     {
-
+        return $this->results;
     }
 }

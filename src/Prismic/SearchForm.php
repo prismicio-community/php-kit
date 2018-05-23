@@ -6,10 +6,7 @@ namespace Prismic;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
-use stdClass;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\ClientInterface;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -31,17 +28,11 @@ use GuzzleHttp\ClientInterface;
  */
 class SearchForm
 {
-    /**
-     * Cache Instance
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
 
     /**
-     * Http Client
-     * @var ClientInterface
+     * @var Api
      */
-    private $client;
+    private $api;
 
     /**
      * The REST form we're querying on in the API
@@ -57,15 +48,13 @@ class SearchForm
 
     /**
      * Constructs a SearchForm object
-     * @param ClientInterface $httpClient An HTTP Client for sending Requests
-     * @param CacheItemPoolInterface $cache A cache for storing responses
+     * @param Api $api
      * @param Form  $form the REST form we're querying on in the API
      * @param array $data the parameters we're getting ready to submit
      */
-    public function __construct(ClientInterface $httpClient, CacheItemPoolInterface $cache, Form $form, array $data)
+    public function __construct(Api $api, Form $form, array $data)
     {
-        $this->client = $httpClient;
-        $this->cache  = $cache;
+        $this->api    = $api;
         $this->form   = $form;
         $this->data   = $data;
     }
@@ -136,7 +125,7 @@ class SearchForm
             $data[$key] = $value;
         }
 
-        return new self($this->client, $this->cache, $this->form, $data);
+        return new self($this->api, $this->form, $data);
     }
 
     /**
@@ -256,9 +245,7 @@ class SearchForm
     public function count() :? int
     {
         $response = $this->pageSize(1)->submit();
-        return isset($response->total_results_size)
-               ? (int) $response->total_results_size
-               : null;
+        return $response->getTotalResults();
     }
 
     /**
@@ -331,8 +318,8 @@ class SearchForm
     private function getCacheItem() : CacheItemInterface
     {
         try {
-            $key = Api::generateCacheKey($this->url());
-            return $this->cache->getItem($key);
+            $key = $this->api->generateCacheKey($this->url());
+            return $this->api->getCache()->getItem($key);
         } catch (CacheException $cacheException) {
             throw new Exception\RuntimeException(
                 'An error occurred retrieving data from the cache',
@@ -348,9 +335,9 @@ class SearchForm
      * @throws Exception\RuntimeException if the Form type is not supported or the Response body is invalid
      * @throws Exception\RequestFailureException if something went wrong retrieving data from the API
      *
-     * @return stdClass Unserialized JSON Response
+     * @return Response A response instance containing hydrated documents
      */
-    public function submit() : stdClass
+    public function submit() : Response
     {
         if ($this->form->getMethod() !== 'GET' ||
             $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
@@ -363,12 +350,13 @@ class SearchForm
         $cacheItem = $this->getCacheItem();
 
         if ($cacheItem->isHit()) {
-            return $cacheItem->get();
+            $json = $cacheItem->get();
+            return Response::fromJsonObject($json, $this->api->getHydrator());
         }
 
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $this->client->request('GET', $url);
+            $response = $this->api->getHttpClient()->request('GET', $url);
             $json = \json_decode((string) $response->getBody());
             if (! isset($json)) {
                 throw new Exception\RuntimeException("Unable to decode json response");
@@ -384,7 +372,8 @@ class SearchForm
         }
 
         $cacheItem->set($json);
-        $this->cache->save($cacheItem);
-        return $json;
+        $this->api->getCache()->save($cacheItem);
+
+        return Response::fromJsonObject($json, $this->api->getHydrator());
     }
 }

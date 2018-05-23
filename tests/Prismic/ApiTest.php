@@ -48,8 +48,7 @@ class ApiTest extends TestCase
             'https://whatever.prismic.io/api/v2',
             'My-Access-Token',
             $this->httpClient->reveal(),
-            $this->cache->reveal(),
-            99
+            $this->cache->reveal()
         );
     }
 
@@ -64,6 +63,32 @@ class ApiTest extends TestCase
         $this->httpClient->request()->shouldNotBeCalled();
 
         return $this->getApi();
+    }
+
+    public function testApiVersionInformation()
+    {
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->get()->willReturn($this->apiData);
+        $item->isHit()->willReturn(true);
+        $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
+        $this->httpClient->request()->shouldNotBeCalled();
+
+        $cache  = $this->cache->reveal();
+
+        $v1Url = 'https://whatever.prismic.io/api';
+        $api = Api::get($v1Url, null, null, $cache);
+        $this->assertTrue($api->isV1Api());
+        $this->assertSame(Api::API_VERSION_1, $api->getApiVersion());
+
+        $v1Url = 'https://whatever.prismic.io/api/v1';
+        $api = Api::get($v1Url, null, null, $cache);
+        $this->assertTrue($api->isV1Api());
+        $this->assertSame(Api::API_VERSION_1, $api->getApiVersion());
+
+        $v2Url = 'https://whatever.prismic.io/api/v2';
+        $api = Api::get($v2Url, null, null, $cache);
+        $this->assertFalse($api->isV1Api());
+        $this->assertSame(Api::API_VERSION_2, $api->getApiVersion());
     }
 
     public function testCachedApiDataWillBeUsedIfAvailable()

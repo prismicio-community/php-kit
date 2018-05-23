@@ -26,7 +26,8 @@
         "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^6.3",
         "psr/cache": "^1.0",
-        "symfony/cache": "^4"
+        "symfony/cache": "^4",
+        "zendframework/zend-escaper": "^2.6"
     },
 
     "suggest": {

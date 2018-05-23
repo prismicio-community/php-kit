@@ -1,0 +1,443 @@
+{
+    "page": 1,
+    "results_per_page": 1,
+    "results_size": 1,
+    "total_results_size": 1,
+    "total_pages": 1,
+    "next_page": "https://whatever.cdn.prismic.io/api/v2/documents/search?ref=MasterRef&q=%5B%5B%3Ad+%3D+at%28document.type%2C+%22doc-type%22%29%5D%5D&page=2&pageSize=1",
+    "prev_page": null,
+    "results": [
+        {
+            "id": "Wl8sDCkAAOwTzh3K",
+            "uid": "some-uid",
+            "type": "doc-type",
+            "href": "https://whatever.cdn.prismic.io/api/v2/documents/search?ref=MasterRef&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Wl8sDCkAAOwTzh3K%22%29+%5D%5D",
+            "tags": [],
+            "first_publication_date": "2018-01-01T12:00:00+0000",
+            "last_publication_date": "2018-01-02T12:00:00+0000",
+            "slugs": [
+                "document-heading"
+            ],
+            "linked_documents": [
+                {
+                    "id": "Wl8sDCkAAOwTzh3K",
+                    "tags": [],
+                    "type": "doc-type",
+                    "slug": "document-heading",
+                    "lang": "en-gb"
+                }
+            ],
+            "lang": "en-gb",
+            "alternate_languages": [
+                {
+                    "id": "Wl8tBSkAAGAUziIa",
+                    "uid": "some-uid.au",
+                    "type": "doc-type",
+                    "lang": "en-au"
+                }
+            ],
+            "data": {
+                "single-image": {
+                    "dimensions": {
+                        "width": 960,
+                        "height": 800
+                    },
+                    "alt": null,
+                    "copyright": null,
+                    "url": "IMAGE URL"
+                },
+                "multi-image": {
+                    "dimensions": {
+                        "width": 960,
+                        "height": 800
+                    },
+                    "alt": null,
+                    "copyright": null,
+                    "url": "IMAGE URL",
+                    "view-3": {
+                        "dimensions": {
+                            "width": 200,
+                            "height": 200
+                        },
+                        "alt": null,
+                        "copyright": null,
+                        "url": "IMAGE URL"
+                    },
+                    "view-2": {
+                        "dimensions": {
+                            "width": 500,
+                            "height": 500
+                        },
+                        "alt": null,
+                        "copyright": null,
+                        "url": "IMAGE URL"
+                    }
+                },
+                "date": "2018-01-01",
+                "datetime": "2018-01-01T12:00:00+0000",
+                "colour": "#000000",
+                "integer": 1.2,
+                "plaintext": "Plain Text Value",
+                "selectfield": "One",
+                "geopoint": {
+                    "latitude": 50.61975024263623,
+                    "longitude": -3.416866064071655
+                },
+                "richtext": [
+                    {
+                        "type": "heading1",
+                        "text": "Heading 1",
+                        "spans": []
+                    },
+                    {
+                        "type": "heading2",
+                        "text": "Heading 2",
+                        "spans": []
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with bold text.",
+                        "spans": [
+                            {
+                                "start": 15,
+                                "end": 24,
+                                "type": "strong"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Unicode paragraph with ßold tex†.",
+                        "spans": [
+                            {
+                                "start": 23,
+                                "end": 32,
+                                "type": "strong"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with italic text.",
+                        "spans": [
+                            {
+                                "start": 15,
+                                "end": 26,
+                                "type": "em"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with labelled text.",
+                        "spans": [
+                            {
+                                "start": 15,
+                                "end": 28,
+                                "type": "label",
+                                "data": {
+                                    "label": "test-label"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with nested spans of several types.",
+                        "spans": [
+                            {
+                                "start": 10,
+                                "end": 44,
+                                "type": "strong"
+                            },
+                            {
+                                "start": 15,
+                                "end": 27,
+                                "type": "label",
+                                "data": {
+                                    "label": "test-label"
+                                }
+                            },
+                            {
+                                "start": 31,
+                                "end": 38,
+                                "type": "em"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with a link to another document.",
+                        "spans": [
+                            {
+                                "start": 17,
+                                "end": 41,
+                                "type": "hyperlink",
+                                "data": {
+                                    "id": "Wl8sDCkAAOwTzh3K",
+                                    "type": "doc-type",
+                                    "tags": [],
+                                    "slug": "document-heading",
+                                    "lang": "en-gb",
+                                    "uid": "some-uid",
+                                    "link_type": "Document",
+                                    "isBroken": false
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph labelled as a block.",
+                        "spans": [],
+                        "label": "test-label"
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with multiple spans at the same index.",
+                        "spans": [
+                            {
+                                "start": 24,
+                                "end": 47,
+                                "type": "label",
+                                "data": {
+                                    "label": "test-label"
+                                }
+                            },
+                            {
+                                "start": 24,
+                                "end": 47,
+                                "type": "em"
+                            },
+                            {
+                                "start": 24,
+                                "end": 47,
+                                "type": "strong"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "text": "Paragraph with multiple labels at the same indexes.",
+                        "spans": [
+                            {
+                                "start": 15,
+                                "end": 50,
+                                "type": "label",
+                                "data": {
+                                    "label": "test-label"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "image",
+                        "url": "IMAGE URL",
+                        "alt": null,
+                        "copyright": null,
+                        "dimensions": {
+                            "width": 960,
+                            "height": 800
+                        },
+                        "label": "test-label"
+                    },
+                    {
+                        "type": "o-list-item",
+                        "text": "A Numbered",
+                        "spans": []
+                    },
+                    {
+                        "type": "o-list-item",
+                        "text": "List",
+                        "spans": []
+                    },
+                    {
+                        "type": "list-item",
+                        "text": "An, un-orderered",
+                        "spans": []
+                    },
+                    {
+                        "type": "list-item",
+                        "text": "List, with 2 items",
+                        "spans": []
+                    },
+                    {
+                        "type": "image",
+                        "url": "IMAGE URL",
+                        "alt": null,
+                        "copyright": null,
+                        "dimensions": {
+                            "width": 960,
+                            "height": 800
+                        },
+                        "linkTo": {
+                            "link_type": "Web",
+                            "url": "https://www.google.com",
+                            "target": "_blank"
+                        }
+                    },
+                    {
+                        "type": "preformatted",
+                        "text": "Pre-formatted Text",
+                        "spans": []
+                    },
+                    {
+                        "type": "embed",
+                        "oembed": {
+                            "type": "video",
+                            "embed_url": "https://www.youtube.com/watch?v=Y04ZsJ6YOMA",
+                            "title": "Irish Mike Series 1 Compilation - Fonejacker",
+                            "provider_name": "YouTube",
+                            "thumbnail_url": "https://i.ytimg.com/vi/Y04ZsJ6YOMA/hqdefault.jpg",
+                            "html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/Y04ZsJ6YOMA?feature=oembed\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>",
+                            "height": 270,
+                            "author_name": "Hat Trick",
+                            "version": "1.0",
+                            "width": 480,
+                            "author_url": "https://www.youtube.com/user/outnumberedchannel",
+                            "thumbnail_height": 360,
+                            "provider_url": "https://www.youtube.com/",
+                            "thumbnail_width": 480
+                        }
+                    }
+                ],
+                "link-anytype": {
+                    "id": "LinkedDocumentId",
+                    "type": "basic-document",
+                    "tags": [],
+                    "slug": "heading-1",
+                    "lang": "en-gb",
+                    "uid": "basic-document",
+                    "link_type": "Document",
+                    "isBroken": false
+                },
+                "link-document": {
+                    "id": "LinkedDocumentId",
+                    "type": "basic-document",
+                    "tags": [],
+                    "slug": "heading-1",
+                    "lang": "en-gb",
+                    "uid": "basic-document",
+                    "link_type": "Document",
+                    "isBroken": false
+                },
+                "link-media": {
+                    "link_type": "Media",
+                    "name": "image.gif",
+                    "kind": "image",
+                    "url": "IMAGE URL",
+                    "size": "627291",
+                    "height": "800",
+                    "width": "960"
+                },
+                "link-pdf": {
+                    "link_type": "Media",
+                    "name": "PDF-File.pdf",
+                    "kind": "document",
+                    "url": "FILE URL",
+                    "size": "351047"
+                },
+                "link-web": {
+                    "link_type": "Web",
+                    "url": "https://www.google.com",
+                    "target": "_blank"
+                },
+                "single-embed": {
+                    "title": "Irish Mike Series 1 Compilation - Fonejacker",
+                    "version": "1.0",
+                    "width": 480,
+                    "thumbnail_width": 480,
+                    "type": "video",
+                    "author_name": "Hat Trick",
+                    "thumbnail_url": "https://i.ytimg.com/vi/Y04ZsJ6YOMA/hqdefault.jpg",
+                    "provider_url": "https://www.youtube.com/",
+                    "provider_name": "YouTube",
+                    "author_url": "https://www.youtube.com/user/outnumberedchannel",
+                    "thumbnail_height": 360,
+                    "html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/Y04ZsJ6YOMA?feature=oembed\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>",
+                    "height": 270,
+                    "embed_url": "https://www.youtube.com/watch?v=Y04ZsJ6YOMA"
+                },
+                "group": [
+                    {
+                        "richtext": [
+                            {
+                                "type": "paragraph",
+                                "text": "Some rich text within a group.",
+                                "spans": [
+                                    {
+                                        "start": 5,
+                                        "end": 9,
+                                        "type": "em"
+                                    },
+                                    {
+                                        "start": 10,
+                                        "end": 14,
+                                        "type": "strong"
+                                    }
+                                ]
+                            }
+                        ],
+                        "single-image": {
+                            "dimensions": {
+                                "width": 960,
+                                "height": 800
+                            },
+                            "alt": null,
+                            "copyright": null,
+                            "url": "IMAGE URL"
+                        },
+                        "date": "2018-01-01",
+                        "datetime": "2018-01-01T12:00:00+0000",
+                        "colour": "#000000",
+                        "integer": 1.0,
+                        "plaintext": "Plain Text",
+                        "selectfield": "One",
+                        "geopoint": {
+                            "latitude": 50.61975024263623,
+                            "longitude": -3.416866064071655
+                        }
+                    }
+                ],
+                "slice-zone": [
+                    {
+                        "slice_type": "complex_slice",
+                        "slice_label": "Custom Slice Label",
+                        "items": [
+                            {
+                                "an_image": {
+                                    "dimensions": {
+                                        "width": 960,
+                                        "height": 800
+                                    },
+                                    "alt": null,
+                                    "copyright": null,
+                                    "url": "IMAGE URL"
+                                },
+                                "some_stuff": [
+                                    {
+                                        "type": "paragraph",
+                                        "text": "This is some rich text, as opposed to poor text",
+                                        "spans": []
+                                    }
+                                ]
+                            }
+                        ],
+                        "primary": {
+                            "title": [
+                                {
+                                    "type": "heading1",
+                                    "text": "Slice Title",
+                                    "spans": []
+                                }
+                            ],
+                            "colour": "#ce9393"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "version": "e5526d2",
+    "license": "This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/."
+}

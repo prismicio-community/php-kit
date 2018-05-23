@@ -3,34 +3,215 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use Prismic\Document\Fragment\FragmentCollection;
+use Prismic\Exception\RuntimeException;
+use Prismic\Exception\UnexpectedValueException;
+use stdClass;
+
 class Document implements DocumentInterface
 {
 
-    private $data;
-
-    public function getId() : int
-    {
-        return $this->data->id;
-    }
+    /** @var string */
+    protected $id;
 
     /**
-     * Return the specified alternate language version of a document
-     * and null if the document doesn't exist
-     *
-     *
-     * @param   object  $document   the document
-     * @param   string  $langKey    the language code of the alternate language version, like "en-us"
-     *
-     * @return object the directly usable object, or null if the alternate language version does not exist
+     * @var string|null
      */
-    public static function getAlternateLanguage($document, $langKey)
+    protected $uid;
+
+    /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var array
+     */
+    protected $tags;
+
+    /** @var array */
+    protected $slugs;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    protected $firstPublished;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    protected $lastPublished;
+
+    /**
+     * @var string|null
+     */
+    protected $lang;
+
+    /**
+     * @var string
+     */
+    protected $href;
+
+    /**
+     * An array of Document Link pointing to translations of this document
+     *
+     * @var array
+     */
+    protected $alternateLanguages;
+
+    /**
+     * @var FragmentCollection
+     */
+    protected $data;
+
+    /**
+     * @var Api
+     */
+    protected $api;
+
+    private function __construct()
     {
-        foreach ($document->alternate_languages as $language) {
-            if ($language->lang === $langKey) {
-                return $language;
-            }
+    }
+
+    public static function fromJsonString(string $json, Api $api) : DocumentInterface
+    {
+        $data = \json_decode($json);
+        if (! $data) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Failed to decode json payload: %s',
+                \json_last_error_msg()
+            ), \json_last_error());
+        }
+        return static::fromJsonObject($data, $api);
+    }
+
+    public static function fromJsonObject(stdClass $data, Api $api) : DocumentInterface
+    {
+        $inst        = new static;
+        $inst->api   = $api;
+        $inst->id    = $inst->assertRequiredProperty($data, 'id', false);
+        $inst->uid   = $inst->assertRequiredProperty($data, 'id', true);
+        $inst->type  = $inst->assertRequiredProperty($data, 'type', false);
+        $inst->tags  = $inst->assertRequiredProperty($data, 'tags', false);
+        $inst->lang  = $inst->assertRequiredProperty($data, 'lang', true);
+        $inst->href  = $inst->assertRequiredProperty($data, 'href', false);
+        $inst->slugs = $inst->assertRequiredProperty($data, 'slugs', false);
+
+        $utc            = new DateTimeZone('UTC');
+        $firstPublished = $inst->assertRequiredProperty($data, 'first_publication_date', true);
+        if ($firstPublished) {
+            $date                 = DateTimeImmutable::createFromFormat(DateTime::ISO8601, $firstPublished);
+            $inst->firstPublished = $date->setTimezone($utc);
+        }
+        $lastPublished = $inst->assertRequiredProperty($data, 'last_publication_date', true);
+        if ($lastPublished) {
+            $date                = DateTimeImmutable::createFromFormat(DateTime::ISO8601, $lastPublished);
+            $inst->lastPublished = $date->setTimezone($utc);
         }
 
-        return null;
+        $altLang                  = $inst->assertRequiredProperty($data, 'alternate_languages', true);
+        $inst->alternateLanguages = $altLang ? $altLang : [];
+
+        $data = $inst->assertRequiredProperty($data, 'data', false);
+
+        /**
+         * The root node in the data property is prefixed with the document type in the V1 API
+         */
+        $data = $api->isV1Api()
+            ? $data->{$inst->type}
+            : $data;
+
+        if (! $api->getLinkResolver()) {
+            throw new RuntimeException(
+                'Documents cannot be properly hydrated without a Link Resolver being made available to the API'
+            );
+        }
+
+        $inst->data = FragmentCollection::factory($data, $api->getLinkResolver());
+
+
+        return $inst;
+    }
+
+    protected function assertRequiredProperty(stdClass $object, string $property, $nullable = true)
+    {
+        if (! isset($object->{$property})) {
+            throw new Exception\UnexpectedValueException(sprintf(
+                'Expected the property %s to be present in JSON payload',
+                $property
+            ));
+        }
+        $value = $object->{$property};
+        if (null === $value && false === $nullable) {
+            throw new UnexpectedValueException(sprintf(
+                'Expected the property %s to be non-null in the JSON payload',
+                $property
+            ));
+        }
+        return $object->{$property};
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
+    }
+
+    public function getUid() : ?string
+    {
+        return $this->uid;
+    }
+
+    public function getType() : string
+    {
+        return $this->type;
+    }
+
+    public function getTags() : array
+    {
+        return $this->tags;
+    }
+
+    public function getFirstPublicationDate() : ?DateTimeInterface
+    {
+        return $this->firstPublished;
+    }
+
+    public function getLastPublicationDate() : ?DateTimeInterface
+    {
+        return $this->lastPublished;
+    }
+
+    public function getLang() : ?string
+    {
+        return $this->lang;
+    }
+
+    public function getHref() : string
+    {
+        return $this->href;
+    }
+
+    public function getAlternateLanguages() : array
+    {
+        return $this->alternateLanguages;
+    }
+
+    public function getData() : FragmentCollection
+    {
+        return $this->data;
+    }
+
+    public function get(string $key)
+    {
+        return $this->data->get($key);
+    }
+
+    public function has(string $key) : bool
+    {
+        return $this->data->has($key);
     }
 }

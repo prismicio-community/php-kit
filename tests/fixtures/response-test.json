@@ -1,0 +1,12 @@
+{
+    "page": 1,
+    "results_per_page": 2,
+    "results_size": 2,
+    "total_results_size": 3,
+    "total_pages": 2,
+    "next_page": "https://whatever.cdn.prismic.io/api/v2/documents/search?ref=MasterRef&q=%5B%5B%3Ad+%3D+at%28document.type%2C+%22doc-type%22%29%5D%5D&page=2&pageSize=2",
+    "prev_page": null,
+    "results": [],
+    "version": "e5526d2",
+    "license": "This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/."
+}
