@@ -5,12 +5,15 @@ namespace Prismic\Document\Fragment\Link;
 
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Document\Fragment\HtmlHelperTrait;
-use Prismic\Exception\UnexpectedValueException;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
 
 abstract class AbstractLink implements LinkInterface
 {
     use HtmlHelperTrait;
+
+    /** @var string|null */
+    protected $target;
 
     public static function abstractFactory($value, LinkResolver $linkResolver) : LinkInterface
     {
@@ -18,7 +21,7 @@ abstract class AbstractLink implements LinkInterface
         $linkType = isset($value->link_type) ? $value->link_type : null;
         $linkType = isset($value->value) && isset($value->type) ? $value->type : $linkType;
         if (null === $linkType) {
-            throw new UnexpectedValueException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Expected a payload describing a link, received %s',
                 \json_encode($value)
             ));
@@ -33,7 +36,7 @@ abstract class AbstractLink implements LinkInterface
                 $subType = 'Link.file';
             }
             if (! $subType) {
-                throw new UnexpectedValueException(sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'Encountered a V2 Media link but the subtype was neither image, nor document. Got %s',
                     (string) $value->kind
                 ));
@@ -59,7 +62,7 @@ abstract class AbstractLink implements LinkInterface
         }
 
         if (null === $link) {
-            throw new UnexpectedValueException(\sprintf(
+            throw new InvalidArgumentException(\sprintf(
                 'Cannot determine a link from the given payload: %s',
                 \json_encode($value)
             ));
@@ -104,7 +107,7 @@ abstract class AbstractLink implements LinkInterface
 
     public function getTarget() : ?string
     {
-        return null;
+        return $this->target;
     }
 
     public function isBroken() : bool
@@ -141,7 +144,7 @@ abstract class AbstractLink implements LinkInterface
         }
 
         return sprintf(
-            '<a %s>',
+            '<a%s>',
             $this->htmlAttributes($attributes)
         );
     }

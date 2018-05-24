@@ -1,0 +1,106 @@
+{
+    "link-document": {
+        "id": "LinkedDocumentId",
+        "type": "document",
+        "tags": [
+            "some", "tags"
+        ],
+        "slug": "slug-value",
+        "lang": "en-gb",
+        "uid": "document-uid",
+        "link_type": "Document",
+        "isBroken": false
+    },
+    "link-broken": {
+        "id": "LinkedDocumentId",
+        "type": "document",
+        "tags": [],
+        "slug": "slug-value",
+        "lang": "en-gb",
+        "uid": "document-uid",
+        "link_type": "Document",
+        "isBroken": true
+    },
+    "link-media": {
+        "link_type": "Media",
+        "name": "image.gif",
+        "kind": "image",
+        "url": "IMAGE_URL",
+        "size": "200",
+        "height": "10",
+        "width": "20"
+    },
+    "link-pdf": {
+        "link_type": "Media",
+        "name": "file.pdf",
+        "kind": "document",
+        "url": "FILE_URL",
+        "size": "500"
+    },
+    "link-web": {
+        "link_type": "Web",
+        "url": "WEB_URL",
+        "target": "_blank"
+    },
+    "v1-link-document": {
+        "type": "Link.document",
+        "value": {
+            "document": {
+                "id": "LinkedDocumentId",
+                "type": "document",
+                "tags": [
+                    "some", "tags"
+                ],
+                "lang": "en-gb",
+                "slug": "slug-value",
+                "uid": "document-uid"
+            },
+            "isBroken": false
+        }
+    },
+    "v1-link-broken": {
+        "type": "Link.document",
+        "value": {
+            "document": {
+                "id": "LinkedDocumentId",
+                "type": "document",
+                "tags": [],
+                "lang": "en-gb",
+                "slug": "slug-value",
+                "uid": "document-uid"
+            },
+            "isBroken": true
+        }
+    },
+    "v1-link-media": {
+        "type": "Link.image",
+        "value": {
+            "image": {
+                "name": "image.gif",
+                "kind": "image",
+                "url": "IMAGE_URL",
+                "size": "200",
+                "height": "10",
+                "width": "10"
+            }
+        }
+    },
+    "v1-link-pdf": {
+        "type": "Link.file",
+        "value": {
+            "file": {
+                "name": "fFile.pdf",
+                "kind": "document",
+                "url": "FILE_URL",
+                "size": "500"
+            }
+        }
+    },
+    "v1-link-web": {
+        "type": "Link.web",
+        "value": {
+            "url": "WEB_URL",
+            "target": "_blank"
+        }
+    }
+}

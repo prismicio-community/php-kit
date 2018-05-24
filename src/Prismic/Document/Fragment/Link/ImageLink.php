@@ -21,9 +21,19 @@ class ImageLink extends FileLink
         $value = isset($value->value) ? $value->value : $value;
         $value = isset($value->image) ? $value->image : $value;
 
-        $link->height = isset($value->height) ? $value->height : null;
-        $link->width  = isset($value->width) ? $value->width : null;
+        $link->height = isset($value->height) ? (int) $value->height : null;
+        $link->width  = isset($value->width) ? (int) $value->width : null;
 
         return $link;
+    }
+
+    public function getWidth() :? int
+    {
+        return $this->width;
+    }
+
+    public function getHeight() :? int
+    {
+        return $this->height;
     }
 }

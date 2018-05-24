@@ -13,15 +13,20 @@ abstract class AbstractScalarFragment implements FragmentInterface
     /** @var mixed */
     protected $value;
 
+    protected function __construct()
+    {
+    }
+
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
-        if (\is_object($value) && isset($value->value)) {
+        if (\is_object($value) && \property_exists($value, 'value')) {
             $value = $value->value; // V1 API
         }
-        if (! \is_scalar($value)) {
+        if (\is_object($value) || \is_array($value)) {
             throw new InvalidArgumentException(\sprintf(
-                'Cannot determine single scalar value from input of type %s',
-                gettype($value)
+                'Cannot determine single scalar value from input of type %s with value %s',
+                gettype($value),
+                \json_encode($value)
             ));
         }
 
@@ -32,16 +37,26 @@ abstract class AbstractScalarFragment implements FragmentInterface
 
     public function asText() :? string
     {
-        $value = (string) $this->value;
-        return empty($value) ? null : $value;
+        // Bools are unlikely, but cast to int first, just in case
+        $value = \is_bool($this->value) ? (int) $this->value : $this->value;
+        $value = (string) $value;
+        return ($value === '') ? null : $value;
     }
 
     public function asHtml() :? string
     {
-        $value = $this->asText();
-        return empty($value)
+        $value = (string) $this->asText();
+        return ($value === '')
                ? null
-               : $this->escapeHtml($this->asText());
+               : $this->escapeHtml($value);
+    }
+
+    public function asHtmlAttribute() :? string
+    {
+        $value = (string) $this->asText();
+        return ($value === '')
+            ? null
+            : $this->escapeHtmlAttr($value);
     }
 
     public function asInteger() :? int

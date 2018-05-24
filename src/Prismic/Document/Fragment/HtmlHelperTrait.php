@@ -66,7 +66,7 @@ trait HtmlHelperTrait
             return $this->escapeHtml($text);
         }
 
-        $nodes = \preg_split('//u', $text, null, \PREG_SPLIT_NO_EMPTY);
+        $nodes = \preg_split('//u', $text, -1, \PREG_SPLIT_NO_EMPTY);
         \array_walk($nodes, function (&$character) {
             $character = $this->escapeHtml($character);
         });
@@ -75,6 +75,7 @@ trait HtmlHelperTrait
                 continue;
             }
             $openTag = $closeTag = null;
+            $end = $span->end - 1;
             switch ($span->type) {
                 case 'strong':
                 case 'em':
@@ -85,7 +86,7 @@ trait HtmlHelperTrait
                 case 'label':
                     // Multiple labels at the same indexes are not possible,
                     // therefore we don't have to combine CSS classes
-                    $openTag  = sprintf('<span %s>', $this->htmlAttributes(['class' => $span->data->label]));
+                    $openTag  = sprintf('<span%s>', $this->htmlAttributes(['class' => $span->data->label]));
                     $closeTag = '</span>';
                     break;
 
@@ -96,7 +97,7 @@ trait HtmlHelperTrait
                     break;
             }
             $nodes[$span->start] = sprintf('%s%s', $openTag, $nodes[$span->start]);
-            $nodes[$span->end] = sprintf('%s%s', $nodes[$span->end], $closeTag);
+            $nodes[$end] = sprintf('%s%s', $nodes[$end], $closeTag);
         }
         return implode('', $nodes);
     }

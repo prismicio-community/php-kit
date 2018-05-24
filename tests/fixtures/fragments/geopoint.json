@@ -1,0 +1,13 @@
+{
+    "v2-geopoint": {
+        "latitude": 1.1,
+        "longitude": 2.2
+    },
+    "v1-geopoint": {
+        "type": "GeoPoint",
+        "value": {
+            "latitude": 1.1,
+            "longitude": 2.2
+        }
+    }
+}

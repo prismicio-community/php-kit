@@ -38,9 +38,6 @@ class DocumentLink extends AbstractLink
     /** @var bool */
     private $isBroken;
 
-    /** @var string|null */
-    private $target;
-
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
         /** @var DocumentLink $link */

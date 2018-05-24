@@ -13,17 +13,10 @@ class WebLink extends AbstractLink
     /** @var string */
     protected $url;
 
-    /** @var string|null */
-    protected $target;
 
     public function getUrl() : ?string
     {
         return $this->url;
-    }
-
-    public function getTarget() : ?string
-    {
-        return $this->target;
     }
 
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface

@@ -26,7 +26,7 @@ class FragmentCollection implements CompositeFragmentInterface
         $data = \get_object_vars($value);
         $collection = new static;
         foreach ($data as $fragmentName => $value) {
-            if (isset($value->type) && isset($value->value)) {
+            if (\is_object($value) && \property_exists($value, 'type') && \property_exists($value, 'value')) {
                 $collection->v1Factory($fragmentName, $value, $linkResolver);
                 continue;
             }
@@ -175,5 +175,11 @@ class FragmentCollection implements CompositeFragmentInterface
     public function has(string $key) : bool
     {
         return isset($this->fragments[$key]);
+    }
+
+    /** @return FragmentInterface[] */
+    public function getFragments() : array
+    {
+        return $this->fragments;
     }
 }

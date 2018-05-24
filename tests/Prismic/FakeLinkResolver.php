@@ -14,6 +14,6 @@ class FakeLinkResolver extends LinkResolverAbstract
             return null;
         }
 
-        return 'http://localhost/' . $link->getId();
+        return 'RESOLVED_LINK';
     }
 }

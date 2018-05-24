@@ -25,7 +25,7 @@ class FileLink extends WebLink
         $value = isset($value->file) ? $value->file : $value;
 
         $link->filename = isset($value->name) ? $value->name : null;
-        $link->filesize = isset($value->size) ? $value->size : null;
+        $link->filesize = isset($value->size) ? (int) $value->size : null;
 
         return $link;
     }
@@ -42,10 +42,6 @@ class FileLink extends WebLink
 
     public function asHtml() : ?string
     {
-        $url = $this->getUrl();
-        if (! $url) {
-            return null;
-        }
         return sprintf(
             '%s%s%s',
             $this->openTag(),

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Document\Fragment\Link\AbstractLink;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
+use stdClass;
 
 class ImageView implements ImageInterface
 {
@@ -37,6 +39,7 @@ class ImageView implements ImageInterface
 
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
+        static::validatePayload($value);
         $image            = new static;
         $image->url       = $value->url;
         $image->alt       = isset($value->alt) ? $value->alt : null;
@@ -50,6 +53,24 @@ class ImageView implements ImageInterface
         return $image;
     }
 
+    private static function validatePayload(stdClass $image) : void
+    {
+        if (! isset($image->url) || ! \is_string($image->url)) {
+            throw new InvalidArgumentException('The image payload must have a url property with a non-empty string');
+        }
+        if (! isset($image->dimensions) || ! \is_object($image->dimensions)) {
+            throw new InvalidArgumentException(
+                'The image payload must have a dimensions property containing the width and height'
+            );
+        }
+        if (! isset($image->dimensions->width) || ! \is_numeric($image->dimensions->width)) {
+            throw new InvalidArgumentException('The image payload must have a width property containing a number');
+        }
+        if (! isset($image->dimensions->height) || ! \is_numeric($image->dimensions->height)) {
+            throw new InvalidArgumentException('The image payload must have a height property containing a number');
+        }
+    }
+
     public function asText() :? string
     {
         return $this->url;
@@ -58,16 +79,16 @@ class ImageView implements ImageInterface
     public function asHtml() :? string
     {
         $attributes = [
-            'src' => $this->url,
-            'width' => $this->width,
-            'height' => $this->height,
-            'alt' => $this->alt,
+            'src'    => (string) $this->url,
+            'width'  => (string) $this->width,
+            'height' => (string) $this->height,
+            'alt'    => (string) $this->alt,
         ];
         if ($this->label) {
             $attributes['class'] = $this->label;
         }
         // Use self-closing tag - you never know, someone might still be serving xhtml
-        $imageMarkup = sprintf('<img %s />', $this->htmlAttributes($attributes));
+        $imageMarkup = sprintf('<img%s />', $this->htmlAttributes($attributes));
 
         if ($this->hasLink()) {
             return \sprintf(

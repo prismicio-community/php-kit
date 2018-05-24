@@ -25,14 +25,14 @@ class Color extends AbstractScalarFragment
         }
         ['r' => $r, 'g' => $g, 'b' => $b] = $this->asRgb();
         if ($alpha) {
-            return sprintf('rgba(%d, %d, %d, %0.4f)', $r, $g, $b, $alpha);
+            return sprintf('rgba(%d, %d, %d, %0.3f)', $r, $g, $b, $alpha);
         }
         return sprintf('rgb(%d, %d, %d)', $r, $g, $b);
     }
 
-    private function isColor() : bool
+    public function isColor() : bool
     {
-        return (bool) \preg_match('/^#[0-9A-F]{6}$/i', $this->value);
+        return (bool) \preg_match('/^#[0-9A-F]{6}$/i', (string) $this->value);
     }
 
     public function asInteger() :? int

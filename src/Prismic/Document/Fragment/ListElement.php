@@ -55,6 +55,14 @@ class ListElement implements CompositeFragmentInterface
         $this->items[] = $item;
     }
 
+    /**
+     * @return TextElement[]
+     */
+    public function getItems() : array
+    {
+        return $this->items;
+    }
+
     public function hasItems() : bool
     {
         return count($this->items) >= 1;
@@ -97,15 +105,12 @@ class ListElement implements CompositeFragmentInterface
     {
         if ($this->hasItems()) {
             $data = [];
+            $data[] = $this->openTag();
             foreach ($this->items as $item) {
                 $data[] = $item->asHtml();
             }
-            return sprintf(
-                '%s%s%s',
-                $this->openTag(),
-                \implode(\PHP_EOL, $data),
-                $this->closeTag()
-            );
+            $data[] = $this->closeTag();
+            return \implode(\PHP_EOL, $data);
         }
         return null;
     }

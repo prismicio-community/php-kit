@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
-use Prismic\Exception\UnexpectedValueException;
 use Prismic\LinkResolver;
 
 class RichText implements CompositeFragmentInterface
@@ -25,7 +24,7 @@ class RichText implements CompositeFragmentInterface
             $value = $value->value;
         }
         if (! \is_array($value)) {
-            throw new UnexpectedValueException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Expected to be able to determine an array of blocks for the RichText fragment, received %s.',
                 \gettype($value)
             ));
@@ -114,14 +113,27 @@ class RichText implements CompositeFragmentInterface
         return $this->getFirstByTag('p');
     }
 
+    public function getParagraphs()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof TextElement && $block->getTag() === 'p');
+        });
+    }
+
     public function getFirstHeading() :? TextElement
     {
-        foreach ($this->blocks as $fragment) {
-            if ($fragment instanceof TextElement && preg_match('/^h[0-9]{1}$/i', $fragment->getTag())) {
-                return $fragment;
-            }
+        $headings = $this->getHeadings();
+        if (\count($headings)) {
+            return \current($headings);
         }
         return null;
+    }
+
+    public function getHeadings()
+    {
+        return array_filter($this->blocks, function ($block) {
+            return ($block instanceof TextElement && preg_match('/^h[0-9]{1}$/i', $block->getTag()));
+        });
     }
 
     public function getFirstByTag(string $tag) :? TextElement
@@ -133,4 +145,39 @@ class RichText implements CompositeFragmentInterface
         }
         return null;
     }
+
+    public function getImages() : array
+    {
+        $images = [];
+        foreach ($this->blocks as $block) {
+            if ($block instanceof Image) {
+                $images[] = $block;
+            }
+        }
+        return $images;
+    }
+
+    public function getFirstImage() :? Image
+    {
+        foreach ($this->blocks as $block) {
+            if ($block instanceof Image) {
+                return $block;
+            }
+        }
+        return null;
+    }
+
+    public function getLists() : array
+    {
+        return \array_filter($this->blocks, function ($block) {
+            return ($block instanceof ListElement);
+        });
+    }
+
+    public function getFirstList() :? ListElement
+    {
+        $lists = $this->getLists();
+        return \count($lists) ? \current($lists) : null;
+    }
+
 }

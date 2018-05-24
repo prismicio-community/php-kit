@@ -1,0 +1,148 @@
+{
+    "single-image-v2": {
+        "dimensions": {
+            "width": 960,
+            "height": 800
+        },
+        "alt": "ALT TEXT",
+        "copyright": "COPYRIGHT TEXT",
+        "url": "IMAGE URL"
+    },
+    "multi-image-v2": {
+        "dimensions": {
+            "width": 960,
+            "height": 800
+        },
+        "alt": null,
+        "copyright": null,
+        "url": "IMAGE URL",
+        "view-2": {
+            "dimensions": {
+                "width": 500,
+                "height": 500
+            },
+            "alt": null,
+            "copyright": null,
+            "url": "IMAGE URL"
+        },
+        "view-3": {
+            "dimensions": {
+                "width": 200,
+                "height": 200
+            },
+            "alt": null,
+            "copyright": null,
+            "url": "IMAGE URL"
+        }
+    },
+    "single-image-v1": {
+        "type": "Image",
+        "value": {
+            "main": {
+                "dimensions": {
+                    "width": 960,
+                    "height": 800
+                },
+                "alt": null,
+                "copyright": null,
+                "url": "IMAGE URL"
+            },
+            "views": {}
+        }
+    },
+    "multi-image-v1": {
+        "type": "Image",
+        "value": {
+            "main": {
+                "dimensions": {
+                    "width": 960,
+                    "height": 800
+                },
+                "alt": null,
+                "copyright": null,
+                "url": "IMAGE URL"
+            },
+            "views": {
+                "view-3": {
+                    "dimensions": {
+                        "width": 200,
+                        "height": 200
+                    },
+                    "alt": null,
+                    "copyright": null,
+                    "url": "IMAGE URL"
+                },
+                "view-2": {
+                    "dimensions": {
+                        "width": 500,
+                        "height": 500
+                    },
+                    "alt": null,
+                    "copyright": null,
+                    "url": "IMAGE URL"
+                }
+            }
+        }
+    },
+    "richtext-v2": [
+        {
+            "type": "image",
+            "url": "IMAGE URL",
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+                "width": 960,
+                "height": 800
+            },
+            "label": "test-label"
+        },
+        {
+            "type": "image",
+            "url": "IMAGE URL",
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+                "width": 960,
+                "height": 800
+            },
+            "linkTo": {
+                "link_type": "Web",
+                "url": "https://www.google.com",
+                "target": "_blank"
+            }
+        }
+    ],
+    "richtext-v1": {
+        "type": "StructuredText",
+        "value": [
+            {
+                "type": "image",
+                "url": "IMAGE URL",
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                    "width": 960,
+                    "height": 800
+                },
+                "label": "test-label"
+            },
+            {
+                "type": "image",
+                "url": "IMAGE URL",
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                    "width": 960,
+                    "height": 800
+                },
+                "linkTo": {
+                    "type": "Link.web",
+                    "value": {
+                        "url": "https://www.google.com",
+                        "target": "_blank"
+                    }
+                }
+            }
+        ]
+    }
+}

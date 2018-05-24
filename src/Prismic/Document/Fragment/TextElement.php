@@ -53,7 +53,6 @@ class TextElement implements FragmentInterface
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
         $element = new static;
-
         $type = isset($value->type) ? $value->type : null;
         if (! $type || ! \array_key_exists($type, $element->tagMap)) {
             throw new InvalidArgumentException(sprintf(
@@ -108,13 +107,9 @@ class TextElement implements FragmentInterface
 
     public function openTag() :? string
     {
-        $attributes = '';
-        if ($this->label) {
-            $attributes = \sprintf(
-                ' %s',
-                $this->htmlAttributes(['class' => $this->label])
-            );
-        }
+        $attributes = $this->label
+            ? $this->htmlAttributes(['class' => $this->label])
+            : '';
         return \sprintf(
             '<%s%s>',
             $this->getTag(),
