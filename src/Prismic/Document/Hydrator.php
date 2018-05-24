@@ -11,10 +11,13 @@ use stdClass;
 class Hydrator implements HydratorInterface
 {
 
+    /** @var string */
     private $defaultClass;
 
+    /** @var string[] */
     private $typeMap;
 
+    /** @var Api */
     private $api;
 
     public function __construct(Api $api, $typeMap, string $defaultClass)
@@ -38,5 +41,10 @@ class Hydrator implements HydratorInterface
             return $this->typeMap[$type];
         }
         return $this->defaultClass;
+    }
+
+    public function mapType(string $type, string $class) : void
+    {
+        $this->typeMap[$type] = $class;
     }
 }

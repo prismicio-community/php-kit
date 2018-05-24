@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Document\Hydrator;
 use Prismic\DocumentInterface;
 use Prismic\Exception\RuntimeException;
 use Prismic\Ref;
@@ -33,6 +34,9 @@ class SearchFormTest extends TestCase
     /** @var Form */
     private $form;
 
+    /** @var Api */
+    private $api;
+
     /**
      * @see fixtures/data.json
      */
@@ -56,6 +60,7 @@ class SearchFormTest extends TestCase
             $this->cache->reveal()
         );
         $api->setLinkResolver(new FakeLinkResolver());
+        $this->api = $api;
         return $api;
     }
 
@@ -530,5 +535,17 @@ class SearchFormTest extends TestCase
         $this->assertInstanceOf(PrismicResponse::class, $response);
         $results = $response->getResults();
         $this->assertContainsOnlyInstancesOf(DocumentInterface::class, $results);
+    }
+
+    public function testResultsWillBeHydratedWithTheCorrectClass()
+    {
+        $this->prepareV2SearchResult();
+        $form = $this->getSearchForm();
+        /** @var Hydrator $hydrator */
+        $hydrator = $this->api->getHydrator();
+        $hydrator->mapType('doc-type', Document\CustomDocument::class);
+        $response = $form->submit();
+        $results = $response->getResults();
+        $this->assertContainsOnlyInstancesOf(Document\CustomDocument::class, $results);
     }
 }
