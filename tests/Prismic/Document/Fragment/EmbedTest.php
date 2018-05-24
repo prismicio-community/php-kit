@@ -30,6 +30,6 @@ class EmbedTest extends TestCase
         $this->assertSame('EMBED_HTML_STRING', $embed->getHtml());
         $this->assertSame(500, $embed->getWidth());
         $this->assertSame(500, $embed->getHeight());
-        $this->assertInternalType('string', $embed->asHtml());
+        $this->assertSame('<div data-oembed-provider="youtube" data-oembed="EMBED_URL" data-oembed-type="video">EMBED_HTML_STRING</div>', $embed->asHtml());
     }
 }

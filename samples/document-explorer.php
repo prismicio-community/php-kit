@@ -18,7 +18,10 @@ declare(strict_types=1);
 namespace Prismic\Sample {
 
     use Prismic\Api;
+    use Prismic\Document\Fragment\Link\DocumentLink;
+    use Prismic\DocumentInterface;
     use Prismic\Exception;
+    use Prismic\LinkResolverAbstract;
     use Prismic\SearchForm;
     use stdClass;
 
@@ -33,9 +36,16 @@ namespace Prismic\Sample {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
+    class Resolver extends LinkResolverAbstract
+    {
+        protected function resolveDocumentLink(DocumentLink $link) :? string
+        {
+            return sprintf('/?id=%s', $link->getId());
+        }
+    }
+
     $finder = new Finder();
     echo (string) $finder;
-
 
     class Finder
     {
@@ -49,6 +59,7 @@ namespace Prismic\Sample {
         {
             try {
                 $this->api = Api::get(PRISMIC_CONFIG['api'], PRISMIC_CONFIG['token']);
+                $this->api->setLinkResolver(new Resolver());
                 $document = isset($_GET['id']) ? $this->findById($_GET['id']) : null;
                 $document = $document ? $document : $this->mostRecent();
                 $this->document = $document;
@@ -58,22 +69,22 @@ namespace Prismic\Sample {
             }
         }
 
-        public function mostRecent() :? stdClass
+        public function mostRecent() :? DocumentInterface
         {
             /** @var SearchForm $form */
             $form = $this->api->forms()->everything;
             $form = $form->ref($this->api->ref());
             $form = $form->orderings('[document.last_publication_date desc]');
             $response = $form->submit();
-            if (isset($response->results) && count($response->results) >= 1) {
-                return current($response->results);
+            if (count($response->getResults()) >= 1) {
+                return current($response->getResults());
             }
             return null;
         }
 
-        public function findById(string $id) :? stdClass
+        public function findById(string $id) :? DocumentInterface
         {
-            return $this->api->getByID($id);
+            return $this->api->getById($id);
         }
 
         public function __toString() : string
@@ -88,17 +99,17 @@ namespace Prismic\Sample {
             $markup[] = '<div class="row my-4"><div class="col-md-12">';
             $title = sprintf(
                 'Viewing Document ID# <code>%s</code> of type “%s”',
-                $this->document->id,
-                $this->document->type
+                $this->document->getId(),
+                $this->document->getType()
             );
             $markup[] = sprintf('<h1>%s</h1>', $title);
             $markup[] = '</div></div>';
             $markup[] = '<div class="row"><div class="col-md-8">';
-            $markup[] = $this->printJson();
+            $markup[] = $this->document->getData()->asHtml();
             $markup[] = '</div>';
             $markup[] = '<div class="col-md-4">';
-            $markup[] = $this->listLinks();
-            $markup[] = $this->listRecentDocs();
+            //$markup[] = $this->listLinks();
+            $markup[] = $this->listRecentDocs(20);
             $markup[] = '</div></div></div>';
             return implode("\n", $markup);
         }
@@ -111,6 +122,10 @@ namespace Prismic\Sample {
             return implode("\n", $markup);
         }
 
+        /**
+         * @return DocumentInterface[]
+         * @param int $count
+         */
         private function recentDocs(int $count = 10) : array
         {
             /** @var SearchForm $form */
@@ -119,8 +134,8 @@ namespace Prismic\Sample {
             $form = $form->orderings('[document.last_publication_date desc]');
             $response = $form->submit();
             $out = [];
-            if (isset($response->results) && count($response->results) >= 1) {
-                foreach ($response->results as $doc) {
+            if (count($response->getResults()) >= 1) {
+                foreach ($response->getResults() as $doc) {
                     $out[] = $doc;
                     if (count($out) >= $count) {
                         break;
@@ -138,8 +153,8 @@ namespace Prismic\Sample {
             foreach ($this->recentDocs($count) as $link) {
                 $markup[] = sprintf(
                     '<a class="list-group-item list-group-item-action" href="/?id=%1$s">ID: %1$s, Type: %2$s</a>',
-                    $link->id,
-                    $link->type
+                    $link->getId(),
+                    $link->getType()
                 );
             }
             $markup[] = '</div>';
@@ -180,6 +195,12 @@ namespace Prismic\Sample {
           rel="stylesheet"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
           crossorigin="anonymous">
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+        }    
+    </style>
 </head>
 <body>
 <div class="container">

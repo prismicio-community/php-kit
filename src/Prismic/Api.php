@@ -132,7 +132,7 @@ class Api
 
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $httpClient->request('GET', $url);
+            $response = $api->httpClient->request('GET', $url);
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }

@@ -99,16 +99,14 @@ class Embed implements FragmentInterface
 
     public function openTag() : string
     {
-        $attributes = [
-            'data-oembed-attributes' => $this->attributes,
-        ];
+        $attributes = [];
         if ($this->provider) {
             $attributes['data-oembed-provider'] = \strtolower($this->provider);
         }
         $attributes['data-oembed'] = $this->url;
         $attributes['data-oembed-type'] = $this->type;
         return \sprintf(
-            '<div %s>',
+            '<div%s>',
             $this->htmlAttributes($attributes)
         );
     }
@@ -121,7 +119,7 @@ class Embed implements FragmentInterface
     public function asHtml() :? string
     {
         return \sprintf(
-            '%s%s%',
+            '%s%s%s',
             $this->openTag(),
             $this->html,
             $this->closeTag()
