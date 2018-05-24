@@ -458,7 +458,7 @@ class Api
      * @return stdClass|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByID(string $id, array $options = []) :? DocumentInterface
+    public function getById(string $id, array $options = []) :? DocumentInterface
     {
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
@@ -472,7 +472,7 @@ class Api
      * @return stdClass|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByUID(string $type, string $uid, array $options = []) :? DocumentInterface
+    public function getByUid(string $type, string $uid, array $options = []) :? DocumentInterface
     {
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
@@ -485,7 +485,7 @@ class Api
      * @return Response the response, including documents and pagination information
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByIDs(array $ids, array $options = []) : Response
+    public function getByIds(array $ids, array $options = []) : Response
     {
         return $this->query(Predicates::in("document.id", $ids), $options);
     }

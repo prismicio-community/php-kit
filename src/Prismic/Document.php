@@ -8,8 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Prismic\Document\Fragment\FragmentCollection;
-use Prismic\Exception\RuntimeException;
-use Prismic\Exception\UnexpectedValueException;
+use Prismic\Document\Fragment\Link\DocumentLink;
 use stdClass;
 
 class Document implements DocumentInterface
@@ -126,7 +125,7 @@ class Document implements DocumentInterface
             : $data;
 
         if (! $api->getLinkResolver()) {
-            throw new RuntimeException(
+            throw new Exception\RuntimeException(
                 'Documents cannot be properly hydrated without a Link Resolver being made available to the API'
             );
         }
@@ -139,16 +138,16 @@ class Document implements DocumentInterface
 
     protected function assertRequiredProperty(stdClass $object, string $property, $nullable = true)
     {
-        if (! isset($object->{$property})) {
-            throw new Exception\UnexpectedValueException(sprintf(
-                'Expected the property %s to be present in JSON payload',
+        if (! \property_exists($object, $property)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'A required document property was missing from the JSON payload: %s',
                 $property
             ));
         }
         $value = $object->{$property};
         if (null === $value && false === $nullable) {
-            throw new UnexpectedValueException(sprintf(
-                'Expected the property %s to be non-null in the JSON payload',
+            throw new Exception\InvalidArgumentException(sprintf(
+                'A required document property was found to be null in the JSON payload: %s',
                 $property
             ));
         }
@@ -218,6 +217,7 @@ class Document implements DocumentInterface
                 return $id ? $this->api->getByID($id) : null;
             }
         }
+        return null;
     }
 
     public function getData() : FragmentCollection
@@ -233,5 +233,10 @@ class Document implements DocumentInterface
     public function has(string $key) : bool
     {
         return $this->data->has($key);
+    }
+
+    public function asLink() : DocumentLink
+    {
+        return DocumentLink::withDocument($this, $this->api->getLinkResolver());
     }
 }
