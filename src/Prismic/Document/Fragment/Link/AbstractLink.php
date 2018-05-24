@@ -5,6 +5,7 @@ namespace Prismic\Document\Fragment\Link;
 
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Document\Fragment\HtmlHelperTrait;
+use Prismic\DocumentInterface;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
 
@@ -70,6 +71,8 @@ abstract class AbstractLink implements LinkInterface
         /** @var LinkInterface $link */
         return $link;
     }
+
+
 
     protected function __construct()
     {

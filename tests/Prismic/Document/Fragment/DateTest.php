@@ -58,5 +58,4 @@ class DateTest extends TestCase
         $date = $this->collection->get('null-date-v1');
         $this->assertNull($date->asHtml());
     }
-
 }

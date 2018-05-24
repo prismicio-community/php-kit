@@ -166,5 +166,4 @@ class LinkTest extends TestCase
         $expect = '<a href="IMAGE_URL">image.gif</a>';
         $this->assertSame($expect, $link->asHtml());
     }
-
 }

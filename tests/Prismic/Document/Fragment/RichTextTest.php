@@ -145,5 +145,4 @@ class RichTextTest extends TestCase
         $this->assertCount(0, $text->getHeadings());
         $this->assertCount(0, $text->getLists());
     }
-
 }

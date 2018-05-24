@@ -179,5 +179,4 @@ class RichText implements CompositeFragmentInterface
         $lists = $this->getLists();
         return \count($lists) ? \current($lists) : null;
     }
-
 }

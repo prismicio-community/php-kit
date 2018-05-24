@@ -68,5 +68,4 @@ class TextTest extends TestCase
         $this->assertSame($expectInt, $text->asInteger());
         $this->assertSame($expectFloat, $text->asFloat());
     }
-
 }

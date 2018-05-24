@@ -21,8 +21,8 @@ class TextElementTest extends TestCase
     public function testFactoryThrowsExceptionWhenValueHasNoType()
     {
         TextElement::factory(
-            \json_decode('{"foo":"bar"}')
-            , new FakeLinkResolver()
+            \json_decode('{"foo":"bar"}'),
+            new FakeLinkResolver()
         );
     }
 
@@ -32,8 +32,8 @@ class TextElementTest extends TestCase
     public function testFactoryThrowsExceptionWhenTypeIsUnknown()
     {
         TextElement::factory(
-            \json_decode('{"type":"unknown"}')
-            , new FakeLinkResolver()
+            \json_decode('{"type":"unknown"}'),
+            new FakeLinkResolver()
         );
     }
 

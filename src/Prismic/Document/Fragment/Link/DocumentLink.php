@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment\Link;
 
 use Prismic\Document\Fragment\FragmentInterface;
+use Prismic\DocumentInterface;
 use Prismic\LinkResolver;
 
 class DocumentLink extends AbstractLink
@@ -52,6 +53,20 @@ class DocumentLink extends AbstractLink
         \array_walk($keys, function ($key) use ($data, $link) {
             $link->{$key} = isset($data[$key]) ? $data[$key] : null;
         });
+        return $link;
+    }
+
+    public static function withDocument(DocumentInterface $document, LinkResolver $linkResolver) : DocumentLink
+    {
+        $link               = new static;
+        $link->linkResolver = $linkResolver;
+        $link->id           = $document->getId();
+        $link->uid          = $document->getUid();
+        $link->type         = $document->getType();
+        $link->slug         = $document->getSlug();
+        $link->tags         = $document->getTags();
+        $link->lang         = $document->getLang();
+        $link->isBroken     = false;
         return $link;
     }
 

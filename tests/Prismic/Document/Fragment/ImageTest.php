@@ -124,5 +124,4 @@ class ImageTest extends TestCase
         $expect = '<a href="URL"><img src="URL" width="10" height="10" alt="" /></a>';
         $this->assertSame($expect, $image->asHtml());
     }
-
 }

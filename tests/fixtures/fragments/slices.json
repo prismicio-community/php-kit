@@ -1,0 +1,103 @@
+{
+    "slice-v2": {
+        "slice_type": "slice-v2",
+        "slice_label": "Slice Label",
+        "primary": {
+            "date": "2018-01-01",
+            "text": "Text",
+            "point": {
+                "latitude": 1.1,
+                "longitude": 2.2
+            }
+        },
+        "items": [
+            {
+                "text-1": "Text 1",
+                "text-2": "Text 2"
+            },
+            {
+                "text-1": "Text 1",
+                "text-2": "Text 2"
+            }
+        ]
+    },
+    "composite-v1": {
+        "type": "Slice",
+        "slice_type": "composite-v1",
+        "slice_label": "Slice Label",
+        "repeat": [
+            {
+                "text-1": {
+                    "type": "Text",
+                    "value": "Text 1"
+                },
+                "text-2": {
+                    "type": "Text",
+                    "value": "Text 2"
+                }
+            },
+            {
+                "text-1": {
+                    "type": "Text",
+                    "value": "Text 1"
+                },
+                "text-2": {
+                    "type": "Text",
+                    "value": "Text 2"
+                }
+            }
+        ],
+        "non-repeat": {
+            "date": {
+                "type": "Date",
+                "value": "2018-01-01"
+            },
+            "text": {
+                "type": "Text",
+                "value": "Text"
+            },
+            "point": {
+                "type": "GeoPoint",
+                "value": {
+                    "latitude": 1.1,
+                    "longitude": 2.2
+                }
+            }
+        }
+    },
+    "legacy-v1": {
+        "type": "SliceZone",
+        "value": [
+            {
+                "type": "Slice",
+                "slice_type": "legacy-v1",
+                "slice_label": "label-value",
+                "value": {
+                    "type": "Group",
+                    "value": [
+                        {
+                            "text-1": {
+                                "type": "Text",
+                                "value": "Text 1"
+                            },
+                            "text-2": {
+                                "type": "Text",
+                                "value": "Text 2"
+                            }
+                        },
+                        {
+                            "text-1": {
+                                "type": "Text",
+                                "value": "Text 1"
+                            },
+                            "text-2": {
+                                "type": "Text",
+                                "value": "Text 2"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

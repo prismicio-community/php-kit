@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use Prismic\Document\Fragment\Link\DocumentLink;
 use Prismic\Document\Hydrator;
+use Prismic\Document\HydratorInterface;
 use Prismic\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -110,7 +112,7 @@ class Api
 
         $api->version = \preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
 
-        $api->hydrator = new Hydrator($api, [], Document::class);
+        $api->setHydrator(new Hydrator($api, [], Document::class));
 
         $url = $action . ($api->accessToken ? '?access_token=' . $api->accessToken : '');
         $key = static::generateCacheKey($url);
@@ -141,6 +143,16 @@ class Api
         $api->cache->save($cacheItem);
 
         return $api;
+    }
+
+    public function getHydrator() : HydratorInterface
+    {
+        return $this->hydrator;
+    }
+
+    public function setHydrator(HydratorInterface $hydrator)
+    {
+        $this->hydrator = $hydrator;
     }
 
     public function setLinkResolver(LinkResolver $linkResolver) : void
@@ -290,9 +302,10 @@ class Api
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
-                       ->results;
+                       ->getResults();
             if (count($documents) > 0) {
-                if ($url = $linkResolver($documents[0])) {
+                $link = DocumentLink::withDocument($documents[0], $this->getLinkResolver());
+                if ($url = $linkResolver($link)) {
                     return $url;
                 }
             }
@@ -404,7 +417,7 @@ class Api
      * @return stdClass
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function query($q, array $options = []) : stdClass
+    public function query($q, array $options = []) : Response
     {
         $options = $this->prepareDefaultQueryOptions($options);
         $ref = $this->ref();
@@ -428,9 +441,9 @@ class Api
      * @return stdClass|null The resulting document, or null
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function queryFirst($q, array $options = []) :? stdClass
+    public function queryFirst($q, array $options = []) :? DocumentInterface
     {
-        $documents = $this->query($q, $options)->results;
+        $documents = $this->query($q, $options)->getResults();
         if (count($documents) > 0) {
             return $documents[0];
         }
@@ -445,7 +458,7 @@ class Api
      * @return stdClass|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByID(string $id, array $options = []) :? stdClass
+    public function getByID(string $id, array $options = []) :? DocumentInterface
     {
         return $this->queryFirst(Predicates::at("document.id", $id), $options);
     }
@@ -459,7 +472,7 @@ class Api
      * @return stdClass|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByUID(string $type, string $uid, array $options = []) :? stdClass
+    public function getByUID(string $type, string $uid, array $options = []) :? DocumentInterface
     {
         return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
     }
@@ -469,10 +482,10 @@ class Api
      *
      * @param array $ids array of strings, the requested ids
      * @param array $options query options: pageSize, orderings, etc.
-     * @return stdClass the response, including documents and pagination information
+     * @return Response the response, including documents and pagination information
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getByIDs(array $ids, array $options = []) : stdClass
+    public function getByIDs(array $ids, array $options = []) : Response
     {
         return $this->query(Predicates::in("document.id", $ids), $options);
     }
@@ -485,7 +498,7 @@ class Api
      * @return stdClass|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
-    public function getSingle(string $type, array $options = []) :? stdClass
+    public function getSingle(string $type, array $options = []) :? DocumentInterface
     {
         return $this->queryFirst(Predicates::at("document.type", $type), $options);
     }
@@ -502,10 +515,5 @@ class Api
         }
 
         return $options;
-    }
-
-    public function getHydrator() : Hydrator
-    {
-        return $this->hydrator;
     }
 }

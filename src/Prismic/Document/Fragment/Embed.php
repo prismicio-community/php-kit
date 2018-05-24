@@ -52,8 +52,8 @@ class Embed implements FragmentInterface
         $embed->type = $value->type;
         $embed->url  = $value->embed_url;
         $embed->html = isset($value->html) ? $value->html : null;
-        $embed->height = isset($value->height) ? $value->height : null;
-        $embed->width = isset($value->width) ? $value->width : null;
+        $embed->height = isset($value->height) ? (int) $value->height : null;
+        $embed->width = isset($value->width) ? (int) $value->width : null;
 
         $embed->attributes = \array_diff_key(
             (array) $value,
@@ -87,9 +87,21 @@ class Embed implements FragmentInterface
         return $this->url;
     }
 
+    public function getWidth() :? int
+    {
+        return $this->width;
+    }
+
+    public function getHeight() :? int
+    {
+        return $this->height;
+    }
+
     public function openTag() : string
     {
-        $attributes = $this->attributes;
+        $attributes = [
+            'data-oembed-attributes' => $this->attributes,
+        ];
         if ($this->provider) {
             $attributes['data-oembed-provider'] = \strtolower($this->provider);
         }

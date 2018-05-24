@@ -8,7 +8,7 @@ use Prismic\Api;
 use Prismic\DocumentInterface;
 use stdClass;
 
-class Hydrator
+class Hydrator implements HydratorInterface
 {
 
     private $defaultClass;

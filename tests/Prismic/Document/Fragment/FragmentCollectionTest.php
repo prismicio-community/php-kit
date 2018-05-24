@@ -51,7 +51,6 @@ class FragmentCollectionTest extends TestCase
         $this->assertTrue($collection->has('richtext'));
         $p = $collection->get('richtext');
         $this->assertInstanceOf(RichText::class, $p);
-
     }
 
     public function testEmptyCollection()

@@ -31,4 +31,8 @@ interface DocumentInterface
     public function getAlternateLanguages() : array;
 
     public function getData() : FragmentCollection;
+
+    public function getSlugs() : array;
+
+    public function getSlug() :? string;
 }

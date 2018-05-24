@@ -10,6 +10,8 @@ use Prismic\LinkResolver;
 class Slice implements CompositeFragmentInterface
 {
 
+    use HtmlHelperTrait;
+
     /**
      * @var FragmentCollection|null
      */
@@ -47,6 +49,11 @@ class Slice implements CompositeFragmentInterface
         $label   = isset($value->slice_label)
                  ? (string) $value->slice_label
                  : null;
+
+        if (! $type) {
+            throw new InvalidArgumentException('No Slice type could be determined from the payload');
+        }
+
         // V1
         $group   = isset($value->repeat)
                  ? Group::factory($value->repeat, $linkResolver)
@@ -58,7 +65,7 @@ class Slice implements CompositeFragmentInterface
          * In much older versions of the API (Before "Composite Slices"), slices
          * had a 'value' property which contained the repeatable group
          */
-        if (! $group && isset($value->value) && isset($value->type) && $value->type === 'Group') {
+        if (! $group && isset($value->value) && isset($value->value->type) && $value->value->type === 'Group') {
             $group = Group::factory($value->value, $linkResolver);
         }
 
@@ -70,10 +77,17 @@ class Slice implements CompositeFragmentInterface
                  ? FragmentCollection::factory($value->primary, $linkResolver)
                  : $primary;
 
-        if (! $type) {
-            throw new InvalidArgumentException('No Slice type could be determined from the payload');
-        }
         return new static($type, $label, $primary, $group);
+    }
+
+    public function getType() : string
+    {
+        return $this->type;
+    }
+
+    public function getLabel() :? string
+    {
+        return $this->label;
     }
 
     public function getPrimary() :? FragmentCollection
@@ -106,17 +120,22 @@ class Slice implements CompositeFragmentInterface
         if (! $this->group && ! $this->primary) {
             return null;
         }
-        $data = [];
+        $attributes = [
+            'data-slice-type' => $this->type,
+        ];
+        if ($this->label) {
+            $attributes['class'] = $this->label;
+        }
+        $data = [
+            sprintf('<div%s>', $this->htmlAttributes($attributes)),
+        ];
         if ($this->primary) {
             $data[] = $this->primary->asHtml();
         }
         if ($this->group) {
             $data[] = $this->group->asHtml();
         }
-        return \sprintf(
-            '<div data-slice-type="%s">%s</div>',
-            $this->type,
-            \implode(\PHP_EOL, $data)
-        );
+        $data[] = '</div>';
+        return \implode(\PHP_EOL, $data);
     }
 }

@@ -41,5 +41,4 @@ class GeoPointTest extends TestCase
             $this->assertSame(2.2, $object->longitude);
         }
     }
-
 }

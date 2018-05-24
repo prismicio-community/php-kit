@@ -87,5 +87,4 @@ class ColorTest extends TestCase
         $colour = $this->getNonColor();
         $this->assertNull($colour->asInteger());
     }
-
 }

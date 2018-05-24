@@ -1,0 +1,16 @@
+{
+    "title": "Item Title",
+    "version": "1.0",
+    "width": 500,
+    "thumbnail_width": 500,
+    "type": "video",
+    "author_name": "Author",
+    "thumbnail_url": "THUMB_URL",
+    "provider_url": "PROVIDER_URL",
+    "provider_name": "YouTube",
+    "author_url": "AUTHOR_URL",
+    "thumbnail_height": 500,
+    "html": "EMBED_HTML_STRING",
+    "height": 500,
+    "embed_url": "EMBED_URL"
+}

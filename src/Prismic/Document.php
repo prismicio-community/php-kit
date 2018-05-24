@@ -94,7 +94,7 @@ class Document implements DocumentInterface
         $inst        = new static;
         $inst->api   = $api;
         $inst->id    = $inst->assertRequiredProperty($data, 'id', false);
-        $inst->uid   = $inst->assertRequiredProperty($data, 'id', true);
+        $inst->uid   = $inst->assertRequiredProperty($data, 'uid', true);
         $inst->type  = $inst->assertRequiredProperty($data, 'type', false);
         $inst->tags  = $inst->assertRequiredProperty($data, 'tags', false);
         $inst->lang  = $inst->assertRequiredProperty($data, 'lang', true);
@@ -175,6 +175,16 @@ class Document implements DocumentInterface
         return $this->tags;
     }
 
+    public function getSlugs() : array
+    {
+        return $this->slugs;
+    }
+
+    public function getSlug() :? string
+    {
+        return count($this->slugs) ? current($this->slugs) : null;
+    }
+
     public function getFirstPublicationDate() : ?DateTimeInterface
     {
         return $this->firstPublished;
@@ -198,6 +208,16 @@ class Document implements DocumentInterface
     public function getAlternateLanguages() : array
     {
         return $this->alternateLanguages;
+    }
+
+    public function getTranslation(string $lang) :? DocumentInterface
+    {
+        foreach ($this->alternateLanguages as $language) {
+            if (isset($language->lang) && $language->lang === $lang) {
+                $id = isset($language->id) ? $language->id : null;
+                return $id ? $this->api->getByID($id) : null;
+            }
+        }
     }
 
     public function getData() : FragmentCollection
