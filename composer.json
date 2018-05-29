@@ -1,6 +1,9 @@
 {
-    "name": "prismic/php-sdk",
-    "description": "PHP development kit for prismic.io",
+    "name": "netglue/prismic-php-kit",
+    "description": "Unofficial PHP development kit for prismic.io",
+    "type": "library",
+    "keywords": ["prismic", "prismicio", "cms"],
+    "homepage": "https://github.com/netglue/prismic-php-kit",
     "config": {
         "sort-packages": true
     },
