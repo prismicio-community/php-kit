@@ -154,6 +154,4 @@ class DocumentTest extends TestCase
         $link = $doc->asLink();
         $this->assertInstanceOf(Fragment\Link\DocumentLink::class, $link);
     }
-
-
 }
