@@ -215,7 +215,7 @@ class Document implements DocumentInterface
         foreach ($this->alternateLanguages as $language) {
             if (isset($language->lang) && $language->lang === $lang) {
                 $id = isset($language->id) ? $language->id : null;
-                return $id ? $this->api->getByID($id) : null;
+                return $id ? $this->api->getById($id) : null;
             }
         }
         return null;
