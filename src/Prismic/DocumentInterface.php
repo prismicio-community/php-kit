@@ -5,6 +5,7 @@ namespace Prismic;
 
 use DateTimeInterface;
 use Prismic\Document\Fragment\FragmentCollection;
+use Prismic\Document\Fragment\FragmentInterface;
 use stdClass;
 
 interface DocumentInterface
@@ -35,4 +36,9 @@ interface DocumentInterface
     public function getSlugs() : array;
 
     public function getSlug() :? string;
+
+    public function get(string $key) :? FragmentInterface;
+
+    public function has(string $key) : bool;
+
 }

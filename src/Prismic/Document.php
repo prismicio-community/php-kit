@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Prismic\Document\Fragment\FragmentCollection;
+use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\Link\DocumentLink;
 use stdClass;
 
@@ -225,7 +226,7 @@ class Document implements DocumentInterface
         return $this->data;
     }
 
-    public function get(string $key)
+    public function get(string $key) :? FragmentInterface
     {
         return $this->data->get($key);
     }
