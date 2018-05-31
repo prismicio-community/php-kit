@@ -6,6 +6,7 @@ namespace Prismic;
 use DateTimeInterface;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\FragmentInterface;
+use Prismic\Document\Fragment\Link\DocumentLink;
 use stdClass;
 
 interface DocumentInterface
