@@ -22,9 +22,9 @@ class SimplePredicate implements Predicate
      */
     public function __construct(string $name, string $fragment, array $args = [])
     {
-        $this->name = $name;
+        $this->name     = $name;
         $this->fragment = $fragment;
-        $this->args = $args;
+        $this->args     = $args;
     }
 
     /**
@@ -50,7 +50,7 @@ class SimplePredicate implements Predicate
      *
      * @return string
      */
-    private static function serializeField($value) : string
+    private function serializeField($value) : string
     {
         if (is_string($value)) {
             return "\"" . $value . "\"";
@@ -58,10 +58,10 @@ class SimplePredicate implements Predicate
         if (is_array($value)) {
             $str_array = [];
             foreach ($value as $elt) {
-                array_push($str_array, static::serializeField($elt));
+                array_push($str_array, $this->serializeField($elt));
             }
             return "[" . implode(", ", $str_array) . "]";
         }
-        return (string)$value;
+        return (string) $value;
     }
 }

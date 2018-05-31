@@ -353,7 +353,7 @@ class SearchFormTest extends TestCase
     public function testMultiplePredicatesInQuery()
     {
         $predicateA = Predicates::at('document.id', 'SomeId');
-        $predicateB = Predicates::any('document.tags', 'Some Tag');
+        $predicateB = Predicates::any('document.tags', ['Some Tag']);
         $expect = sprintf('[%s%s]', $predicateA->q(), $predicateB->q());
         $form = $this->getSearchForm()->query($predicateA, $predicateB);
         $data = $form->getData();
@@ -364,7 +364,7 @@ class SearchFormTest extends TestCase
     {
         $query = [
             Predicates::at('document.id', 'SomeId'),
-            Predicates::any('document.tags', 'Some Tag'),
+            Predicates::any('document.tags', ['Some Tag']),
         ];
         $expect = sprintf('[%s%s]', $query[0]->q(), $query[1]->q());
         $form = $this->getSearchForm()->query(...$query);
@@ -376,7 +376,7 @@ class SearchFormTest extends TestCase
     {
         $query = [
             Predicates::at('document.id', 'SomeId'),
-            Predicates::any('document.tags', 'Some Tag'),
+            Predicates::any('document.tags', ['Some Tag']),
         ];
         $expect = sprintf('[%s%s]', $query[0]->q(), $query[1]->q());
         $form = $this->getSearchForm()->query($query);

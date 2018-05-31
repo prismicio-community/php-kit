@@ -3,55 +3,55 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use DateTime;
+use DateTimeInterface;
+use Prismic\Exception\InvalidArgumentException;
 
 /**
  * A set of helpers to build predicates
- * @package Prismic
  */
 class Predicates
 {
 
     /**
      * @param string $fragment
-     * @param string $value
+     * @param string|array $value
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function at($fragment, $value)
+    public static function at(string $fragment, $value) : Predicate
     {
         return new SimplePredicate("at", $fragment, [$value]);
     }
 
     /**
      * @param string $fragment
-     * @param string $value
+     * @param string|array $value
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function not($fragment, $value)
+    public static function not(string $fragment, $value) : Predicate
     {
         return new SimplePredicate("not", $fragment, [$value]);
     }
 
     /**
      * @param string $fragment
-     * @param string $values
+     * @param array $values
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function any($fragment, $values)
+    public static function any(string $fragment, array $values) : Predicate
     {
         return new SimplePredicate("any", $fragment, [$values]);
     }
 
     /**
      * @param string $fragment
-     * @param string $values
+     * @param array $values
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function in($fragment, $values)
+    public static function in(string $fragment, array $values) : Predicate
     {
         return new SimplePredicate("in", $fragment, [$values]);
     }
@@ -59,9 +59,9 @@ class Predicates
     /**
      * @param string $fragment
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function has($fragment)
+    public static function has(string $fragment) : Predicate
     {
         return new SimplePredicate("has", $fragment);
     }
@@ -69,9 +69,9 @@ class Predicates
     /**
      * @param string $fragment
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function missing($fragment)
+    public static function missing(string $fragment) : Predicate
     {
         return new SimplePredicate("missing", $fragment);
     }
@@ -80,9 +80,9 @@ class Predicates
      * @param string $fragment
      * @param string $value
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function fulltext($fragment, $value)
+    public static function fulltext(string $fragment, string $value) : Predicate
     {
         return new SimplePredicate("fulltext", $fragment, [$value]);
     }
@@ -91,88 +91,103 @@ class Predicates
      * @param string $documentId
      * @param int    $maxResults
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function similar($documentId, $maxResults)
+    public static function similar(string $documentId, int $maxResults) : Predicate
     {
         return new SimplePredicate("similar", $documentId, [$maxResults]);
     }
 
     /**
      * @param string $fragment
-     * @param int    $lowerBound
+     * @param int|float|string $lowerBound A number or numeric string
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function lt($fragment, $lowerBound)
+    public static function lt(string $fragment, $lowerBound) : Predicate
     {
+        if (! \is_numeric($lowerBound)) {
+            throw new InvalidArgumentException(
+                'Predicates::lt() expects a number as it’s second argument'
+            );
+        }
         return new SimplePredicate("number.lt", $fragment, [$lowerBound]);
     }
 
     /**
      * @param string $fragment
-     * @param int    $upperBound
+     * @param int|float|string $upperBound A number or numeric string
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function gt($fragment, $upperBound)
+    public static function gt(string $fragment, $upperBound) : Predicate
     {
+        if (! \is_numeric($upperBound)) {
+            throw new InvalidArgumentException(
+                'Predicates::gt() expects a number as it’s second argument'
+            );
+        }
         return new SimplePredicate("number.gt", $fragment, [$upperBound]);
     }
 
     /**
      * @param string $fragment
-     * @param int    $lowerBound
-     * @param int    $upperBound
+     * @param int|float|string $lowerBound A number or numeric string
+     * @param int|float|string $upperBound A number or numeric string
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function inRange($fragment, $lowerBound, $upperBound)
+    public static function inRange(string $fragment, $lowerBound, $upperBound) : Predicate
     {
+        if (! \is_numeric($upperBound) || ! \is_numeric($lowerBound)) {
+            throw new InvalidArgumentException(
+                'Predicates::inRange() expects numbers for it’s second and third arguments'
+            );
+        }
         return new SimplePredicate("number.inRange", $fragment, [$lowerBound, $upperBound]);
     }
 
     /**
-     * @param string       $fragment
-     * @param DateTime|int $before
+     * @param string $fragment
+     * @param DateTimeInterface|int|string $before
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dateBefore($fragment, $before)
+    public static function dateBefore(string $fragment, $before) : Predicate
     {
-        if ($before instanceof DateTime) {
+        if ($before instanceof DateTimeInterface) {
             $before = $before->getTimestamp() * 1000;
         }
         return new SimplePredicate("date.before", $fragment, [$before]);
     }
 
     /**
-     * @param string       $fragment
-     * @param DateTime|int $after
+     * @param string $fragment
+     * @param DateTimeInterface|int|string $after
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dateAfter($fragment, $after)
+    public static function dateAfter(string $fragment, $after) : Predicate
     {
-        if ($after instanceof DateTime) {
+        if ($after instanceof DateTimeInterface) {
             $after = $after->getTimestamp() * 1000;
         }
         return new SimplePredicate("date.after", $fragment, [$after]);
     }
 
     /**
-     * @param string       $fragment
-     * @param DateTime|int $before
-     * @param DateTime|int $after
+     * @param string $fragment
+     * @param DateTimeInterface|int|string $before
+     * @param DateTimeInterface|int|string $after
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dateBetween($fragment, $before, $after)
+    public static function dateBetween(string $fragment, $before, $after) : Predicate
     {
-        if ($before instanceof DateTime) {
+        if ($before instanceof DateTimeInterface) {
             $before = $before->getTimestamp() * 1000;
         }
-        if ($after instanceof DateTime) {
+        if ($after instanceof DateTimeInterface) {
             $after = $after->getTimestamp() * 1000;
         }
         return new SimplePredicate("date.between", $fragment, [$before, $after]);
@@ -180,156 +195,195 @@ class Predicates
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfMonth($fragment, $day)
+    public static function dayOfMonth(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('j');
+        }
         return new SimplePredicate("date.day-of-month", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfMonthBefore($fragment, $day)
+    public static function dayOfMonthBefore(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('j');
+        }
         return new SimplePredicate("date.day-of-month-before", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfMonthAfter($fragment, $day)
+    public static function dayOfMonthAfter(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('j');
+        }
         return new SimplePredicate("date.day-of-month-after", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfWeek($fragment, $day)
+    public static function dayOfWeek(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('N');
+        }
         return new SimplePredicate("date.day-of-week", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfWeekBefore($fragment, $day)
+    public static function dayOfWeekBefore(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('N');
+        }
         return new SimplePredicate("date.day-of-week-before", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $day
+     * @param DateTimeInterface|int|string $day
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function dayOfWeekAfter($fragment, $day)
+    public static function dayOfWeekAfter(string $fragment, $day) : Predicate
     {
+        if ($day instanceof DateTimeInterface) {
+            $day = (int) $day->format('N');
+        }
         return new SimplePredicate("date.day-of-week-after", $fragment, [$day]);
     }
 
     /**
      * @param string $fragment
-     * @param string $month
+     * @param DateTimeInterface|int|string $month
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function month($fragment, $month)
+    public static function month(string $fragment, $month) : Predicate
     {
+        if ($month instanceof DateTimeInterface) {
+            $month = (int) $month->format('n');
+        }
         return new SimplePredicate("date.month", $fragment, [$month]);
     }
 
     /**
      * @param string $fragment
-     * @param string $month
+     * @param DateTimeInterface|int|string $month
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function monthBefore($fragment, $month)
+    public static function monthBefore(string $fragment, $month) : Predicate
     {
+        if ($month instanceof DateTimeInterface) {
+            $month = (int) $month->format('n');
+        }
         return new SimplePredicate("date.month-before", $fragment, [$month]);
     }
 
     /**
      * @param string $fragment
-     * @param string $month
+     * @param DateTimeInterface|int|string $month
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function monthAfter($fragment, $month)
+    public static function monthAfter(string $fragment, $month) : Predicate
     {
+        if ($month instanceof DateTimeInterface) {
+            $month = (int) $month->format('n');
+        }
         return new SimplePredicate("date.month-after", $fragment, [$month]);
     }
 
     /**
      * @param string $fragment
-     * @param string $year
+     * @param DateTimeInterface|int|string $year
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function year($fragment, $year)
+    public static function year(string $fragment, $year) : Predicate
     {
+        if ($year instanceof DateTimeInterface) {
+            $year = (int) $year->format('Y');
+        }
         return new SimplePredicate("date.year", $fragment, [$year]);
     }
 
     /**
      * @param string $fragment
-     * @param string $hour
+     * @param DateTimeInterface|int|string $hour
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function hour($fragment, $hour)
+    public static function hour(string $fragment, $hour) : Predicate
     {
+        if ($hour instanceof DateTimeInterface) {
+            $hour = (int) $hour->format('H');
+        }
         return new SimplePredicate("date.hour", $fragment, [$hour]);
     }
 
     /**
      * @param string $fragment
-     * @param string $hour
+     * @param DateTimeInterface|int|string $hour
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function hourBefore($fragment, $hour)
+    public static function hourBefore(string $fragment, $hour) : Predicate
     {
+        if ($hour instanceof DateTimeInterface) {
+            $hour = (int) $hour->format('H');
+        }
         return new SimplePredicate("date.hour-before", $fragment, [$hour]);
     }
 
     /**
      * @param string $fragment
-     * @param string $hour
+     * @param DateTimeInterface|int|string $hour
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function hourAfter($fragment, $hour)
+    public static function hourAfter(string $fragment, $hour) : Predicate
     {
+        if ($hour instanceof DateTimeInterface) {
+            $hour = (int) $hour->format('H');
+        }
         return new SimplePredicate("date.hour-after", $fragment, [$hour]);
     }
 
     /**
      * @param string $fragment
-     * @param string $latitude
-     * @param string $longitude
-     * @param string $radius
+     * @param float $latitude
+     * @param float $longitude
+     * @param float $radius In Kilometers
      *
-     * @return SimplePredicate
+     * @return Predicate
      */
-    public static function near($fragment, $latitude, $longitude, $radius)
+    public static function near(string $fragment, float $latitude, float $longitude, float $radius) : Predicate
     {
         return new SimplePredicate("geopoint.near", $fragment, [$latitude, $longitude, $radius]);
     }
