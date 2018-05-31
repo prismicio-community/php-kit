@@ -58,7 +58,14 @@ namespace Prismic\Sample {
         public function __construct()
         {
             try {
-                $this->api = Api::get(PRISMIC_CONFIG['api'], PRISMIC_CONFIG['token']);
+                $apiUrl = \getenv('PRISMIC_API')
+                    ? \getenv('PRISMIC_API')
+                    : PRISMIC_CONFIG['api'];
+                $accessToken = \getenv('PRISMIC_TOKEN')
+                    ? \getenv('PRISMIC_TOKEN')
+                    : PRISMIC_CONFIG['token'];
+
+                $this->api = Api::get($apiUrl, $accessToken);
                 $this->api->setLinkResolver(new Resolver());
                 $document = isset($_GET['id']) ? $this->findById($_GET['id']) : null;
                 $document = $document ? $document : $this->mostRecent();
