@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment\Link;
 
+use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Document\Fragment\HtmlHelperTrait;
-use Prismic\DocumentInterface;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
 
@@ -48,17 +48,17 @@ abstract class AbstractLink implements LinkInterface
         switch ($linkType) {
             case 'Link.document':
             case 'Document':
-                $link = DocumentLink::factory($value, $linkResolver);
+                $link = DocumentLink::linkFactory($value, $linkResolver);
                 break;
             case 'Link.web':
             case 'Web':
-                $link = WebLink::factory($value, $linkResolver);
+                $link = WebLink::linkFactory($value, $linkResolver);
                 break;
             case 'Link.image':
-                $link = ImageLink::factory($value, $linkResolver);
+                $link = ImageLink::linkFactory($value, $linkResolver);
                 break;
             case 'Link.file':
-                $link = FileLink::factory($value, $linkResolver);
+                $link = FileLink::linkFactory($value, $linkResolver);
                 break;
         }
 
@@ -72,7 +72,12 @@ abstract class AbstractLink implements LinkInterface
         return $link;
     }
 
+    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    {
+        return static::linkFactory($value, $linkResolver);
+    }
 
+    abstract public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface;
 
     protected function __construct()
     {

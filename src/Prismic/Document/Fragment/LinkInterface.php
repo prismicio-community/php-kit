@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment;
 
+use Prismic\LinkResolver;
+
 interface LinkInterface extends FragmentInterface
 {
+
+    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface;
 
     public function getUrl() :? string;
 

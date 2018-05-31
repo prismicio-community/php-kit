@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment\Link;
 
-use Prismic\Document\Fragment\FragmentInterface;
+use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
 
@@ -19,7 +19,7 @@ class WebLink extends AbstractLink
         return $this->url;
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface
     {
         /** @var WebLink $link */
         $link = new static();

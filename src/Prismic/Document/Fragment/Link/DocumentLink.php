@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment\Link;
 
-use Prismic\Document\Fragment\FragmentInterface;
+use Prismic\Document\Fragment\LinkInterface;
 use Prismic\DocumentInterface;
 use Prismic\LinkResolver;
 
@@ -34,7 +34,7 @@ class DocumentLink extends AbstractLink
     /** @var bool */
     private $isBroken;
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface
     {
         /** @var DocumentLink $link */
         $link = new static();
