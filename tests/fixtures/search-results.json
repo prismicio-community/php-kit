@@ -37,6 +37,11 @@
                 }
             ],
             "data": {
+                "null-fragment" : null,
+                "empty-image": {
+                    "empty-thumb": {}
+                },
+                "empty-richtext": [],
                 "single-image": {
                     "dimensions": {
                         "width": 960,

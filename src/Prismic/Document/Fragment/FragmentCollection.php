@@ -134,11 +134,39 @@ class FragmentCollection implements CompositeFragmentInterface
             return;
         }
 
+        if ($this->isEmptyFragment($value)) {
+            return;
+        }
+
         throw new UnexpectedValueException(\sprintf(
             'Cannot determine the fragment type at index %s with the content %s',
             $key,
             \json_encode($value)
         ));
+    }
+
+    private function isEmptyFragment($value)
+    {
+        if (null === $value) {
+            return true;
+        }
+        if (\is_array($value) && empty($value)) {
+            return true;
+        }
+        if (\is_string($value) && '' === $value) {
+            return true;
+        }
+        if (\is_object($value)) {
+            $properties = \get_object_vars($value);
+            foreach ($properties as $name => $property) {
+                if (! $this->isEmptyFragment($property)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public function asText() :? string
