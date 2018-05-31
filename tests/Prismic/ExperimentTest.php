@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use Prismic\Experiment;
 use Prismic\Experiments;
 
 class ExperimentTest extends TestCase
 {
+    /**
+     * @var Experiments
+     */
     private $experiments;
 
     protected function setUp()
@@ -18,7 +22,12 @@ class ExperimentTest extends TestCase
     public function testParsing()
     {
         $running = $this->experiments->getRunning();
+        $this->assertContainsOnlyInstancesOf(Experiment::class, $running);
+        $this->assertContainsOnlyInstancesOf(Experiment::class, $this->experiments->getDraft());
+
         $exp1 = $running[0];
+        $this->assertSame($exp1, $this->experiments->getCurrent());
+
         $this->assertEquals("VDUBBawGAKoGelsX", $exp1->getId());
         $this->assertEquals("_UQtin7EQAOH5M34RQq6Dg", $exp1->getGoogleId());
         $this->assertEquals("Exp 1", $exp1->getName());
@@ -40,5 +49,13 @@ class ExperimentTest extends TestCase
         $this->assertNull($this->experiments->refFromCookie("_UQtin7EQAOH5M34RQq6Dg -1"), "Index overflow negative index");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 0"), "Unknown Google ID");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 1"), "Unknown Google ID");
+    }
+
+    public function testEmptyExperimentData()
+    {
+        $data = '{"draft":[],"running":[]}';
+        $experiments = Experiments::parse(\json_decode($data));
+
+        $this->assertNull($experiments->getCurrent());
     }
 }

@@ -15,13 +15,13 @@ class Experiments
 
     /**
      * Array of draft experiments
-     * @var array
+     * @var Experiment[]
      */
     private $draft;
 
     /**
      * Array of running experiments
-     * @var array
+     * @var Experiment[]
      */
     private $running;
 
@@ -69,11 +69,17 @@ class Experiments
         return null;
     }
 
+    /**
+     * @return Experiment[]
+     */
     public function getDraft() : array
     {
         return $this->draft;
     }
 
+    /**
+     * @return Experiment[]
+     */
     public function getRunning() : array
     {
         return $this->running;
@@ -84,6 +90,7 @@ class Experiments
      *
      * @param  stdClass $json the json bit retrieved from the API that represents experiments.
      * @return self the manipulable object for the experiments.
+     * @internal
      */
     public static function parse(stdClass $json) : self
     {
