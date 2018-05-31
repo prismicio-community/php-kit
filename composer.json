@@ -37,6 +37,10 @@
         "ext-apc": "APCu is used as the default cache if it is available"
     },
 
+    "replace": {
+        "prismic/php-sdk": "*"
+    },
+
     "require-dev": {
         "phpstan/phpstan": "^0.9.2",
         "phpunit/phpunit": "^7",
