@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Document\Hydrator;
+use Prismic\Document\HydratorInterface;
 use Prismic\Exception;
 use stdClass;
 
@@ -49,7 +49,7 @@ class Response
     {
     }
 
-    public static function fromJsonString(string $json, Hydrator $hydrator) : self
+    public static function fromJsonString(string $json, HydratorInterface $hydrator) : self
     {
         $data = \json_decode($json);
         if (! $data) {
@@ -61,7 +61,7 @@ class Response
         return static::fromJsonObject($data, $hydrator);
     }
 
-    public static function fromJsonObject(stdClass $data, Hydrator $hydrator) : self
+    public static function fromJsonObject(stdClass $data, HydratorInterface $hydrator) : self
     {
         $instance = new static;
 

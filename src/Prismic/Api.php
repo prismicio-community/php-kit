@@ -303,8 +303,8 @@ class Api
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
                        ->getResults();
-            if (count($documents) > 0) {
-                $link = DocumentLink::withDocument($documents[0], $this->getLinkResolver());
+            if (count($documents) > 0 && $this->linkResolver) {
+                $link = DocumentLink::withDocument($documents[0], $this->linkResolver);
                 if ($url = $linkResolver($link)) {
                     return $url;
                 }
@@ -405,7 +405,7 @@ class Api
         if ($experiment) {
             return $experiment;
         }
-        return (string) $this->master()->getRef();
+        return $this->master()->getRef();
     }
 
     /**
@@ -414,7 +414,7 @@ class Api
      *
      * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
      * @param  array                  $options   query options: pageSize, orderings, etc.
-     * @return stdClass
+     * @return Response
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function query($q, array $options = []) : Response
@@ -438,7 +438,7 @@ class Api
      *
      * @param  string|array|Predicate $q The query, as a string, predicate or array of predicates
      * @param  array $options Query options: pageSize, orderings, etc.
-     * @return stdClass|null The resulting document, or null
+     * @return DocumentInterface|null The resulting document, or null
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function queryFirst($q, array $options = []) :? DocumentInterface
@@ -455,7 +455,7 @@ class Api
      *
      * @param string $id The requested id
      * @param array $options Query options: pageSize, orderings, etc.
-     * @return stdClass|null The resulting document (null if no match)
+     * @return DocumentInterface|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getById(string $id, array $options = []) :? DocumentInterface
@@ -469,7 +469,7 @@ class Api
      * @param string $type The custom type of the requested document
      * @param string $uid The requested uid
      * @param array $options Query options: pageSize, orderings, etc.
-     * @return stdClass|null The resulting document (null if no match)
+     * @return DocumentInterface|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getByUid(string $type, string $uid, array $options = []) :? DocumentInterface
@@ -495,7 +495,7 @@ class Api
      *
      * @param string $type The custom type of the requested document
      * @param array $options Query options: pageSize, orderings, etc.
-     * @return stdClass|null The resulting document (null if no match)
+     * @return DocumentInterface|null The resulting document (null if no match)
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
     public function getSingle(string $type, array $options = []) :? DocumentInterface

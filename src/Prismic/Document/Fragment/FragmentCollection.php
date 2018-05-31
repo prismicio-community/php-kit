@@ -7,7 +7,6 @@ use Prismic\Document\Fragment\Link\AbstractLink;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\Exception\UnexpectedValueException;
 use Prismic\LinkResolver;
-use stdClass;
 
 class FragmentCollection implements CompositeFragmentInterface
 {
@@ -36,7 +35,7 @@ class FragmentCollection implements CompositeFragmentInterface
         return $collection;
     }
 
-    private function v1Factory(string $key, stdClass $value, LinkResolver $linkResolver) : void
+    private function v1Factory(string $key, $value, LinkResolver $linkResolver) : void
     {
         $fragment = null;
         switch ($value->type) {
