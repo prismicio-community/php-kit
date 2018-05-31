@@ -79,7 +79,7 @@ class ImageView implements ImageInterface
     public function asHtml() :? string
     {
         $attributes = [
-            'src'    => (string) $this->url,
+            'src'    => $this->url,
             'width'  => (string) $this->width,
             'height' => (string) $this->height,
             'alt'    => (string) $this->alt,
@@ -90,7 +90,7 @@ class ImageView implements ImageInterface
         // Use self-closing tag - you never know, someone might still be serving xhtml
         $imageMarkup = sprintf('<img%s />', $this->htmlAttributes($attributes));
 
-        if ($this->hasLink()) {
+        if ($this->link) {
             return \sprintf(
                 '%s%s%s',
                 $this->link->openTag(),

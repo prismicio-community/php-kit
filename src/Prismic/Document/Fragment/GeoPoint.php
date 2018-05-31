@@ -30,7 +30,7 @@ class GeoPoint implements FragmentInterface, JsonSerializable
         }
         $latitude = isset($value->latitude) ? (float) $value->latitude : null;
         $longitude = isset($value->longitude) ? (float) $value->longitude : null;
-        if (null === $longitude || null === $longitude) {
+        if (! \is_float($longitude) || ! \is_float($latitude)) {
             throw new InvalidArgumentException(sprintf(
                 'Expected an object containing latitude and longitude values, received: %s',
                 json_encode($value)

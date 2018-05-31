@@ -16,7 +16,7 @@ class Experiment
 
     /**
      * Google's Experiment ID
-     * @var string
+     * @var string|null
      */
     private $googleId;
 

@@ -25,7 +25,7 @@ class Slice implements CompositeFragmentInterface
     /** @var string */
     private $type;
 
-    /** @var string */
+    /** @var string|null */
     private $label;
 
     private function __construct(
