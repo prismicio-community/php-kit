@@ -50,7 +50,7 @@ class TextElement implements FragmentInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         $element = new static;
         $type = isset($value->type) ? $value->type : null;

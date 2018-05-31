@@ -69,7 +69,7 @@ class RichText implements CompositeFragmentInterface
                     break;
                 case 'o-list-item':
                     if (! $openList || $openList->getTag() !== 'ol') {
-                        $openList = ListElement::factory('ol', $linkResolver);
+                        $openList = ListElement::fromTag('ol');
                         $richText->blocks[] = $openList;
                     }
                     /** @var TextElement $item */
@@ -78,7 +78,7 @@ class RichText implements CompositeFragmentInterface
                     break;
                 case 'list-item':
                     if (! $openList || $openList->getTag() !== 'ul') {
-                        $openList = ListElement::factory('ul', $linkResolver);
+                        $openList = ListElement::fromTag('ul');
                         $richText->blocks[] = $openList;
                     }
                     /** @var TextElement $item */

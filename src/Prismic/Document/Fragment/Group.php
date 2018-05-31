@@ -11,7 +11,7 @@ class Group implements CompositeFragmentInterface
     /** @var CompositeFragmentInterface[] */
     private $fragments = [];
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         $value = isset($value->value) ? $value->value : $value;
         /**
@@ -32,7 +32,7 @@ class Group implements CompositeFragmentInterface
              * or multiple or single slices
              */
             if (isset($collection->slice_type)) {
-                $group->fragments[] = Slice::factory($collection, $linkResolver);
+                $group->fragments[] = Slice::fromJson($collection, $linkResolver);
             } else {
                 $group->fragments[] = FragmentCollection::factory($collection, $linkResolver);
             }

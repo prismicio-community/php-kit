@@ -14,7 +14,7 @@ class FragmentCollection implements CompositeFragmentInterface
     /** @var FragmentInterface[] */
     protected $fragments = [];
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         if (! \is_object($value)) {
             throw new InvalidArgumentException(\sprintf(

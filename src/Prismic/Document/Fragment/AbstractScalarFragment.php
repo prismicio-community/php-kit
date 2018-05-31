@@ -17,7 +17,7 @@ abstract class AbstractScalarFragment implements FragmentInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver)
     {
         if (\is_object($value) && \property_exists($value, 'value')) {
             $value = $value->value; // V1 API

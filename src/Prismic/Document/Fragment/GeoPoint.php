@@ -23,7 +23,7 @@ class GeoPoint implements FragmentInterface, JsonSerializable
         $this->longitude = $lng;
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         if (isset($value->value)) {
             $value = $value->value;

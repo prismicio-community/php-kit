@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment\Link;
 
-use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Document\Fragment\HtmlHelperTrait;
 use Prismic\Exception\InvalidArgumentException;
@@ -70,11 +69,6 @@ abstract class AbstractLink implements LinkInterface
         }
         /** @var LinkInterface $link */
         return $link;
-    }
-
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
-    {
-        return static::linkFactory($value, $linkResolver);
     }
 
     abstract public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface;

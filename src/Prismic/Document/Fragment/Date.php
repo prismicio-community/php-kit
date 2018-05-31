@@ -17,7 +17,7 @@ class Date extends AbstractScalarFragment
     /** @var string|null */
     protected $value;
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         /** @var Date $fragment */
         $fragment = parent::factory($value, $linkResolver);

@@ -42,6 +42,11 @@ class Slice implements CompositeFragmentInterface
 
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
+        return static::fromJson($value, $linkResolver);
+    }
+
+    public static function fromJson($value, LinkResolver $linkResolver) : self
+    {
         // Type and Label are the same for V1 & V2
         $type    = isset($value->slice_type)
                  ? (string) $value->slice_type

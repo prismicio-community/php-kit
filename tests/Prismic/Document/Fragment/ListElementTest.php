@@ -16,24 +16,22 @@ class ListElementTest extends TestCase
      */
     public function testFactoryThrowsExceptionForInvalidTag()
     {
-        ListElement::factory('foo', new FakeLinkResolver());
+        ListElement::fromTag('foo');
     }
 
     public function testOrderedAndUnordered()
     {
-        $linkResolver = new FakeLinkResolver();
         /** @var ListElement $list */
-        $list = ListElement::factory('ul', $linkResolver);
+        $list = ListElement::fromTag('ul');
         $this->assertFalse($list->isOrdered());
-        $list = ListElement::factory('ol', $linkResolver);
+        $list = ListElement::fromTag('ol');
         $this->assertTrue($list->isOrdered());
     }
 
     public function testEmptyListsReturnNullForTextAndHtml()
     {
-        $linkResolver = new FakeLinkResolver();
         /** @var ListElement $list */
-        $list = ListElement::factory('ul', $linkResolver);
+        $list = ListElement::fromTag('ul');
         $this->assertFalse($list->hasItems());
         $this->assertNull($list->asHtml());
         $this->assertNull($list->asText());
@@ -52,7 +50,7 @@ class ListElementTest extends TestCase
             $linkResolver
         );
         /** @var ListElement $list */
-        $list = ListElement::factory('ul', $linkResolver);
+        $list = ListElement::fromTag('ul');
         $list->addItem($p);
     }
 
@@ -64,7 +62,7 @@ class ListElementTest extends TestCase
             $linkResolver
         );
         /** @var ListElement $list */
-        $list = ListElement::factory('ol', $linkResolver);
+        $list = ListElement::fromTag('ol');
         $list->addItem($item);
         $this->assertTrue($list->hasItems());
 

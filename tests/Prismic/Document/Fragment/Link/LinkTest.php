@@ -132,7 +132,7 @@ class LinkTest extends TestCase
      */
     public function testWebLinkThrowsExceptionWhenUrlIsNotSet()
     {
-        WebLink::factory(
+        WebLink::linkFactory(
             \json_decode('{
             }'),
             new FakeLinkResolver()

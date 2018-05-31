@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment;
 
+use Prismic\Exception\RuntimeException;
 use Prismic\LinkResolver;
 use stdClass;
 
@@ -15,7 +16,7 @@ class Image implements ImageInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         $image = new static();
         $value = isset($value->value) ? $value->value : $value;
@@ -49,7 +50,14 @@ class Image implements ImageInterface
 
     public function getMain() : ImageInterface
     {
-        return $this->getView('main');
+        $view = $this->getView('main');
+        if (! $view) {
+            /**
+             * It is very unlikely this will be reached due to ImageView::validatePayload
+             */
+            throw new RuntimeException('The main view could not be retrieved for this image');
+        }
+        return $view;
     }
 
     public function getView(string $view) :? ImageInterface

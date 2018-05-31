@@ -25,16 +25,16 @@ class ListElement implements CompositeFragmentInterface
         $this->items = [];
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function fromTag(string $tag) : ListElement
     {
         $element = new static;
-        if ($value !== 'ul' && $value !== 'ol') {
+        if ($tag !== 'ul' && $tag !== 'ol') {
             throw new InvalidArgumentException(\sprintf(
                 'Expected the string ul or ol to the named constructor. Received %s',
-                gettype($value)
+                gettype($tag)
             ));
         }
-        $element->tag = $value;
+        $element->tag = $tag;
 
         return $element;
     }

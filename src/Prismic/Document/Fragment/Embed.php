@@ -35,7 +35,7 @@ class Embed implements FragmentInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory($value, LinkResolver $linkResolver) : self
     {
         $value = isset($value->value) ? $value->value : $value;
         $value = isset($value->oembed) ? $value->oembed : $value;
