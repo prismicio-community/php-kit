@@ -1,106 +1,124 @@
-[![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")](https://travis-ci.org/prismicio/php-kit)
+# Unofficial PHP development kit for prismic.io
+[![alt text](https://travis-ci.org/netglue/prismic-php-kit.png?branch=master "Travis build")](https://travis-ci.org/netglue/prismic-php-kit)
 
-# PHP development kit for prismic.io
+## Introduction
 
-## Getting started
+This fork of the [official Prismic.io library](https://github.com/prismicio/php-kit) differs in a few ways and is more similar to the 3.x version of the original kit than the 4.x version that's currently in beta.
 
-### Install the kit for your project
+## Installation
 
-First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default built-in cache support.
-
-Install with [Composer](https://getcomposer.org/doc/00-intro.md):
+[Composer](https://getcomposer.org) is the only 'supported' installation method:
 
 ```bash
-$ composer require prismic/php-sdk
+$ composer require netglue/prismic-php-kit
 ```
 
-### Usage
+## Usage
 
-Include the dependency:
+You'll need a content repository all setup and ready to go at [Prismic.io](https://prismic.io), if you don’t know anything about prismic.io yet, take a [look at the website](https://prismic.io) and the [documentation about content modelling](https://user-guides.prismic.io/content-modeling-and-custom-types) and [sign up for an account](https://prismic.io/signup).
+
+Prismic content repositories expose a url to direct your API queries to in the form of `https://<REPO-NAME>.prismic.io/api`. Your repository may or may not require an access token depending on how you have set it up. There are currently 2 versions of the content API which are accessible at different URLs. V1 of the API is available at `/api` or `/api/v1` whereas V2 of the API is available at `/api/v2`. This kit attempts to support both versions of the API transparently. The V1 api appears to be the same as V2 with the exception that the responses in V1 are more verbose. There's no date for deprecation of the v1 api and I’m not aware of any functional differences between the two versions.
+
+Once you have the details for your repository, you can create an API client in the following way _(Assuming you have setup [composer autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading))_:
 
 ```php
-<?php
-include_once __DIR__.'/../vendor/autoload.php';
-
 use Prismic\Api;
+$accessToken = 'AccessTokenString Or null';
+$api = Api::get('https://<REPO-NAME>.prismic.io/api/v1', $accessToken); 
 ```
 
-Then call the API: 
+## Results from the API
+
+In most cases, you'll probably be retrieving either a single document or a result set from the API, for example, using the api client to retrieve a single document by it's identifier goes something like this: `$api->getById('SomeIdentifier');`, whereas a query to get all the documents of a specific type may look like…
+```php
+<?php
+use Prismic\Predicates;
+$query = [
+    Predicates::at('document.type', 'blog-post'),
+];
+$response = $api->query($query);
+```
+
+For a single document, you'll be getting a `\Prismic\DocumentInterface` instance. Result sets will be an instance of `\Prismic\Response`. Calling `$response->getResults()` will yield an array of Document instances.
+
+## Resolving Application Links
+
+In most cases, before you can render content as HTML, you will need to provide a 'Link Resolver' to the API client so that it knows how to generate URLs for your content. Your link resolver needs to implement the `\Prismic\LinkResolver` interface. There's an abstract class to inherit from in `\Prismic\LinkResolverAbstract` so that you only have to implement a single method and you can find an concrete example Link Resolver in `./samples/LinkResolverExample.php`. Once you have a link resolver instance, provide it to the API with
+```php
+<?php
+/** @var \Prismic\LinkResolver $linkResolver **/
+$linkResolver = $myDiContainer->get('My-Link-Resolver');
+$api->setLinkResolver($linkResolver);
+```
+## Rendering Content
+
+Generally speaking, once you've figured out how to query the api to get some data, you'll probably want to render this as HTML or plain text. Calling `$document->asHtml()` will give you a bucket of html but it likely won't be structured in the way you want, therefore you'll be using some sort of templating library.
+
+Each document retrieved from the API will contain the fragments you have defined at Prismic, these fragments will be contained in a `\Prismic\Document\Fragment\FragmentCollection` and within that collection, there might be any number of single or composite `\Prismic\Document\Fragment\FragmentInterface` instances. Because _(Apart from the UID, if present)_ no content fields are required by the CMS, you will generally want to check for non nulls in your template before attempting to render anything:
 
 ```php
 <?php
-$api = Api::get('https://your-repo-name.prismic.io/api/v2');
-$doc = $api->getByUID('get-started');
-```
+/** @var \Prismic\Document\Fragment\RichText|null $titleFragment **/
+$titleFragment = $document->get('title');
+if ($titleFragment) {
+    printf('<div class="page-title-block">%s</div>', $titleFragment->asHtml());
+}
+``` 
 
-The kit is compatible and tested with PHP 5.4 and above.
+## Hydrating Results into Concrete Objects
 
-Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
-For Symfony 2.7 projects, use version 2.0.3.
-
-### DOM helpers usage
-
-In these examples we have a $doc variable corresponding to the fetched Prismic document.
-We also have a $linkResolver variable containing the functional link resolver, [read our docs to learn more about Link Resolving](https://prismic.io/docs/php/beyond-the-api/link-resolving).
-
-#### Link
+By default, the kit will create a `\Prismic\Document` instance for each document retrieved from the API. You can change this behaviour by mapping prismic document types to FQCN's, for example:
 
 ```php
 <?php
-use Prismic\Dom\Link;
-
-echo Link::asUrl($doc->data->link, $linkResolver);
+$hydrator = $api->getHydrator();
+$hydrator->mapType('blog-post', \My\BlogPostDocument::class);
+$response = $api->query([Predicates::at('document.type', 'blog-post')]);
+/** @var \My\BlogPostDocument[] $posts */
+$posts = $response->getResults();
 ```
 
-#### Rich Text
+Any class you define to represent a document must implement `\Primic\DocumentInterface`, but normally, you should be able to just extend `\Prismic\Document`
+
+## Caching
+
+Caching differs in this fork in that it consumes any `\Psr\Cache` implementation so you can swap out caching for any adapter from any Psr compatible library that floats your boat. By default the Symfony implementation is used with an APC adapter if APC is installed, otherwise, it's an in-memory array cache.
+
+Your custom cache needs to be provided to the named constructor of the Api instance:
 
 ```php
 <?php
-use Prismic\Dom\RichText;
-
-echo RichText::asText($doc->data->title);
-echo RichText::asHtml($doc->data->description, $linkResolver);
+/** @var \Psr\Cache\CacheItemPoolInterface $cache **/
+$cache = $myDIContainer->get('SomeRedisCache');
+$httpClient = null;
+$api = Api::get($repoApiUrl, $accessToken, $httpClient, $cache);
 ```
 
-#### Date
+## Built-In Document Explorer
 
-```php
-<?php
-use Prismic\Dom\Date;
+There's a naive document explorer ready to use if you have an existing repo you'd like to fire up:
 
-$date = Date::asDate($doc->data->date);
-echo $date->format('Y-m-d H:i:s');
+```bash
+$ export PRISMIC_API="https://somerepo.prismic.io/api"
+$ export PRISMIC_TOKEN="Some-Access-Token"
+$ composer serve
+> php -S 0.0.0.0:8080 -t samples samples/document-explorer.php
 ```
 
-## More information
+Visit [http://localhost:8080](http://localhost:8080) in your browser and you should see the content in the repo.
 
-* [Developer docs](https://prismic.io/docs/php/getting-started/with-the-php-starter-kit)
-* [PHP Quickstart tutorial](https://prismic.io/quickstart#?lang=php)
-* [PHPDoc](https://prismicio.github.io/php-kit)
-* [Changelog](https://github.com/prismicio/php-kit/releases)
+## Testing
 
-## Install the kit locally
-
-Clone this GitHub repository, then [install Composer](https://getcomposer.org/doc/00-intro.md) if you haven't, and run:
+Tests are written with PHPUnit. To run the tests locally:
 
 ```bash
 $ composer install
+$ vendor/bin/phpunit # or composer check
 ```
 
-## Tests
+## Contributions
 
-Please write tests for any bugfix or new feature.
-
-If you find existing code that is not optimally tested and wish to make it better, we really appreciate it; but you should document it on its own branch and its own pull request.
-
-Tests are run by running the command:
-```bash
-$ ./vendor/bin/phpunit
-```
-
-Some of the kit's tests check stuff that are built on top of APC and need APC to work from the command line. If you've installed and enabled APC, and your cache tests don't pass:
- * check if your APC is enabled for your command line, by running `php -i | grep apc`; if no output is displayed, then maybe the APC extension you installed and enabled is only enabled in apache but not for your command line. Check how your OS works to make that happen, and if it involves changing a php.ini file, make sure it's the right php.ini (you might have one for apache, and one for the command line)
- * if APC is enabled for the command line, and yet the tests still fail, make sure your `apc.enable_cli` (which you see in the output of  `php -i | grep apc`) is 'On'. If it's not, add this at the end of your php.ini: `apc.enable_cli = 1`. Make sure it's the right php.ini (you might have one for apache, and one for the command line)
+…and pull requests are most welcome, but please run `composer check` to make sure that CS is maintained and include additional unit tests if appropriate.
 
 ## License
 
