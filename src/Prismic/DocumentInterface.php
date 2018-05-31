@@ -40,4 +40,6 @@ interface DocumentInterface
     public function get(string $key) :? FragmentInterface;
 
     public function has(string $key) : bool;
+
+    public function asLink() : DocumentLink;
 }
