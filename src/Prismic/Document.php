@@ -241,7 +241,9 @@ class Document implements DocumentInterface
     {
         $resolver = $this->api->getLinkResolver();
         if (! $resolver) {
-            throw new RuntimeException('No link resolver has been defined so it is not possible to construct a link for this document');
+            throw new RuntimeException(
+                'No link resolver has been defined so it is not possible to construct a link for this document'
+            );
         }
         return DocumentLink::withDocument($this, $resolver);
     }
