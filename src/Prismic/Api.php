@@ -65,6 +65,9 @@ class Api
      */
     private $httpClient;
 
+    /**
+     * @var HydratorInterface
+     */
     private $hydrator;
 
     /**
@@ -73,6 +76,9 @@ class Api
      */
     private $version;
 
+    /**
+     * @var LinkResolver|null
+     */
     private $linkResolver;
 
     private function __construct()
