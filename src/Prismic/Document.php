@@ -10,6 +10,7 @@ use DateTimeZone;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\Link\DocumentLink;
+use Prismic\Exception\RuntimeException;
 use stdClass;
 
 class Document implements DocumentInterface
@@ -238,6 +239,10 @@ class Document implements DocumentInterface
 
     public function asLink() : DocumentLink
     {
-        return DocumentLink::withDocument($this, $this->api->getLinkResolver());
+        $resolver = $this->api->getLinkResolver();
+        if (! $resolver) {
+            throw new RuntimeException('No link resolver has been defined so it is not possible to construct a link for this document');
+        }
+        return DocumentLink::withDocument($this, $resolver);
     }
 }
