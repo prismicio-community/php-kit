@@ -6,7 +6,11 @@ namespace Prismic\Document;
 
 use Prismic\Api;
 use Prismic\DocumentInterface;
+use Prismic\Exception\InvalidArgumentException;
 use stdClass;
+use function class_implements;
+use function in_array;
+use function sprintf;
 
 class Hydrator implements HydratorInterface
 {
@@ -31,6 +35,7 @@ class Hydrator implements HydratorInterface
     {
         /** @var string|null $type */
         $type = isset($object->type) ? $object->type : null;
+        /** @var DocumentInterface $class */
         $class = $this->getClass($type);
         return $class::fromJsonObject($object, $this->api);
     }
@@ -45,6 +50,14 @@ class Hydrator implements HydratorInterface
 
     public function mapType(string $type, string $class) : void
     {
+        $interfaces = class_implements($class);
+        if (! in_array(DocumentInterface::class, $interfaces)) {
+            throw new InvalidArgumentException(sprintf(
+                'The class %s does not implement %s',
+                $class,
+                DocumentInterface::class
+            ));
+        }
         $this->typeMap[$type] = $class;
     }
 }
