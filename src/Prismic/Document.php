@@ -10,7 +10,6 @@ use DateTimeZone;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\Link\DocumentLink;
-use Prismic\Exception\RuntimeException;
 use stdClass;
 
 class Document implements DocumentInterface
@@ -211,6 +210,12 @@ class Document implements DocumentInterface
         return $this->alternateLanguages;
     }
 
+    /**
+     * Return a translation of this document for the given language if one exists
+     * @param string $lang
+     * @return null|DocumentInterface
+     * @throws Exception\ExceptionInterface If a matching document is found but an error occurs retrieving it
+     */
     public function getTranslation(string $lang) :? DocumentInterface
     {
         foreach ($this->alternateLanguages as $language) {
@@ -239,12 +244,8 @@ class Document implements DocumentInterface
 
     public function asLink() : DocumentLink
     {
+        /** @var LinkResolver $resolver */
         $resolver = $this->api->getLinkResolver();
-        if (! $resolver) {
-            throw new RuntimeException(
-                'No link resolver has been defined so it is not possible to construct a link for this document'
-            );
-        }
         return DocumentLink::withDocument($this, $resolver);
     }
 }

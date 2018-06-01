@@ -26,5 +26,4 @@ class LinkResolverExample extends LinkResolverAbstract
 
         return sprintf('/app/%s/%s', $link->getType(), $link->getUid());
     }
-
 }
