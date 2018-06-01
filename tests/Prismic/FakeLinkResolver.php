@@ -10,10 +10,6 @@ class FakeLinkResolver extends LinkResolverAbstract
 {
     protected function resolveDocumentLink(DocumentLink $link) :? string
     {
-        if ($link->isBroken()) {
-            return null;
-        }
-
         return 'RESOLVED_LINK';
     }
 }
