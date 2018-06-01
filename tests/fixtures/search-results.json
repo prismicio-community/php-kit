@@ -42,6 +42,7 @@
                     "empty-thumb": {}
                 },
                 "empty-richtext": [],
+                "empty-string": "",
                 "single-image": {
                     "dimensions": {
                         "width": 960,
@@ -437,6 +438,63 @@
                                 }
                             ],
                             "colour": "#ce9393"
+                        }
+                    }
+                ],
+                "empty-single-image": {},
+                "empty-multi-image": {
+                    "view-2": {},
+                    "view-3": {}
+                },
+                "empty-date": null,
+                "empty-datetime": null,
+                "empty-colour": null,
+                "empty-integer": null,
+                "empty-plaintext": null,
+                "empty-selectfield": "One",
+                "empty-geopoint": {},
+                "empty-link-anytype": {
+                    "link_type": "Any"
+                },
+                "empty-link-document": {
+                    "link_type": "Document"
+                },
+                "empty-link-media": {
+                    "link_type": "Media"
+                },
+                "empty-link-pdf": {
+                    "link_type": "Media"
+                },
+                "empty-link-web": {
+                    "link_type": "Web"
+                },
+                "empty-single-embed": {},
+                "empty-group": [
+                    {
+                        "richtext": [],
+                        "single-image": {},
+                        "date": null,
+                        "datetime": null,
+                        "colour": null,
+                        "integer": null,
+                        "plaintext": null,
+                        "selectfield": "One",
+                        "geopoint": {}
+                    }
+                ],
+                "empty-slice-zone": [
+                    {
+                        "slice_type": "quote",
+                        "slice_label": null,
+                        "items": [
+                            {}
+                        ],
+                        "primary": {
+                            "quote": [],
+                            "name_of_the_author": [],
+                            "portrait_author": {
+                                "mobile": {}
+                            }
                         }
                     }
                 ]

@@ -1,11 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
-use Prismic\LinkResolver;
 
 class ListElement implements CompositeFragmentInterface
 {

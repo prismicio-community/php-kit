@@ -7,6 +7,19 @@ use Prismic\Document\Fragment\Link\AbstractLink;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\Exception\UnexpectedValueException;
 use Prismic\LinkResolver;
+use function count;
+use function get_object_vars;
+use function gettype;
+use function implode;
+use function is_array;
+use function is_float;
+use function is_object;
+use function is_string;
+use function json_encode;
+use function preg_match;
+use function property_exists;
+use function sprintf;
+use function strpos;
 
 class FragmentCollection implements CompositeFragmentInterface
 {
@@ -16,16 +29,16 @@ class FragmentCollection implements CompositeFragmentInterface
 
     public static function factory($value, LinkResolver $linkResolver) : self
     {
-        if (! \is_object($value)) {
-            throw new InvalidArgumentException(\sprintf(
+        if (! is_object($value)) {
+            throw new InvalidArgumentException(sprintf(
                 'Expected an object as the collection value, received %s',
-                \gettype($value)
+                gettype($value)
             ));
         }
-        $data = \get_object_vars($value);
+        $data = get_object_vars($value);
         $collection = new static;
         foreach ($data as $fragmentName => $value) {
-            if (\is_object($value) && \property_exists($value, 'type') && \property_exists($value, 'value')) {
+            if (is_object($value) && property_exists($value, 'type') && property_exists($value, 'value')) {
                 $collection->v1Factory($fragmentName, $value, $linkResolver);
                 continue;
             }
@@ -44,17 +57,17 @@ class FragmentCollection implements CompositeFragmentInterface
                 break;
             case 'Date':
             case 'Timestamp':
-                $fragment = Date::factory($value, $linkResolver);
+                $fragment = Date::factory($value);
                 break;
             case 'Color':
-                $fragment = Color::factory($value, $linkResolver);
+                $fragment = Color::factory($value);
                 break;
             case 'Number':
-                $fragment = Number::factory($value, $linkResolver);
+                $fragment = Number::factory($value);
                 break;
             case 'Text':
             case 'Select':
-                $fragment = Text::factory($value, $linkResolver);
+                $fragment = Text::factory($value);
                 break;
             case 'Link.document':
             case 'Link.image':
@@ -66,17 +79,14 @@ class FragmentCollection implements CompositeFragmentInterface
                 $fragment = RichText::factory($value, $linkResolver);
                 break;
             case 'GeoPoint':
-                $fragment = GeoPoint::factory($value, $linkResolver);
+                $fragment = GeoPoint::factory($value);
                 break;
             case 'Embed':
-                $fragment = Embed::factory($value, $linkResolver);
+                $fragment = Embed::factory($value);
                 break;
             case 'Group':
             case 'SliceZone':
                 $fragment = Group::factory($value, $linkResolver);
-                break;
-            case 'Slice':
-                $fragment = Slice::factory($value, $linkResolver);
                 break;
         }
 
@@ -85,36 +95,43 @@ class FragmentCollection implements CompositeFragmentInterface
 
     private function v2Factory(string $key, $value, LinkResolver $linkResolver) : void
     {
-        if (isset($value->dimensions) && \is_object($value->dimensions)) {
+        if ($this->isEmptyFragment($value)) {
+            return;
+        }
+
+        if (isset($value->dimensions) && is_object($value->dimensions)) {
             $this->fragments[$key] = Image::factory($value, $linkResolver);
             return;
         }
-        if (\is_float($value)) {
-            $this->fragments[$key] = Number::factory($value, $linkResolver);
+        if (is_float($value)) {
+            $this->fragments[$key] = Number::factory($value);
             return;
         }
-        if (\is_string($value)) {
-            if (\strpos($value, '#') === 0) {
-                $this->fragments[$key] = Color::factory($value, $linkResolver);
+        if (is_string($value)) {
+            if (strpos($value, '#') === 0) {
+                $this->fragments[$key] = Color::factory($value);
                 return;
             }
-            if (\preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $value)) {
-                $this->fragments[$key] = Date::factory($value, $linkResolver);
+            if (preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $value)) {
+                $this->fragments[$key] = Date::factory($value);
                 return;
             }
-            $this->fragments[$key] = Text::factory($value, $linkResolver);
+            $this->fragments[$key] = Text::factory($value);
             return;
         }
         if (isset($value->link_type)) {
-            $this->fragments[$key] = AbstractLink::abstractFactory($value, $linkResolver);
+            $link = AbstractLink::abstractFactory($value, $linkResolver);
+            if ($link) {
+                $this->fragments[$key] = $link;
+            }
             return;
         }
         if (isset($value->latitude)) {
-            $this->fragments[$key] = GeoPoint::factory($value, $linkResolver);
+            $this->fragments[$key] = GeoPoint::factory($value);
             return;
         }
         if (isset($value->embed_url)) {
-            $this->fragments[$key] = Embed::factory($value, $linkResolver);
+            $this->fragments[$key] = Embed::factory($value);
             return;
         }
         if (isset($value->slice_type)) {
@@ -122,8 +139,8 @@ class FragmentCollection implements CompositeFragmentInterface
             return;
         }
         // Arrays can now only be RichText or Groups
-        if (\is_array($value)) {
-            $firstElement = current($value);
+        if (is_array($value)) {
+            $firstElement = \current($value);
             // Does it look like RichText?
             if (isset($firstElement->type)) {
                 $this->fragments[$key] = RichText::factory($value, $linkResolver);
@@ -133,39 +150,46 @@ class FragmentCollection implements CompositeFragmentInterface
             return;
         }
 
-        if ($this->isEmptyFragment($value)) {
+        if ($this->isEmptyObject($value)) {
             return;
         }
 
-        throw new UnexpectedValueException(\sprintf(
+        throw new UnexpectedValueException(sprintf(
             'Cannot determine the fragment type at index %s with the content %s',
             $key,
-            \json_encode($value)
+            json_encode($value)
         ));
     }
 
-    private function isEmptyFragment($value)
+    private function isEmptyFragment($value) : bool
     {
         if (null === $value) {
             return true;
         }
-        if (\is_array($value) && empty($value)) {
+        if (is_array($value) && empty($value)) {
             return true;
         }
-        if (\is_string($value) && '' === $value) {
+        if (is_string($value) && '' === $value) {
             return true;
         }
-        if (\is_object($value)) {
-            $properties = \get_object_vars($value);
+
+        return false;
+    }
+
+    private function isEmptyObject($value) : bool
+    {
+        if (is_object($value)) {
+            /** @var object $value */
+            $properties = get_object_vars($value);
             foreach ($properties as $name => $property) {
-                if (! $this->isEmptyFragment($property)) {
+                if (! $this->isEmptyObject($property)) {
                     return false;
                 }
             }
             return true;
         }
 
-        return false;
+        return $this->isEmptyFragment($value);
     }
 
     public function asText() :? string
@@ -177,7 +201,7 @@ class FragmentCollection implements CompositeFragmentInterface
         if (! count($data)) {
             return null;
         }
-        return \implode(\PHP_EOL, $data);
+        return implode(\PHP_EOL, $data);
     }
 
     public function asHtml() :? string
@@ -189,7 +213,7 @@ class FragmentCollection implements CompositeFragmentInterface
         if (! count($data)) {
             return null;
         }
-        return \implode(\PHP_EOL, $data);
+        return implode(\PHP_EOL, $data);
     }
 
     public function get(string $key) :? FragmentInterface

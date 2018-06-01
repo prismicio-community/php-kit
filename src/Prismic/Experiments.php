@@ -90,7 +90,6 @@ class Experiments
      *
      * @param  stdClass $json the json bit retrieved from the API that represents experiments.
      * @return self the manipulable object for the experiments.
-     * @internal
      */
     public static function parse(stdClass $json) : self
     {

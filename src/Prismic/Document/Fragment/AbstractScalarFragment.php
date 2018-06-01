@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
-use Prismic\LinkResolver;
 
 abstract class AbstractScalarFragment implements FragmentInterface
 {
@@ -17,7 +16,7 @@ abstract class AbstractScalarFragment implements FragmentInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver)
+    public static function factory($value)
     {
         if (\is_object($value) && \property_exists($value, 'value')) {
             $value = $value->value; // V1 API

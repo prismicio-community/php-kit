@@ -15,14 +15,14 @@ class EmbedTest extends TestCase
      */
     public function testExceptionThrownWithNoEmbedUrl()
     {
-        Embed::factory(\json_decode('{}'), new FakeLinkResolver());
+        Embed::factory(\json_decode('{}'));
     }
 
     public function testExpectedValues()
     {
         $data = \json_decode($this->getJsonFixture('fragments/embed.json'));
         /** @var Embed $embed */
-        $embed = Embed::factory($data, new FakeLinkResolver());
+        $embed = Embed::factory($data);
         $this->assertSame('YouTube', $embed->getProvider());
         $this->assertSame('video', $embed->getType());
         $this->assertSame('EMBED_URL', $embed->getUrl());

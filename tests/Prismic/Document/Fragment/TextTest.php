@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Text;
-use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class TextTest extends TestCase
@@ -26,7 +25,7 @@ class TextTest extends TestCase
     public function testFactoryThrowsExceptionForInvalidSpec(string $json)
     {
         $value = \json_decode($json);
-        Text::factory($value, new FakeLinkResolver());
+        Text::factory($value);
     }
 
     public function testV1Spec()
@@ -36,7 +35,7 @@ class TextTest extends TestCase
             "value": "Some Text"
         }');
         /** @var Text $text */
-        $text = Text::factory($value, new FakeLinkResolver());
+        $text = Text::factory($value);
         $this->assertSame('Some Text', $text->asText());
         $this->assertSame('Some Text', $text->asHtml());
         $this->assertSame('Some&#x20;Text', $text->asHtmlAttribute());
@@ -61,7 +60,7 @@ class TextTest extends TestCase
     public function testValidScalarValues($value, $expectText, $expectHtml, $expectAttribute, $expectInt, $expectFloat)
     {
         /** @var Text $text */
-        $text = Text::factory($value, new FakeLinkResolver());
+        $text = Text::factory($value);
         $this->assertSame($expectText, $text->asText());
         $this->assertSame($expectHtml, $text->asHtml());
         $this->assertSame($expectAttribute, $text->asHtmlAttribute());

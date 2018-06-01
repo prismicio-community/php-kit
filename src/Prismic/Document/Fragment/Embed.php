@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
-use Prismic\LinkResolver;
 
 class Embed implements FragmentInterface
 {
@@ -35,7 +34,7 @@ class Embed implements FragmentInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : self
+    public static function factory($value) : self
     {
         $value = isset($value->value) ? $value->value : $value;
         $value = isset($value->oembed) ? $value->oembed : $value;

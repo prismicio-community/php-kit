@@ -15,11 +15,20 @@ abstract class AbstractLink implements LinkInterface
     /** @var string|null */
     protected $target;
 
-    public static function abstractFactory($value, LinkResolver $linkResolver) : LinkInterface
+    public static function abstractFactory($value, LinkResolver $linkResolver) :? LinkInterface
     {
         // Inspect payload to determine link type
         $linkType = isset($value->link_type) ? $value->link_type : null;
         $linkType = isset($value->value) && isset($value->type) ? $value->type : $linkType;
+
+        /**
+         * In V2, link fields that have not been assigned a target are non-empty objects, hooray!
+         * Rather than throw an exception, return null
+         */
+        if (isset($value->link_type) && count((array) $value) === 1) {
+            return null;
+        }
+
         if (null === $linkType) {
             throw new InvalidArgumentException(sprintf(
                 'Expected a payload describing a link, received %s',

@@ -6,7 +6,6 @@ namespace Prismic\Document\Fragment;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Prismic\LinkResolver;
 
 class Date extends AbstractScalarFragment
 {
@@ -17,10 +16,10 @@ class Date extends AbstractScalarFragment
     /** @var string|null */
     protected $value;
 
-    public static function factory($value, LinkResolver $linkResolver) : self
+    public static function factory($value) : self
     {
         /** @var Date $fragment */
-        $fragment = parent::factory($value, $linkResolver);
+        $fragment = parent::factory($value);
         $fragment->format = 'c';
         if (\preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', (string) $fragment->value)) {
             $fragment->format = 'Y-m-d';

@@ -64,7 +64,7 @@ class RichText implements CompositeFragmentInterface
                     $openList = null;
                     break;
                 case 'embed':
-                    $richText->blocks[] = Embed::factory($blockData, $linkResolver);
+                    $richText->blocks[] = Embed::factory($blockData);
                     $openList = null;
                     break;
                 case 'o-list-item':

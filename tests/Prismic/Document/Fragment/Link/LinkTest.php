@@ -64,9 +64,31 @@ class LinkTest extends TestCase
     public function testExceptionThrownForUnknownLinkType()
     {
         $data = \json_decode('{
-            "link_type": "Unknown"
+            "link_type": "Unknown",
+            "url": "whatever"
         }');
         AbstractLink::abstractFactory($data, new FakeLinkResolver());
+    }
+
+    public function emptyLinkDataProvider()
+    {
+        return [
+            ['{"link_type": "Any"}'],
+            ['{"link_type": "Document"}'],
+            ['{"link_type": "Media"}'],
+            ['{"link_type": "Media"}'],
+            ['{"link_type": "Web"}'],
+        ];
+    }
+
+    /**
+     * @dataProvider emptyLinkDataProvider
+     */
+    public function testNullIsReturnedForV2EmptyLinks(string $json)
+    {
+        $this->assertNull(
+            AbstractLink::abstractFactory(\json_decode($json), new FakeLinkResolver())
+        );
     }
 
     public function testDocumentLinkReturnsExpectedValues()

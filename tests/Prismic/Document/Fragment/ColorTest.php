@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Color;
-use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class ColorTest extends TestCase
@@ -12,45 +11,41 @@ class ColorTest extends TestCase
 
     public function testFactory()
     {
-        $linkResolver = new FakeLinkResolver();
         $data = \json_decode('{"type": "Color", "value": "#000000"}');
-        $colour = Color::factory($data, $linkResolver);
+        $colour = Color::factory($data);
         $this->assertInstanceOf(Color::class, $colour);
 
-        $colour = Color::factory('#000000', $linkResolver);
+        $colour = Color::factory('#000000');
         $this->assertInstanceOf(Color::class, $colour);
 
-        $colour = Color::factory(null, $linkResolver);
+        $colour = Color::factory(null);
         $this->assertInstanceOf(Color::class, $colour);
     }
 
     public function testIsColor()
     {
-        $linkResolver = new FakeLinkResolver();
         /** @var Color $colour */
-        $colour = Color::factory('#000000', $linkResolver);
+        $colour = Color::factory('#000000');
         $this->assertTrue($colour->isColor());
 
-        $colour = Color::factory(null, $linkResolver);
+        $colour = Color::factory(null);
         $this->assertFalse($colour->isColor());
 
-        $colour = Color::factory('foo', $linkResolver);
+        $colour = Color::factory('foo');
         $this->assertFalse($colour->isColor());
     }
 
     private function getBlack() : Color
     {
-        $linkResolver = new FakeLinkResolver();
         /** @var Color $colour */
-        $colour = Color::factory('#000000', $linkResolver);
+        $colour = Color::factory('#000000');
         return $colour;
     }
 
     private function getNonColor() : Color
     {
-        $linkResolver = new FakeLinkResolver();
         /** @var Color $colour */
-        $colour = Color::factory(null, $linkResolver);
+        $colour = Color::factory(null);
         return $colour;
     }
 

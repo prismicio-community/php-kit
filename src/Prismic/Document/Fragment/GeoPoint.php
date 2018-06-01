@@ -5,9 +5,9 @@ namespace Prismic\Document\Fragment;
 
 use JsonSerializable;
 use Prismic\Exception\InvalidArgumentException;
-use Prismic\LinkResolver;
-use function sprintf;
+use function is_float;
 use function json_encode;
+use function sprintf;
 
 class GeoPoint implements FragmentInterface, JsonSerializable
 {
@@ -23,14 +23,14 @@ class GeoPoint implements FragmentInterface, JsonSerializable
         $this->longitude = $lng;
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : self
+    public static function factory($value) : self
     {
         if (isset($value->value)) {
             $value = $value->value;
         }
         $latitude = isset($value->latitude) ? (float) $value->latitude : null;
         $longitude = isset($value->longitude) ? (float) $value->longitude : null;
-        if (! \is_float($longitude) || ! \is_float($latitude)) {
+        if (! is_float($longitude) || ! is_float($latitude)) {
             throw new InvalidArgumentException(sprintf(
                 'Expected an object containing latitude and longitude values, received: %s',
                 json_encode($value)
