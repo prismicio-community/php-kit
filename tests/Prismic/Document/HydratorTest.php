@@ -22,5 +22,4 @@ class HydratorTest extends TestCase
 
         $hydrator->mapType('whatever', \stdClass::class);
     }
-
 }
