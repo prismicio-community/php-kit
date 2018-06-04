@@ -43,7 +43,7 @@ class SliceTest extends TestCase
         /** @var Slice $slice */
         $slice = \current($items);
         $this->assertInstanceOf(Slice::class, $slice);
-        $this->assertNull($slice->getPrimary());
+        $this->assertInstanceOf(FragmentCollection::class, $slice->getPrimary());
     }
 
     public function testGetItemsIsFunctionalForAllSliceSpecs()
@@ -71,8 +71,8 @@ class SliceTest extends TestCase
         $this->assertInstanceOf(Slice::class, $slice);
         $this->assertSame('some-type', $slice->getType());
         $this->assertNull($slice->getLabel());
-        $this->assertNull($slice->getPrimary());
-        $this->assertNull($slice->getItems());
+        $this->assertInstanceOf(FragmentCollection::class, $slice->getPrimary());
+        $this->assertInstanceOf(Group::class, $slice->getItems());
         $this->assertNull($slice->asText());
         $this->assertNull($slice->asHtml());
     }

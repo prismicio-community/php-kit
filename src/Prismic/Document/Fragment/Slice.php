@@ -7,6 +7,9 @@ namespace Prismic\Document\Fragment;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
 
+use function count;
+use function implode;
+
 class Slice implements CompositeFragmentInterface
 {
 
@@ -31,8 +34,8 @@ class Slice implements CompositeFragmentInterface
     private function __construct(
         string $type,
         ?string $label = null,
-        ?FragmentCollection $primary = null,
-        ?Group $group = null
+        FragmentCollection $primary = null,
+        Group $group = null
     ) {
         $this->type    = $type;
         $this->label   = $label;
@@ -82,6 +85,9 @@ class Slice implements CompositeFragmentInterface
                  ? FragmentCollection::factory($value->primary, $linkResolver)
                  : $primary;
 
+        $group = $group ? $group : Group::emptyGroup();
+        $primary = $primary ? $primary : FragmentCollection::emptyCollection();
+
         return new static($type, $label, $primary, $group);
     }
 
@@ -95,36 +101,40 @@ class Slice implements CompositeFragmentInterface
         return $this->label;
     }
 
-    public function getPrimary() :? FragmentCollection
+    public function getPrimary() : FragmentCollection
     {
         return $this->primary;
     }
 
-    public function getItems() :? Group
+    public function getItems() : Group
     {
         return $this->group;
     }
 
     public function asText() :? string
     {
-        if (! $this->group && ! $this->primary) {
-            return null;
-        }
         $data = [];
-        if ($this->primary) {
-            $data[] = $this->primary->asText();
+        $primary = $this->primary->asText();
+        if ($primary) {
+            $data[] = $primary;
         }
-        if ($this->group) {
-            $data[] = $this->group->asText();
+        $group = $this->group->asText();
+        if ($group) {
+            $data[] = $group;
         }
-        return \implode(\PHP_EOL, $data);
+        return count($data) >= 1
+            ? implode(\PHP_EOL, $data)
+            : null;
     }
 
     public function asHtml() :? string
     {
-        if (! $this->group && ! $this->primary) {
+        $primary = $this->primary->asHtml();
+        $group   = $this->group->asHtml();
+        if (empty($primary) && empty($group)) {
             return null;
         }
+
         $attributes = [
             'data-slice-type' => $this->type,
         ];
@@ -134,13 +144,13 @@ class Slice implements CompositeFragmentInterface
         $data = [
             sprintf('<div%s>', $this->htmlAttributes($attributes)),
         ];
-        if ($this->primary) {
-            $data[] = $this->primary->asHtml();
+        if ($primary) {
+            $data[] = $primary;
         }
-        if ($this->group) {
-            $data[] = $this->group->asHtml();
+        if ($group) {
+            $data[] = $group;
         }
         $data[] = '</div>';
-        return \implode(\PHP_EOL, $data);
+        return implode(\PHP_EOL, $data);
     }
 }

@@ -40,6 +40,11 @@ class Group implements CompositeFragmentInterface
         return $group;
     }
 
+    public static function emptyGroup() : self
+    {
+        return new static();
+    }
+
     public function asText() :? string
     {
         $data = [];

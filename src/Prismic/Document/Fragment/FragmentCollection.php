@@ -48,6 +48,11 @@ class FragmentCollection implements CompositeFragmentInterface
         return $collection;
     }
 
+    public static function emptyCollection() : self
+    {
+        return new static();
+    }
+
     private function v1Factory(string $key, $value, LinkResolver $linkResolver) : void
     {
         $fragment = null;
