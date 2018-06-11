@@ -290,13 +290,11 @@ class Api
     /**
      * Return the URL to display a given preview
      * @param string $token as received from Prismic server to identify the content to preview
-     * @param LinkResolver $linkResolver the link resolver to build URL for your site
-     * @param string $defaultUrl the URL to default to return if the preview doesn't correspond to a document
-     *                (usually the home page of your site)
+     * @param string $defaultUrl the URL to return if the preview doesn't correspond to a document
      * @return string the URL you should redirect the user to preview the requested change
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @throws Exception\ExceptionInterface If there's a problem querying the API
      */
-    public function previewSession(string $token, LinkResolver $linkResolver, string $defaultUrl) : string
+    public function previewSession(string $token, string $defaultUrl) : string
     {
         try {
             $response = $this->httpClient->request('GET', $token);
@@ -306,14 +304,13 @@ class Api
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $response = \json_decode((string) $response->getBody());
         if (isset($response->mainDocument)) {
-            $documents = $this
-                       ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])
-                       ->getResults();
-            if (count($documents) > 0 && $this->linkResolver) {
-                $link = DocumentLink::withDocument($documents[0], $this->linkResolver);
-                if ($url = $linkResolver($link)) {
-                    return $url;
-                }
+            $document = $this->getById(
+                $response->mainDocument,
+                ['ref' => $token]
+            );
+            if ($document) {
+                $url = $this->linkResolver->resolve($document->asLink());
+                return $url ? $url : $defaultUrl;
             }
         }
         return $defaultUrl;

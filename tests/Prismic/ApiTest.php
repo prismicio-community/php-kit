@@ -279,7 +279,7 @@ class ApiTest extends TestCase
         $exception = new \GuzzleHttp\Exception\TransferException('Some Exception Message');
         $this->httpClient->request('GET', 'SomeToken')->willThrow($exception);
         $api = $this->getApiWithDefaultData();
-        $api->previewSession('SomeToken', new FakeLinkResolver(), '/');
+        $api->previewSession('SomeToken', '/');
     }
 
     public function testDefaultUrlIsReturnedWhenPreviewResponseDoesNotContainMainDocument()
@@ -288,7 +288,7 @@ class ApiTest extends TestCase
         $response->getBody()->willReturn('{}');
         $this->httpClient->request('GET', 'SomeToken')->willReturn($response->reveal());
         $api = $this->getApiWithDefaultData();
-        $url = $api->previewSession('SomeToken', new FakeLinkResolver(), '/TheDefaultUrl');
+        $url = $api->previewSession('SomeToken', '/TheDefaultUrl');
         $this->assertSame('/TheDefaultUrl', $url);
     }
 
@@ -315,7 +315,7 @@ class ApiTest extends TestCase
 
         $api = $this->getApiWithDefaultData();
         $api->setLinkResolver(new FakeLinkResolver());
-        $url = $api->previewSession('SomeToken', new FakeLinkResolver(), '/TheDefaultUrl');
+        $url = $api->previewSession('SomeToken', '/TheDefaultUrl');
         $this->assertSame('RESOLVED_LINK', $url);
     }
 }
