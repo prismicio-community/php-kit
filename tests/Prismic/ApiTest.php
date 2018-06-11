@@ -78,17 +78,17 @@ class ApiTest extends TestCase
         $v1Url = 'https://whatever.prismic.io/api';
         $api = Api::get($v1Url, null, null, $cache);
         $this->assertTrue($api->isV1Api());
-        $this->assertSame(Api::API_VERSION_1, $api->getApiVersion());
+        $this->assertSame('1.0.0', $api->getApiVersion());
 
         $v1Url = 'https://whatever.prismic.io/api/v1';
         $api = Api::get($v1Url, null, null, $cache);
         $this->assertTrue($api->isV1Api());
-        $this->assertSame(Api::API_VERSION_1, $api->getApiVersion());
+        $this->assertSame('1.0.0', $api->getApiVersion());
 
         $v2Url = 'https://whatever.prismic.io/api/v2';
         $api = Api::get($v2Url, null, null, $cache);
         $this->assertFalse($api->isV1Api());
-        $this->assertSame(Api::API_VERSION_2, $api->getApiVersion());
+        $this->assertSame('2.0.0', $api->getApiVersion());
     }
 
     public function testCachedApiDataWillBeUsedIfAvailable()

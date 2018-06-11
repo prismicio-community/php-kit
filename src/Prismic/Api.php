@@ -27,9 +27,9 @@ class Api
      */
     const VERSION = "4.0.0";
 
-    const API_VERSION_1 = '1.0.0';
+    private const API_VERSION_1 = '1.0.0';
 
-    const API_VERSION_2 = '2.0.0';
+    private const API_VERSION_2 = '2.0.0';
 
     /**
      * Name of the cookie that will be used to remember the preview reference
