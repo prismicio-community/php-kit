@@ -299,12 +299,12 @@ class Api
     public function previewSession(string $token, LinkResolver $linkResolver, string $defaultUrl) : string
     {
         try {
-            $response = $this->getHttpClient()->request('GET', $token);
+            $response = $this->httpClient->request('GET', $token);
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        $response = \json_decode($response->getBody());
+        $response = \json_decode((string) $response->getBody());
         if (isset($response->mainDocument)) {
             $documents = $this
                        ->query(Predicates::at("document.id", $response->mainDocument), ['ref' => $token, 'lang' => '*'])

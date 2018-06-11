@@ -269,4 +269,53 @@ class ApiTest extends TestCase
             $this->assertNull($e->getResponse());
         }
     }
+
+    /**
+     * @expectedException \Prismic\Exception\RequestFailureException
+     * @expectedExceptionMessage Api Request Failed
+     */
+    public function testPreviewSessionWrapsGuzzleExceptions()
+    {
+        $exception = new \GuzzleHttp\Exception\TransferException('Some Exception Message');
+        $this->httpClient->request('GET', 'SomeToken')->willThrow($exception);
+        $api = $this->getApiWithDefaultData();
+        $api->previewSession('SomeToken', new FakeLinkResolver(), '/');
+    }
+
+    public function testDefaultUrlIsReturnedWhenPreviewResponseDoesNotContainMainDocument()
+    {
+        $response = $this->prophesize(ResponseInterface::class);
+        $response->getBody()->willReturn('{}');
+        $this->httpClient->request('GET', 'SomeToken')->willReturn($response->reveal());
+        $api = $this->getApiWithDefaultData();
+        $url = $api->previewSession('SomeToken', new FakeLinkResolver(), '/TheDefaultUrl');
+        $this->assertSame('/TheDefaultUrl', $url);
+    }
+
+    public function testFirstDocumentUrlIsReturnedWhenAMainDocumentIsSet()
+    {
+        /**
+         * The Preview Response from the API
+         */
+        $previewResponse = $this->prophesize(ResponseInterface::class);
+        $previewResponse->getBody()->willReturn($this->getJsonFixture('preview-session.json'));
+        $this->httpClient->request('GET', 'SomeToken')->willReturn($previewResponse->reveal());
+
+        /**
+         * Setup the Search Response from the API
+         */
+        $expectedFormUrl = 'http://repo.prismic.io/api/v2/documents/search?ref=SomeToken&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22SomeDocumentId%22%29%5D%5D&lang=%2A';
+        $formCacheKey = Api::generateCacheKey($expectedFormUrl);
+        $searchResult = \json_decode($this->getJsonFixture('search-results.json'));
+        $cacheItem = $this->prophesize(CacheItemInterface::class);
+        $cacheItem->isHit()->willReturn(true);
+        $cacheItem->get()->willReturn($searchResult);
+        $this->cache->getItem($formCacheKey)->willReturn($cacheItem->reveal());
+
+
+        $api = $this->getApiWithDefaultData();
+        $api->setLinkResolver(new FakeLinkResolver());
+        $url = $api->previewSession('SomeToken', new FakeLinkResolver(), '/TheDefaultUrl');
+        $this->assertSame('RESOLVED_LINK', $url);
+    }
 }
