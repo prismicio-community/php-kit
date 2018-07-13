@@ -206,4 +206,22 @@ class TextElementTest extends TestCase
         $expect = '<p>Paragraph with a <a href="URL">link to another document</a>.</p>';
         $this->assertSame($expect, $text->asHtml());
     }
+
+    public function testNewLinesAreConvertedToLineBreaks()
+    {
+        $value = \json_decode('{
+            "type": "paragraph",
+            "text": "Paragraph with\nbold\ntext.",
+            "spans": [
+                {
+                    "start": 15,
+                    "end": 24,
+                    "type": "strong"
+                }
+            ]
+        }');
+        $text = TextElement::factory($value, new FakeLinkResolver());
+        $expect = "<p>Paragraph with<br />\n<strong>bold<br />\ntext</strong>.</p>";
+        $this->assertSame($expect, $text->asHtml());
+    }
 }

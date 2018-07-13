@@ -99,6 +99,6 @@ trait HtmlHelperTrait
             $nodes[$span->start] = sprintf('%s%s', $openTag, $nodes[$span->start]);
             $nodes[$end] = sprintf('%s%s', $nodes[$end], $closeTag);
         }
-        return implode('', $nodes);
+        return nl2br(implode('', $nodes));
     }
 }
