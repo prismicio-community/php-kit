@@ -63,7 +63,7 @@ trait HtmlHelperTrait
     private function insertSpans(string $text, array $spans, LinkResolver $linkResolver) : string
     {
         if (empty($spans)) {
-            return $this->escapeHtml($text);
+            return nl2br($this->escapeHtml($text));
         }
 
         $nodes = \preg_split('//u', $text, -1, \PREG_SPLIT_NO_EMPTY);

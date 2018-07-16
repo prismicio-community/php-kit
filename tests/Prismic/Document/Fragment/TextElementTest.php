@@ -207,7 +207,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testNewLinesAreConvertedToLineBreaks()
+    public function testNewLinesAreConvertedToLineBreaksWhenSpansArePresent()
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -222,6 +222,18 @@ class TextElementTest extends TestCase
         }');
         $text = TextElement::factory($value, new FakeLinkResolver());
         $expect = "<p>Paragraph with<br />\n<strong>bold<br />\ntext</strong>.</p>";
+        $this->assertSame($expect, $text->asHtml());
+    }
+
+    public function testNewLinesAreConvertedToLineBreaksWhenSpansAreNotPresent()
+    {
+        $value = \json_decode('{
+            "type": "paragraph",
+            "text": "Paragraph with\nbold\ntext.",
+            "spans": []
+        }');
+        $text = TextElement::factory($value, new FakeLinkResolver());
+        $expect = "<p>Paragraph with<br />\nbold<br />\ntext.</p>";
         $this->assertSame($expect, $text->asHtml());
     }
 }
