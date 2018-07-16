@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.0.1 - 2018-07-13
+
+- Altered serialisation of HTML for structured text elements so that it preserves line breaks, replacing them with &lt;br /&gt;
+
 ## 4.0.0 - 2018-06-12
 
 Initial release highlights include:
