@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.0.2 - 2018-07-16
+
+- Fixed preservation of line breaks when rich text does not contain spans   
+
 ## 4.0.1 - 2018-07-13
 
 - Altered serialisation of HTML for structured text elements so that it preserves line breaks, replacing them with &lt;br /&gt;
