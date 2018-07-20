@@ -146,7 +146,7 @@ class Api
      * Returns the master ref repository: the ref which is to be used to query content
      * that is live right now.
      *
-     * @return string the master ref
+     * @return Ref the master ref
      */
     public function master()
     {
