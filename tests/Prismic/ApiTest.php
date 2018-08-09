@@ -251,6 +251,23 @@ class ApiTest extends TestCase
         $this->assertInstanceOf(SearchForm::class, $forms->everything);
     }
 
+    public function testFormsIsASearchFormCollection()
+    {
+        $api = $this->getApiWithDefaultData();
+        $forms = $api->forms();
+        $this->assertInstanceOf(Prismic\SearchFormCollection::class, $forms);
+    }
+
+    /**
+     * @expectedException \Prismic\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The search form named "notHere" does not exist
+     */
+    public function testExceptionThrownAccessingASearchFormThatDoesNotExist()
+    {
+        $api = $this->getApiWithDefaultData();
+        $api->forms()->notHere;
+    }
+
     public function testRefsGroupsRefsByLabel()
     {
         $api = $this->getApiWithDefaultData();

@@ -81,6 +81,9 @@ class Api
      */
     private $linkResolver;
 
+    /** @var SearchFormCollection|null */
+    private $forms;
+
     private function __construct()
     {
     }
@@ -273,17 +276,19 @@ class Api
      * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
      * Learn more about those keywords in prismic.io's documentation on our developers' portal.
      */
-    public function forms() : stdClass
+    public function forms() : SearchFormCollection
     {
-        $forms  = $this->data->getForms();
-        $rforms = new stdClass();
-        foreach ($forms as $key => $form) {
-            $formObject = Form::withJsonObject($form);
-            $data = $formObject->defaultData();
-            $rforms->$key = new SearchForm($this, $formObject, $data);
+        if (! $this->forms) {
+            $forms = [];
+            foreach ($this->data->getForms() as $name => $jsonObject) {
+                $formObject = Form::withJsonObject($jsonObject);
+                $data = $formObject->defaultData();
+                $forms[$name] = new SearchForm($this, $formObject, $data);
+            }
+            $this->forms = new SearchFormCollection($forms);
         }
 
-        return $rforms;
+        return $this->forms;
     }
 
     public function getExperiments() : Experiments
