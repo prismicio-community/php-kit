@@ -69,6 +69,9 @@ class Group implements CompositeFragmentInterface
         return \implode(\PHP_EOL, $data);
     }
 
+    /**
+     * @return Slice[]|FragmentCollection[]
+     */
     public function getItems() : array
     {
         return $this->fragments;

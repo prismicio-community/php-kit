@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic;
-use Prismic\SearchForm;
-use Prismic\Api;
-use Prismic\ApiData;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\RequestInterface;
-use Prophecy\Argument;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Prismic;
+use Prismic\Api;
+use Prismic\ApiData;
+use Prismic\SearchForm;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class ApiTest extends TestCase
 {
@@ -22,10 +22,10 @@ class ApiTest extends TestCase
     /** @var ApiData */
     private $apiData;
 
-    /** @var \GuzzleHttp\ClientInterface */
+    /** @var ClientInterface|ObjectProphecy */
     private $httpClient;
 
-    /** @var CacheItemPoolInterface */
+    /** @var CacheItemPoolInterface|ObjectProphecy */
     private $cache;
 
     /**
@@ -63,6 +63,24 @@ class ApiTest extends TestCase
         $this->httpClient->request()->shouldNotBeCalled();
 
         return $this->getApi();
+    }
+
+    public function testQueryStringOnApiUrlIsNotDestroyed()
+    {
+        $url = 'https://repo.prismic.io/api/v2?someParam=someValue&foo=bar';
+        $token = 'My-Access-Token';
+        $expect = $url . '&access_token=' . $token;
+        $expectedKey = Api::generateCacheKey($expect);
+
+        /** @var CacheItemInterface|ObjectProphecy $item */
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->get()->willReturn($this->apiData);
+        $item->isHit()->willReturn(true);
+        $this->cache->getItem($expectedKey)->willReturn($item);
+
+        $api = Api::get($url, $token, null, $this->cache->reveal());
+
+        $this->assertInstanceOf(Api::class, $api);
     }
 
     public function testApiVersionInformation()

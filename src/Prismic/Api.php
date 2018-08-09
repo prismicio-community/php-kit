@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Document\Fragment\Link\DocumentLink;
-use Prismic\Document\Hydrator;
-use Prismic\Document\HydratorInterface;
-use Prismic\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use stdClass;
-use Psr\Cache\CacheItemPoolInterface;
+use GuzzleHttp\Psr7\Uri;
+use Prismic\Document\Hydrator;
+use Prismic\Document\HydratorInterface;
+use Prismic\Exception;
 use Psr\Cache\CacheException;
+use Psr\Cache\CacheItemPoolInterface;
+use stdClass;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -120,8 +120,12 @@ class Api
 
         $api->setHydrator(new Hydrator($api, [], Document::class));
 
-        $url = $action . ($api->accessToken ? '?access_token=' . $api->accessToken : '');
-        $key = static::generateCacheKey($url);
+        $url = new Uri($action);
+        $url = $api->accessToken
+            ? Uri::withQueryValue($url, 'access_token', $api->accessToken)
+            : $url;
+
+        $key = static::generateCacheKey((string) $url);
         try {
             $cacheItem  = $api->cache->getItem($key);
         } catch (CacheException $cacheException) {
@@ -138,7 +142,7 @@ class Api
 
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $api->httpClient->request('GET', $url);
+            $response = $api->httpClient->request('GET', (string) $url);
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
