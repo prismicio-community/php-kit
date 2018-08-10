@@ -16,12 +16,12 @@ class Slice implements CompositeFragmentInterface
     use HtmlHelperTrait;
 
     /**
-     * @var FragmentCollection|null
+     * @var FragmentCollection
      */
     private $primary;
 
     /**
-     * @var Group|null
+     * @var Group
      */
     private $group;
 
@@ -33,9 +33,9 @@ class Slice implements CompositeFragmentInterface
 
     private function __construct(
         string $type,
-        ?string $label = null,
-        FragmentCollection $primary = null,
-        Group $group = null
+        FragmentCollection $primary,
+        Group $group,
+        ?string $label = null
     ) {
         $this->type    = $type;
         $this->label   = $label;
@@ -88,7 +88,7 @@ class Slice implements CompositeFragmentInterface
         $group = $group ? $group : Group::emptyGroup();
         $primary = $primary ? $primary : FragmentCollection::emptyCollection();
 
-        return new static($type, $label, $primary, $group);
+        return new static($type, $primary, $group, $label);
     }
 
     public function getType() : string
