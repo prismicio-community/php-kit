@@ -317,7 +317,7 @@ class Api
                 $response->mainDocument,
                 ['ref' => $token]
             );
-            if ($document) {
+            if ($document && $this->linkResolver) {
                 $url = $this->linkResolver->resolve($document->asLink());
                 return $url ? $url : $defaultUrl;
             }
