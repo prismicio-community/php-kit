@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Prismic\Document\Fragment\Link;
 
-use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Document\Fragment\HtmlHelperTrait;
+use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
+use function count;
+use function json_encode;
+use function sprintf;
+use function substr;
 
 abstract class AbstractLink implements LinkInterface
 {
@@ -32,7 +36,7 @@ abstract class AbstractLink implements LinkInterface
         if (null === $linkType) {
             throw new InvalidArgumentException(sprintf(
                 'Expected a payload describing a link, received %s',
-                \json_encode($value)
+                json_encode($value)
             ));
         }
         // In V2, you have to look at $value->kind in order to figure out if it's an image or a file
@@ -73,7 +77,7 @@ abstract class AbstractLink implements LinkInterface
         if (null === $link) {
             throw new InvalidArgumentException(\sprintf(
                 'Cannot determine a link from the given payload: %s',
-                \json_encode($value)
+                json_encode($value)
             ));
         }
         /** @var LinkInterface $link */
@@ -151,7 +155,7 @@ abstract class AbstractLink implements LinkInterface
             $attributes['rel'] = 'noopener';
         }
         if ($this->getLang()) {
-            $attributes['hreflang'] = \substr($this->getLang(), 0, 2);
+            $attributes['hreflang'] = substr($this->getLang(), 0, 2);
         }
 
         return sprintf(

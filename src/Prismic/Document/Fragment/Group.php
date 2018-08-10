@@ -5,6 +5,10 @@ namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
+use function count;
+use function implode;
+use function is_array;
+use function json_encode;
 
 class Group implements CompositeFragmentInterface
 {
@@ -17,10 +21,10 @@ class Group implements CompositeFragmentInterface
         /**
          * A Group is a zero indexed array of objects/maps. Each element is a fragment,
          */
-        if (! \is_array($value)) {
+        if (! is_array($value)) {
             throw new InvalidArgumentException(\sprintf(
                 'Expected an indexed array for group construction, received %s',
-                \json_encode($value)
+                json_encode($value)
             ));
         }
         $group = new static();
@@ -54,7 +58,7 @@ class Group implements CompositeFragmentInterface
         if (! count($data)) {
             return null;
         }
-        return \implode(\PHP_EOL, $data);
+        return implode(\PHP_EOL, $data);
     }
 
     public function asHtml() :? string
@@ -66,11 +70,11 @@ class Group implements CompositeFragmentInterface
         if (! count($data)) {
             return null;
         }
-        return \implode(\PHP_EOL, $data);
+        return implode(\PHP_EOL, $data);
     }
 
     /**
-     * @return Slice[]|FragmentCollection[]
+     * @return Slice[]|FragmentCollection[]|CompositeFragmentInterface[]
      */
     public function getItems() : array
     {
