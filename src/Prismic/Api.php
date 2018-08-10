@@ -433,8 +433,12 @@ class Api
     {
         $options = $this->prepareDefaultQueryOptions($options);
         $ref = $this->ref();
-        /** @var SearchForm $form */
-        $form = $this->forms()->everything->ref($ref);
+
+        $form = $this->forms()->getForm('everything');
+        if (! $form) {
+            throw new Exception\RuntimeException('The form "everything" does not exist');
+        }
+        $form = $form->ref($ref);
         if (! empty($q)) {
             $form = $form->query($q);
         }
