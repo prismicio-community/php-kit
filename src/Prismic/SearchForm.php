@@ -159,7 +159,7 @@ class SearchForm
      *
      * Pass multiple string arguments or an array of strings to unpack with the splat operator
      *
-     * @param string[] $fields
+     * @param string ...$fields
      * @return self
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
@@ -173,7 +173,7 @@ class SearchForm
      *
      * Pass multiple string arguments or an array of strings to unpack with the splat operator
      *
-     * @param string[] $fields
+     * @param string ...$fields
      * @return self
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
@@ -218,7 +218,7 @@ class SearchForm
     /**
      * Set the query's ordering, setting in what order the documents must be retrieved.
      *
-     * @param string[] $fields
+     * @param string ...$fields
      * @return SearchForm
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
@@ -252,7 +252,7 @@ class SearchForm
      * Set query predicates
      * You can provide a single string, or one or multiple Predicate instances to build an "AND" query
      *
-     * @param mixed $params
+     * @param mixed ...$params
      * @return self
      * @throws Exception\ExceptionInterface if parameters are invalid
      */
