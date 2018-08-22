@@ -21,7 +21,6 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = not(document.type, "blog-post")]', $predicate->q());
     }
 
-
     public function testAnyPredicate()
     {
         $p = Predicates::any("document.tags", ["Macaron", "Cupcakes"]);
