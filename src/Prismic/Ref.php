@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use stdClass;
 
 /**
- * Embodies a ref to be called on the prismic.io repository. The ref is a prismic.io
+ * Embodies a ref to be called on the Prismic repository. The ref is a Prismic
  * concept that represents a time on which you wish to query the repository, in the present (the
  * content that is live now, we call this ref the master ref) or in the future (the content that
  * is planned for a future content release).

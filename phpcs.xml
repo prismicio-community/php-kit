@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Prismic.io Coding Standard">
-    <description>Coding Standard for the Prismic.io PHP Kit based on Zend Framework Coding Standard</description>
+<ruleset name="Prismic Coding Standard">
+    <description>Coding Standard for the Prismic PHP Kit based on Zend Framework Coding Standard</description>
 
     <!-- Paths to check -->
     <file>src</file>

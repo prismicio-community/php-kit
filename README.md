@@ -1,6 +1,6 @@
 [![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")](https://travis-ci.org/prismicio/php-kit)
 
-# PHP development kit for prismic.io
+# PHP development kit for Prismic
 
 ## Getting started
 
@@ -106,7 +106,7 @@ Some of the kit's tests check stuff that are built on top of APC and need APC to
 
 This software is licensed under the Apache 2 license, quoted below.
 
-Copyright 2018 Prismic.io (https://prismic.io).
+Copyright 2018 Prismic (https://prismic.io).
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 

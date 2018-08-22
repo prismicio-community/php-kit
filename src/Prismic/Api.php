@@ -14,7 +14,7 @@ use Prismic\Cache\NoCache;
 use stdClass;
 
 /**
- * This class embodies a connection to your prismic.io repository's API.
+ * This class embodies a connection to your Prismic repository's API.
  * Initialize it with Prismic::Api::get(), and use your Prismic::Api::forms() to make API calls
  * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
  */
@@ -197,7 +197,7 @@ class Api
     /**
      * Returns all forms of type Prismic::SearchForm that are available for this repository's API.
      * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
-     * Learn more about those keywords in prismic.io's documentation on our developers' portal.
+     * Learn more about those keywords in Prismic's documentation on our developers' portal.
      */
     public function forms() : stdClass
     {
