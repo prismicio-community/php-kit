@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Api;
 use Prismic\Predicates;
 
-class PredicatesTest extends \PHPUnit_Framework_TestCase
+class PredicatesTest extends TestCase
 {
 
     public function testAtPredicate()
@@ -23,7 +24,7 @@ class PredicatesTest extends \PHPUnit_Framework_TestCase
 
     public function testAnyPredicate()
     {
-        $p = Predicates::any("document.tags", array("Macaron", "Cupcakes"));
+        $p = Predicates::any("document.tags", ["Macaron", "Cupcakes"]);
         $this->assertEquals('[:d = any(document.tags, ["Macaron", "Cupcakes"])]', $p->q());
     }
 
@@ -56,5 +57,4 @@ class PredicatesTest extends \PHPUnit_Framework_TestCase
         $p = Predicates::near("my.store.coordinates", 40.689757, -74.0451453, 15);
         $this->assertEquals("[:d = geopoint.near(my.store.coordinates, 40.689757, -74.0451453, 15)]", $p->q());
     }
-
 }

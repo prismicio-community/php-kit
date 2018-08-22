@@ -1,18 +1,20 @@
 <?php
+declare(strict_types=1);
 
-namespace Prismic\Test;
+namespace Prismic\Test\Dom;
 
+use Prismic\Test\TestCase;
 use Prismic\Dom\RichText;
 use Prismic\Test\FakeLinkResolver;
 
-class RichTextTest extends \PHPUnit_Framework_TestCase
+class RichTextTest extends TestCase
 {
     private $richText;
     private $linkResolver;
 
     protected function setUp()
     {
-        $this->richText = json_decode(file_get_contents(__DIR__.'/../../fixtures/rich-text.json'));
+        $this->richText = json_decode($this->getJsonFixture('rich-text.json'));
         $this->linkResolver = new FakeLinkResolver();
     }
 
@@ -87,7 +89,7 @@ class RichTextTest extends \PHPUnit_Framework_TestCase
                 '<iframe width="480" height="270" src="https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>' .
             '</div>'
         );
-        $htmlSerializer = function($element, $content) {
+        $htmlSerializer = function ($element, $content) {
             if ($element->type === 'heading3') {
                 $classes = 'custom';
                 if (isset($element->label)) {

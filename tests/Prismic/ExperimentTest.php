@@ -1,16 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Experiments;
 
-class ExperimentTest extends \PHPUnit_Framework_TestCase
+class ExperimentTest extends TestCase
 {
     private $experiments;
 
     protected function setUp()
     {
-        $experimentsJson = json_decode(file_get_contents(__DIR__.'/../fixtures/experiments.json'));
+        $experimentsJson = \json_decode($this->getJsonFixture('experiments.json'));
         $this->experiments = Experiments::parse($experimentsJson);
     }
 
@@ -39,7 +40,5 @@ class ExperimentTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->experiments->refFromCookie("_UQtin7EQAOH5M34RQq6Dg -1"), "Index overflow negative index");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 0"), "Unknown Google ID");
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 1"), "Unknown Google ID");
-
     }
-
 }

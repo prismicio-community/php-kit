@@ -1,23 +1,26 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Predicate;
-
-/**
- * Class SimplePredicate
- *
- * @package Prismic
- */
 class SimplePredicate implements Predicate
 {
+
+    /** @var string  */
+    private $name;
+
+    /** @var string  */
+    private $fragment;
+
+    /** @var array  */
+    private $args;
 
     /**
      * @param string $name
      * @param string $fragment
      * @param array  $args
      */
-    public function __construct($name, $fragment, array $args = array())
+    public function __construct(string $name, string $fragment, array $args = [])
     {
         $this->name = $name;
         $this->fragment = $fragment;
@@ -27,10 +30,10 @@ class SimplePredicate implements Predicate
     /**
      * @return string
      */
-    public function q()
+    public function q() : string
     {
         $query = "[:d = " . $this->name . "(";
-        if ($this->name == "similar") {
+        if ($this->name === "similar") {
             $query .= "\"" . $this->fragment . "\"";
         } else {
             $query .= $this->fragment;
@@ -47,18 +50,18 @@ class SimplePredicate implements Predicate
      *
      * @return string
      */
-    private static function serializeField($value) {
+    private static function serializeField($value) : string
+    {
         if (is_string($value)) {
             return "\"" . $value . "\"";
         }
         if (is_array($value)) {
-            $str_array = array();
+            $str_array = [];
             foreach ($value as $elt) {
-                array_push($str_array, SimplePredicate::serializeField($elt));
+                array_push($str_array, static::serializeField($elt));
             }
-            return "[" . join(", ", $str_array) . "]";
+            return "[" . implode(", ", $str_array) . "]";
         }
         return (string)$value;
     }
-
 }

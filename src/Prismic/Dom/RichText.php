@@ -47,7 +47,7 @@ class RichText
      */
     public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
     {
-        $groups = array();
+        $groups = [];
 
         foreach ($richText as $block) {
             $count = count($groups);
@@ -58,16 +58,16 @@ class RichText
                 } elseif ('ol' == $lastOne->getTag() && $block->type === 'o-list-item') {
                     $lastOne->addBlock($block);
                 } elseif ($block->type === 'list-item') {
-                    $newBlockGroup = new BlockGroup('ul', array());
+                    $newBlockGroup = new BlockGroup('ul', []);
                     $newBlockGroup->addBlock($block);
                     array_push($groups, $newBlockGroup);
                 } else {
                     if ($block->type === 'o-list-item') {
-                        $newBlockGroup = new BlockGroup('ol', array());
+                        $newBlockGroup = new BlockGroup('ol', []);
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     } else {
-                        $newBlockGroup = new BlockGroup(null, array());
+                        $newBlockGroup = new BlockGroup(null, []);
                         $newBlockGroup->addBlock($block);
                         array_push($groups, $newBlockGroup);
                     }
@@ -80,7 +80,7 @@ class RichText
                 } else {
                     $tag = null;
                 }
-                $newBlockGroup = new BlockGroup($tag, array());
+                $newBlockGroup = new BlockGroup($tag, []);
                 $newBlockGroup->addBlock($block);
                 array_push($groups, $newBlockGroup);
             }
@@ -154,15 +154,15 @@ class RichText
             return htmlentities($text, null, 'UTF-8');
         }
 
-        $tagsStart = array();
-        $tagsEnd = array();
+        $tagsStart = [];
+        $tagsEnd = [];
 
         foreach ($spans as $span) {
-            if (!array_key_exists($span->start, $tagsStart)) {
-                $tagsStart[$span->start] = array();
+            if (! array_key_exists($span->start, $tagsStart)) {
+                $tagsStart[$span->start] = [];
             }
-            if (!array_key_exists($span->end, $tagsEnd)) {
-                $tagsEnd[$span->end] = array();
+            if (! array_key_exists($span->end, $tagsEnd)) {
+                $tagsEnd[$span->end] = [];
             }
             array_push($tagsStart[$span->start], $span);
             array_push($tagsEnd[$span->end], $span);
@@ -170,7 +170,7 @@ class RichText
 
         $c = null;
         $html = '';
-        $stack = array();
+        $stack = [];
 
         for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
             if (array_key_exists($pos, $tagsEnd)) {
@@ -179,16 +179,18 @@ class RichText
                     $tag = array_pop($stack);
                     // Continue only if block contains content.
                     if ($tag && $tag['span']) {
-                        $innerHtml = trim(RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer));
-                      if (count($stack) == 0) {
-                          // The tag was top level
-                          $html .= $innerHtml;
-                      } else {
-                          // Add the content to the parent tag
-                          $last = array_pop($stack);
-                          $last['text'] = $last['text'] . $innerHtml;
-                          array_push($stack, $last);
-                      }
+                        $innerHtml = trim(
+                            RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer)
+                        );
+                        if (count($stack) == 0) {
+                            // The tag was top level
+                            $html .= $innerHtml;
+                        } else {
+                            // Add the content to the parent tag
+                            $last = array_pop($stack);
+                            $last['text'] = $last['text'] . $innerHtml;
+                            array_push($stack, $last);
+                        }
                     }
                 }
             }
@@ -201,10 +203,10 @@ class RichText
                 usort($sspans, $spanSort);
                 foreach ($sspans as $span) {
                     // Open a tag
-                    array_push($stack, array(
+                    array_push($stack, [
                         'span' => $span,
                         'text' => ''
-                    ));
+                    ]);
                 }
             }
             if ($pos < strlen($text)) {
@@ -216,10 +218,10 @@ class RichText
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
-                    $stack[$last_idx] = array(
+                    $stack[$last_idx] = [
                         'span' => $last['span'],
                         'text' => $last['text'] . htmlentities($c, null, 'UTF-8')
-                    );
+                    ];
                 }
             }
         }
@@ -238,7 +240,7 @@ class RichText
      *
      * @return string the HTML representation of the element
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer)
+    private static function serialize($element, $content, $linkResolver, $htmlSerializer) : string
     {
         if ($htmlSerializer) {
             $custom = $htmlSerializer($element, $content);
@@ -286,17 +288,19 @@ class RichText
                     $providerAttr = ' data-oembed-provider="' . strtolower($element->oembed->provider_name) . '"';
                 }
                 if ($element->oembed->html) {
-                    return (
-                        '<div data-oembed="' . $element->oembed->embed_url . '" data-oembed-type="' . strtolower($element->oembed->type) . '"' . $providerAttr . '>' .
-                            $element->oembed->html .
-                        '</div>'
+                    return sprintf(
+                        '<div data-oembed="%s" data-oembed-type="%s"%s>%s</div>',
+                        $element->oembed->embed_url,
+                        strtolower($element->oembed->type),
+                        $providerAttr,
+                        $element->oembed->html
                     );
                 }
                 return '';
         }
 
         // Spans
-        $attributes = array();
+        $attributes = [];
         switch ($element->type) {
             case 'strong':
                 $nodeName = 'strong';
@@ -307,10 +311,10 @@ class RichText
             case 'hyperlink':
                 $nodeName = 'a';
                 if (isset($element->data->target)) {
-                    $attributes = array_merge(array(
+                    $attributes = array_merge([
                         'target' => $element->data->target,
                         'rel' => 'noopener',
-                    ), $attributes);
+                    ], $attributes);
                 }
                 if ($element->data->link_type === 'Document') {
                     $attributes['href'] = $linkResolver ? $linkResolver($element->data) : '';
