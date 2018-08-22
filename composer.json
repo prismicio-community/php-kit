@@ -14,11 +14,8 @@
             "Prismic\\Test\\": "tests/Prismic"
         }
     },
-
-    "license": "Apache 2 license",
-
+    "license": "Apache-2.0",
     "minimum-stability": "stable",
-
     "require": {
         "php": ">=7.1",
         "ext-curl": "*",
@@ -27,8 +24,9 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
+        "phpdocumentor/phpdocumentor": "dev-master",
         "phpunit/phpunit": "^7",
-        "squizlabs/php_codesniffer": "^3.2"
+        "squizlabs/php_codesniffer": "^3.3"
     },
     "extra": {
         "branch-alias": {
@@ -42,6 +40,7 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "docs": "phpdoc",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-html build/report",
         "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php"

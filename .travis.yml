@@ -12,6 +12,7 @@ before_script:
 script:
   - composer test
   - composer cs-check
+  - composer docs
 
 deploy:
   provider: pages

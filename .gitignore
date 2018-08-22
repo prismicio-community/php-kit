@@ -4,6 +4,5 @@ phpunit.xml
 /build/
 
 ### Composer ###
-composer.lock
 composer.phar
 /vendor/
