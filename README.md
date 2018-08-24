@@ -2,6 +2,8 @@
 
 # PHP development kit for Prismic
 
+This kit supports PHP version >= 7.1.
+
 ## Getting started
 
 ### Install the kit for your project
