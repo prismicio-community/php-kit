@@ -24,12 +24,12 @@ class Predicates
     }
 
     /**
-     * @param string $fragment
-     * @param string $value
+     * @param string                      $fragment
+     * @param string|array|float|DateTime $value
      *
      * @return SimplePredicate
      */
-    public static function not(string $fragment, string $value) : SimplePredicate
+    public static function not(string $fragment, $value) : SimplePredicate
     {
         return new SimplePredicate("not", $fragment, [$value]);
     }
