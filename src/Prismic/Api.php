@@ -15,7 +15,7 @@ use stdClass;
 
 /**
  * This class embodies a connection to your Prismic repository's API.
- * Initialize it with Prismic::Api::get(), and use your Prismic::Api::forms() to make API calls
+ * Initialize it with Prismic::Api::get(), and use your Prismic::Api::form() to make API calls
  * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
  */
 class Api
@@ -195,21 +195,17 @@ class Api
     }
 
     /**
-     * Returns all forms of type Prismic::SearchForm that are available for this repository's API.
-     * The intended syntax of a call is: api->forms()->everything->query(query)->ref(ref)->submit().
+     * Returns the form of type Prismic::SearchForm based on its name.
+     * The intended syntax of a call is: api->form('everything')->query(query)->ref(ref)->submit().
      * Learn more about those keywords in Prismic's documentation on our developers' portal.
      */
-    public function forms() : stdClass
+    public function form(string $formName) : SearchForm
     {
-        $forms  = $this->data->getForms();
-        $rforms = new stdClass();
-        foreach ($forms as $key => $form) {
-            $formObject = Form::withJsonObject($form);
-            $data = $formObject->defaultData();
-            $rforms->$key = new SearchForm($this->httpClient, $this->cache, $formObject, $data);
-        }
+        $forms = $this->data->getForms();
+        $formObject = Form::withJsonObject($forms[$formName]);
+        $data = $formObject->defaultData();
 
-        return $rforms;
+        return new SearchForm($this->httpClient, $this->cache, $formObject, $data);
     }
 
     public function getExperiments() : Experiments
@@ -431,7 +427,7 @@ class Api
     {
         $ref = $this->ref();
         /** @var SearchForm $form */
-        $form = $this->forms()->everything->ref($ref);
+        $form = $this->forms('everything')->ref($ref);
         if (! empty($q)) {
             $form = $form->query($q);
         }

@@ -200,9 +200,9 @@ class ApiTest extends TestCase
     public function testFormsReturnsOnlyFormInstances()
     {
         $api = $this->getApiWithDefaultData();
-        $forms = $api->forms();
-        $this->assertTrue(isset($forms->everything));
-        $this->assertInstanceOf(SearchForm::class, $forms->everything);
+        $everything = $api->form('everything');
+        $this->assertTrue(isset($everything));
+        $this->assertInstanceOf(SearchForm::class, $everything);
     }
 
     public function testRefsGroupsRefsByLabel()
