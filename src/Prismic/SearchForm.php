@@ -8,6 +8,7 @@ use stdClass;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\ClientInterface;
 use Prismic\Cache\CacheInterface;
+use Prismic\Utils;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -316,13 +317,7 @@ class SearchForm
      */
     public function url() : string
     {
-        $url = $this->form->getAction() . '?' . http_build_query($this->data);
-        /**
-         * This expression removes integer array keys,
-         * i.e. ?q[0]=Whatever&q[1]=OtherThing becomes ?q=Whatever&q=OtherThing
-         */
-        $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
-        return $url;
+        return Utils::buildUrl($this->form->getAction(), $this->data);
     }
 
     /**

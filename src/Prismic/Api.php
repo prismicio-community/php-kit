@@ -100,7 +100,7 @@ class Api
             return new self(unserialize($apiData), $accessToken, $httpClient, $cache);
         }
 
-        $url = $action . ($accessToken ? '?access_token=' . $accessToken : '');
+        $url = $accessToken ? Utils::buildUrl($action, [ 'access_token' => $accessToken]) : $action;
         $httpClient = is_null($httpClient) ? new Client() : $httpClient;
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
