@@ -427,7 +427,7 @@ class Api
     {
         $ref = $this->ref();
         /** @var SearchForm $form */
-        $form = $this->forms('everything')->ref($ref);
+        $form = $this->form('everything')->ref($ref);
         if (! empty($q)) {
             $form = $form->query($q);
         }
