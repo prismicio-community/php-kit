@@ -87,6 +87,10 @@
                     "type": "String",
                     "multiple": false
                 },
+                "graphQuery": {
+                    "type": "String",
+                    "multiple": false
+                },
                 "orderings": {
                     "type": "String",
                     "multiple": false

@@ -188,6 +188,16 @@ class SearchForm
     }
 
     /**
+     * Set the graphQuery parameter: GraphQL syntax based to select fields
+     * @param string $query
+     * @return self
+     */
+    public function graphQuery(string $query) : self
+    {
+        return $this->set("graphQuery", $query);
+    }
+
+    /**
      * Set the language for the query documents.
      * @param string $lang
      * @return self

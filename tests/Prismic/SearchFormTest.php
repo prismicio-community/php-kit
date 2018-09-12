@@ -232,6 +232,21 @@ class SearchFormTest extends TestCase
         );
     }
 
+    public function testGraphQueryWithStringArg()
+    {
+        $query = '{
+            blogpost {
+                title
+            }
+        }';
+
+        $this->assertScalarOptionIsSet(
+            $this->getSearchForm()->graphQuery($query),
+            'graphQuery',
+            $query
+        );
+    }
+
     public function testOrderingsWithStringArgs()
     {
         $this->assertScalarOptionIsSet(
