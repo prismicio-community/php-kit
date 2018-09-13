@@ -24,7 +24,7 @@ class Api
     /**
      * Kit version number
      */
-    const VERSION = "4.0.0";
+    const VERSION = "5.0.0";
 
     /**
      * Name of the cookie that will be used to remember the preview reference
