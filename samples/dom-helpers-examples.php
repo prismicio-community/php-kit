@@ -13,7 +13,7 @@ $document = $api->getSingle('example');
 
 class ExampleLinkResolver extends LinkResolver
 {
-    public function resolve($link)
+    public function resolve($link) : string
     {
         if ($link->isBroken) {
             return '/404';

@@ -1,6 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic;
+
+use Prismic\Exception;
+use stdClass;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\ClientInterface;
+use Prismic\Cache\CacheInterface;
+use Prismic\Utils;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -11,7 +19,8 @@ namespace Prismic;
  * $result = $api->form('everything')->ref($ref)->submit()
  *
  * And here's an example of a more complex query:
- * $result = $api->form('products')->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
+ * $result = $api->form('products')
+ *               ->query('[[:d = any(document.tags, ["Featured"])]]')->pageSize(10)->page(2)->ref($ref)->submit()
  *
  * Note that setting the ref is mandatory, or your submit call will fail.
  *
@@ -22,37 +31,48 @@ namespace Prismic;
 class SearchForm
 {
     /**
-     * Prismic::Api the API object containing all the information to know where to query
+     * Cache Instance
+     * @var CacheInterface
      */
-    private $api;
+    private $cache;
+
     /**
-     * Prismic::Form the REST form we're querying on in the API
+     * Http Client
+     * @var ClientInterface
+     */
+    private $client;
+
+    /**
+     * The REST form we're querying on in the API
+     * @var Form
      */
     private $form;
+
     /**
-     * array the parameters we're getting ready to submit
+     * The parameters we're getting ready to submit
+     * @var array
      */
     private $data;
 
     /**
      * Constructs a SearchForm object
-     * @param Prismic::Api  $api  the API object containing all the information to know where to query
-     * @param Prismic::Form $form the REST form we're querying on in the API
-     * @param array         $data the parameters we're getting ready to submit
+     * @param ClientInterface $httpClient An HTTP Client for sending Requests
+     * @param CacheInterface $cache A cache for storing responses
+     * @param Form  $form the REST form we're querying on in the API
+     * @param array $data the parameters we're getting ready to submit
      */
-    public function __construct(Api $api, Form $form, array $data)
+    public function __construct(ClientInterface $httpClient, CacheInterface $cache, Form $form, array $data)
     {
-        $this->api  = $api;
-        $this->form = $form;
-        $this->data = $data;
+        $this->client = $httpClient;
+        $this->cache  = $cache;
+        $this->form   = $form;
+        $this->data   = $data;
     }
 
     /**
      * Get the parameters we're about to submit.
-     *
-     * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }
@@ -63,157 +83,172 @@ class SearchForm
      *
      * Checks that the parameter is expected in the RESTful form before allowing to add it.
      *
-     * @param  string $key the name of the parameter
-     * @param  string $value the value of the parameter
+     * @param  string     $key the name of the parameter
+     * @param  string|int $value the value of the parameter
      *
-     * \throws RuntimeException
+     * @throws Exception\ExceptionInterface
      *
-     * @return \Prismic\SearchForm a clone of the SearchForm object with the new parameter added
+     * @return self A clone of the SearchForm object with the new parameter added
      */
-    public function set($key, $value)
+    public function set(string $key, $value) : self
     {
-        $data = $this->data;
-        if (isset($key) && isset($value)) {
-            $fields = $this->form->getFields();
-            /** @var FieldForm $field */
-            $field = $fields[$key];
-
-            if (is_int($value) && $field->getType() != "Integer") {
-                throw new \RuntimeException("Cannot use a Int as value for field " . $key);
-            }
-
-            if ($field->isMultiple()) {
-                $values = isset($data[$key]) ? $data[$key] : array();
-                if (is_array($values)) {
-                    array_push($values, $value);
-                } else {
-                    $values = array($value);
-                }
-                $data[$key] = $values;
-            } else {
-                $data[$key] = $value;
-            }
+        if (empty($key)) {
+            throw new Exception\InvalidArgumentException('Form parameter key must be a non-empty string');
         }
-        return new SearchForm($this->api, $this->form, $data);
+        if (! is_scalar($value)) {
+            throw new Exception\InvalidArgumentException('Form parameter value must be scalar');
+        }
+        $fields = $this->form->getFields();
+        if (! isset($fields[$key])) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Unknown form field parameter "%s"',
+                $key
+            ));
+        }
+
+        /** @var FieldForm $field */
+        $field = $fields[$key];
+
+        if ($field->getType() === 'String' && ! is_string($value)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The field %s expects a string parameter, received %s',
+                $key,
+                gettype($value)
+            ));
+        }
+
+        if ($field->getType() === 'Integer' && ! is_numeric($value)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The field %s expects an integer parameter, received %s',
+                $key,
+                gettype($value)
+            ));
+        }
+
+
+        $data = $this->data;
+        if ($field->isMultiple()) {
+            $data[$key] = isset($data[$key]) ? $data[$key] : [];
+            $data[$key] = is_array($data[$key]) ? $data[$key] : [$data[$key]];
+            $data[$key][] = $value;
+        } else {
+            $data[$key] = $value;
+        }
+
+        return new self($this->client, $this->cache, $this->form, $data);
     }
 
     /**
-     * Set the repository's ref.
+     * Set the repository ref to query at
      *
-     * @param  string|\Prismic\Ref $ref the ref we wish to query on, or its ID.
-     *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new ref parameter added
+     * @param  string|Ref $ref the ref we wish to query on, or its ID.
+     * @return self
      */
-    public function ref($ref)
+    public function ref($ref) : self
     {
-        if ($ref instanceof \Prismic\Ref) {
-            $ref = $ref->getRef();
+        if ($ref instanceof Ref) {
+            $ref = (string) $ref;
         }
         return $this->set("ref", $ref);
     }
 
     /**
      * Set the after parameter: the id of the document to start the results from (excluding that document).
-     *
      * @param string $documentId
-     *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new after parameter added
+     * @return self
      */
-    public function after($documentId)
+    public function after(string $documentId) : self
     {
         return $this->set("after", $documentId);
     }
 
     /**
-     * Set the fetch parameter: restrict the fields to retrieve for a document. You can pass in parameter
-     * an array of strings, or several strings.
+     * Set the fetch parameter: restrict the fields to retrieve for a document
      *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new fetch parameter added
+     * Pass multiple string arguments or an array of strings to unpack with the splat operator
+     *
+     * @param string[] $fields
+     * @return self
      */
-    public function fetch()
+    public function fetch(string ...$fields) : self
     {
-        $numargs = func_num_args();
-        if ($numargs == 1 && is_array(func_get_arg(0))) {
-            $fields = func_get_arg(0);
-        } else {
-            $fields = func_get_args();
-        }
-        return $this->set("fetch", join(",", $fields));
+        return $this->set("fetch", implode(",", $fields));
     }
 
     /**
-     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink, You can pass in parameter
-     * an array of strings, or several strings.
+     * Set the fetchLinks parameter: additional fields to retrieve for DocumentLink
      *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new fetchLinks parameter added
+     * Pass multiple string arguments or an array of strings to unpack with the splat operator
+     *
+     * @param string[] $fields
+     * @return self
      */
-    public function fetchLinks()
+    public function fetchLinks(string ...$fields) : self
     {
-        $numargs = func_num_args();
-        if ($numargs == 1 && is_array(func_get_arg(0))) {
-            $fields = func_get_arg(0);
-        } else {
-            $fields = func_get_args();
-        }
         return $this->set("fetchLinks", join(",", $fields));
     }
 
     /**
-     * Set the language for the query documents.
-     *
-     * @param  int $lang
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new lang parameter added
+     * Set the graphQuery parameter: GraphQL syntax based to select fields
+     * @param string $query
+     * @return self
      */
-    public function lang($lang)
+    public function graphQuery(string $query) : self
+    {
+        return $this->set("graphQuery", $query);
+    }
+
+    /**
+     * Set the language for the query documents.
+     * @param string $lang
+     * @return self
+     */
+    public function lang(string $lang) : self
     {
         return $this->set("lang", $lang);
     }
 
     /**
      * Set the query's page size, for the pagination.
-     *
-     * @param  int $pageSize
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new pageSize parameter added
+     * @param int $pageSize
+     * @return self
      */
-    public function pageSize($pageSize)
+    public function pageSize(int $pageSize) : self
     {
         return $this->set("pageSize", $pageSize);
     }
 
     /**
-     * Set the query's page, for the pagination.
-     *
-     * @param  int $page
-     *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new page parameter added
+     * Set the query result page number, for the pagination.
+     * @param int $page
+     * @return self
      */
-    public function page($page)
+    public function page(int $page) : self
     {
         return $this->set("page", $page);
     }
 
     /**
      * Set the query's ordering, setting in what order the documents must be retrieved.
-     *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new orderings parameter added
      */
-    public function orderings()
+    public function orderings(string ...$fields) : self
     {
-        if (func_num_args() == 0) return $this;
-        $orderings = "[" . join(",", array_map(function($order) { return preg_replace('/(^\[|\]$)/', '', $order); }, func_get_args())) . "]";
+        $fields = array_filter($fields);
+        if (empty($fields)) {
+            return $this;
+        }
+        $orderings = "[" . implode(",", array_map(function ($order) {
+            return preg_replace('/(^\[|\]$)/', '', $order);
+        }, $fields)) . "]";
         return $this->set("orderings", $orderings);
     }
 
     /**
      * Submit the current API call, and unmarshalls the result into PHP objects.
-     *
-     * @return Prismic::Response the result of the call
-     *
-     * \throws RuntimeException
      */
-    public function submit()
+    public function submit() : stdClass
     {
-        return $this->submit_raw();
+        return $this->submitRaw();
     }
 
     /**
@@ -222,99 +257,119 @@ class SearchForm
      * This uses a copy of the SearchForm with a page size of 1 (the smallest
      * allowed) since all we care about is one of the returned non-result
      * fields.
-     *
-     * @return int Total number of results
-     *
-     * \throws RuntimeException
      */
-    public function count()
+    public function count() :? int
     {
-        return $this->pageSize(1)->submit_raw()->total_results_size;
+        $response = $this->pageSize(1)->submitRaw();
+        return isset($response->total_results_size)
+               ? (int) $response->total_results_size
+               : null;
     }
 
     /**
-     * Set the query's predicates themselves.
-     * You can pass a String representing a query as parameter, or one or multiple Predicates to build an "AND" query
-     *
-     * @return Prismic::SearchForm a clone of the SearchForm object with the new predicate or predicates added
+     * Set query predicates
+     * You can provide a single string, or one or multiple Predicate instances to build an "AND" query
      */
-    public function query()
+    public function query(...$params) : self
     {
-        $numargs = func_num_args();
-        if ($numargs == 0) return clone $this;
-        $first = func_get_arg(0);
-        if ($numargs == 1 && is_string($first)) {
+        // Filter empty args and return early if appropriate
+        $params = array_filter($params);
+        if (empty($params)) {
+            return clone $this;
+        }
+        $first = current($params);
+        // Unpack a single array argument
+        if (count($params) === 1 && is_array($first)) {
+            $params = $first;
+        }
+        $this->assertValidQueryParameters($params);
+        if (count($params) === 1 && is_string($first)) {
             return $this->set("q", $first);
         }
-        if ($numargs == 1 && is_array($first)) {
-            $predicates = $first;
-        } else {
-            $predicates = func_get_args();
-        }
-        $query = "[" . join("", array_map(function($predicate) { return $predicate->q(); }, $predicates)) . "]";
+        $query = "[" . implode("", array_map(function ($predicate) {
+            /** @var Predicate $predicate */
+            return $predicate->q();
+        }, $params)) . "]";
         return $this->set("q", $query);
     }
 
     /**
-     * Get the URL for this form
-     *
-     * @return string the URL
+     * Assert that the parameters used for a query contain either a single string, or an array of Predicates
+     * @param array $params
+     * @throws Exception\InvalidArgumentException
      */
-    public function url()
+    private function assertValidQueryParameters(array $params) : void
     {
-        $url = $this->form->getAction() . '?' . http_build_query($this->data);
-        $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
-        return $url;
+        if (count($params) === 1 && is_string(current($params))) {
+            return;
+        }
+        foreach ($params as $param) {
+            if (! $param instanceof Predicate) {
+                throw new Exception\InvalidArgumentException(
+                    'Query parameters should consist of a single string or multiple Predicate instances'
+                );
+            }
+        }
+    }
+
+    /**
+     * Get the URL for this form
+     */
+    public function url() : string
+    {
+        return Utils::buildUrl($this->form->getAction(), $this->data);
     }
 
     /**
      * Checks if the results for this form are already cached
-     *
-     * @return boolean true if the results for this form are fresh in the cache, false otherwise
      */
-    public function isCached()
+    public function isCached() : bool
     {
-        return $this->api->getCache()->has($this->url());
+        return $this->cache->has($this->url());
     }
 
     /**
      * Performs the actual submit call, without the unmarshalling.
      *
-     * \throws RuntimeException if the Form type is not supported
+     * @throws Exception\RuntimeException if the Form type is not supported or the Response body is invalid
+     * @throws Exception\RequestFailureException if something went wrong retrieving data from the API
      *
-     * @return the raw (unparsed) response.
+     * @return stdClass Unserialized JSON Response
      */
-    private function submit_raw()
+    private function submitRaw() : stdClass
     {
-        if ($this->form->getMethod() == 'GET' &&
-            $this->form->getEnctype() == 'application/x-www-form-urlencoded' &&
-            $this->form->getAction()
+        if ($this->form->getMethod() !== 'GET' ||
+            $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
+            ! $this->form->getAction()
         ) {
-            $url = $this->url();
-            $cacheKey = $this->url();
-
-            $response = $this->api->getCache()->get($cacheKey);
-
-            if ($response) {
-                return $response;
-            } 
-            $response = $this->api->getHttpClient()->get($url);
-            $cacheControl = $response->getHeader('Cache-Control')[0];
-            $cacheDuration = null;
-            if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
-                $cacheDuration = (int) $groups[1];
-            }
-            $json = json_decode($response->getBody(true));
-            if (!isset($json)) {
-                throw new \RuntimeException("Unable to decode json response");
-            }
-            if ($cacheDuration !== null) {
-                $expiration = $cacheDuration;
-                $this->api->getCache()->set($cacheKey, $json, $expiration);
-            }
-            return $json;
+            throw new Exception\RuntimeException("Form type not supported");
         }
-        throw new \RuntimeException("Form type not supported");
-    }
+        $url = $this->url();
+        $cacheKey = $this->url();
 
+        $cachedJson = $this->cache->get($cacheKey);
+
+        if ($cachedJson) {
+            return $cachedJson;
+        }
+        try {
+            /** @var \Psr\Http\Message\ResponseInterface $response */
+            $response = $this->client->request('GET', $url);
+        } catch (GuzzleException $guzzleException) {
+            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+        }
+        $cacheControl = $response->getHeader('Cache-Control')[0];
+        $cacheDuration = null;
+        if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
+            $cacheDuration = (int) $groups[1];
+        }
+        $json = \json_decode((string) $response->getBody());
+        if (! isset($json)) {
+            throw new Exception\RuntimeException("Unable to decode json response");
+        }
+        if ($cacheDuration !== null) {
+            $this->cache->set($cacheKey, $json, $cacheDuration);
+        }
+        return $json;
+    }
 }

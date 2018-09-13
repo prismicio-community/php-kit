@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Dom;
 
@@ -26,7 +27,7 @@ class BlockGroup
      * @param string  $maybeTag  the tag to use if should be (values are either "ul", "ol" or null)
      * @param array   $blocks  the array of BlockInterface objects that are being grouped here
      */
-    public function __construct($maybeTag, $blocks)
+    public function __construct(?string $maybeTag, array $blocks)
     {
         $this->maybeTag = $maybeTag;
         $this->blocks = $blocks;
@@ -47,7 +48,7 @@ class BlockGroup
      *
      * @return  string  the tag to use if should be (values are either "ul", "ol" or null).
      */
-    public function getTag()
+    public function getTag() :? string
     {
         return $this->maybeTag;
     }
@@ -57,7 +58,7 @@ class BlockGroup
      *
      * @return array the array of BlockInterface objects that are being grouped here
      */
-    public function getBlocks()
+    public function getBlocks() : array
     {
         return $this->blocks;
     }

@@ -28,7 +28,7 @@ class ApcCache implements CacheInterface
     public function get($key)
     {
         $value = \apcu_fetch($key, $success);
-        if (!$success) {
+        if (! $success) {
             return null;
         }
         return $value;

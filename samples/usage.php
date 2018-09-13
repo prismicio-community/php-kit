@@ -4,11 +4,11 @@ include_once __DIR__.'/../vendor/autoload.php';
 
 use Prismic\Api;
 
-$options = array(
+$options = [
     'prismic.ref'   => false,
     'prismic.api'   => "https://your-repository-name.prismic.io/api/v2",
     'prismic.token' => "Your permanent token",
-);
+];
 
 // retrieve the main information from the api, form and repositories ...
 $api = Api::get($options['prismic.api'], $options['prismic.token']);

@@ -1,22 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Ref;
+use DateTimeImmutable;
+use stdClass;
 
-class RefTest extends \PHPUnit_Framework_TestCase
+class RefTest extends TestCase
 {
 
     private $refs;
 
     public function getRefs()
     {
-        if(!$this->refs) {
-            $this->refs = json_decode(file_get_contents(__DIR__.'/../fixtures/refs.json'));
+        if (! $this->refs) {
+            $this->refs = \json_decode($this->getJsonFixture('refs.json'));
         }
-        $out = array();
-        foreach($this->refs->refs as $ref) {
-            $out[] = array($ref);
+        $out = [];
+        foreach ($this->refs->refs as $ref) {
+            $out[] = [$ref];
         }
         return $out;
     }
@@ -34,9 +37,9 @@ class RefTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $ref->getLabel());
         $this->assertStringMatchesFormat('%s', $ref->getLabel());
         $this->assertInternalType('boolean', $ref->isMasterRef());
-        if(!is_null($ref->getScheduledAt())) {
+        if (! is_null($ref->getScheduledAt())) {
             $this->assertInternalType('int', $ref->getScheduledAt());
-            $this->assertEquals(13, strlen($ref->getScheduledAt()), 'Expected a 13 digit number');
+            $this->assertEquals(13, strlen((string)$ref->getScheduledAt()), 'Expected a 13 digit number');
         }
     }
 
@@ -46,9 +49,13 @@ class RefTest extends \PHPUnit_Framework_TestCase
     public function testGetScheduledAtTimestamp($json)
     {
         $ref = Ref::parse($json);
-        if(!is_null($ref->getScheduledAtTimestamp())) {
+
+        if (! is_null($ref->getScheduledAtTimestamp())) {
             $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
-            $this->assertEquals(10, strlen($ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
+            $this->assertEquals(10, strlen((string)$ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
+        } else {
+            // Squash No assertions warning in PHP Unit
+            $this->assertNull($ref->getScheduledAtTimestamp());
         }
     }
 
@@ -67,9 +74,9 @@ class RefTest extends \PHPUnit_Framework_TestCase
     public function testGetScheduledDate($json)
     {
         $ref = Ref::parse($json);
-        if(!is_null($ref->getScheduledAtTimestamp())) {
+        if (! is_null($ref->getScheduledAtTimestamp())) {
             $date = $ref->getScheduledDate();
-            $this->assertInstanceOf('DateTime', $date);
+            $this->assertInstanceOf(DateTimeImmutable::class, $date);
             $this->assertSame($ref->getScheduledAtTimestamp(), $date->getTimestamp());
             $this->assertNotSame($date, $ref->getScheduledDate(), 'Returned date should be a new instance every time');
         } else {
@@ -77,4 +84,11 @@ class RefTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @expectedException Prismic\Exception\ExceptionInterface
+     */
+    public function testExceptionThrownForInvalidJsonObject()
+    {
+        Ref::parse(new stdClass);
+    }
 }
