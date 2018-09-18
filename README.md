@@ -2,8 +2,6 @@
 
 # PHP development kit for Prismic
 
-This kit supports PHP version >= 7.1.
-
 ## Getting started
 
 ### Install the kit for your project
@@ -35,7 +33,7 @@ $api = Api::get('https://your-repo-name.prismic.io/api/v2');
 $doc = $api->getByUID('get-started');
 ```
 
-The kit is compatible and tested with PHP 5.4 and above.
+This kit supports PHP version >= 7.1.
 
 Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
 For Symfony 2.7 projects, use version 2.0.3.
