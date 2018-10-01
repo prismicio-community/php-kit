@@ -1,0 +1,52 @@
+{
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "t.🤦‍♂️.t",
+            "spans": [
+                {
+                    "start": 0,
+                    "end": 2,
+                    "type": "em"
+                },
+                {
+                    "start": 7,
+                    "end": 9,
+                    "type": "em"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "t.🚀.t",
+            "spans": [
+                {
+                    "start": 0,
+                    "end": 2,
+                    "type": "em"
+                },
+                {
+                    "start": 4,
+                    "end": 6,
+                    "type": "em"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "text": "t.🤷‍♀️.t",
+            "spans": [
+                {
+                    "start": 0,
+                    "end": 2,
+                    "type": "em"
+                },
+                {
+                    "start": 7,
+                    "end": 9,
+                    "type": "em"
+                }
+            ]
+        }
+    ]
+}

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic\Test\Dom;
 
-use Prismic\Test\TestCase;
 use Prismic\Dom\RichText;
 use Prismic\Test\FakeLinkResolver;
+use Prismic\Test\TestCase;
 
 class RichTextTest extends TestCase
 {
@@ -165,5 +165,32 @@ class RichTextTest extends TestCase
 
         $this->assertEquals('', RichText::asHtml($this->richText->empty, $this->linkResolver));
         $this->assertEquals('', RichText::asHtml($this->richText->empty));
+    }
+
+    public function emojiDataProvider()
+    {
+        $expect = [
+            0 => '<p><em>t.</em>🤦‍&zwj;♂️<em>.t</em></p>',
+            1 => '<p><em>t.</em>🚀<em>.t</em></p>',
+            2 => '<p><em>t.</em>🤷&zwj;‍♀<em>.t</em></p>',
+        ];
+        $fixture = json_decode($this->getJsonFixture('emoji.json'));
+        foreach ($fixture->content as $index => $block) {
+            yield [
+                [$block],
+                $expect[$index],
+            ];
+        }
+    }
+
+    /**
+     * @dataProvider emojiDataProvider
+     * @param $block
+     * @param $expect
+     */
+    public function testEmojiAndSpansAreCorrectlyRendered($block, $expect)
+    {
+        $result = RichText::asHtml($block, $this->linkResolver);
+        $this->assertSame($expect, $result);
     }
 }
