@@ -35,12 +35,12 @@ class Api
     /**
      * Name of the cookie that will be used to remember the preview reference
      */
-    const PREVIEW_COOKIE = "io.prismic.preview";
+    public const PREVIEW_COOKIE = "io.prismic.preview";
 
     /**
      * Name of the cookie that will be used to remember the experiment reference
      */
-    const EXPERIMENTS_COOKIE = "io.prismic.experiment";
+    public const EXPERIMENTS_COOKIE = "io.prismic.experiment";
 
     /**
      * The API's access token to be used with each API call
