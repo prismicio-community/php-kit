@@ -12,7 +12,13 @@ use Prismic\Document\HydratorInterface;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemPoolInterface;
-use stdClass;
+use function array_filter;
+use function count;
+use function is_null;
+use function json_decode;
+use function md5;
+use function preg_match;
+use function str_replace;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -130,7 +136,7 @@ class Api
                     ? Cache\DefaultCache::factory()
                     : $cache;
 
-        $api->version = \preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
+        $api->version = preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
 
         $api->setHydrator(new Hydrator($api, [], Document::class));
 
@@ -335,7 +341,7 @@ class Api
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        $response = \json_decode((string) $response->getBody());
+        $response = json_decode((string) $response->getBody());
         if (isset($response->mainDocument)) {
             $document = $this->getById(
                 $response->mainDocument,
