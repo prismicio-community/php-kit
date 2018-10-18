@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.0.3 - 2018-10-18
+
+#### Fixed
+
+- Existing query strings are now preserved when setting the API Url. This is important if you are using integration fields
+- Potential error fixed in `Api::previewSession()` where the link resolver could potentially be null
+
+#### Added
+- `Api::forms()` now returns a new class `SearchFormCollection` rather than a simple stdClass from json_decode. This improves type safety. 
+- `Api::setRequestCookies(array) : void` allowing you to provide the request cookies to the Api instance manually for those situations where the $_COOKIE super global doesn't exist. 
+
+#### Deprecated
+- `Api::VERSION` is deprecated - it's not used anywhere and is pointless
+
+
 ## 4.0.2 - 2018-07-16
 
 - Fixed preservation of line breaks when rich text does not contain spans   
