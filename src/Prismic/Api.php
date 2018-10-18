@@ -24,8 +24,9 @@ class Api
 
     /**
      * Kit version number
+     * @deprecated
      */
-    const VERSION = "4.0.0";
+    public const VERSION = "4.0.0";
 
     private const API_VERSION_1 = '1.0.0';
 
