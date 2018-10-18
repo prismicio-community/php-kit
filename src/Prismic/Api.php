@@ -85,8 +85,18 @@ class Api
     /** @var SearchFormCollection|null */
     private $forms;
 
+    /**
+     * Request cookies to inspect for preview or experiment refs
+     *
+     * By default, this array is populated with the $_COOKIE super global but can be overridden with setRequestCookies()
+     *
+     * @var array
+     */
+    private $requestCookies;
+
     private function __construct()
     {
+        $this->requestCookies = isset($_COOKIE) ? $_COOKIE : [];
     }
 
     /**
@@ -177,6 +187,19 @@ class Api
     public function getLinkResolver() :? LinkResolver
     {
         return $this->linkResolver;
+    }
+
+    /**
+     * Set cookie values found in the request
+     *
+     * If preview and experiment cookie values are not available in your environment in the $_COOKIE super global, you
+     * can provide them here and they'll be inspected to see if a preview is required or an experiment is running
+     *
+     * @param array $cookies
+     */
+    public function setRequestCookies(array $cookies) : void
+    {
+        $this->requestCookies = $cookies;
     }
 
     public static function generateCacheKey(string $url) : string
@@ -360,8 +383,8 @@ class Api
             static::PREVIEW_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
-            if (isset($_COOKIE[$cookieName])) {
-                return $_COOKIE[$cookieName];
+            if (isset($this->requestCookies[$cookieName])) {
+                return $this->requestCookies[$cookieName];
             }
         }
 
@@ -378,9 +401,9 @@ class Api
             static::EXPERIMENTS_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
-            if (isset($_COOKIE[$cookieName])) {
+            if (isset($this->requestCookies[$cookieName])) {
                 $experiments = $this->getExperiments();
-                return $experiments->refFromCookie($_COOKIE[$cookieName]);
+                return $experiments->refFromCookie($this->requestCookies[$cookieName]);
             }
         }
 

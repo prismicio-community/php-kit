@@ -191,6 +191,19 @@ class ApiTest extends TestCase
         $this->assertSame($expect, $api->ref());
     }
 
+    /**
+     * @dataProvider getPreviewRefs
+     */
+    public function testCookieValuesCanBeSetOverridingSuperGlobal(array $cookie, string $expect)
+    {
+        $_COOKIE = [
+            'io.prismic.preview' => uniqid(),
+        ];
+        $api = $this->getApiWithDefaultData();
+        $api->setRequestCookies($cookie);
+        $this->assertSame($expect, $api->ref());
+    }
+
     public function testInPreviewIsTrueWhenPreviewCookieIsSet()
     {
         $_COOKIE = [
