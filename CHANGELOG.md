@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.1.0 - 2018-11-12
+
+#### Fixed
+
+- Nothing
+
+#### Added
+
+- Added method `void \Prismic\Api::reloadApiData()` to forcefully re-fetch the api data from the remote service. You
+ would not normally need to call this in a standard web server environment because simply flushing the cache would be
+ sufficient. However, in a cli environment handling multiple requests, flushing the cache will not free the 
+ `\Prismic\ApiData` instance in memory, so you'd need to call this method during perhaps a web-hook triggered cache
+ busting event… 
+ 
+#### Deprecated
+
+- Nothing
+
+#### Removed
+
+- Nothing
+
 ## 4.0.3 - 2018-10-18
 
 #### Fixed
