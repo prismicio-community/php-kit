@@ -134,6 +134,26 @@ class ApiTest extends TestCase
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
+    public function testApiDataCanBeForcefullyReloaded()
+    {
+        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $key = Api::generateCacheKey($url);
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->willReturn(false);
+        $item->set(Argument::any())->shouldBeCalledTimes(2);
+        $this->cache->getItem($key)->willReturn($item->reveal());
+        $this->cache->deleteItem($key)->shouldBeCalledTimes(1);
+        $this->cache->save($item->reveal())->shouldBeCalledTimes(2);
+        $response = $this->prophesize(ResponseInterface::class);
+        $response->getBody()->willReturn($this->getJsonFixture('data.json'));
+        $this->httpClient->request('GET', $url)->willReturn($response->reveal());
+
+        $api = $this->getApi();
+        $data = $api->getData();
+        $api->reloadApiData();
+        $this->assertNotSame($data, $api->getData());
+    }
+
     public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive()
     {
         $api = $this->getApiWithDefaultData();
