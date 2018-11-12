@@ -3,10 +3,20 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use function array_map;
+use function current;
+use function http_build_query;
+use function implode;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function preg_match;
+use function preg_replace;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -99,7 +109,7 @@ class SearchForm
         /** @var FieldForm $field */
         $field = $fields[$key];
 
-        if ($field->getType() === 'String' && ! is_string($value)) {
+        if (! is_string($value) && $field->getType() === 'String') {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The field %s expects a string parameter, received %s',
                 $key,
@@ -107,7 +117,7 @@ class SearchForm
             ));
         }
 
-        if ($field->getType() === 'Integer' && ! is_numeric($value)) {
+        if (! is_numeric($value) && $field->getType() === 'Integer') {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The field %s expects an integer parameter, received %s',
                 $key,
@@ -118,7 +128,7 @@ class SearchForm
 
         $data = $this->data;
         if ($field->isMultiple()) {
-            $data[$key] = isset($data[$key]) ? $data[$key] : [];
+            $data[$key] = $data[$key] ?? [];
             $data[$key] = is_array($data[$key]) ? $data[$key] : [$data[$key]];
             $data[$key][] = $value;
         } else {
@@ -140,7 +150,7 @@ class SearchForm
         if ($ref instanceof Ref) {
             $ref = (string) $ref;
         }
-        return $this->set("ref", $ref);
+        return $this->set('ref', $ref);
     }
 
     /**
@@ -151,7 +161,7 @@ class SearchForm
      */
     public function after(string $documentId) : self
     {
-        return $this->set("after", $documentId);
+        return $this->set('after', $documentId);
     }
 
     /**
@@ -165,7 +175,7 @@ class SearchForm
      */
     public function fetch(string ...$fields) : self
     {
-        return $this->set("fetch", implode(",", $fields));
+        return $this->set('fetch', implode(',', $fields));
     }
 
     /**
@@ -179,7 +189,7 @@ class SearchForm
      */
     public function fetchLinks(string ...$fields) : self
     {
-        return $this->set("fetchLinks", join(",", $fields));
+        return $this->set('fetchLinks', implode(',', $fields));
     }
 
     /**
@@ -190,7 +200,7 @@ class SearchForm
      */
     public function lang(string $lang) : self
     {
-        return $this->set("lang", $lang);
+        return $this->set('lang', $lang);
     }
 
     /**
@@ -201,7 +211,7 @@ class SearchForm
      */
     public function pageSize(int $pageSize) : self
     {
-        return $this->set("pageSize", $pageSize);
+        return $this->set('pageSize', $pageSize);
     }
 
     /**
@@ -212,7 +222,7 @@ class SearchForm
      */
     public function page(int $page) : self
     {
-        return $this->set("page", $page);
+        return $this->set('page', $page);
     }
 
     /**
@@ -228,10 +238,10 @@ class SearchForm
         if (empty($fields)) {
             return $this;
         }
-        $orderings = "[" . implode(",", array_map(function ($order) {
+        $orderings = '[' . implode(',', array_map(function ($order) {
             return preg_replace('/(^\[|\]$)/', '', $order);
-        }, $fields)) . "]";
-        return $this->set("orderings", $orderings);
+        }, $fields)) . ']';
+        return $this->set('orderings', $orderings);
     }
 
     /**
@@ -265,18 +275,18 @@ class SearchForm
         }
         $first = current($params);
         // Unpack a single array argument
-        if (count($params) === 1 && is_array($first)) {
+        if (is_array($first) && count($params) === 1) {
             $params = $first;
         }
         $this->assertValidQueryParameters($params);
-        if (count($params) === 1 && is_string($first)) {
-            return $this->set("q", $first);
+        if (is_string($first) && count($params) === 1) {
+            return $this->set('q', $first);
         }
-        $query = "[" . implode("", array_map(function ($predicate) {
+        $query = '[' . implode('', array_map(function ($predicate) {
             /** @var Predicate $predicate */
             return $predicate->q();
-        }, $params)) . "]";
-        return $this->set("q", $query);
+        }, $params)) . ']';
+        return $this->set('q', $query);
     }
 
     /**
@@ -308,7 +318,7 @@ class SearchForm
          * This expression removes integer array keys,
          * i.e. ?q[0]=Whatever&q[1]=OtherThing becomes ?q=Whatever&q=OtherThing
          */
-        $url = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $url);
+        $url = preg_replace('/%5B(?:\d|[1-9]\d+)%5D=/', '=', $url);
         return $url;
     }
 
@@ -318,7 +328,7 @@ class SearchForm
     private function getCacheItem() : CacheItemInterface
     {
         try {
-            $key = $this->api->generateCacheKey($this->url());
+            $key = Api::generateCacheKey($this->url());
             return $this->api->getCache()->getItem($key);
         } catch (CacheException $cacheException) {
             throw new Exception\RuntimeException(
@@ -330,7 +340,7 @@ class SearchForm
     }
 
     /**
-     * Performs the actual submit call, without the unmarshalling.
+     * Performs the actual submit call, without the un-marshalling.
      *
      * @throws Exception\RuntimeException if the Form type is not supported or the Response body is invalid
      * @throws Exception\RequestFailureException if something went wrong retrieving data from the API
@@ -343,7 +353,7 @@ class SearchForm
             $this->form->getEnctype() !== 'application/x-www-form-urlencoded' ||
             ! $this->form->getAction()
         ) {
-            throw new Exception\RuntimeException("Form type not supported");
+            throw new Exception\RuntimeException('Form type not supported');
         }
         $url = $this->url();
 
@@ -357,16 +367,16 @@ class SearchForm
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
             $response = $this->api->getHttpClient()->request('GET', $url);
-            $json = \json_decode((string) $response->getBody());
-            if (! isset($json)) {
-                throw new Exception\RuntimeException("Unable to decode json response");
+            $json = json_decode((string) $response->getBody());
+            if ($json === null) {
+                throw new Exception\RuntimeException('Unable to decode json response');
             }
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
 
         $cacheControl = $response->getHeader('Cache-Control')[0];
-        if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) == 1) {
+        if (preg_match('/^max-age\s*=\s*(\d+)$/', $cacheControl, $groups) === 1) {
             $cacheDuration = (int) $groups[1];
             $cacheItem->expiresAfter($cacheDuration);
         }

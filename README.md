@@ -96,6 +96,30 @@ $httpClient = null;
 $api = Api::get($repoApiUrl, $accessToken, $httpClient, $cache);
 ```
 
+## Webhooks
+
+Webhooks are sent to your app/website when individual documents or releases are published. Just so you know, these are the other conditions for when a webhook might be posted.
+
+| Event Type | Webhook | Partial Payload |
+|:---|:---:|:---|
+| New Document Type Created | No ||
+| Document Type Disabled | No ||
+| Document Type Deleted | No ||
+| Bookmark Created | Yes | `{ "bookmarks" : { "addition" : [ { "id" : "example", "docId" : "" } ] } }` |
+| Bookmark Target Set | Yes | `{ "bookmarks" : { "update" : [ { "id" : "example", "docId" : "SomeID" } ] } }` |
+| Bookmark Target Changed | Yes | `{ "bookmarks" : { "update" : [ { "id" : "example", "docId" : "DifferentID" } ] } }` |
+| Bookmark Deleted | Yes | `{ "bookmarks" : { "deletion" : [ { "id" : "example", "docId" : "LastKnownDocumentId" } ] } }` |
+| Collection Created | Yes | `{ "collection" : { "addition" : [ { "id" : "example", "label" : "Example" } ] } }` |
+| Collection Filters Changed | No ||
+| Collection Name Changed | Yes | `{ "collection" : { "update" : [ { "id" : "example", "label" : "Example Changed" } ] } }` |
+| Collection Deleted | Yes | `{ "collection" : { "deletion" : [ { "id" : "example", "label" : "Example" } ] } }` |
+| Create new release | Yes | `{"releases" : { "addition" : [ { "id" : "RELEASE-ID", "ref" : "RELEASE-REF", "label" : "Example" } ] }}` |
+| Docs Added to Release | Yes | `{"releases" : { "update" : [ { "id" : "RELEASE-ID", "ref" : "RELEASE-REF", "label" : "Example" } ] }}` |
+
+The [docs here](https://user-guides.prismic.io/webhooks/webhooks) say that webhooks are dispatched when tags are added, changed and removed. This is not accurate. At the time of writing, you cannot edit or delete tags. Any new tags that are created as part of working with documents will be posted in the next payload but only if something else occurs that triggers a webhook.
+
+The only way that you can determine whether a release or a document has been published is the presence of the `masterRef` property in the body of the webhook payload. 
+
 ## Built-In Document Explorer
 
 There's a naive document explorer ready to use if you have an existing repo you'd like to fire up:
