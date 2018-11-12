@@ -14,10 +14,10 @@ use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemPoolInterface;
 use function array_filter;
 use function count;
-use function is_null;
 use function json_decode;
 use function md5;
 use function preg_match;
+use function sprintf;
 use function str_replace;
 
 /**
@@ -32,7 +32,7 @@ class Api
      * Kit version number
      * @deprecated
      */
-    public const VERSION = "4.0.0";
+    public const VERSION = '4.0.0';
 
     private const API_VERSION_1 = '1.0.0';
 
@@ -41,51 +41,38 @@ class Api
     /**
      * Name of the cookie that will be used to remember the preview reference
      */
-    public const PREVIEW_COOKIE = "io.prismic.preview";
+    public const PREVIEW_COOKIE = 'io.prismic.preview';
 
     /**
      * Name of the cookie that will be used to remember the experiment reference
      */
-    public const EXPERIMENTS_COOKIE = "io.prismic.experiment";
+    public const EXPERIMENTS_COOKIE = 'io.prismic.experiment';
 
-    /**
-     * The API's access token to be used with each API call
-     * @var string|null
-     */
+    /** @var string|null */
     private $accessToken;
 
-    /**
-     * An instance of ApiData containing information about types, tags and refs etc
-     * @var ApiData
-     */
+    /** @var string */
+    private $url;
+
+    /** @var ApiData */
     private $data;
 
-    /**
-     * The cache instance
-     * @var CacheItemPoolInterface
-     */
+    /** @var CacheItemPoolInterface */
     private $cache;
 
-    /**
-     * Guzzle HTTP Client
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $httpClient;
 
-    /**
-     * @var HydratorInterface
-     */
+    /** @var HydratorInterface */
     private $hydrator;
 
     /**
-     * The API version determined by the URL passes to the named constructor
+     * The API version determined by the URL passed to the named constructor
      * @var string
      */
     private $version;
 
-    /**
-     * @var LinkResolver|null
-     */
+    /** @var LinkResolver|null */
     private $linkResolver;
 
     /** @var SearchFormCollection|null */
@@ -102,7 +89,7 @@ class Api
 
     private function __construct()
     {
-        $this->requestCookies = isset($_COOKIE) ? $_COOKIE : [];
+        $this->requestCookies = $_COOKIE ?? [];
     }
 
     /**
@@ -126,28 +113,36 @@ class Api
 
         $api = new static();
 
-        $api->accessToken = empty($accessToken) ? null : $accessToken;
+        $api->accessToken = $accessToken === '' ? null : $accessToken;
 
-        $api->httpClient = is_null($httpClient)
-                         ? new Client()
-                         : $httpClient;
+        $api->url = $action;
 
-        $api->cache = is_null($cache)
-                    ? Cache\DefaultCache::factory()
-                    : $cache;
+        $api->httpClient = $httpClient ?? new Client();
+
+        $api->cache = $cache ?? Cache\DefaultCache::factory();
 
         $api->version = preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
 
         $api->setHydrator(new Hydrator($api, [], Document::class));
 
-        $url = new Uri($action);
-        $url = $api->accessToken
-            ? Uri::withQueryValue($url, 'access_token', $api->accessToken)
+        $api->loadApiData();
+
+        return $api;
+    }
+
+    /**
+     * Helper that retrieves API Data from the remote service
+     */
+    private function loadApiData() : void
+    {
+        $url = new Uri($this->url);
+        $url = $this->accessToken
+            ? Uri::withQueryValue($url, 'access_token', $this->accessToken)
             : $url;
 
         $key = static::generateCacheKey((string) $url);
         try {
-            $cacheItem  = $api->cache->getItem($key);
+            $cacheItem  = $this->cache->getItem($key);
         } catch (CacheException $cacheException) {
             throw new Exception\RuntimeException(
                 'A cache exception occurred whilst retrieving cached api data',
@@ -156,23 +151,21 @@ class Api
             );
         }
         if ($cacheItem->isHit()) {
-            $api->data = $cacheItem->get();
-            return $api;
+            $this->data = $cacheItem->get();
+            return;
         }
 
         try {
             /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $api->httpClient->request('GET', (string) $url);
+            $response = $this->httpClient->request('GET', (string) $url);
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
 
-        $api->data = ApiData::withJsonString((string) $response->getBody());
+        $this->data = ApiData::withJsonString((string) $response->getBody());
 
-        $cacheItem->set($api->data);
-        $api->cache->save($cacheItem);
-
-        return $api;
+        $cacheItem->set($this->data);
+        $this->cache->save($cacheItem);
     }
 
     public function getHydrator() : HydratorInterface
@@ -180,7 +173,7 @@ class Api
         return $this->hydrator;
     }
 
-    public function setHydrator(HydratorInterface $hydrator)
+    public function setHydrator(HydratorInterface $hydrator) : void
     {
         $this->hydrator = $hydrator;
     }
@@ -295,7 +288,7 @@ class Api
     public function master() : Ref
     {
         $masters = array_filter($this->data->getRefs(), function (Ref $ref) {
-            return $ref->isMasterRef() == true;
+            return $ref->isMasterRef() === true;
         });
 
         return $masters[0];
@@ -506,7 +499,7 @@ class Api
      */
     public function getById(string $id, array $options = []) :? DocumentInterface
     {
-        return $this->queryFirst(Predicates::at("document.id", $id), $options);
+        return $this->queryFirst(Predicates::at('document.id', $id), $options);
     }
 
     /**
@@ -520,7 +513,13 @@ class Api
      */
     public function getByUid(string $type, string $uid, array $options = []) :? DocumentInterface
     {
-        return $this->queryFirst(Predicates::at("my.".$type.".uid", $uid), $options);
+        return $this->queryFirst(
+            Predicates::at(sprintf(
+                'my.%s.uid',
+                $type
+            ), $uid),
+            $options
+        );
     }
 
     /**
@@ -533,7 +532,7 @@ class Api
      */
     public function getByIds(array $ids, array $options = []) : Response
     {
-        return $this->query(Predicates::in("document.id", $ids), $options);
+        return $this->query(Predicates::in('document.id', $ids), $options);
     }
 
     /**
@@ -546,7 +545,7 @@ class Api
      */
     public function getSingle(string $type, array $options = []) :? DocumentInterface
     {
-        return $this->queryFirst(Predicates::at("document.type", $type), $options);
+        return $this->queryFirst(Predicates::at('document.type', $type), $options);
     }
 
     /**
