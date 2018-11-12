@@ -11,6 +11,7 @@ use Prismic\Document\Hydrator;
 use Prismic\Document\HydratorInterface;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use function array_filter;
 use function count;
@@ -130,19 +131,21 @@ class Api
         return $api;
     }
 
-    /**
-     * Helper that retrieves API Data from the remote service
-     */
-    private function loadApiData() : void
+    private function apiDataUrl() : string
     {
         $url = new Uri($this->url);
         $url = $this->accessToken
             ? Uri::withQueryValue($url, 'access_token', $this->accessToken)
             : $url;
+        return (string) $url;
+    }
 
-        $key = static::generateCacheKey((string) $url);
+    private function apiDataCacheItem() : CacheItemInterface
+    {
+        $url = $this->apiDataUrl();
+        $key = static::generateCacheKey($url);
         try {
-            $cacheItem  = $this->cache->getItem($key);
+            return $this->cache->getItem($key);
         } catch (CacheException $cacheException) {
             throw new Exception\RuntimeException(
                 'A cache exception occurred whilst retrieving cached api data',
@@ -150,22 +153,45 @@ class Api
                 $cacheException
             );
         }
+    }
+
+    private function loadApiData() : void
+    {
+        $cacheItem = $this->apiDataCacheItem();
         if ($cacheItem->isHit()) {
             $this->data = $cacheItem->get();
             return;
         }
+        $this->data = $this->getApiData();
+        $cacheItem->set($this->data);
+        $this->cache->save($cacheItem);
+    }
 
+    private function getApiData() : ApiData
+    {
+        $url = $this->apiDataUrl();
         try {
-            /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $this->httpClient->request('GET', (string) $url);
+            $response = $this->httpClient->request('GET', $url);
+            return ApiData::withJsonString((string) $response->getBody());
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
         }
+    }
 
-        $this->data = ApiData::withJsonString((string) $response->getBody());
-
-        $cacheItem->set($this->data);
-        $this->cache->save($cacheItem);
+    public function reloadApiData() : void
+    {
+        try {
+            $url = $this->apiDataUrl();
+            $key = static::generateCacheKey($url);
+            $this->cache->deleteItem($key);
+            $this->loadApiData();
+        } catch (CacheException $cacheException) {
+            throw new Exception\RuntimeException(
+                'A cache exception occurred whilst deleting cached api data',
+                0,
+                $cacheException
+            );
+        }
     }
 
     public function getHydrator() : HydratorInterface
