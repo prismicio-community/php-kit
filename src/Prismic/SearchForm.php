@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use function gettype;
 use GuzzleHttp\Exception\GuzzleException;
+use function is_object;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
@@ -17,6 +19,7 @@ use function is_string;
 use function json_decode;
 use function preg_match;
 use function preg_replace;
+use function sprintf;
 
 /**
  * Embodies an API call we are in the process of building. This gets started with Prismic\Api.form,
@@ -370,6 +373,12 @@ class SearchForm
             $json = json_decode((string) $response->getBody());
             if ($json === null) {
                 throw new Exception\RuntimeException('Unable to decode json response');
+            }
+            if (! is_object($json)) {
+                throw new Exception\UnexpectedValueException(sprintf(
+                    'Expected the response from the API to be decoded as an object but %s returned',
+                    gettype($json)
+                ));
             }
         } catch (GuzzleException $guzzleException) {
             throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
