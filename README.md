@@ -115,6 +115,11 @@ Webhooks are sent to your app/website when individual documents or releases are 
 | Collection Deleted | Yes | `{ "collection" : { "deletion" : [ { "id" : "example", "label" : "Example" } ] } }` |
 | Create new release | Yes | `{"releases" : { "addition" : [ { "id" : "RELEASE-ID", "ref" : "RELEASE-REF", "label" : "Example" } ] }}` |
 | Docs Added to Release | Yes | `{"releases" : { "update" : [ { "id" : "RELEASE-ID", "ref" : "RELEASE-REF", "label" : "Example" } ] }}` |
+| Experiment Created | Yes | `{ "experiments" : { "addition" : [ { "id" : "Some ID", "name" : "Testing Experiment", "variations" : [ { "id" : "Some ID", "ref" : "Some Ref", "label" : "Base" } ] } ] } }` |
+| Documents added to Experiment Before Starting It | Yes | `{ "experiments" : { "update" : [ { "id" : "Some ID", "name" : "Testing Experiment", "variations" : [ { "id" : "Some ID", "ref" : "Some Ref", "label" : "Base" }, { "id" : "Some Id", "ref" : "Some Ref", "label" : "Variation 1" } ] } ] } }` |
+| Start Experiment | No _(FFS)_ | |
+| Experiment Stopped | Yes | `{ experiments" : { "deletion" : [ { "id" : "Some ID", "name" : "Experiment Name", "variations" : [ { "id" : "Some ID", "ref" : "Some Ref", "label" : "Base" }, { "id" : "Some ID", "ref" : "Some Ref", "label" : "First Variation" } ] } ] } }` 
+| Experiment Deleted | No | |
 
 The [docs here](https://user-guides.prismic.io/webhooks/webhooks) say that webhooks are dispatched when tags are added, changed and removed. This is not accurate. At the time of writing, you cannot edit or delete tags. Any new tags that are created as part of working with documents will be posted in the next payload but only if something else occurs that triggers a webhook.
 
