@@ -6,6 +6,7 @@ namespace Prismic;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use Prismic\Document\Hydrator;
 use Prismic\Document\HydratorInterface;
@@ -356,14 +357,19 @@ class Api
     {
         try {
             $response = $this->httpClient->request('GET', $token);
-        } catch (GuzzleException $guzzleException) {
-            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+        } catch (RequestException $requestException) {
+            $apiResponse = $requestException->getResponse();
+            if ($apiResponse && Exception\ExpiredPreviewTokenException::isTokenExpiryResponse($apiResponse)) {
+                throw Exception\ExpiredPreviewTokenException::fromResponse($apiResponse);
+            }
+            throw Exception\RequestFailureException::fromGuzzleException($requestException);
+        } catch (GuzzleException $exception) {
+            throw Exception\RequestFailureException::fromGuzzleException($exception);
         }
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        $response = json_decode((string) $response->getBody());
-        if (isset($response->mainDocument)) {
+        $responseBody = json_decode((string) $response->getBody());
+        if (isset($responseBody->mainDocument)) {
             $document = $this->getById(
-                $response->mainDocument,
+                $responseBody->mainDocument,
                 ['ref' => $token]
             );
             if ($document && $this->linkResolver) {

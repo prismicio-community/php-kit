@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.2.0 - TBD
+
+### Added
+
+- [#4](https://github.com/netglue/prismic-php-kit/pull/4) Adds a new Exception `ExpiredPreviewTokenException` that is
+thrown during `Api::previewSession()`
+
+### Changed
+
+- [#4](https://github.com/netglue/prismic-php-kit/pull/4) Changes behaviour of `Api::previewSession()` by throwing an
+`ExpiredPreviewTokenException` in situations where a preview token has expired.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 4.1.0 - 2018-11-12
 
 #### Fixed
