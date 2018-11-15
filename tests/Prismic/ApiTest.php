@@ -5,6 +5,9 @@ namespace Prismic\Test;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Response;
 use Prismic;
 use Prismic\Api;
 use Prismic\ApiData;
@@ -347,6 +350,18 @@ class ApiTest extends TestCase
         $exception = new \GuzzleHttp\Exception\TransferException('Some Exception Message');
         $this->httpClient->request('GET', 'SomeToken')->willThrow($exception);
         $api = $this->getApiWithDefaultData();
+        $api->previewSession('SomeToken', '/');
+    }
+
+    public function testExpiredPreviewTokenIsReThrownWithSpecialisedException() : void
+    {
+        $response = new Response();
+        $response->getBody()->write('{"error":"Preview token expired"}');
+        $guzzleException = $this->prophesize(RequestException::class);
+        $guzzleException->getResponse()->willReturn($response);
+        $this->httpClient->request('GET', 'SomeToken')->willThrow($guzzleException->reveal());
+        $api = $this->getApiWithDefaultData();
+        $this->expectException(Prismic\Exception\ExpiredPreviewTokenException::class);
         $api->previewSession('SomeToken', '/');
     }
 
