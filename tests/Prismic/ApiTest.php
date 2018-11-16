@@ -386,7 +386,7 @@ class ApiTest extends TestCase
         $token = urlencode($url);
         $this->httpClient->request('GET', $url)->shouldNotBeCalled();
         $this->expectException(Prismic\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The host "en-gb.wordpress.org" is not valid for a preview url');
+        $this->expectExceptionMessage('The host "en-gb.wordpress.org" does not match the api host "whatever.prismic.io"');
         $api = $this->getApiWithDefaultData();
         $api->previewSession($token, '/');
     }

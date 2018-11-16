@@ -370,8 +370,9 @@ class Api
         ['host' => $apiHost] = parse_url($this->url);
         if ($previewHost !== $apiHost) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'The host "%s" is not valid for a preview url',
-                $previewHost
+                'The host "%s" does not match the api host "%s"',
+                $previewHost,
+                $apiHost
             ), 400);
         }
         return $token;
