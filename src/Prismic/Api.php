@@ -377,7 +377,7 @@ class Api
          * causes the problem.
          */
         $previewHost = str_replace('.cdn.', '.', strtolower($previewHost));
-        $apiHost = str_replace('.cdn.', '.', strtolower($previewHost));
+        $apiHost = str_replace('.cdn.', '.', strtolower($apiHost));
         if ($previewHost !== $apiHost) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The host "%s" does not match the api host "%s"',
