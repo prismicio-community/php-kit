@@ -22,7 +22,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#5](https://github.com/netglue/prismic-php-kit/pull/4) ensures that the preview token is validated before any attempt
+is made to retrieve a ref from the api.
 
 ## 4.2.0 - 2018-11-15
 
