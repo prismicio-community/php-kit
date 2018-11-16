@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use function gettype;
 use GuzzleHttp\Exception\GuzzleException;
-use function is_object;
 use Prismic\Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
+use stdClass;
 use function array_map;
 use function current;
+use function gettype;
 use function http_build_query;
 use function implode;
 use function is_array;
@@ -374,7 +374,7 @@ class SearchForm
             if ($json === null) {
                 throw new Exception\RuntimeException('Unable to decode json response');
             }
-            if (! is_object($json)) {
+            if (! $json instanceof stdClass) {
                 throw new Exception\UnexpectedValueException(sprintf(
                     'Expected the response from the API to be decoded as an object but %s returned',
                     gettype($json)
