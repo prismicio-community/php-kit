@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 4.2.1 - TBD
+## 4.2.1 - 2018-11-16
 
 ### Added
 
@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#5](https://github.com/netglue/prismic-php-kit/pull/4) ensures that the preview token is validated before any attempt
+- [#5](https://github.com/netglue/prismic-php-kit/pull/5) ensures that the preview token is validated before any attempt
 is made to retrieve a ref from the api.
 
 ## 4.2.0 - 2018-11-15
