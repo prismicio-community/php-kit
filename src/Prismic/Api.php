@@ -23,6 +23,7 @@ use function parse_url;
 use function preg_match;
 use function sprintf;
 use function str_replace;
+use function strtolower;
 use const FILTER_FLAG_PATH_REQUIRED;
 use const FILTER_VALIDATE_URL;
 
@@ -368,6 +369,15 @@ class Api
         }
         ['host' => $previewHost] = parse_url($token);
         ['host' => $apiHost] = parse_url($this->url);
+        /**
+         * Because the API host will possibly be name.cdn.prismic.io but the preview domain can be name.prismic.io
+         * we can only reliably verify the same parent domain name if we parse both domains with something that uses
+         * the public suffix list, like https://github.com/jeremykendall/php-domain-parser for example. We really
+         * don't want to have to go through all that, so for now we will just strip/hard-code the 'cdn' part which
+         * causes the problem.
+         */
+        $previewHost = str_replace('.cdn.', '.', strtolower($previewHost));
+        $apiHost = str_replace('.cdn.', '.', strtolower($previewHost));
         if ($previewHost !== $apiHost) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'The host "%s" does not match the api host "%s"',
