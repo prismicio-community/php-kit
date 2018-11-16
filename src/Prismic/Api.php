@@ -16,11 +16,16 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use function array_filter;
 use function count;
+use function filter_var;
 use function json_decode;
 use function md5;
+use function parse_url;
 use function preg_match;
 use function sprintf;
 use function str_replace;
+use function strtolower;
+use const FILTER_FLAG_PATH_REQUIRED;
+use const FILTER_VALIDATE_URL;
 
 /**
  * This class embodies a connection to your prismic.io repository's API.
@@ -347,6 +352,43 @@ class Api
     }
 
     /**
+     * Validate and filter a preview token ensuring that the URL it represents corresponds to the same host as the API
+     * @param string $token
+     * @return string The validated token
+     */
+    private function validatePreviewToken(string $token) : string
+    {
+        // Even if the token has already been decoded, if it's a reasonable url,
+        // repeated decodes should not cause a problem.
+        $token = urldecode($token);
+        if (! filter_var($token, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The preview token "%s" is not a valid url',
+                $token
+            ), 400);
+        }
+        ['host' => $previewHost] = parse_url($token);
+        ['host' => $apiHost] = parse_url($this->url);
+        /**
+         * Because the API host will possibly be name.cdn.prismic.io but the preview domain can be name.prismic.io
+         * we can only reliably verify the same parent domain name if we parse both domains with something that uses
+         * the public suffix list, like https://github.com/jeremykendall/php-domain-parser for example. We really
+         * don't want to have to go through all that, so for now we will just strip/hard-code the 'cdn' part which
+         * causes the problem.
+         */
+        $previewHost = str_replace('.cdn.', '.', strtolower($previewHost));
+        $apiHost = str_replace('.cdn.', '.', strtolower($apiHost));
+        if ($previewHost !== $apiHost) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'The host "%s" does not match the api host "%s"',
+                $previewHost,
+                $apiHost
+            ), 400);
+        }
+        return $token;
+    }
+
+    /**
      * Return the URL to display a given preview
      * @param string $token as received from Prismic server to identify the content to preview
      * @param string $defaultUrl the URL to return if the preview doesn't correspond to a document
@@ -356,7 +398,21 @@ class Api
     public function previewSession(string $token, string $defaultUrl) : string
     {
         try {
+            // $token is untrusted input, possibly from a GET request and will be retrieved by the http client
+            $token = $this->validatePreviewToken($token);
             $response = $this->httpClient->request('GET', $token);
+            $responseBody = json_decode((string) $response->getBody());
+            if (isset($responseBody->mainDocument)) {
+                $document = $this->getById(
+                    $responseBody->mainDocument,
+                    ['ref' => $token]
+                );
+                if ($document && $this->linkResolver) {
+                    $url = $this->linkResolver->resolve($document->asLink());
+                    return $url ? $url : $defaultUrl;
+                }
+            }
+            return $defaultUrl;
         } catch (RequestException $requestException) {
             $apiResponse = $requestException->getResponse();
             if ($apiResponse && Exception\ExpiredPreviewTokenException::isTokenExpiryResponse($apiResponse)) {
@@ -366,18 +422,6 @@ class Api
         } catch (GuzzleException $exception) {
             throw Exception\RequestFailureException::fromGuzzleException($exception);
         }
-        $responseBody = json_decode((string) $response->getBody());
-        if (isset($responseBody->mainDocument)) {
-            $document = $this->getById(
-                $responseBody->mainDocument,
-                ['ref' => $token]
-            );
-            if ($document && $this->linkResolver) {
-                $url = $this->linkResolver->resolve($document->asLink());
-                return $url ? $url : $defaultUrl;
-            }
-        }
-        return $defaultUrl;
     }
 
     /**

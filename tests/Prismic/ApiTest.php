@@ -5,7 +5,6 @@ namespace Prismic\Test;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Response;
 use Prismic;
@@ -18,6 +17,7 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use function json_decode;
 
 class ApiTest extends TestCase
 {
@@ -36,6 +36,9 @@ class ApiTest extends TestCase
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
+    /** @var string */
+    private $repoUrl = 'https://whatever.prismic.io/api/v2';
+
     public function setUp()
     {
         unset($_COOKIE);
@@ -48,7 +51,7 @@ class ApiTest extends TestCase
     protected function getApi() : Api
     {
         return Api::get(
-            'https://whatever.prismic.io/api/v2',
+            $this->repoUrl,
             'My-Access-Token',
             $this->httpClient->reveal(),
             $this->cache->reveal()
@@ -57,8 +60,9 @@ class ApiTest extends TestCase
 
     protected function getApiWithDefaultData() : Api
     {
-        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $url = $this->repoUrl . '?access_token=My-Access-Token';
         $key = Api::generateCacheKey($url);
+        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
         $item->get()->willReturn($this->apiData);
         $item->isHit()->willReturn(true);
@@ -68,9 +72,9 @@ class ApiTest extends TestCase
         return $this->getApi();
     }
 
-    public function testQueryStringOnApiUrlIsNotDestroyed()
+    public function testQueryStringOnApiUrlIsNotDestroyed() : void
     {
-        $url = 'https://repo.prismic.io/api/v2?someParam=someValue&foo=bar';
+        $url = $this->repoUrl . '?someParam=someValue&foo=bar';
         $token = 'My-Access-Token';
         $expect = $url . '&access_token=' . $token;
         $expectedKey = Api::generateCacheKey($expect);
@@ -86,8 +90,9 @@ class ApiTest extends TestCase
         $this->assertInstanceOf(Api::class, $api);
     }
 
-    public function testApiVersionInformation()
+    public function testApiVersionInformation() : void
     {
+        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
         $item->get()->willReturn($this->apiData);
         $item->isHit()->willReturn(true);
@@ -112,16 +117,17 @@ class ApiTest extends TestCase
         $this->assertSame('2.0.0', $api->getApiVersion());
     }
 
-    public function testCachedApiDataWillBeUsedIfAvailable()
+    public function testCachedApiDataWillBeUsedIfAvailable() : void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
-    public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty()
+    public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty() : void
     {
-        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $url = $this->repoUrl . '?access_token=My-Access-Token';
         $key = Api::generateCacheKey($url);
+        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
         $item->isHit()->willReturn(false);
         $item->set(Argument::any())->shouldBeCalled();
@@ -131,15 +137,14 @@ class ApiTest extends TestCase
         $response->getBody()->willReturn($this->getJsonFixture('data.json'));
         $this->httpClient->request('GET', $url)->willReturn($response->reveal());
 
-
         $api = $this->getApi();
         $this->assertInstanceOf(ClientInterface::class, $api->getHttpClient());
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
-    public function testApiDataCanBeForcefullyReloaded()
+    public function testApiDataCanBeForcefullyReloaded() : void
     {
-        $url = 'https://whatever.prismic.io/api/v2?access_token=My-Access-Token';
+        $url = $this->repoUrl . '?access_token=My-Access-Token';
         $key = Api::generateCacheKey($url);
         $item = $this->prophesize(CacheItemInterface::class);
         $item->isHit()->willReturn(false);
@@ -157,13 +162,13 @@ class ApiTest extends TestCase
         $this->assertNotSame($data, $api->getData());
     }
 
-    public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive()
+    public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive() : void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame($this->expectedMasterRef, $api->ref());
     }
 
-    public function testMasterRefIsReturnedByMasterMethod()
+    public function testMasterRefIsReturnedByMasterMethod() : void
     {
         $api = $this->getApiWithDefaultData();
         $ref = $api->master();
@@ -171,14 +176,14 @@ class ApiTest extends TestCase
         $this->assertSame($this->expectedMasterRef, (string) $ref);
     }
 
-    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet()
+    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet() : void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertFalse($api->inPreview());
         $this->assertFalse($api->inExperiment());
     }
 
-    public function getPreviewRefs()
+    public function getPreviewRefs() : array
     {
         return [
             [
@@ -206,8 +211,10 @@ class ApiTest extends TestCase
 
     /**
      * @dataProvider getPreviewRefs
+     * @param array $cookie
+     * @param string $expect
      */
-    public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect)
+    public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect) : void
     {
         $_COOKIE = $cookie;
         $api = $this->getApiWithDefaultData();
@@ -216,18 +223,20 @@ class ApiTest extends TestCase
 
     /**
      * @dataProvider getPreviewRefs
+     * @param array $cookie
+     * @param string $expect
      */
-    public function testCookieValuesCanBeSetOverridingSuperGlobal(array $cookie, string $expect)
+    public function testCookieValuesCanBeSetOverridingSuperGlobal(array $cookie, string $expect) : void
     {
         $_COOKIE = [
-            'io.prismic.preview' => uniqid(),
+            'io.prismic.preview' => uniqid('', true),
         ];
         $api = $this->getApiWithDefaultData();
         $api->setRequestCookies($cookie);
         $this->assertSame($expect, $api->ref());
     }
 
-    public function testInPreviewIsTrueWhenPreviewCookieIsSet()
+    public function testInPreviewIsTrueWhenPreviewCookieIsSet() : void
     {
         $_COOKIE = [
             'io.prismic.preview' => 'whatever',
@@ -236,7 +245,7 @@ class ApiTest extends TestCase
         $this->assertTrue($api->inPreview());
     }
 
-    public function testRefDoesNotReturnStaleExperimentRef()
+    public function testRefDoesNotReturnStaleExperimentRef() : void
     {
         $_COOKIE = [
             'io.prismic.experiment' => 'Stale Experiment Cookie Value',
@@ -245,7 +254,7 @@ class ApiTest extends TestCase
         $this->assertSame($this->expectedMasterRef, $api->ref());
     }
 
-    public function testCorrectExperimentRefIsReturnedWhenCookieIsSet()
+    public function testCorrectExperimentRefIsReturnedWhenCookieIsSet() : void
     {
         $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $expectedRef = 'VDUUmHIKAZQKk9uq'; // The ref at index 1 for the variations in this experiment
@@ -260,7 +269,7 @@ class ApiTest extends TestCase
     /**
      * @depends testCorrectExperimentRefIsReturnedWhenCookieIsSet
      */
-    public function testPreviewRefTrumpsExperimentRefWhenSet()
+    public function testPreviewRefTrumpsExperimentRefWhenSet() : void
     {
         $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $_COOKIE = [
@@ -272,14 +281,14 @@ class ApiTest extends TestCase
         $this->assertFalse($api->inExperiment());
     }
 
-    public function testBookmarkReturnsCorrectDocumentId()
+    public function testBookmarkReturnsCorrectDocumentId() : void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame('Ue0EDd_mqb8Dhk3j', $api->bookmark('about'));
         $this->assertNull($api->bookmark('unknown-bookmark'));
     }
 
-    public function testFormsReturnsOnlyFormInstances()
+    public function testFormsReturnsOnlyFormInstances() : void
     {
         $api = $this->getApiWithDefaultData();
         $forms = $api->forms();
@@ -287,24 +296,22 @@ class ApiTest extends TestCase
         $this->assertInstanceOf(SearchForm::class, $forms->everything);
     }
 
-    public function testFormsIsASearchFormCollection()
+    public function testFormsIsASearchFormCollection() : void
     {
         $api = $this->getApiWithDefaultData();
         $forms = $api->forms();
         $this->assertInstanceOf(Prismic\SearchFormCollection::class, $forms);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The search form named "notHere" does not exist
-     */
-    public function testExceptionThrownAccessingASearchFormThatDoesNotExist()
+    public function testExceptionThrownAccessingASearchFormThatDoesNotExist() : void
     {
+        $this->expectException(Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The search form named "notHere" does not exist');
         $api = $this->getApiWithDefaultData();
         $api->forms()->notHere;
     }
 
-    public function testRefsGroupsRefsByLabel()
+    public function testRefsGroupsRefsByLabel() : void
     {
         $api = $this->getApiWithDefaultData();
         $refs = $api->refs();
@@ -314,21 +321,21 @@ class ApiTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Prismic\Ref::class, $refs);
     }
 
-    public function testRefsContainsOnlyFirstEncounteredRefWithLabel()
+    public function testRefsContainsOnlyFirstEncounteredRefWithLabel() : void
     {
         $api = $this->getApiWithDefaultData();
         $refs = $api->refs();
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $refs['San Francisco Grand opening']);
     }
 
-    public function testGetRefFromLabelReturnsExpectedRef()
+    public function testGetRefFromLabelReturnsExpectedRef() : void
     {
         $api = $this->getApiWithDefaultData();
         $ref = $api->getRefFromLabel('San Francisco Grand opening');
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $ref);
     }
 
-    public function testUsefulExceptionIsThrownWhenApiCannotBeReached()
+    public function testUsefulExceptionIsThrownWhenApiCannotBeReached() : void
     {
         $client = new Client(['connect_timeout' => 0.01]);
         try {
@@ -341,16 +348,14 @@ class ApiTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RequestFailureException
-     * @expectedExceptionMessage Api Request Failed
-     */
-    public function testPreviewSessionWrapsGuzzleExceptions()
+    public function testPreviewSessionWrapsGuzzleExceptions() : void
     {
         $exception = new \GuzzleHttp\Exception\TransferException('Some Exception Message');
-        $this->httpClient->request('GET', 'SomeToken')->willThrow($exception);
+        $this->httpClient->request('GET', $this->repoUrl)->willThrow($exception);
         $api = $this->getApiWithDefaultData();
-        $api->previewSession('SomeToken', '/');
+        $this->expectException(Prismic\Exception\RequestFailureException::class);
+        $this->expectExceptionMessage('Api Request Failed');
+        $api->previewSession($this->repoUrl, '/');
     }
 
     public function testExpiredPreviewTokenIsReThrownWithSpecialisedException() : void
@@ -359,46 +364,65 @@ class ApiTest extends TestCase
         $response->getBody()->write('{"error":"Preview token expired"}');
         $guzzleException = $this->prophesize(RequestException::class);
         $guzzleException->getResponse()->willReturn($response);
-        $this->httpClient->request('GET', 'SomeToken')->willThrow($guzzleException->reveal());
+        $this->httpClient->request('GET', $this->repoUrl)->willThrow($guzzleException->reveal());
         $api = $this->getApiWithDefaultData();
         $this->expectException(Prismic\Exception\ExpiredPreviewTokenException::class);
-        $api->previewSession('SomeToken', '/');
+        $api->previewSession($this->repoUrl, '/');
     }
 
-    public function testDefaultUrlIsReturnedWhenPreviewResponseDoesNotContainMainDocument()
+    public function testNonUrlLikePreviewTokenIsInvalid() : void
+    {
+        $token = 'foo';
+        $this->httpClient->request('GET', $token)->shouldNotBeCalled();
+        $this->expectException(Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The preview token "foo" is not a valid url');
+        $api = $this->getApiWithDefaultData();
+        $api->previewSession($token, '/');
+    }
+
+    public function testPreviewUrlIsInvalidForNonMatchingApiHost() : void
+    {
+        $url = 'https://en-gb.wordpress.org/wordpress-4.9.8-en_GB.zip';
+        $token = urlencode($url);
+        $this->httpClient->request('GET', $url)->shouldNotBeCalled();
+        $this->expectException(Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The host "en-gb.wordpress.org" does not match the api host "whatever.prismic.io"');
+        $api = $this->getApiWithDefaultData();
+        $api->previewSession($token, '/');
+    }
+
+    public function testDefaultUrlIsReturnedWhenPreviewResponseDoesNotContainMainDocument() : void
     {
         $response = $this->prophesize(ResponseInterface::class);
         $response->getBody()->willReturn('{}');
-        $this->httpClient->request('GET', 'SomeToken')->willReturn($response->reveal());
+        $this->httpClient->request('GET', $this->repoUrl)->willReturn($response->reveal());
         $api = $this->getApiWithDefaultData();
-        $url = $api->previewSession('SomeToken', '/TheDefaultUrl');
+        $url = $api->previewSession($this->repoUrl, '/TheDefaultUrl');
         $this->assertSame('/TheDefaultUrl', $url);
     }
 
-    public function testFirstDocumentUrlIsReturnedWhenAMainDocumentIsSet()
+    public function testFirstDocumentUrlIsReturnedWhenAMainDocumentIsSet() : void
     {
         /**
          * The Preview Response from the API
          */
         $previewResponse = $this->prophesize(ResponseInterface::class);
         $previewResponse->getBody()->willReturn($this->getJsonFixture('preview-session.json'));
-        $this->httpClient->request('GET', 'SomeToken')->willReturn($previewResponse->reveal());
+        $this->httpClient->request('GET', $this->repoUrl)->willReturn($previewResponse->reveal());
 
         /**
          * Setup the Search Response from the API
          */
-        $expectedFormUrl = 'http://repo.prismic.io/api/v2/documents/search?ref=SomeToken&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22SomeDocumentId%22%29%5D%5D&lang=%2A';
-        $formCacheKey = Api::generateCacheKey($expectedFormUrl);
-        $searchResult = \json_decode($this->getJsonFixture('search-results.json'));
+        $searchResult = json_decode($this->getJsonFixture('search-results.json'));
         $cacheItem = $this->prophesize(CacheItemInterface::class);
         $cacheItem->isHit()->willReturn(true);
         $cacheItem->get()->willReturn($searchResult);
-        $this->cache->getItem($formCacheKey)->willReturn($cacheItem->reveal());
+        $this->cache->getItem(Argument::type('string'))->willReturn($cacheItem->reveal());
 
 
         $api = $this->getApiWithDefaultData();
         $api->setLinkResolver(new FakeLinkResolver());
-        $url = $api->previewSession('SomeToken', '/TheDefaultUrl');
+        $url = $api->previewSession($this->repoUrl, '/TheDefaultUrl');
         $this->assertSame('RESOLVED_LINK', $url);
     }
 }
