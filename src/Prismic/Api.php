@@ -528,8 +528,8 @@ class Api
      */
     private function prepareDefaultQueryOptions(array $options) : array
     {
-        if (! isset($options['lang'])) {
-            $options['lang'] = '*';
+        if (isset($options['lang']) && $options['lang'] == "*") {
+            throw new Exception("FORDIDDEN. You can't use getByUID with *, use the predicates instead.");
         }
 
         return $options;
