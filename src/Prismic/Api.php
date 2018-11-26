@@ -167,21 +167,6 @@ class Api
         }
     }
 
-    public function reloadApiData() : void
-    {
-        try {
-            $url = $this->apiDataUrl();
-            $key = static::generateCacheKey($url);
-            $this->cache->deleteItem($key);
-        } catch (CacheException $cacheException) {
-            throw new Exception\RuntimeException(
-                'A cache exception occurred whilst deleting cached api data',
-                0,
-                $cacheException
-            );
-        }
-    }
-
     public function getHydrator() : HydratorInterface
     {
         return $this->hydrator;
