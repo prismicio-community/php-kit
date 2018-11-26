@@ -61,9 +61,6 @@ class Api
     /** @var string */
     private $url;
 
-    /** @var ApiData */
-    private $data;
-
     /** @var CacheItemPoolInterface */
     private $cache;
 
@@ -132,8 +129,6 @@ class Api
 
         $api->setHydrator(new Hydrator($api, [], Document::class));
 
-        $api->loadApiData();
-
         return $api;
     }
 
@@ -161,18 +156,6 @@ class Api
         }
     }
 
-    private function loadApiData() : void
-    {
-        $cacheItem = $this->apiDataCacheItem();
-        if ($cacheItem->isHit()) {
-            $this->data = $cacheItem->get();
-            return;
-        }
-        $this->data = $this->getApiData();
-        $cacheItem->set($this->data);
-        $this->cache->save($cacheItem);
-    }
-
     private function getApiData() : ApiData
     {
         $url = $this->apiDataUrl();
@@ -190,7 +173,6 @@ class Api
             $url = $this->apiDataUrl();
             $key = static::generateCacheKey($url);
             $this->cache->deleteItem($key);
-            $this->loadApiData();
         } catch (CacheException $cacheException) {
             throw new Exception\RuntimeException(
                 'A cache exception occurred whilst deleting cached api data',
@@ -256,7 +238,7 @@ class Api
     public function refs() : array
     {
         $groupBy = [];
-        foreach ($this->data->getRefs() as $ref) {
+        foreach ($this->getData()->getRefs() as $ref) {
             $label = $ref->getLabel();
             if (! isset($groupBy[$label])) {
                 $groupBy[$label] = $ref;
@@ -287,7 +269,7 @@ class Api
      */
     public function bookmarks() : array
     {
-        return $this->data->getBookmarks();
+        return $this->getData()->getBookmarks();
     }
 
     /**
@@ -319,7 +301,7 @@ class Api
      */
     public function master() : Ref
     {
-        $masters = array_filter($this->data->getRefs(), function (Ref $ref) {
+        $masters = array_filter($this->getData()->getRefs(), function (Ref $ref) {
             return $ref->isMasterRef() === true;
         });
 
@@ -335,7 +317,7 @@ class Api
     {
         if (! $this->forms) {
             $forms = [];
-            foreach ($this->data->getForms() as $name => $jsonObject) {
+            foreach ($this->getData()->getForms() as $name => $jsonObject) {
                 $formObject = Form::withJsonObject($jsonObject);
                 $data = $formObject->defaultData();
                 $forms[$name] = new SearchForm($this, $formObject, $data);
@@ -348,7 +330,7 @@ class Api
 
     public function getExperiments() : Experiments
     {
-        return $this->data->getExperiments();
+        return $this->getData()->getExperiments();
     }
 
     /**
@@ -429,7 +411,17 @@ class Api
      */
     public function getData() : ApiData
     {
-        return $this->data;
+        $cacheItem = $this->apiDataCacheItem();
+        if ($cacheItem->isHit()) {
+            $data = $cacheItem->get();
+            if ($data instanceof ApiData) {
+                return $data;
+            }
+        }
+        $data = $this->getApiData();
+        $cacheItem->set($data);
+        $this->cache->save($cacheItem);
+        return $data;
     }
 
     /**

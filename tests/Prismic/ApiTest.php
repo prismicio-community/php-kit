@@ -340,6 +340,7 @@ class ApiTest extends TestCase
         $client = new Client(['connect_timeout' => 0.01]);
         try {
             $api = Api::get('http://example.example', null, $client);
+            $api->getData();
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
             $this->assertContains('example.example', $e->getMessage());
