@@ -142,26 +142,6 @@ class ApiTest extends TestCase
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
-    public function testApiDataCanBeForcefullyReloaded() : void
-    {
-        $url = $this->repoUrl . '?access_token=My-Access-Token';
-        $key = Api::generateCacheKey($url);
-        $item = $this->prophesize(CacheItemInterface::class);
-        $item->isHit()->willReturn(false);
-        $item->set(Argument::any())->shouldBeCalledTimes(2);
-        $this->cache->getItem($key)->willReturn($item->reveal());
-        $this->cache->deleteItem($key)->shouldBeCalledTimes(1);
-        $this->cache->save($item->reveal())->shouldBeCalledTimes(2);
-        $response = $this->prophesize(ResponseInterface::class);
-        $response->getBody()->willReturn($this->getJsonFixture('data.json'));
-        $this->httpClient->request('GET', $url)->willReturn($response->reveal());
-
-        $api = $this->getApi();
-        $data = $api->getData();
-        $api->reloadApiData();
-        $this->assertNotSame($data, $api->getData());
-    }
-
     public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive() : void
     {
         $api = $this->getApiWithDefaultData();
@@ -285,7 +265,12 @@ class ApiTest extends TestCase
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame('Ue0EDd_mqb8Dhk3j', $api->bookmark('about'));
-        $this->assertNull($api->bookmark('unknown-bookmark'));
+    }
+
+    public function testBookmarkReturnsNullForUnknownBookmark() : void
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertNull($api->bookmark('not_known_bookmark_name'));
     }
 
     public function testFormsReturnsOnlyFormInstances() : void
@@ -340,6 +325,7 @@ class ApiTest extends TestCase
         $client = new Client(['connect_timeout' => 0.01]);
         try {
             $api = Api::get('http://example.example', null, $client);
+            $api->getData();
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
             $this->assertContains('example.example', $e->getMessage());
