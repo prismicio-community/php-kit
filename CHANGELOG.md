@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.2.2 - 2018-11-26
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#6](https://github.com/netglue/prismic-php-kit/pull/6) removes the `\Prismic\Api::reloadApiData()` method - whilst
+this is a BC break. It was only introduced in `4.1.0` a couple of weeks ago so it's unlikely that anyone is even aware
+it was there in the first place.
+
+### Fixed
+
+- [#6](https://github.com/netglue/prismic-php-kit/pull/6) removes the need to `reloadApiData` after a cache bust by
+ simply not keeping a reference to the Api Data payload in memory.
+
 ## 4.2.1 - 2018-11-16
 
 ### Added
