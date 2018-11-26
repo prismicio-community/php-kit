@@ -285,7 +285,12 @@ class ApiTest extends TestCase
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame('Ue0EDd_mqb8Dhk3j', $api->bookmark('about'));
-        $this->assertNull($api->bookmark('unknown-bookmark'));
+    }
+
+    public function testBookmarkReturnsNullForUnknownBookmark() : void
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertNull($api->bookmark('not_known_bookmark_name'));
     }
 
     public function testFormsReturnsOnlyFormInstances() : void

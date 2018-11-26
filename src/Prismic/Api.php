@@ -286,11 +286,7 @@ class Api
     public function bookmark(string $name) :? string
     {
         $bookmarks = $this->bookmarks();
-        if (isset($bookmarks[$name])) {
-            return $bookmarks[$name];
-        }
-
-        return null;
+        return $bookmarks[$name] ?? null;
     }
 
     /**
