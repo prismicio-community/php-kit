@@ -387,7 +387,7 @@ class Api
                 );
                 if ($document && $this->linkResolver) {
                     $url = $this->linkResolver->resolve($document->asLink());
-                    return $url ? $url : $defaultUrl;
+                    return $url ?: $defaultUrl;
                 }
             }
             return $defaultUrl;
