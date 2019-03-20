@@ -134,7 +134,7 @@ class ApiData
             (array)$json->bookmarks,
             (array)$json->types,
             array_map(
-                function($language) {
+                function ($language) {
                     return Language::parse($language);
                 },
                 (array)$json->languages

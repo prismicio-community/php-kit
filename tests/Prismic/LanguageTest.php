@@ -8,7 +8,6 @@
 
 namespace Prismic\Test;
 
-
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\Language;
 
@@ -39,5 +38,4 @@ class LanguageTest extends TestCase
     {
         Language::parse(new \stdClass);
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Prismic;
 
-
 class Language
 {
 
@@ -33,8 +32,7 @@ class Language
     private function __construct(
         string $id,
         string $name
-    )
-    {
+    ) {
         $this->id = $id;
         $this->name = $name;
     }
@@ -77,5 +75,4 @@ class Language
             $json->name
         );
     }
-
 }
