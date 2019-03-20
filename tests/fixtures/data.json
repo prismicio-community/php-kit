@@ -30,6 +30,24 @@
         "job-offer": "Job offer",
         "product": "Product"
     },
+    "languages": [
+        {
+            "id": "en-us",
+            "name": "English - United States"
+        },
+        {
+            "id": "nl-nl",
+            "name": "Dutch - Netherlands"
+        },
+        {
+            "id": "es-es",
+            "name": "Spanish - Spain (Traditional)"
+        },
+        {
+            "id": "fr-fr",
+            "name": "French - France"
+        }
+    ],
     "tags": ["Cupcake", "Pie", "Featured", "Macaron"],
     "forms": {
         "everything": {
