@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\ApiData;
+use Prismic\Language;
 use Prismic\Ref;
 use Prismic\Experiments;
 use stdClass;
@@ -11,6 +12,7 @@ use stdClass;
 class ApiDataTest extends TestCase
 {
 
+    /** @var ApiData */
     private $data;
 
     public function setUp()
@@ -51,6 +53,9 @@ class ApiDataTest extends TestCase
 
         $this->assertCount(2, $this->data->getForms());
         $this->assertContainsOnlyInstancesOf(stdClass::class, $this->data->getForms());
+
+        $this->assertCount(4, $this->data->getLanguages());
+        $this->assertContainsOnly(Language::class, $this->data->getLanguages());
 
         $this->assertInstanceOf(Experiments::class, $this->data->getExperiments());
 

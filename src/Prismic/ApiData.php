@@ -57,21 +57,29 @@ class ApiData
     private $experiments;
 
     /**
+     * List of configured languages
+     * @var array
+     */
+    private $languages;
+
+    /**
      * A constructor to build the object when you've retrieved all the data you need.
      *
-     * @param array       $refs
-     * @param array       $bookmarks
-     * @param array       $types
-     * @param array       $tags
-     * @param array       $forms
+     * @param array $refs
+     * @param array $bookmarks
+     * @param array $types
+     * @param array $languages
+     * @param array $tags
+     * @param array $forms
      * @param Experiments $experiments
-     * @param string      $oauth_initiate
-     * @param string      $oauth_token
+     * @param string $oauth_initiate
+     * @param string $oauth_token
      */
     private function __construct(
         array $refs,
         array $bookmarks,
         array $types,
+        array $languages,
         array $tags,
         array $forms,
         Experiments $experiments,
@@ -81,6 +89,7 @@ class ApiData
         $this->refs = $refs;
         $this->bookmarks = $bookmarks;
         $this->types = $types;
+        $this->languages = $languages;
         $this->tags = $tags;
         $this->forms = $forms;
         $this->experiments = $experiments;
@@ -124,6 +133,12 @@ class ApiData
             ),
             (array)$json->bookmarks,
             (array)$json->types,
+            array_map(
+                function ($language) {
+                    return Language::parse($language);
+                },
+                (array)$json->languages
+            ),
             $json->tags,
             (array)$json->forms,
             $experiments,
@@ -195,5 +210,10 @@ class ApiData
     public function getOauthToken() : string
     {
         return $this->oauth_token;
+    }
+
+    public function getLanguages() : array
+    {
+        return $this->languages;
     }
 }
