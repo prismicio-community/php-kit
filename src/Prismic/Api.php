@@ -350,8 +350,8 @@ class Api
     private function getPreviewRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', static::PREVIEW_COOKIE),
-            static::PREVIEW_COOKIE,
+            str_replace(['.',' '], '_', self::PREVIEW_COOKIE),
+            self::PREVIEW_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($_COOKIE[$cookieName])) {
@@ -368,8 +368,8 @@ class Api
     private function getExperimentRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', static::EXPERIMENTS_COOKIE),
-            static::EXPERIMENTS_COOKIE,
+            str_replace(['.',' '], '_', self::EXPERIMENTS_COOKIE),
+            self::EXPERIMENTS_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($_COOKIE[$cookieName])) {
