@@ -106,12 +106,12 @@ class Form
     /**
      * Return a new instance from a JSON string
      * @param string $json
-     * @return self
+     * @return static
      */
     public static function withJsonString(string $json) : self
     {
         $data = \json_decode($json);
-        return self::withJsonObject($data);
+        return static::withJsonObject($data);
     }
 
     /**

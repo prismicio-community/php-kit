@@ -100,7 +100,7 @@ class ApiData
     /**
      * Return a new ApiData instance from the given JSON string
      * @param string $json
-     * @return self
+     * @return static
      */
     public static function withJsonString(string $json) : self
     {
@@ -111,7 +111,7 @@ class ApiData
                 json_last_error_msg()
             ), json_last_error());
         }
-        return self::withJsonObject($data);
+        return static::withJsonObject($data);
     }
 
     /**
