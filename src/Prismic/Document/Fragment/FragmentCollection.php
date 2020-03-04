@@ -108,6 +108,10 @@ class FragmentCollection implements CompositeFragmentInterface
             $this->fragments[$key] = Image::factory($value, $linkResolver);
             return;
         }
+        if (is_bool($value)) {
+            $this->fragments[$key] = Boolean::factory($value);
+            return;
+        }
         if (is_float($value)) {
             $this->fragments[$key] = Number::factory($value);
             return;
