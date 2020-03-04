@@ -22,8 +22,11 @@ class Boolean implements FragmentInterface
             $value = $value->value; // V1 API
         }
         if (\is_object($value) || \is_array($value)) {
-            throw new InvalidArgumentException(\sprintf('Cannot determine single boolean value from input of type %s with value %s',
-                gettype($value), \json_encode($value)));
+            throw new InvalidArgumentException(\sprintf(
+                'Cannot determine single boolean value from input of type %s with value %s',
+                gettype($value),
+                \json_encode($value)
+            ));
         }
 
         $fragment = new static();
