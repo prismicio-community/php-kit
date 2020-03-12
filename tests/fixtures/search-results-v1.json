@@ -553,6 +553,10 @@
                                 }
                             }
                         ]
+                    },
+                    "bool_type" : {
+                        "type": "Boolean",
+                        "value": true
                     }
                 }
             }

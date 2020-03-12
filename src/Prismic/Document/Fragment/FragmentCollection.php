@@ -93,6 +93,9 @@ class FragmentCollection implements CompositeFragmentInterface
             case 'SliceZone':
                 $fragment = Group::factory($value, $linkResolver);
                 break;
+            case 'Boolean':
+                $fragment = Boolean::factory($value);
+                break;
         }
 
         $this->fragments[$key] = $fragment;
@@ -106,6 +109,10 @@ class FragmentCollection implements CompositeFragmentInterface
 
         if (isset($value->dimensions) && is_object($value->dimensions)) {
             $this->fragments[$key] = Image::factory($value, $linkResolver);
+            return;
+        }
+        if (is_bool($value)) {
+            $this->fragments[$key] = Boolean::factory($value);
             return;
         }
         if (is_float($value)) {
