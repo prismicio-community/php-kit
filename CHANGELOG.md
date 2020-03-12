@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 4.3.0 - 2020-03-12
+
+### Added
+
+- [#8](https://github.com/netglue/prismic-php-kit/pull/8) and [#9](https://github.com/netglue/prismic-php-kit/pull/9) adds a new fragment type for boolean values, currently in beta at Prismic.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing
+
+
 ## 4.2.2 - 2018-11-26
 
 ### Added
