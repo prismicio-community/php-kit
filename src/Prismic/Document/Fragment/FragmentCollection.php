@@ -93,6 +93,9 @@ class FragmentCollection implements CompositeFragmentInterface
             case 'SliceZone':
                 $fragment = Group::factory($value, $linkResolver);
                 break;
+            case 'Boolean':
+                $fragment = Boolean::factory($value);
+                break;
         }
 
         $this->fragments[$key] = $fragment;
