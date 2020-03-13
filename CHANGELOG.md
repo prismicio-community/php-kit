@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.0.0 - TBD
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Minimum PHP Version is now 7.3
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 4.3.0 - 2020-03-12
 
 ### Added
