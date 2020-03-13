@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic\Ref;
 use DateTimeImmutable;
+use Prismic\Exception\ExceptionInterface;
+use Prismic\Ref;
 use stdClass;
 
 class RefTest extends TestCase
@@ -12,7 +13,7 @@ class RefTest extends TestCase
 
     private $refs;
 
-    public function getRefs()
+    public function getRefs() : iterable
     {
         if (! $this->refs) {
             $this->refs = \json_decode($this->getJsonFixture('refs.json'));
@@ -27,18 +28,18 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testParseRefs($json)
+    public function testParseRefs($json) : void
     {
         $ref = Ref::parse($json);
-        $this->assertInternalType('string', $ref->getId());
+        $this->assertIsString($ref->getId());
         $this->assertStringMatchesFormat('%s', $ref->getId());
-        $this->assertInternalType('string', $ref->getRef());
+        $this->assertIsString($ref->getRef());
         $this->assertStringMatchesFormat('%s', $ref->getRef());
-        $this->assertInternalType('string', $ref->getLabel());
+        $this->assertIsString($ref->getLabel());
         $this->assertStringMatchesFormat('%s', $ref->getLabel());
-        $this->assertInternalType('boolean', $ref->isMasterRef());
-        if (! is_null($ref->getScheduledAt())) {
-            $this->assertInternalType('int', $ref->getScheduledAt());
+        $this->assertIsBool($ref->isMasterRef());
+        if ($ref->getScheduledAt() !== null) {
+            $this->assertIsInt($ref->getScheduledAt());
             $this->assertEquals(13, strlen((string)$ref->getScheduledAt()), 'Expected a 13 digit number');
         }
     }
@@ -46,12 +47,12 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testGetScheduledAtTimestamp($json)
+    public function testGetScheduledAtTimestamp($json) : void
     {
         $ref = Ref::parse($json);
 
-        if (! is_null($ref->getScheduledAtTimestamp())) {
-            $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
+        if ($ref->getScheduledAtTimestamp() !== null) {
+            $this->assertIsInt($ref->getScheduledAtTimestamp());
             $this->assertEquals(10, strlen((string)$ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
         } else {
             // Squash No assertions warning in PHP Unit
@@ -62,7 +63,7 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testToStringSerialisesToRef($json)
+    public function testToStringSerialisesToRef($json) : void
     {
         $ref = Ref::parse($json);
         $this->assertSame($ref->getRef(), (string) $ref);
@@ -71,10 +72,10 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testGetScheduledDate($json)
+    public function testGetScheduledDate($json) : void
     {
         $ref = Ref::parse($json);
-        if (! is_null($ref->getScheduledAtTimestamp())) {
+        if ($ref->getScheduledAtTimestamp() !== null) {
             $date = $ref->getScheduledDate();
             $this->assertInstanceOf(DateTimeImmutable::class, $date);
             $this->assertSame($ref->getScheduledAtTimestamp(), $date->getTimestamp());
@@ -84,11 +85,9 @@ class RefTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Prismic\Exception\ExceptionInterface
-     */
     public function testExceptionThrownForInvalidJsonObject()
     {
+        $this->expectException(ExceptionInterface::class);
         Ref::parse(new stdClass);
     }
 }

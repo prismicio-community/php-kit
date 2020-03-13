@@ -4,21 +4,19 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Embed;
-use Prismic\Test\FakeLinkResolver;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\TestCase;
 
 class EmbedTest extends TestCase
 {
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The type and embed_url properties are required elements of the JSON payload
-     */
-    public function testExceptionThrownWithNoEmbedUrl()
+    public function testExceptionThrownWithNoEmbedUrl() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The type and embed_url properties are required elements of the JSON payload');
         Embed::factory(\json_decode('{}'));
     }
 
-    public function testExpectedValues()
+    public function testExpectedValues() : void
     {
         $data = \json_decode($this->getJsonFixture('fragments/embed.json'));
         /** @var Embed $embed */

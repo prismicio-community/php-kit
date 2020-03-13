@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Document\Fragment\FragmentCollection;
-use Prismic\Document\Fragment\Link\WebLink;
 
 class LinkResolverAbstractTest extends TestCase
 {
@@ -18,7 +17,7 @@ class LinkResolverAbstractTest extends TestCase
         return $collection;
     }
 
-    public function testInvokeProxiesToResolve()
+    public function testInvokeProxiesToResolve() : void
     {
         $resolver = new FakeLinkResolver();
         $links = $this->getLinkCollection();
@@ -27,7 +26,7 @@ class LinkResolverAbstractTest extends TestCase
         $this->assertSame('WEB_URL', $url);
     }
 
-    public function testBrokenLinksAreSkipped()
+    public function testBrokenLinksAreSkipped() : void
     {
         $resolver = new FakeLinkResolver();
         $links = $this->getLinkCollection();
@@ -35,7 +34,7 @@ class LinkResolverAbstractTest extends TestCase
         $this->assertNull($resolver($link));
     }
 
-    public function testDocumentLinksAreResolved()
+    public function testDocumentLinksAreResolved() : void
     {
         $resolver = new FakeLinkResolver();
         $links = $this->getLinkCollection();

@@ -5,7 +5,7 @@ namespace Prismic\Document\Fragment;
 
 use Prismic\Document\Fragment\Link\AbstractLink;
 use Prismic\LinkResolver;
-use Zend\Escaper\Escaper;
+use Laminas\Escaper\Escaper;
 use function array_walk;
 use function implode;
 use function is_array;

@@ -1,0 +1,54 @@
+name: PHPUnit Test Suite
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+jobs:
+    run-tests:
+        name: PHP ${{ matrix.php-versions }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php-versions: ['7.3', '7.4']
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup PHP Action
+              uses: shivammathur/setup-php@1.6.1
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: mbstring,curl,json,intl,apcu
+                  coverage: pcov
+                  pecl: true
+                  ini-values: apc.enabled=1, apc.enable_cli=1
+            - name: Check PHP Setup
+              run: |
+                  php -v
+                  php -m
+                  php -i
+            - name: Get composer cache directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - name: Cache composer dependencies
+              uses: actions/cache@v1
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-${{ matrix.php-versions }}-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: ${{ runner.os }}-composer-
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
+            - name: Check CS
+              run: composer cs-check
+            - name: PHP Compatibility Check
+              run: composer compat-check
+            - name: PHPUnit
+              run: php -dpcov.directory=. -dpcov.enabled=1 -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --stop-on-error --coverage-clover=coverage.xml
+            - name: Upload Coverage to CodeCov
+              uses: codecov/codecov-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  file: ./coverage.xml
+                  fail_ci_if_error: false

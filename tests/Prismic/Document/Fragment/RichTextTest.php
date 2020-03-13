@@ -4,35 +4,31 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\RichText;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class RichTextTest extends TestCase
 {
-
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testFactoryWillOnlyAcceptArray()
+    public function testFactoryWillOnlyAcceptArray() : void
     {
+        $this->expectException(InvalidArgumentException::class);
         RichText::factory('Foo', new FakeLinkResolver());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage No type can be determined for the rich text fragment
-     */
-    public function testBlocksWithoutTypePropertyWillCauseException()
+    public function testBlocksWithoutTypePropertyWillCauseException() : void
     {
         $value = \json_decode('[
             {
                 "foo" : "bar"
             }
         ]');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No type can be determined for the rich text fragment');
         RichText::factory($value, new FakeLinkResolver());
     }
 
-    public function testAsTextAndHtmlRenderAsExpected()
+    public function testAsTextAndHtmlRenderAsExpected() : void
     {
         $value = \json_decode('[
             {
@@ -60,7 +56,7 @@ class RichTextTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testFindingByTag()
+    public function testFindingByTag() : void
     {
         $value = \json_decode('[
             {
@@ -131,7 +127,7 @@ class RichTextTest extends TestCase
         $this->assertCount(2, $text->getLists());
     }
 
-    public function testFindingByTagOnEmptyStructure()
+    public function testFindingByTagOnEmptyStructure() : void
     {
         /** @var RichText $text */
         $text = RichText::factory([], new FakeLinkResolver());

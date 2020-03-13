@@ -6,22 +6,20 @@ namespace Prismic\Test\Document\Fragment;
 use Prismic\Document\Fragment\Color;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\Group;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class GroupTest extends TestCase
 {
-
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected an indexed array for group construction
-     */
-    public function testNonArrayCausesExceptionInFactory()
+    public function testNonArrayCausesExceptionInFactory() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected an indexed array for group construction');
         Group::factory('foo', new FakeLinkResolver());
     }
 
-    public function testEmptyGroup()
+    public function testEmptyGroup() : void
     {
         /** @var Group $group */
         $group = Group::factory([], new FakeLinkResolver());
@@ -30,7 +28,7 @@ class GroupTest extends TestCase
         $this->assertNull($group->asText());
     }
 
-    public function testBasicGroup()
+    public function testBasicGroup() : void
     {
         $data = \json_decode($this->getJsonFixture('fragments/group.json'));
         /** @var Group $group */

@@ -17,34 +17,31 @@
             "Prismic\\Test\\": "tests/Prismic"
         }
     },
-
     "license": "Apache-2.0",
-
     "minimum-stability": "stable",
-
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.3",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^6.3",
+        "laminas/laminas-escaper": "^2.6",
         "psr/cache": "^1.0",
-        "symfony/cache": "^4",
-        "zendframework/zend-escaper": "^2.6"
+        "symfony/cache": "^4"
     },
-
     "suggest": {
         "ext-apc": "APCu is used as the default cache if it is available"
     },
-
     "replace": {
         "prismic/php-sdk": "*"
     },
-
     "require-dev": {
-        "phpstan/phpstan": "^0.9.2",
-        "phpunit/phpunit": "^7",
-        "squizlabs/php_codesniffer": "^3.2"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpstan/phpstan": "^0.12",
+        "phpunit/phpunit": "^9",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.5"
     },
     "extra": {
         "branch-alias": {
@@ -56,6 +53,7 @@
             "@cs-check",
             "@test"
         ],
+        "compat-check": "vendor/bin/phpcs -ns -p ./src/ --standard=PHPCompatibility",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",

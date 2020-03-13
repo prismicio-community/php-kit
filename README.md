@@ -1,7 +1,8 @@
 # Unofficial PHP development kit for prismic.io
-[![alt text](https://travis-ci.org/netglue/prismic-php-kit.png?branch=master "Travis build")](https://travis-ci.org/netglue/prismic-php-kit)
-[![Maintainability](https://api.codeclimate.com/v1/badges/46e65939eeace01a9605/maintainability)](https://codeclimate.com/github/netglue/prismic-php-kit/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/46e65939eeace01a9605/test_coverage)](https://codeclimate.com/github/netglue/prismic-php-kit/test_coverage)
+
+![Build Status](https://github.com/netglue/prismic-php-kit/workflows/PHPUnit%20Test%20Suite/badge.svg)
+[![codecov](https://codecov.io/gh/netglue/prismic-php-kit/branch/master/graph/badge.svg)](https://codecov.io/gh/netglue/prismic-php-kit)
+
 
 ## Introduction
 

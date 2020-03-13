@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Predicates;
 
 class PredicatesTest extends TestCase
@@ -20,7 +21,7 @@ class PredicatesTest extends TestCase
     /**
      * @dataProvider atProvider
      */
-    public function testAtPredicate(string $fragment, $value, string $expect)
+    public function testAtPredicate(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::at($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
@@ -39,7 +40,7 @@ class PredicatesTest extends TestCase
     /**
      * @dataProvider notProvider
      */
-    public function testNotPredicate(string $fragment, $value, string $expect)
+    public function testNotPredicate(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::not($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
@@ -57,7 +58,7 @@ class PredicatesTest extends TestCase
     /**
      * @dataProvider anyProvider
      */
-    public function testAnyPredicate(string $fragment, $value, string $expect)
+    public function testAnyPredicate(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::any($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
@@ -80,27 +81,27 @@ class PredicatesTest extends TestCase
         $this->assertEquals($expect, $predicate->q());
     }
 
-    public function testHasPredicate()
+    public function testHasPredicate() : void
     {
-        $predicate = Predicates::has("my.article.author");
+        $predicate = Predicates::has('my.article.author');
         $this->assertEquals('[:d = has(my.article.author)]', $predicate->q());
     }
 
-    public function testMissingPredicate()
+    public function testMissingPredicate() : void
     {
-        $predicate = Predicates::missing("my.article.author");
+        $predicate = Predicates::missing('my.article.author');
         $this->assertEquals('[:d = missing(my.article.author)]', $predicate->q());
     }
 
-    public function testFulltextPredicate()
+    public function testFulltextPredicate() : void
     {
-        $predicate = Predicates::fulltext("document", "some value");
+        $predicate = Predicates::fulltext('document', 'some value');
         $this->assertEquals('[:d = fulltext(document, "some value")]', $predicate->q());
     }
 
-    public function testSimilarPredicate()
+    public function testSimilarPredicate() : void
     {
-        $predicate = Predicates::similar("someId", 5);
+        $predicate = Predicates::similar('someId', 5);
         $this->assertEquals('[:d = similar("someId", 5)]', $predicate->q());
     }
 
@@ -109,25 +110,23 @@ class PredicatesTest extends TestCase
         return [
             ['my.page.num', 1, '[:d = number.lt(my.page.num, 1)]'],
             ['my.page.num', 1.1, '[:d = number.lt(my.page.num, 1.1)]'],
-            ['my.page.num', "2", '[:d = number.lt(my.page.num, "2")]'],
+            ['my.page.num', '2', '[:d = number.lt(my.page.num, "2")]'],
         ];
     }
 
     /**
      * @dataProvider ltProvider
      */
-    public function testNumberLT(string $fragment, $value, string $expect)
+    public function testNumberLT(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::lt($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testLtThrowsExceptionForNonNumber()
+    public function testLtThrowsExceptionForNonNumber() : void
     {
-        Predicates::lt("my.product.price", 'foo');
+        $this->expectException(InvalidArgumentException::class);
+        Predicates::lt('my.product.price', 'foo');
     }
 
     public function gtProvider() : array
@@ -135,25 +134,23 @@ class PredicatesTest extends TestCase
         return [
             ['my.page.num', 1, '[:d = number.gt(my.page.num, 1)]'],
             ['my.page.num', 1.1, '[:d = number.gt(my.page.num, 1.1)]'],
-            ['my.page.num', "2", '[:d = number.gt(my.page.num, "2")]'],
+            ['my.page.num', '2', '[:d = number.gt(my.page.num, "2")]'],
         ];
     }
 
     /**
      * @dataProvider gtProvider
      */
-    public function testNumberGt(string $fragment, $value, string $expect)
+    public function testNumberGt(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::gt($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testGtThrowsExceptionForNonNumber()
+    public function testGtThrowsExceptionForNonNumber() : void
     {
-        Predicates::gt("my.product.price", 'foo');
+        $this->expectException(InvalidArgumentException::class);
+        Predicates::gt('my.product.price', 'foo');
     }
 
     public function rangeProvider() : array
@@ -161,28 +158,26 @@ class PredicatesTest extends TestCase
         return [
             ['my.page.num', 1, 2,  '[:d = number.inRange(my.page.num, 1, 2)]'],
             ['my.page.num', 1.1, 2.2,  '[:d = number.inRange(my.page.num, 1.1, 2.2)]'],
-            ['my.page.num', "2", "3", '[:d = number.inRange(my.page.num, "2", "3")]'],
+            ['my.page.num', '2', '3', '[:d = number.inRange(my.page.num, "2", "3")]'],
         ];
     }
 
     /**
      * @dataProvider rangeProvider
      */
-    public function testNumberInRange(string $fragment, $low, $high, string $expect)
+    public function testNumberInRange(string $fragment, $low, $high, string $expect) : void
     {
         $predicate = Predicates::inRange($fragment, $low, $high);
         $this->assertEquals($expect, $predicate->q());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testExceptionThrownByInRangeForNonNumbers()
+    public function testExceptionThrownByInRangeForNonNumbers() : void
     {
+        $this->expectException(InvalidArgumentException::class);
         Predicates::inRange('my.whatever', 'foo', 'foo');
     }
 
-    public function testDateBefore()
+    public function testDateBefore() : void
     {
         $predicate = Predicates::dateBefore('foo', 1);
         $this->assertEquals('[:d = date.before(foo, 1)]', $predicate->q());
@@ -194,7 +189,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = date.before(foo, 1000)]', $predicate->q());
     }
 
-    public function testDateAfter()
+    public function testDateAfter() : void
     {
         $predicate = Predicates::dateAfter('foo', 1);
         $this->assertEquals('[:d = date.after(foo, 1)]', $predicate->q());
@@ -206,7 +201,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = date.after(foo, 1000)]', $predicate->q());
     }
 
-    public function testDateBetween()
+    public function testDateBetween() : void
     {
         $predicate = Predicates::dateBetween('foo', 1, 2);
         $this->assertEquals('[:d = date.between(foo, 1, 2)]', $predicate->q());
@@ -218,7 +213,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = date.between(foo, 1000, 1000)]', $predicate->q());
     }
 
-    public function testDayOfMonth()
+    public function testDayOfMonth() : void
     {
         $predicate = Predicates::dayOfMonth('foo', 1);
         $this->assertEquals('[:d = date.day-of-month(foo, 1)]', $predicate->q());
@@ -236,7 +231,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = date.day-of-month-after(foo, 1)]', $predicate->q());
     }
 
-    public function testDayOfWeek()
+    public function testDayOfWeek() : void
     {
         $date = \DateTime::createFromFormat('!U', '1');
 
@@ -250,45 +245,45 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = date.day-of-week-before(foo, 4)]', $predicate->q());
     }
 
-    public function testMonth()
+    public function testMonth() : void
     {
         $date = \DateTime::createFromFormat('!U', '1');
 
-        $predicate = Predicates::month("foo", $date);
+        $predicate = Predicates::month('foo', $date);
         $this->assertEquals('[:d = date.month(foo, 1)]', $predicate->q());
 
-        $predicate = Predicates::monthAfter("foo", $date);
+        $predicate = Predicates::monthAfter('foo', $date);
         $this->assertEquals('[:d = date.month-after(foo, 1)]', $predicate->q());
 
-        $predicate = Predicates::monthBefore("foo", $date);
+        $predicate = Predicates::monthBefore('foo', $date);
         $this->assertEquals('[:d = date.month-before(foo, 1)]', $predicate->q());
     }
 
-    public function testYear()
+    public function testYear() : void
     {
         $date = \DateTime::createFromFormat('!U', '1');
 
-        $predicate = Predicates::year("foo", $date);
+        $predicate = Predicates::year('foo', $date);
         $this->assertEquals('[:d = date.year(foo, 1970)]', $predicate->q());
     }
 
-    public function testHour()
+    public function testHour() : void
     {
         $date = \DateTime::createFromFormat('!U', '1');
 
-        $predicate = Predicates::hour("foo", $date);
+        $predicate = Predicates::hour('foo', $date);
         $this->assertEquals('[:d = date.hour(foo, 0)]', $predicate->q());
 
-        $predicate = Predicates::hourAfter("foo", $date);
+        $predicate = Predicates::hourAfter('foo', $date);
         $this->assertEquals('[:d = date.hour-after(foo, 0)]', $predicate->q());
 
-        $predicate = Predicates::hourBefore("foo", $date);
+        $predicate = Predicates::hourBefore('foo', $date);
         $this->assertEquals('[:d = date.hour-before(foo, 0)]', $predicate->q());
     }
 
-    public function testGeopointNear()
+    public function testGeopointNear() : void
     {
-        $p = Predicates::near("my.store.coordinates", 40.689757, -74.0451453, 15);
-        $this->assertEquals("[:d = geopoint.near(my.store.coordinates, 40.689757, -74.0451453, 15)]", $p->q());
+        $p = Predicates::near('my.store.coordinates', 40.689757, -74.0451453, 15);
+        $this->assertEquals('[:d = geopoint.near(my.store.coordinates, 40.689757, -74.0451453, 15)]', $p->q());
     }
 }

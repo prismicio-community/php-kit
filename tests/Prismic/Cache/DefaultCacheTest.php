@@ -10,7 +10,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class DefaultCacheTest extends TestCase
 {
-    public function testApcUsedAsDefaultCacheIfAvailable()
+    public function testApcUsedAsDefaultCacheIfAvailable() : void
     {
         if (! \extension_loaded('apc')) {
             $this->markTestSkipped('APC extension is not loaded');
@@ -24,7 +24,7 @@ class DefaultCacheTest extends TestCase
         $this->assertInstanceOf(ApcuAdapter::class, $cache);
     }
 
-    public function testArrayCacheIsUsedByDefaultWhenApcIsNotAvailable()
+    public function testArrayCacheIsUsedByDefaultWhenApcIsNotAvailable() : void
     {
         if (\extension_loaded('apc')) {
             $this->markTestSkipped('APC extension is loaded so this test cannot continue');
@@ -34,7 +34,7 @@ class DefaultCacheTest extends TestCase
         $this->assertInstanceOf(ArrayAdapter::class, $cache);
     }
 
-    public function testGetArrayCache()
+    public function testGetArrayCache() : void
     {
         $cache = DefaultCache::getArrayCache();
         $this->assertInstanceOf(ArrayAdapter::class, $cache);

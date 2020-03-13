@@ -5,21 +5,19 @@ namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\ListElement;
 use Prismic\Document\Fragment\TextElement;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class ListElementTest extends TestCase
 {
-
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testFactoryThrowsExceptionForInvalidTag()
+    public function testFactoryThrowsExceptionForInvalidTag() : void
     {
+        $this->expectException(InvalidArgumentException::class);
         ListElement::fromTag('foo');
     }
 
-    public function testOrderedAndUnordered()
+    public function testOrderedAndUnordered() : void
     {
         /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
@@ -28,7 +26,7 @@ class ListElementTest extends TestCase
         $this->assertTrue($list->isOrdered());
     }
 
-    public function testEmptyListsReturnNullForTextAndHtml()
+    public function testEmptyListsReturnNullForTextAndHtml() : void
     {
         /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
@@ -39,10 +37,7 @@ class ListElementTest extends TestCase
         $this->assertNull($list->closeTag());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testExceptionThrowForInvalidListItemType()
+    public function testExceptionThrowForInvalidListItemType() : void
     {
         $linkResolver = new FakeLinkResolver();
         $p = TextElement::factory(
@@ -51,10 +46,11 @@ class ListElementTest extends TestCase
         );
         /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
+        $this->expectException(InvalidArgumentException::class);
         $list->addItem($p);
     }
 
-    public function testRenderingToHtml()
+    public function testRenderingToHtml() : void
     {
         $linkResolver = new FakeLinkResolver();
         $item = TextElement::factory(

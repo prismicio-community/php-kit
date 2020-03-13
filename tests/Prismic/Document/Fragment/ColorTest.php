@@ -8,8 +8,7 @@ use Prismic\Test\TestCase;
 
 class ColorTest extends TestCase
 {
-
-    public function testFactory()
+    public function testFactory() : void
     {
         $data = \json_decode('{"type": "Color", "value": "#000000"}');
         $colour = Color::factory($data);
@@ -22,7 +21,7 @@ class ColorTest extends TestCase
         $this->assertInstanceOf(Color::class, $colour);
     }
 
-    public function testIsColor()
+    public function testIsColor() : void
     {
         /** @var Color $colour */
         $colour = Color::factory('#000000');
@@ -49,7 +48,7 @@ class ColorTest extends TestCase
         return $colour;
     }
 
-    public function testAsRgb()
+    public function testAsRgb() : void
     {
         $colour = $this->getBlack();
         $expect = [
@@ -63,7 +62,7 @@ class ColorTest extends TestCase
         $this->assertNull($colour->asRgb());
     }
 
-    public function testAsRgbString()
+    public function testAsRgbString() : void
     {
         $colour = $this->getBlack();
         $this->assertSame('rgb(0, 0, 0)', $colour->asRgbString());
@@ -73,7 +72,7 @@ class ColorTest extends TestCase
         $this->assertNull($colour->asRgbString());
     }
 
-    public function testAsInteger()
+    public function testAsInteger() : void
     {
         $colour = $this->getBlack();
         $expect = \hexdec('000000');

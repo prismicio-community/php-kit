@@ -13,7 +13,7 @@ class DateTest extends TestCase
     /** @var FragmentCollection */
     private $collection;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->collection = FragmentCollection::factory(
@@ -22,7 +22,7 @@ class DateTest extends TestCase
         );
     }
 
-    public function testAllFixtureValuesAreDateInstances()
+    public function testAllFixtureValuesAreDateInstances() : void
     {
         foreach ($this->collection->getFragments() as $fragment) {
             $this->assertInstanceOf(Date::class, $fragment);
@@ -37,7 +37,7 @@ class DateTest extends TestCase
         }
     }
 
-    public function testAsTextReturnsStringOrNull()
+    public function testAsTextReturnsStringOrNull() : void
     {
         $date = $this->collection->get('date-v2');
         $this->assertSame('2018-01-01', $date->asText());
@@ -49,7 +49,7 @@ class DateTest extends TestCase
         $this->assertNull($date->asText());
     }
 
-    public function testAsHtmlReturnsExpectedValue()
+    public function testAsHtmlReturnsExpectedValue() : void
     {
         $date = $this->collection->get('date-v2');
         $expect = '<time datetime="2018-01-01">2018-01-01</time>';

@@ -10,12 +10,12 @@ use Prismic\Document\Fragment\Link\FileLink;
 use Prismic\Document\Fragment\Link\ImageLink;
 use Prismic\Document\Fragment\Link\WebLink;
 use Prismic\Document\Fragment\LinkInterface;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class LinkTest extends TestCase
 {
-
     private function getLinkCollection() : FragmentCollection
     {
         /** @var FragmentCollection $collection */
@@ -26,28 +26,24 @@ class LinkTest extends TestCase
         return $collection;
     }
 
-    public function testAbstractFactoryForAllLinkTypes()
+    public function testAbstractFactoryForAllLinkTypes() : void
     {
         $links = $this->getLinkCollection()->getFragments();
         $this->assertCount(10, $links);
         $this->assertContainsOnlyInstancesOf(LinkInterface::class, $links);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected a payload describing a link
-     */
-    public function testAbstractFactoryThrowsExceptionForNoLinkType()
+    public function testAbstractFactoryThrowsExceptionForNoLinkType() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a payload describing a link');
         AbstractLink::abstractFactory('Foo', new FakeLinkResolver());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Encountered a V2 Media link but the subtype was neither image, nor document.
-     */
-    public function testExceptionThrownForUnknownMediaType()
+    public function testExceptionThrownForUnknownMediaType() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Encountered a V2 Media link but the subtype was neither image, nor document.');
         $data = \json_decode('{
             "link_type": "Media",
             "name": "image.gif",
@@ -57,12 +53,10 @@ class LinkTest extends TestCase
         AbstractLink::abstractFactory($data, new FakeLinkResolver());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Cannot determine a link from the given payload
-     */
-    public function testExceptionThrownForUnknownLinkType()
+    public function testExceptionThrownForUnknownLinkType() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot determine a link from the given payload');
         $data = \json_decode('{
             "link_type": "Unknown",
             "url": "whatever"
@@ -70,7 +64,7 @@ class LinkTest extends TestCase
         AbstractLink::abstractFactory($data, new FakeLinkResolver());
     }
 
-    public function emptyLinkDataProvider()
+    public function emptyLinkDataProvider() : iterable
     {
         return [
             ['{"link_type": "Any"}'],
@@ -84,14 +78,14 @@ class LinkTest extends TestCase
     /**
      * @dataProvider emptyLinkDataProvider
      */
-    public function testNullIsReturnedForV2EmptyLinks(string $json)
+    public function testNullIsReturnedForV2EmptyLinks(string $json) : void
     {
         $this->assertNull(
             AbstractLink::abstractFactory(\json_decode($json), new FakeLinkResolver())
         );
     }
 
-    public function testDocumentLinkReturnsExpectedValues()
+    public function testDocumentLinkReturnsExpectedValues() : void
     {
         /** @var DocumentLink $link */
         $link = $this->getLinkCollection()->get('link-document');
@@ -101,7 +95,7 @@ class LinkTest extends TestCase
         $this->assertSame('RESOLVED_LINK', $link->getUrl());
         $this->assertSame('LinkedDocumentId', $link->getId());
         $this->assertSame('document', $link->getType());
-        $this->assertInternalType('array', $link->getTags());
+        $this->assertIsArray($link->getTags());
         $this->assertSame('document-uid', $link->getUid());
         $this->assertSame('en-gb', $link->getLang());
         $this->assertSame('slug-value', $link->getSlug());
@@ -110,7 +104,7 @@ class LinkTest extends TestCase
         $this->assertSame($expect, $link->asHtml());
     }
 
-    public function testBrokenLinkReturnsExpectedValues()
+    public function testBrokenLinkReturnsExpectedValues() : void
     {
         /** @var DocumentLink $link */
         $link = $this->getLinkCollection()->get('link-broken');
@@ -125,7 +119,7 @@ class LinkTest extends TestCase
         $this->assertNull($link->closeTag());
     }
 
-    public function testWebLinksReturnsExpectedValues()
+    public function testWebLinksReturnsExpectedValues() : void
     {
         /** @var WebLink $link */
         $link = $this->getLinkCollection()->get('link-web');
@@ -148,12 +142,10 @@ class LinkTest extends TestCase
         $this->assertSame($expect, $link->asHtml());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected value to contain a url property
-     */
-    public function testWebLinkThrowsExceptionWhenUrlIsNotSet()
+    public function testWebLinkThrowsExceptionWhenUrlIsNotSet() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected value to contain a url property');
         WebLink::linkFactory(
             \json_decode('{
             }'),
@@ -161,28 +153,28 @@ class LinkTest extends TestCase
         );
     }
 
-    public function testFileLinkReturnsExpectedValues()
+    public function testFileLinkReturnsExpectedValues() : void
     {
         /** @var FileLink $link */
         $link = $this->getLinkCollection()->get('link-pdf');
         $this->assertInstanceOf(FileLink::class, $link);
         $this->assertFalse($link->isBroken());
-        $this->assertInternalType('integer', $link->getFilesize());
+        $this->assertIsInt($link->getFilesize());
         $this->assertSame('file.pdf', $link->getFilename());
 
         $expect = '<a href="FILE_URL">file.pdf</a>';
         $this->assertSame($expect, $link->asHtml());
     }
 
-    public function testImageLinkReturnsExpectedValues()
+    public function testImageLinkReturnsExpectedValues() : void
     {
         /** @var ImageLink $link */
         $link = $this->getLinkCollection()->get('link-media');
         $this->assertInstanceOf(ImageLink::class, $link);
         $this->assertFalse($link->isBroken());
-        $this->assertInternalType('integer', $link->getFilesize());
-        $this->assertInternalType('integer', $link->getWidth());
-        $this->assertInternalType('integer', $link->getHeight());
+        $this->assertIsInt($link->getFilesize());
+        $this->assertIsInt($link->getWidth());
+        $this->assertIsInt($link->getHeight());
         $this->assertSame('image.gif', $link->getFilename());
 
         $expect = '<a href="IMAGE_URL">image.gif</a>';

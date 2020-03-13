@@ -13,13 +13,13 @@ class ExperimentTest extends TestCase
      */
     private $experiments;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $experimentsJson = \json_decode($this->getJsonFixture('experiments.json'));
         $this->experiments = Experiments::parse($experimentsJson);
     }
 
-    public function testParsing()
+    public function testParsing() : void
     {
         $running = $this->experiments->getRunning();
         $this->assertContainsOnlyInstancesOf(Experiment::class, $running);
@@ -39,7 +39,7 @@ class ExperimentTest extends TestCase
         $this->assertEquals("VDUBBawGALAGelsa", $base->getRef());
     }
 
-    public function testCookieParsing()
+    public function testCookieParsing() : void
     {
         $this->assertNull($this->experiments->refFromCookie(""), "Empty cookie");
         $this->assertNull($this->experiments->refFromCookie("Poneys are awesome"), "Invalid content");
@@ -51,7 +51,7 @@ class ExperimentTest extends TestCase
         $this->assertNull($this->experiments->refFromCookie("NotAGoodLookingId 1"), "Unknown Google ID");
     }
 
-    public function testEmptyExperimentData()
+    public function testEmptyExperimentData() : void
     {
         $data = '{"draft":[],"running":[]}';
         $experiments = Experiments::parse(\json_decode($data));

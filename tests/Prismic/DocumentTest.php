@@ -7,13 +7,15 @@ use Prismic\Api;
 use Prismic\Document;
 use Prismic\Document\Fragment;
 use Prismic\DocumentInterface;
+use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\RuntimeException;
 
 class DocumentTest extends TestCase
 {
 
     private $api;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->api = $this->prophesize(Api::class);
@@ -24,12 +26,10 @@ class DocumentTest extends TestCase
         return $this->api->reveal();
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Failed to decode json payload
-     */
-    public function testInvalidJsonInFactory()
+    public function testInvalidJsonInFactory() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Failed to decode json payload');
         Document::fromJsonString('foo', $this->api->reveal());
     }
 
@@ -48,11 +48,11 @@ class DocumentTest extends TestCase
 
     /**
      * @dataProvider missingPropertyDataProvider
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage A required document property was missing from the JSON payload
      */
-    public function testRequiredPropertyFailures(string $json)
+    public function testRequiredPropertyFailures(string $json) : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A required document property was missing from the JSON payload');
         Document::fromJsonString($json, $this->api->reveal());
     }
 
@@ -68,11 +68,11 @@ class DocumentTest extends TestCase
 
     /**
      * @dataProvider nullPropertyDataProvider
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage A required document property was found to be null in the JSON payload
      */
-    public function testNonNullPropertyFailures(string $json)
+    public function testNonNullPropertyFailures(string $json) : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A required document property was found to be null in the JSON payload');
         Document::fromJsonString($json, $this->api->reveal());
     }
 
@@ -101,14 +101,12 @@ class DocumentTest extends TestCase
         return Document::fromJsonString($json, $this->getApi());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Documents cannot be properly hydrated without a Link Resolver being made available to the API
-     */
-    public function testLinkResolverIsRequiredToHydrateDocuments()
+    public function testLinkResolverIsRequiredToHydrateDocuments() : void
     {
         $this->api->isV1Api()->willReturn(false);
         $this->api->getLinkResolver()->willReturn(null);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Documents cannot be properly hydrated without a Link Resolver being made available to the API');
         $this->getMinimumValidDocument();
     }
 
@@ -119,7 +117,7 @@ class DocumentTest extends TestCase
         return $this->getMinimumValidDocument();
     }
 
-    public function testBasicAccessors()
+    public function testBasicAccessors() : void
     {
         $doc = $this->setupMinimumDocument();
         $this->assertSame('ID', $doc->getId());
@@ -130,7 +128,7 @@ class DocumentTest extends TestCase
         $this->assertContains('tag-1', $doc->getTags());
         $this->assertContains('slug-1', $doc->getSlugs());
         $this->assertSame('slug-1', $doc->getSlug());
-        $this->assertInternalType('array', $doc->getAlternateLanguages());
+        $this->assertIsArray($doc->getAlternateLanguages());
         $this->assertInstanceOf(\DateTimeInterface::class, $doc->getFirstPublicationDate());
         $this->assertInstanceOf(\DateTimeInterface::class, $doc->getLastPublicationDate());
         $this->assertInstanceOf(Fragment\Text::class, $doc->get('text-value'));
@@ -139,7 +137,7 @@ class DocumentTest extends TestCase
         $this->assertFalse($doc->has('unknown-field'));
     }
 
-    public function testGetTranslation()
+    public function testGetTranslation() : void
     {
         $fakeDoc = $this->prophesize(DocumentInterface::class)->reveal();
         $this->api->getById('TranslatedID')->willReturn($fakeDoc);
@@ -148,7 +146,7 @@ class DocumentTest extends TestCase
         $this->assertSame($fakeDoc, $doc->getTranslation('en-au'));
     }
 
-    public function testAsLink()
+    public function testAsLink() : void
     {
         $doc = $this->setupMinimumDocument();
         $link = $doc->asLink();

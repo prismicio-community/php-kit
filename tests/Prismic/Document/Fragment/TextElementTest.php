@@ -4,40 +4,31 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\TextElement;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class TextElementTest extends TestCase
 {
-
-    public function setUp()
+    public function testFactoryThrowsExceptionWhenValueHasNoType() : void
     {
-        parent::setUp();
-    }
-
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testFactoryThrowsExceptionWhenValueHasNoType()
-    {
+        $this->expectException(InvalidArgumentException::class);
         TextElement::factory(
             \json_decode('{"foo":"bar"}'),
             new FakeLinkResolver()
         );
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     */
-    public function testFactoryThrowsExceptionWhenTypeIsUnknown()
+    public function testFactoryThrowsExceptionWhenTypeIsUnknown() : void
     {
+        $this->expectException(InvalidArgumentException::class);
         TextElement::factory(
             \json_decode('{"type":"unknown"}'),
             new FakeLinkResolver()
         );
     }
 
-    public function testSpanWithEmptyType()
+    public function testSpanWithEmptyType() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -53,7 +44,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testBoldText()
+    public function testBoldText() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -71,7 +62,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testSpanAroundUtf8Characters()
+    public function testSpanAroundUtf8Characters() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -89,7 +80,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testNestedSpans()
+    public function testNestedSpans() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -121,7 +112,7 @@ class TextElementTest extends TestCase
         $this->assertSame('Paragraph with nested spans of several types.', $text->asText());
     }
 
-    public function testNestedSpansAtTheSameIndex()
+    public function testNestedSpansAtTheSameIndex() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -155,7 +146,7 @@ class TextElementTest extends TestCase
         $this->assertSame('<p>Paragraph with multiple spans at the same index.</p>', $text->withoutFormatting());
     }
 
-    public function testLabelAtBlockLevel()
+    public function testLabelAtBlockLevel() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -169,7 +160,7 @@ class TextElementTest extends TestCase
         $this->assertSame('Paragraph labelled as a block.', $text->asText());
     }
 
-    public function testNullTextWillRenderAsNull()
+    public function testNullTextWillRenderAsNull() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -184,7 +175,7 @@ class TextElementTest extends TestCase
         $this->assertNull($text->withoutFormatting());
     }
 
-    public function testLinkSpan()
+    public function testLinkSpan() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -207,7 +198,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testNewLinesAreConvertedToLineBreaksWhenSpansArePresent()
+    public function testNewLinesAreConvertedToLineBreaksWhenSpansArePresent() : void
     {
         $value = \json_decode('{
             "type": "paragraph",
@@ -225,7 +216,7 @@ class TextElementTest extends TestCase
         $this->assertSame($expect, $text->asHtml());
     }
 
-    public function testNewLinesAreConvertedToLineBreaksWhenSpansAreNotPresent()
+    public function testNewLinesAreConvertedToLineBreaksWhenSpansAreNotPresent() : void
     {
         $value = \json_decode('{
             "type": "paragraph",

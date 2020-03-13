@@ -5,26 +5,24 @@ namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\RichText;
+use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\UnexpectedValueException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class FragmentCollectionTest extends TestCase
 {
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected an object as the collection value
-     */
-    public function testExceptionThrownWhenFactoryReceivesNonObject()
+    public function testExceptionThrownWhenFactoryReceivesNonObject() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected an object as the collection value');
         FragmentCollection::factory([], new FakeLinkResolver());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\UnexpectedValueException
-     * @expectedExceptionMessage Cannot determine the fragment type at index
-     */
-    public function testExceptionThrownByFactoryForUndeterminableType()
+    public function testExceptionThrownByFactoryForUnDeterminableType() : void
     {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Cannot determine the fragment type at index');
         $data = \json_decode('{
             "name": {
                 "could" : "be anything"
@@ -33,7 +31,7 @@ class FragmentCollectionTest extends TestCase
         FragmentCollection::factory($data, new FakeLinkResolver());
     }
 
-    public function testSimpleTextAndHtmlRendering()
+    public function testSimpleTextAndHtmlRendering() : void
     {
         $data = \json_decode('{
             "richtext": [
@@ -53,7 +51,7 @@ class FragmentCollectionTest extends TestCase
         $this->assertInstanceOf(RichText::class, $p);
     }
 
-    public function testEmptyCollection()
+    public function testEmptyCollection() : void
     {
         $data = \json_decode('{}');
         /** @var FragmentCollection $collection */

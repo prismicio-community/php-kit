@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Text;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\TestCase;
 
 class TextTest extends TestCase
@@ -18,17 +19,17 @@ class TextTest extends TestCase
     }
 
     /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Cannot determine single scalar value from input
      * @dataProvider invalidSpecProvider
      */
-    public function testFactoryThrowsExceptionForInvalidSpec(string $json)
+    public function testFactoryThrowsExceptionForInvalidSpec(string $json) : void
     {
         $value = \json_decode($json);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot determine single scalar value from input');
         Text::factory($value);
     }
 
-    public function testV1Spec()
+    public function testV1Spec() : void
     {
         $value = \json_decode('{
             "type" : "Text",
@@ -57,7 +58,7 @@ class TextTest extends TestCase
     /**
      * @dataProvider validScalarValueProvider
      */
-    public function testValidScalarValues($value, $expectText, $expectHtml, $expectAttribute, $expectInt, $expectFloat)
+    public function testValidScalarValues($value, $expectText, $expectHtml, $expectAttribute, $expectInt, $expectFloat) : void
     {
         /** @var Text $text */
         $text = Text::factory($value);

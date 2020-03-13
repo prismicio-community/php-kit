@@ -39,7 +39,7 @@ class ApiTest extends TestCase
     /** @var string */
     private $repoUrl = 'https://whatever.prismic.io/api/v2';
 
-    public function setUp()
+    protected function setUp() : void
     {
         unset($_COOKIE);
 
@@ -328,7 +328,7 @@ class ApiTest extends TestCase
             $api->getData();
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
-            $this->assertContains('example.example', $e->getMessage());
+            $this->assertStringContainsString('example.example', $e->getMessage());
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertNull($e->getResponse());
         }

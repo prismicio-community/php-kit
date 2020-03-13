@@ -6,6 +6,7 @@ namespace Prismic\Test\Document\Fragment;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\Group;
 use Prismic\Document\Fragment\Slice;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
@@ -15,26 +16,26 @@ class SliceTest extends TestCase
     /** @var FragmentCollection */
     private $collection;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $data = \json_decode($this->getJsonFixture('fragments/slices.json'));
         $this->collection = FragmentCollection::factory($data, new FakeLinkResolver());
     }
 
-    public function testGetPrimaryIsFunctionalForAllSliceSpecs()
+    public function testGetPrimaryIsFunctionalForAllSliceSpecs() : void
     {
         /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
         $this->assertInstanceOf(Slice::class, $v2);
         $this->assertInstanceOf(FragmentCollection::class, $v2->getPrimary());
-        $this->assertInternalType('string', $v2->asHtml());
+        $this->assertIsString($v2->asHtml());
 
         /** @var Slice $v1 */
         $v1 = $this->collection->get('composite-v1');
         $this->assertInstanceOf(Slice::class, $v1);
         $this->assertInstanceOf(FragmentCollection::class, $v1->getPrimary());
-        $this->assertInternalType('string', $v1->asHtml());
+        $this->assertIsString($v1->asHtml());
 
         /** @var Group $sliceZone */
         $sliceZone = $this->collection->get('legacy-v1');
@@ -46,7 +47,7 @@ class SliceTest extends TestCase
         $this->assertInstanceOf(FragmentCollection::class, $slice->getPrimary());
     }
 
-    public function testGetItemsIsFunctionalForAllSliceSpecs()
+    public function testGetItemsIsFunctionalForAllSliceSpecs() : void
     {
         /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
@@ -64,7 +65,7 @@ class SliceTest extends TestCase
         $this->assertInstanceOf(Group::class, $slice->getItems());
     }
 
-    public function testMinimumSliceRequirementIsType()
+    public function testMinimumSliceRequirementIsType() : void
     {
         /** @var Slice $slice */
         $slice = Slice::factory(\json_decode('{"slice_type":"some-type"}'), new FakeLinkResolver());
@@ -77,16 +78,14 @@ class SliceTest extends TestCase
         $this->assertNull($slice->asHtml());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage No Slice type could be determined from the payload
-     */
-    public function testExceptionThrownForMissingSliceType()
+    public function testExceptionThrownForMissingSliceType() : void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No Slice type could be determined from the payload');
         Slice::factory(\json_decode('{}'), new FakeLinkResolver());
     }
 
-    public function testAsText()
+    public function testAsText() : void
     {
         /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
@@ -102,7 +101,7 @@ class SliceTest extends TestCase
         $this->assertSame($expect, $v2->asText());
     }
 
-    public function testAsHtml()
+    public function testAsHtml() : void
     {
         $sliceZone = $this->collection->get('legacy-v1');
         $expect = \implode(\PHP_EOL, [

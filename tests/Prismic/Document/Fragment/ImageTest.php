@@ -7,22 +7,23 @@ use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\Image;
 use Prismic\Document\Fragment\Link\WebLink;
 use Prismic\Document\Fragment\RichText;
+use Prismic\Exception\InvalidArgumentException;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
 class ImageTest extends TestCase
 {
-
+    /** @var FragmentCollection */
     private $collection;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $data = \json_decode($this->getJsonFixture('fragments/image.json'));
         $this->collection = FragmentCollection::factory($data, new FakeLinkResolver());
     }
 
-    public function testFixtureImagesAllReturnImages()
+    public function testFixtureImagesAllReturnImages() : void
     {
         foreach (['single-image-v2', 'multi-image-v2', 'single-image-v1', 'multi-image-v1'] as $key) {
             /** @var Image $image */
@@ -37,7 +38,7 @@ class ImageTest extends TestCase
         }
     }
 
-    public function invalidImagePayloadProvider()
+    public function invalidImagePayloadProvider() : iterable
     {
         return [
             ['{}'],
@@ -52,35 +53,35 @@ class ImageTest extends TestCase
 
     /**
      * @dataProvider invalidImagePayloadProvider
-     * @expectedException \Prismic\Exception\InvalidArgumentException
      */
-    public function testInvalidPayloadCases(string $jsonString)
+    public function testInvalidPayloadCases(string $jsonString) : void
     {
+        $this->expectException(InvalidArgumentException::class);
         Image::factory(\json_decode($jsonString), new FakeLinkResolver());
     }
 
-    public function testImageFragmentBasics()
+    public function testImageFragmentBasics() : void
     {
         /** @var Image $image */
         $image = $this->collection->get('single-image-v2');
         $this->assertInstanceOf(Image::class, $image);
-        $this->assertInternalType('string', $image->getAlt());
-        $this->assertInternalType('integer', $image->getWidth());
-        $this->assertInternalType('integer', $image->getHeight());
-        $this->assertInternalType('string', $image->getUrl());
+        $this->assertIsString($image->getAlt());
+        $this->assertIsInt($image->getWidth());
+        $this->assertIsInt($image->getHeight());
+        $this->assertIsString($image->getUrl());
         $this->assertNull($image->getLink());
         $this->assertFalse($image->hasLink());
         $this->assertNull($image->getLabel());
-        $this->assertInternalType('string', $image->getCopyright());
+        $this->assertIsString($image->getCopyright());
         $views = $image->getViews();
-        $this->assertInternalType('array', $views);
+        $this->assertIsArray($views);
         $this->assertCount(1, $views);
         $this->assertArrayHasKey('main', $views);
-        $this->assertInternalType('float', $image->ratio());
+        $this->assertIsFloat($image->ratio());
         $this->assertSame($image->getUrl(), $image->asText());
     }
 
-    public function testHtmlIsCorrectlyRenderedWhenThereIsNoLink()
+    public function testHtmlIsCorrectlyRenderedWhenThereIsNoLink() : void
     {
         /** @var Image $image */
         $image = $this->collection->get('single-image-v2');
@@ -88,7 +89,7 @@ class ImageTest extends TestCase
         $this->assertSame('<img src="IMAGE&#x20;URL" width="960" height="800" alt="ALT&#x20;TEXT" />', $html);
     }
 
-    public function testLabelIsAddedAsCssClassWhenPresent()
+    public function testLabelIsAddedAsCssClassWhenPresent() : void
     {
         $json = '{
             "url" : "URL",
@@ -103,7 +104,7 @@ class ImageTest extends TestCase
         $this->assertSame('<img src="URL" width="10" height="10" alt="" class="LABEL" />', $image->asHtml());
     }
 
-    public function testLinkIsRetrievableWhenPresentInJsonPayload()
+    public function testLinkIsRetrievableWhenPresentInJsonPayload() : void
     {
         $json = '{
             "type": "image",
