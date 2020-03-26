@@ -52,10 +52,10 @@ class SimplePredicate implements Predicate
      */
     private static function serializeField($value) : string
     {
-		 if (is_bool($value)) {
-		     if($value) return "true";
-		     return "false";
-		 }
+		  if (is_bool($value)) {
+		      if($value) return "true";
+		      return "false";
+		  }
         if (is_string($value)) {
             return "\"" . $value . "\"";
         }
