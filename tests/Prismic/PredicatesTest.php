@@ -8,7 +8,6 @@ use Prismic\Predicates;
 
 class PredicatesTest extends TestCase
 {
-
     public function testAtPredicate()
     {
         $predicate = Predicates::at("document.type", "blog-post");
@@ -55,5 +54,14 @@ class PredicatesTest extends TestCase
     {
         $p = Predicates::near("my.store.coordinates", 40.689757, -74.0451453, 15);
         $this->assertEquals("[:d = geopoint.near(my.store.coordinates, 40.689757, -74.0451453, 15)]", $p->q());
+    }
+
+    public function testBoolean()
+    {
+        $p = Predicates::at("my.product.promote", true);
+        $this->assertEquals('[:d = at(my.product.promote, true)]', $p->q());
+
+        $p = Predicates::at("my.product.promote", false);
+        $this->assertEquals('[:d = at(my.product.promote, false)]', $p->q());
     }
 }
