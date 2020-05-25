@@ -25,10 +25,11 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Removed
 
 - Deprecated `Api::VERSION` constant
+- Removed dependency on APC-BC Extension
 
 ### Fixed
 
-- Nothing.
+- [#18](https://github.com/netglue/prismic-php-kit/pull/18) correctly serializes booleans for predicates when querying the api.
 
 ## 4.3.0 - 2020-03-12
 

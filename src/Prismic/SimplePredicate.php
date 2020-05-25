@@ -5,6 +5,7 @@ namespace Prismic;
 
 use function implode;
 use function is_array;
+use function is_bool;
 use function is_string;
 
 class SimplePredicate implements Predicate
@@ -53,6 +54,10 @@ class SimplePredicate implements Predicate
     {
         if (is_string($value)) {
             return '"' . $value . '"';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
         }
 
         if (is_array($value)) {
