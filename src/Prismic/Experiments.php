@@ -3,28 +3,22 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use stdClass;
+use function array_map;
+use function count;
+use function explode;
 
-/**
- * Class Experiments
- *
- * @package Prismic
- */
 class Experiments
 {
-
-    /**
-     * Array of draft experiments
-     * @var Experiment[]
-     */
+    /** @var Experiment[] */
     private $draft;
 
-    /**
-     * Array of running experiments
-     * @var Experiment[]
-     */
+    /** @var Experiment[] */
     private $running;
 
+    /**
+     * @param Experiment[] $draft
+     * @param Experiment[] $running
+     */
     private function __construct(array $draft, array $running)
     {
         $this->draft   = $draft;
@@ -39,33 +33,34 @@ class Experiments
         if (count($this->running) > 0) {
             return $this->running[0];
         }
+
         return null;
     }
 
     /**
      * Given the value of an experiment cookie, return the corresponding Ref as a string
-     * @param null|string $cookie
-     * @return null|string
      */
     public function refFromCookie(?string $cookie) :? string
     {
         if (empty($cookie)) {
             return null;
         }
-        $parts = explode(" ", $cookie);
+
+        $parts = explode(' ', $cookie);
 
         if (count($parts) >= 2) {
             $experiment = $this->findRunningById($parts[0]);
             if (! $experiment) {
                 return null;
             }
-            /** @var Variation[] $variations */
+
             $variations = $experiment->getVariations();
-            $varIndex = (int)($parts[1]);
+            $varIndex = (int) $parts[1];
             if ($varIndex > -1 && $varIndex < count($variations)) {
                 return $variations[$varIndex]->getRef();
             }
         }
+
         return null;
     }
 
@@ -85,19 +80,13 @@ class Experiments
         return $this->running;
     }
 
-    /**
-     * Parses a given experiments. Not meant to be used except for testing.
-     *
-     * @param  stdClass $json the json bit retrieved from the API that represents experiments.
-     * @return self the manipulable object for the experiments.
-     */
-    public static function parse(stdClass $json) : self
+    public static function parse(object $json) : self
     {
         return new self(
-            array_map(function ($exp) {
+            array_map(static function (object $exp) : Experiment {
                 return Experiment::parse($exp);
             }, $json->draft),
-            array_map(function ($exp) {
+            array_map(static function (object $exp) : Experiment {
                 return Experiment::parse($exp);
             }, $json->running)
         );
@@ -105,17 +94,15 @@ class Experiments
 
     /**
      * Find the running experiment with the given Google ID
-     * @param string $id
-     * @return null|Experiment
      */
     private function findRunningById(string $id) :? Experiment
     {
-        /** @var Experiment $exp */
         foreach ($this->running as $exp) {
             if ($exp->getGoogleId() === $id) {
                 return $exp;
             }
         }
+
         return null;
     }
 }

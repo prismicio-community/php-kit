@@ -7,8 +7,7 @@ use Prismic\LinkResolver;
 
 interface LinkInterface extends FragmentInterface
 {
-
-    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface;
+    public static function linkFactory(object $value, LinkResolver $linkResolver) : LinkInterface;
 
     public function getUrl() :? string;
 
@@ -18,6 +17,7 @@ interface LinkInterface extends FragmentInterface
 
     public function getType() :? string;
 
+    /** @return string[] */
     public function getTags() :? array;
 
     public function getSlug() :? string;

@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Prismic\Test\Document\Fragment;
 
+use DateTimeInterface;
 use Prismic\Document\Fragment\Date;
 use Prismic\Document\Fragment\FragmentCollection;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
 
@@ -17,7 +19,7 @@ class DateTest extends TestCase
     {
         parent::setUp();
         $this->collection = FragmentCollection::factory(
-            \json_decode($this->getJsonFixture('fragments/date.json')),
+            Json::decodeObject($this->getJsonFixture('fragments/date.json')),
             new FakeLinkResolver()
         );
     }
@@ -27,11 +29,12 @@ class DateTest extends TestCase
         foreach ($this->collection->getFragments() as $fragment) {
             $this->assertInstanceOf(Date::class, $fragment);
         }
+
         $nonNull = ['date-v2', 'datetime-v2', 'date-v1', 'datetime-v1'];
         foreach ($nonNull as $key) {
             $fragment = $this->collection->get($key);
             /** @var Date $fragment */
-            $this->assertInstanceOf(\DateTimeInterface::class, $fragment->asDateTime());
+            $this->assertInstanceOf(DateTimeInterface::class, $fragment->asDateTime());
             $date = $fragment->asDateTime();
             $this->assertSame('2018-01-01', $date->format('Y-m-d'));
         }

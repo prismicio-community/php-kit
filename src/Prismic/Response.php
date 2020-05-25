@@ -4,45 +4,28 @@ declare(strict_types=1);
 namespace Prismic;
 
 use Prismic\Document\HydratorInterface;
-use Prismic\Exception;
-use stdClass;
 
 class Response
 {
-
-    /**
-     * @var int
-     */
+    /** @var int */
     private $page;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $perPage;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $totalResults;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $pageCount;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $nextPage;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $prevPage;
 
-    /**
-     * @var array
-     */
+    /** @var DocumentInterface[] */
     private $results;
 
     private function __construct()
@@ -51,19 +34,12 @@ class Response
 
     public static function fromJsonString(string $json, HydratorInterface $hydrator) : self
     {
-        $data = \json_decode($json);
-        if (! $data) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Failed to decode json payload: %s',
-                \json_last_error_msg()
-            ). \json_last_error());
-        }
-        return static::fromJsonObject($data, $hydrator);
+        return static::fromJsonObject(Json::decodeObject($json), $hydrator);
     }
 
-    public static function fromJsonObject(stdClass $data, HydratorInterface $hydrator) : self
+    public static function fromJsonObject(object $data, HydratorInterface $hydrator) : self
     {
-        $instance = new static;
+        $instance = new static();
 
         $instance->page         = $data->page;
         $instance->perPage      = $data->results_per_page;
@@ -71,8 +47,8 @@ class Response
         $instance->pageCount    = $data->total_pages;
         $instance->nextPage     = $data->next_page;
         $instance->prevPage     = $data->prev_page;
-
         $instance->results      = [];
+
         foreach ($data->results as $object) {
             $instance->results[] = $hydrator->hydrate($object);
         }

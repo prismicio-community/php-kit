@@ -7,5 +7,4 @@ use Prismic\Document as BaseDocument;
 
 class CustomDocument extends BaseDocument
 {
-
 }

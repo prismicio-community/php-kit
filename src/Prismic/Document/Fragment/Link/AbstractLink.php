@@ -6,9 +6,9 @@ namespace Prismic\Document\Fragment\Link;
 use Prismic\Document\Fragment\HtmlHelperTrait;
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\LinkResolver;
 use function count;
-use function json_encode;
 use function sprintf;
 use function substr;
 
@@ -19,11 +19,11 @@ abstract class AbstractLink implements LinkInterface
     /** @var string|null */
     protected $target;
 
-    public static function abstractFactory($value, LinkResolver $linkResolver) :? LinkInterface
+    public static function abstractFactory(object $value, LinkResolver $linkResolver) :? LinkInterface
     {
         // Inspect payload to determine link type
-        $linkType = isset($value->link_type) ? $value->link_type : null;
-        $linkType = isset($value->value) && isset($value->type) ? $value->type : $linkType;
+        $linkType = $value->link_type ?? null;
+        $linkType = isset($value->value, $value->type) ? $value->type : $linkType;
 
         /**
          * In V2, link fields that have not been assigned a target are non-empty objects, hooray!
@@ -33,29 +33,34 @@ abstract class AbstractLink implements LinkInterface
             return null;
         }
 
-        if (null === $linkType) {
+        if ($linkType === null) {
             throw new InvalidArgumentException(sprintf(
                 'Expected a payload describing a link, received %s',
-                json_encode($value)
+                Json::encode($value)
             ));
         }
+
         // In V2, you have to look at $value->kind in order to figure out if it's an image or a file
         if ($linkType === 'Media') {
             $subType = null;
             if (isset($value->kind) && $value->kind === 'image') {
                 $subType = 'Link.image';
             }
+
             if (isset($value->kind) && $value->kind === 'document') {
                 $subType = 'Link.file';
             }
+
             if (! $subType) {
                 throw new InvalidArgumentException(sprintf(
                     'Encountered a V2 Media link but the subtype was neither image, nor document. Got %s',
                     (string) $value->kind
                 ));
             }
+
             $linkType = $subType;
         }
+
         $link = null;
         switch ($linkType) {
             case 'Link.document':
@@ -74,17 +79,15 @@ abstract class AbstractLink implements LinkInterface
                 break;
         }
 
-        if (null === $link) {
-            throw new InvalidArgumentException(\sprintf(
+        if ($link === null) {
+            throw new InvalidArgumentException(sprintf(
                 'Cannot determine a link from the given payload: %s',
-                json_encode($value)
+                Json::encode($value)
             ));
         }
-        /** @var LinkInterface $link */
+
         return $link;
     }
-
-    abstract public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface;
 
     protected function __construct()
     {
@@ -105,6 +108,7 @@ abstract class AbstractLink implements LinkInterface
         return null;
     }
 
+    /** @return string[] */
     public function getTags() :? array
     {
         return [];
@@ -133,7 +137,8 @@ abstract class AbstractLink implements LinkInterface
     public function __toString() : string
     {
         $url = $this->getUrl();
-        return $url ? $url : '';
+
+        return $url ?: '';
     }
 
     public function asText() : ?string
@@ -147,6 +152,7 @@ abstract class AbstractLink implements LinkInterface
         if (! $url) {
             return null;
         }
+
         $attributes = [
             'href' => $this->getUrl(),
         ];
@@ -154,6 +160,7 @@ abstract class AbstractLink implements LinkInterface
             $attributes['target'] = $this->getTarget();
             $attributes['rel'] = 'noopener';
         }
+
         if ($this->getLang()) {
             $attributes['hreflang'] = substr($this->getLang(), 0, 2);
         }
@@ -170,6 +177,7 @@ abstract class AbstractLink implements LinkInterface
         if (! $url) {
             return null;
         }
+
         return '</a>';
     }
 
@@ -179,6 +187,7 @@ abstract class AbstractLink implements LinkInterface
         if (! $url) {
             return null;
         }
+
         return sprintf(
             '%s%s%s',
             $this->openTag(),

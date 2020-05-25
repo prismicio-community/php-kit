@@ -4,18 +4,18 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
+use function count;
+use function gettype;
+use function implode;
+use function sprintf;
+use const PHP_EOL;
 
 class ListElement implements CompositeFragmentInterface
 {
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $tag;
 
-    /**
-     * @var TextElement[]
-     */
+    /** @var TextElement[] */
     private $items;
 
     private function __construct()
@@ -25,13 +25,14 @@ class ListElement implements CompositeFragmentInterface
 
     public static function fromTag(string $tag) : ListElement
     {
-        $element = new static;
+        $element = new static();
         if ($tag !== 'ul' && $tag !== 'ol') {
-            throw new InvalidArgumentException(\sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Expected the string ul or ol to the named constructor. Received %s',
                 gettype($tag)
             ));
         }
+
         $element->tag = $tag;
 
         return $element;
@@ -45,11 +46,12 @@ class ListElement implements CompositeFragmentInterface
     public function addItem(TextElement $item) : void
     {
         if ($item->getTag() !== 'li') {
-            throw new InvalidArgumentException(\sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'You can only append list items with the "li" tag to a list. Received an element with the tag "%s"',
                 $item->getTag()
             ));
         }
+
         $this->items[] = $item;
     }
 
@@ -78,8 +80,10 @@ class ListElement implements CompositeFragmentInterface
             foreach ($this->items as $item) {
                 $data[] = $item->asText();
             }
-            return \implode(\PHP_EOL, $data);
+
+            return implode(PHP_EOL, $data);
         }
+
         return null;
     }
 
@@ -88,6 +92,7 @@ class ListElement implements CompositeFragmentInterface
         if ($this->hasItems()) {
             return sprintf('<%s>', $this->tag);
         }
+
         return null;
     }
 
@@ -96,10 +101,11 @@ class ListElement implements CompositeFragmentInterface
         if ($this->hasItems()) {
             return sprintf('</%s>', $this->tag);
         }
+
         return null;
     }
 
-    public function asHtml() : ?string
+    public function asHtml() :? string
     {
         if ($this->hasItems()) {
             $data = [];
@@ -107,9 +113,12 @@ class ListElement implements CompositeFragmentInterface
             foreach ($this->items as $item) {
                 $data[] = $item->asHtml();
             }
+
             $data[] = $this->closeTag();
-            return \implode(\PHP_EOL, $data);
+
+            return implode(PHP_EOL, $data);
         }
+
         return null;
     }
 }

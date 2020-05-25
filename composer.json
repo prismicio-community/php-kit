@@ -36,7 +36,8 @@
         "prismic/php-sdk": "*"
     },
     "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
+        "doctrine/coding-standard": "^7.0",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9",
@@ -59,6 +60,7 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-html build/report",
         "analyse": "phpstan analyse --level=max src",
-        "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php"
+        "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php",
+        "phpcs" :"vendor/bin/phpcs --standard=PHPCompatibility --standard=Doctrine"
     }
 }

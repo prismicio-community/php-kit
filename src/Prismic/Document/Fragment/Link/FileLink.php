@@ -6,31 +6,29 @@ namespace Prismic\Document\Fragment\Link;
 use Prismic\Document\Fragment\HtmlHelperTrait;
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\LinkResolver;
+use function assert;
+use function sprintf;
 
 class FileLink extends WebLink
 {
-
     use HtmlHelperTrait;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $filename;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $filesize;
 
-    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface
+    public static function linkFactory(object $value, LinkResolver $linkResolver) : LinkInterface
     {
-        /** @var FileLink $link */
         $link = parent::linkFactory($value, $linkResolver);
-        // V1
-        $value = isset($value->value) ? $value->value : $value;
-        $value = isset($value->file) ? $value->file : $value;
+        assert($link instanceof self);
 
-        $link->filename = isset($value->name) ? $value->name : null;
+        // V1
+        $value = $value->value ?? $value;
+        $value = $value->file ?? $value;
+
+        $link->filename = $value->name ?? null;
         $link->filesize = isset($value->size) ? (int) $value->size : null;
 
         return $link;
@@ -46,9 +44,10 @@ class FileLink extends WebLink
         return $this->filename;
     }
 
-    public function asHtml() : ?string
+    public function asHtml() :? string
     {
-        $label = $this->filename ? $this->filename : $this->url;
+        $label = $this->filename ?: $this->url;
+
         return sprintf(
             '%s%s%s',
             $this->openTag(),

@@ -6,7 +6,10 @@ namespace Prismic\Document\Fragment;
 use Prismic\Document\Fragment\Link\AbstractLink;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
-use stdClass;
+use function is_numeric;
+use function is_object;
+use function is_string;
+use function sprintf;
 
 class ImageView implements ImageInterface
 {
@@ -37,36 +40,40 @@ class ImageView implements ImageInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : self
+    public static function factory(object $value, LinkResolver $linkResolver) : self
     {
         static::validatePayload($value);
-        $image            = new static;
+        $image            = new static();
         $image->url       = $value->url;
-        $image->alt       = isset($value->alt) ? $value->alt : null;
-        $image->copyright = isset($value->copyright) ? $value->copyright : null;
-        $image->label     = isset($value->label) ? $value->label : null;
+        $image->alt       = $value->alt ?? null;
+        $image->copyright = $value->copyright ?? null;
+        $image->label     = $value->label ?? null;
         $image->width     = $value->dimensions->width;
         $image->height    = $value->dimensions->height;
         $image->link      = isset($value->linkTo)
                           ? AbstractLink::abstractFactory($value->linkTo, $linkResolver)
                           : null;
+
         return $image;
     }
 
-    private static function validatePayload(stdClass $image) : void
+    private static function validatePayload(object $image) : void
     {
-        if (! isset($image->url) || ! \is_string($image->url)) {
+        if (! isset($image->url) || ! is_string($image->url)) {
             throw new InvalidArgumentException('The image payload must have a url property with a non-empty string');
         }
-        if (! isset($image->dimensions) || ! \is_object($image->dimensions)) {
+
+        if (! isset($image->dimensions) || ! is_object($image->dimensions)) {
             throw new InvalidArgumentException(
                 'The image payload must have a dimensions property containing the width and height'
             );
         }
-        if (! isset($image->dimensions->width) || ! \is_numeric($image->dimensions->width)) {
+
+        if (! isset($image->dimensions->width) || ! is_numeric($image->dimensions->width)) {
             throw new InvalidArgumentException('The image payload must have a width property containing a number');
         }
-        if (! isset($image->dimensions->height) || ! \is_numeric($image->dimensions->height)) {
+
+        if (! isset($image->dimensions->height) || ! is_numeric($image->dimensions->height)) {
             throw new InvalidArgumentException('The image payload must have a height property containing a number');
         }
     }
@@ -87,11 +94,12 @@ class ImageView implements ImageInterface
         if ($this->label) {
             $attributes['class'] = $this->label;
         }
+
         // Use self-closing tag - you never know, someone might still be serving xhtml
         $imageMarkup = sprintf('<img%s />', $this->htmlAttributes($attributes));
 
         if ($this->link) {
-            return \sprintf(
+            return sprintf(
                 '%s%s%s',
                 $this->link->openTag(),
                 $imageMarkup,
@@ -139,7 +147,7 @@ class ImageView implements ImageInterface
 
     public function hasLink() : bool
     {
-        return ! is_null($this->link);
+        return $this->link !== null;
     }
 
     public function ratio() : float

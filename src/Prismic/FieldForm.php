@@ -5,21 +5,23 @@ namespace Prismic;
 
 class FieldForm
 {
-
     /**
      * Field Type
+     *
      * @var string
      */
     private $type;
 
     /**
      * Can the field be used multiple times?
+     *
      * @var bool
      */
     private $multiple;
 
     /**
      * Default Value
+     *
      * @var string|null
      */
     private $defaultValue;
@@ -27,9 +29,9 @@ class FieldForm
     /**
      * Constructing a FieldForm.
      *
-     * @param string  $type         the type of the field
-     * @param boolean $multiple     can the parameter be used multiple times
-     * @param string  $defaultValue the default value
+     * @param string $type         The type of the field
+     * @param bool   $multiple     Can the parameter be used multiple times?
+     * @param string $defaultValue The default value
      */
     public function __construct(string $type, bool $multiple, ?string $defaultValue)
     {

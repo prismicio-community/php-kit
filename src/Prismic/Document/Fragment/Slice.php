@@ -6,23 +6,19 @@ namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\LinkResolver;
-
 use function count;
 use function implode;
+use function sprintf;
+use const PHP_EOL;
 
 class Slice implements CompositeFragmentInterface
 {
-
     use HtmlHelperTrait;
 
-    /**
-     * @var FragmentCollection
-     */
+    /** @var FragmentCollection */
     private $primary;
 
-    /**
-     * @var Group
-     */
+    /** @var Group */
     private $group;
 
     /** @var string */
@@ -43,12 +39,12 @@ class Slice implements CompositeFragmentInterface
         $this->group   = $group;
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
+    public static function factory(object $value, LinkResolver $linkResolver) : FragmentInterface
     {
         return static::fromJson($value, $linkResolver);
     }
 
-    public static function fromJson($value, LinkResolver $linkResolver) : self
+    public static function fromJson(object $value, LinkResolver $linkResolver) : self
     {
         // Type and Label are the same for V1 & V2
         $type    = isset($value->slice_type)
@@ -73,7 +69,7 @@ class Slice implements CompositeFragmentInterface
          * In much older versions of the API (Before "Composite Slices"), slices
          * had a 'value' property which contained the repeatable group
          */
-        if (! $group && isset($value->value) && isset($value->value->type) && $value->value->type === 'Group') {
+        if (isset($value->value, $value->value->type) && ! $group && $value->value->type === 'Group') {
             $group = Group::factory($value->value, $linkResolver);
         }
 
@@ -85,8 +81,8 @@ class Slice implements CompositeFragmentInterface
                  ? FragmentCollection::factory($value->primary, $linkResolver)
                  : $primary;
 
-        $group = $group ? $group : Group::emptyGroup();
-        $primary = $primary ? $primary : FragmentCollection::emptyCollection();
+        $group = $group ?: Group::emptyGroup();
+        $primary = $primary ?: FragmentCollection::emptyCollection();
 
         return new static($type, $primary, $group, $label);
     }
@@ -118,12 +114,14 @@ class Slice implements CompositeFragmentInterface
         if ($primary) {
             $data[] = $primary;
         }
+
         $group = $this->group->asText();
         if ($group) {
             $data[] = $group;
         }
+
         return count($data) >= 1
-            ? implode(\PHP_EOL, $data)
+            ? implode(PHP_EOL, $data)
             : null;
     }
 
@@ -141,16 +139,21 @@ class Slice implements CompositeFragmentInterface
         if ($this->label) {
             $attributes['class'] = $this->label;
         }
+
         $data = [
             sprintf('<div%s>', $this->htmlAttributes($attributes)),
         ];
+
         if ($primary) {
             $data[] = $primary;
         }
+
         if ($group) {
             $data[] = $group;
         }
+
         $data[] = '</div>';
-        return implode(\PHP_EOL, $data);
+
+        return implode(PHP_EOL, $data);
     }
 }

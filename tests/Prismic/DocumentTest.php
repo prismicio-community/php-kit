@@ -3,16 +3,21 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use DateTimeInterface;
 use Prismic\Api;
 use Prismic\Document;
-use Prismic\Document\Fragment;
+use Prismic\Document\Fragment\FragmentCollection;
+use Prismic\Document\Fragment\Link\DocumentLink;
+use Prismic\Document\Fragment\Text;
 use Prismic\DocumentInterface;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\JsonError;
 use Prismic\Exception\RuntimeException;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class DocumentTest extends TestCase
 {
-
+    /** @var Api|ObjectProphecy */
     private $api;
 
     protected function setUp() : void
@@ -28,11 +33,12 @@ class DocumentTest extends TestCase
 
     public function testInvalidJsonInFactory() : void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Failed to decode json payload');
+        $this->expectException(JsonError::class);
+        $this->expectExceptionMessage('Failed to decode JSON payload');
         Document::fromJsonString('foo', $this->api->reveal());
     }
 
+    /** @return mixed[] */
     public function missingPropertyDataProvider() : array
     {
         return [
@@ -42,7 +48,7 @@ class DocumentTest extends TestCase
             ['{"id": "foo", "uid": "some-uid", "type": "some-type"}'],
             ['{"id": "foo", "uid": "some-uid", "type": "some-type", "tags": []}'],
             ['{"id": "foo", "uid": "some-uid", "type": "some-type", "tags": [], "lang": null}'],
-            ['{"id": "foo", "uid": "some-uid", "type": "some-type", "tags": [], "lang": null, "href": "somewhere"}']
+            ['{"id": "foo", "uid": "some-uid", "type": "some-type", "tags": [], "lang": null, "href": "somewhere"}'],
         ];
     }
 
@@ -56,13 +62,15 @@ class DocumentTest extends TestCase
         Document::fromJsonString($json, $this->api->reveal());
     }
 
+    /** @return mixed[] */
     public function nullPropertyDataProvider() : array
     {
         return [
-            ['{"id": null}'],
-            ['{"id": "foo", "uid": null, "type": null}'],
-            ['{"id": "foo", "uid": null, "type": "some-type", "tags": null}'],
-            ['{"id": "foo", "uid": null, "type": "some-type", "tags": [], "lang": null, "href": null}']
+            'Null ID' => ['{"id": null}'],
+            'Null Type' => ['{"id": "foo", "uid": null, "type": null}'],
+            'Null Tags' => ['{"id": "foo", "uid": null, "type": "some-type", "tags": null}'],
+            'Null Slugs' => ['{"id": "foo", "uid": null, "type": "some-type", "tags": [], "slugs": null}'],
+            'Null href' => ['{"id": "foo", "uid": null, "type": "some-type", "tags": [], "slugs": [], "href": null}'],
         ];
     }
 
@@ -78,14 +86,15 @@ class DocumentTest extends TestCase
 
     public function getMinimumValidDocument() : Document
     {
-        $json = '{
+        $json = <<<EOF
+        {
             "id": "ID",
             "uid": "UID",
             "type": "type",
-            "tags": [ "tag-1" ],
+            "tags": [ "tag-1", "tag-2" ],
             "lang": "en-gb",
             "href": "DOCUMENT_URL",
-            "slugs": [ "slug-1" ],
+            "slugs": [ "slug-1", "slug-2" ],
             "first_publication_date": "2018-01-01T12:00:00+0000",
             "last_publication_date": "2018-01-02T12:00:00+0000",
             "alternate_languages": [{
@@ -97,7 +106,9 @@ class DocumentTest extends TestCase
             "data": {
                 "text-value": "Text Value"
             }
-        }';
+        }
+        EOF;
+
         return Document::fromJsonString($json, $this->getApi());
     }
 
@@ -114,6 +125,7 @@ class DocumentTest extends TestCase
     {
         $this->api->isV1Api()->willReturn(false);
         $this->api->getLinkResolver()->willReturn(new FakeLinkResolver());
+
         return $this->getMinimumValidDocument();
     }
 
@@ -129,10 +141,10 @@ class DocumentTest extends TestCase
         $this->assertContains('slug-1', $doc->getSlugs());
         $this->assertSame('slug-1', $doc->getSlug());
         $this->assertIsArray($doc->getAlternateLanguages());
-        $this->assertInstanceOf(\DateTimeInterface::class, $doc->getFirstPublicationDate());
-        $this->assertInstanceOf(\DateTimeInterface::class, $doc->getLastPublicationDate());
-        $this->assertInstanceOf(Fragment\Text::class, $doc->get('text-value'));
-        $this->assertInstanceOf(Fragment\FragmentCollection::class, $doc->getData());
+        $this->assertInstanceOf(DateTimeInterface::class, $doc->getFirstPublicationDate());
+        $this->assertInstanceOf(DateTimeInterface::class, $doc->getLastPublicationDate());
+        $this->assertInstanceOf(Text::class, $doc->get('text-value'));
+        $this->assertInstanceOf(FragmentCollection::class, $doc->getData());
         $this->assertTrue($doc->has('text-value'));
         $this->assertFalse($doc->has('unknown-field'));
     }
@@ -150,6 +162,6 @@ class DocumentTest extends TestCase
     {
         $doc = $this->setupMinimumDocument();
         $link = $doc->asLink();
-        $this->assertInstanceOf(Fragment\Link\DocumentLink::class, $link);
+        $this->assertInstanceOf(DocumentLink::class, $link);
     }
 }

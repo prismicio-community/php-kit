@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use DateTime;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\Predicates;
 
 class PredicatesTest extends TestCase
 {
-
+    /** @return mixed[] */
     public function atProvider() : array
     {
         return [
@@ -19,6 +20,8 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider atProvider
      */
     public function testAtPredicate(string $fragment, $value, string $expect) : void
@@ -27,6 +30,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals($expect, $predicate->q());
     }
 
+    /** @return mixed[] */
     public function notProvider() : array
     {
         return [
@@ -38,6 +42,8 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider notProvider
      */
     public function testNotPredicate(string $fragment, $value, string $expect) : void
@@ -46,6 +52,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals($expect, $predicate->q());
     }
 
+    /** @return mixed[] */
     public function anyProvider() : array
     {
         return [
@@ -56,6 +63,8 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider anyProvider
      */
     public function testAnyPredicate(string $fragment, $value, string $expect) : void
@@ -64,6 +73,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals($expect, $predicate->q());
     }
 
+    /** @return mixed[] */
     public function inProvider() : array
     {
         return [
@@ -73,9 +83,11 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider inProvider
      */
-    public function testInPredicate(string $fragment, $value, string $expect)
+    public function testInPredicate(string $fragment, $value, string $expect) : void
     {
         $predicate = Predicates::in($fragment, $value);
         $this->assertEquals($expect, $predicate->q());
@@ -105,6 +117,7 @@ class PredicatesTest extends TestCase
         $this->assertEquals('[:d = similar("someId", 5)]', $predicate->q());
     }
 
+    /** @return mixed[] */
     public function ltProvider() : array
     {
         return [
@@ -115,6 +128,8 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider ltProvider
      */
     public function testNumberLT(string $fragment, $value, string $expect) : void
@@ -129,6 +144,7 @@ class PredicatesTest extends TestCase
         Predicates::lt('my.product.price', 'foo');
     }
 
+    /** @return mixed[] */
     public function gtProvider() : array
     {
         return [
@@ -139,6 +155,8 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $value
+     *
      * @dataProvider gtProvider
      */
     public function testNumberGt(string $fragment, $value, string $expect) : void
@@ -153,6 +171,7 @@ class PredicatesTest extends TestCase
         Predicates::gt('my.product.price', 'foo');
     }
 
+    /** @return mixed[] */
     public function rangeProvider() : array
     {
         return [
@@ -163,6 +182,9 @@ class PredicatesTest extends TestCase
     }
 
     /**
+     * @param mixed $low
+     * @param mixed $high
+     *
      * @dataProvider rangeProvider
      */
     public function testNumberInRange(string $fragment, $low, $high, string $expect) : void
@@ -184,7 +206,7 @@ class PredicatesTest extends TestCase
         $predicate = Predicates::dateBefore('foo', '2018-01-01');
         $this->assertEquals('[:d = date.before(foo, "2018-01-01")]', $predicate->q());
 
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
         $predicate = Predicates::dateBefore('foo', $date);
         $this->assertEquals('[:d = date.before(foo, 1000)]', $predicate->q());
     }
@@ -196,7 +218,7 @@ class PredicatesTest extends TestCase
         $predicate = Predicates::dateAfter('foo', '2018-01-01');
         $this->assertEquals('[:d = date.after(foo, "2018-01-01")]', $predicate->q());
 
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
         $predicate = Predicates::dateAfter('foo', $date);
         $this->assertEquals('[:d = date.after(foo, 1000)]', $predicate->q());
     }
@@ -208,7 +230,7 @@ class PredicatesTest extends TestCase
         $predicate = Predicates::dateBetween('foo', '2018-01-01', '2018-01-02');
         $this->assertEquals('[:d = date.between(foo, "2018-01-01", "2018-01-02")]', $predicate->q());
 
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
         $predicate = Predicates::dateBetween('foo', $date, $date);
         $this->assertEquals('[:d = date.between(foo, 1000, 1000)]', $predicate->q());
     }
@@ -220,7 +242,7 @@ class PredicatesTest extends TestCase
         $predicate = Predicates::dayOfMonth('foo', '5');
         $this->assertEquals('[:d = date.day-of-month(foo, "5")]', $predicate->q());
 
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
         $predicate = Predicates::dayOfMonth('foo', $date);
         $this->assertEquals('[:d = date.day-of-month(foo, 1)]', $predicate->q());
 
@@ -233,7 +255,7 @@ class PredicatesTest extends TestCase
 
     public function testDayOfWeek() : void
     {
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
 
         $predicate = Predicates::dayOfWeek('foo', $date);
         $this->assertEquals('[:d = date.day-of-week(foo, 4)]', $predicate->q());
@@ -247,7 +269,7 @@ class PredicatesTest extends TestCase
 
     public function testMonth() : void
     {
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
 
         $predicate = Predicates::month('foo', $date);
         $this->assertEquals('[:d = date.month(foo, 1)]', $predicate->q());
@@ -261,7 +283,7 @@ class PredicatesTest extends TestCase
 
     public function testYear() : void
     {
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
 
         $predicate = Predicates::year('foo', $date);
         $this->assertEquals('[:d = date.year(foo, 1970)]', $predicate->q());
@@ -269,7 +291,7 @@ class PredicatesTest extends TestCase
 
     public function testHour() : void
     {
-        $date = \DateTime::createFromFormat('!U', '1');
+        $date = DateTime::createFromFormat('!U', '1');
 
         $predicate = Predicates::hour('foo', $date);
         $this->assertEquals('[:d = date.hour(foo, 0)]', $predicate->q());

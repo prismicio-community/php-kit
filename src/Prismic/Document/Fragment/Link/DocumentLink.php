@@ -6,10 +6,10 @@ namespace Prismic\Document\Fragment\Link;
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\DocumentInterface;
 use Prismic\LinkResolver;
+use function array_walk;
 
 class DocumentLink extends AbstractLink
 {
-
     /** @var LinkResolver */
     private $linkResolver;
 
@@ -25,7 +25,7 @@ class DocumentLink extends AbstractLink
     /** @var string|null */
     private $slug;
 
-    /** @var array */
+    /** @var string[] */
     private $tags;
 
     /** @var string|null */
@@ -34,26 +34,24 @@ class DocumentLink extends AbstractLink
     /** @var bool */
     private $isBroken;
 
-    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface
+    public static function linkFactory(object $value, LinkResolver $linkResolver) : LinkInterface
     {
-        /** @var DocumentLink $link */
         $link = new static();
         $link->linkResolver = $linkResolver;
-        $value = isset($value->value) ? $value->value : $value;
-        $link->isBroken = isset($value->isBroken) ? $value->isBroken : false;
+        $value = $value->value ?? $value;
+        $link->isBroken = $value->isBroken ?? false;
         $data = isset($value->document) ? (array) $value->document : (array) $value;
-        $keys = [
-            'id', 'type', 'tags', 'slug', 'lang', 'uid', 'target'
-        ];
-        \array_walk($keys, function ($key) use ($data, $link) {
-            $link->{$key} = isset($data[$key]) ? $data[$key] : null;
+        $keys = ['id', 'type', 'tags', 'slug', 'lang', 'uid', 'target'];
+        array_walk($keys, static function ($key) use ($data, $link) : void {
+            $link->{$key} = $data[$key] ?? null;
         });
+
         return $link;
     }
 
     public static function withDocument(DocumentInterface $document, LinkResolver $linkResolver) : DocumentLink
     {
-        $link               = new static;
+        $link               = new static();
         $link->linkResolver = $linkResolver;
         $link->id           = $document->getId();
         $link->uid          = $document->getUid();
@@ -62,6 +60,7 @@ class DocumentLink extends AbstractLink
         $link->tags         = $document->getTags();
         $link->lang         = $document->getLang();
         $link->isBroken     = false;
+
         return $link;
     }
 
@@ -85,6 +84,7 @@ class DocumentLink extends AbstractLink
         return $this->type;
     }
 
+    /** @inheritDoc */
     public function getTags() :? array
     {
         return $this->tags;

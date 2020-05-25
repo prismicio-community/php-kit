@@ -4,29 +4,33 @@ declare(strict_types=1);
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\LinkResolver;
 use function count;
 use function implode;
 use function is_array;
-use function json_encode;
+use function sprintf;
+use const PHP_EOL;
 
 class Group implements CompositeFragmentInterface
 {
     /** @var CompositeFragmentInterface[] */
     private $fragments = [];
 
+    /** @param object|mixed[] $value */
     public static function factory($value, LinkResolver $linkResolver) : self
     {
-        $value = isset($value->value) ? $value->value : $value;
+        $value = $value->value ?? $value;
         /**
          * A Group is a zero indexed array of objects/maps. Each element is a fragment,
          */
         if (! is_array($value)) {
-            throw new InvalidArgumentException(\sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Expected an indexed array for group construction, received %s',
-                json_encode($value)
+                Json::encode($value)
             ));
         }
+
         $group = new static();
         foreach ($value as $collection) {
             /**
@@ -41,6 +45,7 @@ class Group implements CompositeFragmentInterface
                 $group->fragments[] = FragmentCollection::factory($collection, $linkResolver);
             }
         }
+
         return $group;
     }
 
@@ -55,10 +60,12 @@ class Group implements CompositeFragmentInterface
         foreach ($this->fragments as $fragment) {
             $data[] = $fragment->asText();
         }
+
         if (! count($data)) {
             return null;
         }
-        return implode(\PHP_EOL, $data);
+
+        return implode(PHP_EOL, $data);
     }
 
     public function asHtml() :? string
@@ -67,10 +74,12 @@ class Group implements CompositeFragmentInterface
         foreach ($this->fragments as $fragment) {
             $data[] = $fragment->asHtml();
         }
+
         if (! count($data)) {
             return null;
         }
-        return implode(\PHP_EOL, $data);
+
+        return implode(PHP_EOL, $data);
     }
 
     /**

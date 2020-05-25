@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use BadMethodCallException;
+use Prismic\Exception\InvalidArgumentException;
 use function sprintf;
 
 class SearchFormCollection
 {
-    /**
-     * @var SearchForm[]
-     */
+    /** @var SearchForm[] */
     private $forms = [];
 
+    /** @param SearchForm[] $forms */
     public function __construct(array $forms)
     {
-        foreach ($forms as $name => $form) {
-            $this->addForm($name, $form);
+        foreach ($forms as $form) {
+            $this->addForm($form->getKey(), $form);
         }
     }
 
@@ -40,12 +41,19 @@ class SearchFormCollection
     {
         $form = $this->getForm($name);
         if (! $form) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The search form named "%s" does not exist',
                 $name
             ));
         }
+
         return $form;
+    }
+
+    /** @param mixed $value */
+    public function __set(string $name, $value) : void
+    {
+        throw new BadMethodCallException('There is no __set method');
     }
 
     public function __isset(string $name) : bool

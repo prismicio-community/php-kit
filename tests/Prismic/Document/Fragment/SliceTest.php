@@ -7,68 +7,73 @@ use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\Group;
 use Prismic\Document\Fragment\Slice;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
+use function assert;
+use function current;
+use function implode;
+use function json_decode;
+use const PHP_EOL;
 
 class SliceTest extends TestCase
 {
-
     /** @var FragmentCollection */
     private $collection;
 
     protected function setUp() : void
     {
         parent::setUp();
-        $data = \json_decode($this->getJsonFixture('fragments/slices.json'));
+        $data = Json::decodeObject($this->getJsonFixture('fragments/slices.json'));
         $this->collection = FragmentCollection::factory($data, new FakeLinkResolver());
     }
 
     public function testGetPrimaryIsFunctionalForAllSliceSpecs() : void
     {
-        /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
+        assert($v2 instanceof Slice);
         $this->assertInstanceOf(Slice::class, $v2);
         $this->assertInstanceOf(FragmentCollection::class, $v2->getPrimary());
         $this->assertIsString($v2->asHtml());
 
-        /** @var Slice $v1 */
         $v1 = $this->collection->get('composite-v1');
+        assert($v1 instanceof Slice);
         $this->assertInstanceOf(Slice::class, $v1);
         $this->assertInstanceOf(FragmentCollection::class, $v1->getPrimary());
         $this->assertIsString($v1->asHtml());
 
-        /** @var Group $sliceZone */
         $sliceZone = $this->collection->get('legacy-v1');
+        assert($sliceZone instanceof Group);
         $this->assertInstanceOf(Group::class, $sliceZone);
         $items = $sliceZone->getItems();
-        /** @var Slice $slice */
-        $slice = \current($items);
+        $slice = current($items);
+        assert($slice instanceof Slice);
         $this->assertInstanceOf(Slice::class, $slice);
         $this->assertInstanceOf(FragmentCollection::class, $slice->getPrimary());
     }
 
     public function testGetItemsIsFunctionalForAllSliceSpecs() : void
     {
-        /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
+        assert($v2 instanceof Slice);
         $this->assertInstanceOf(Group::class, $v2->getItems());
 
-        /** @var Slice $v1 */
         $v1 = $this->collection->get('composite-v1');
+        assert($v1 instanceof Slice);
         $this->assertInstanceOf(Group::class, $v1->getItems());
 
-        /** @var Group $sliceZone */
         $sliceZone = $this->collection->get('legacy-v1');
+        assert($sliceZone instanceof Group);
         $items = $sliceZone->getItems();
-        /** @var Slice $slice */
-        $slice = \current($items);
+        $slice = current($items);
+        assert($slice instanceof Slice);
         $this->assertInstanceOf(Group::class, $slice->getItems());
     }
 
     public function testMinimumSliceRequirementIsType() : void
     {
-        /** @var Slice $slice */
-        $slice = Slice::factory(\json_decode('{"slice_type":"some-type"}'), new FakeLinkResolver());
+        $slice = Slice::factory(json_decode('{"slice_type":"some-type"}'), new FakeLinkResolver());
+        assert($slice instanceof Slice);
         $this->assertInstanceOf(Slice::class, $slice);
         $this->assertSame('some-type', $slice->getType());
         $this->assertNull($slice->getLabel());
@@ -82,14 +87,14 @@ class SliceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('No Slice type could be determined from the payload');
-        Slice::factory(\json_decode('{}'), new FakeLinkResolver());
+        Slice::factory(Json::decodeObject('{}'), new FakeLinkResolver());
     }
 
     public function testAsText() : void
     {
-        /** @var Slice $v2 */
         $v2 = $this->collection->get('slice-v2');
-        $expect = \implode(\PHP_EOL, [
+        assert($v2 instanceof Slice);
+        $expect = implode(PHP_EOL, [
             '2018-01-01',
             'Text',
             '1.100000, 2.200000',
@@ -104,7 +109,7 @@ class SliceTest extends TestCase
     public function testAsHtml() : void
     {
         $sliceZone = $this->collection->get('legacy-v1');
-        $expect = \implode(\PHP_EOL, [
+        $expect = implode(PHP_EOL, [
             '<div data-slice-type="legacy-v1" class="label-value">',
             'Text 1',
             'Text 2',

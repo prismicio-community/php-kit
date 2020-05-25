@@ -17,28 +17,35 @@
 
     <config name="testVersion" value="7.3-"/>
 
-    <!-- inherit rules from: -->
-    <rule ref="PSR2"/>
+    <!-- Inherit rules from Doctrine Coding Standard -->
+    <rule ref="Doctrine">
+        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.IncorrectWhitespaceBetweenOpenTagAndDeclare"/>
+        <!-- I like return types to look like this: ") :? Type" or ") : Type" -->
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing.WhitespaceAfterNullabilitySymbol" />
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing.NoSpaceBetweenColonAndNullabilitySymbol" />
 
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+        <!-- We're not renaming all the exception classes and interfaces just for this rule -->
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousSuffix" />
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousTraitNaming.SuperfluousSuffix" />
 
-    <rule ref="Generic.Formatting.SpaceAfterNot"/>
-
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
-        <properties>
-            <property name="ignoreNewlines" value="true"/>
-        </properties>
-    </rule>
-
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
-        <properties>
-            <property name="ignoreBlankLines" value="false"/>
-        </properties>
+        <!-- Whilst this lib is compatible with 7.3, exclude this sniff -->
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint" />
     </rule>
 
     <!-- Ignore long lines in test cases -->
     <rule ref="Generic.Files.LineLength">
         <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSame">
+        <severity>0</severity>
     </rule>
 
 </ruleset>

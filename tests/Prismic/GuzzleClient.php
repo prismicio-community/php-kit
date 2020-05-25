@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Prismic\Test;
 
 use GuzzleHttp\Client;
@@ -13,8 +14,7 @@ use GuzzleHttp\Client;
 
 class GuzzleClient extends Client
 {
-
-    public function get()
+    public function get() : void
     {
     }
 }

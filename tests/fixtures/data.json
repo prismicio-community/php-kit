@@ -147,6 +147,15 @@
                 ]
             }
         ]
-    }
-
+    },
+    "languages": [
+        {
+            "id": "en-gb",
+            "name": "English - Great Britain"
+        },
+        {
+            "id": "en-au",
+            "name": "English - Australia"
+        }
+    ]
 }

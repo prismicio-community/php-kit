@@ -1,51 +1,61 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Prismic\Document\Fragment;
 
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\LinkResolver;
+use function array_filter;
+use function count;
+use function current;
+use function gettype;
+use function implode;
+use function is_array;
+use function is_object;
+use function preg_match;
+use function sprintf;
+use const PHP_EOL;
 
 class RichText implements CompositeFragmentInterface
 {
-
-    /**
-     * @var FragmentInterface[]
-     */
+    /** @var FragmentInterface[] */
     private $blocks;
 
+    /** @param mixed[]|object $value */
     public static function factory($value, LinkResolver $linkResolver) : FragmentInterface
     {
-        $richText = new static;
+        $richText = new static();
         // In API V2, Rich text is an array of 'Block Level' objects,
         // in V1, the array is in the property 'value'
-        if (isset($value->value)) {
+        if (is_object($value) && isset($value->value)) {
             $value = $value->value;
         }
-        if (! \is_array($value)) {
+
+        if (! is_array($value)) {
             throw new InvalidArgumentException(sprintf(
                 'Expected to be able to determine an array of blocks for the RichText fragment, received %s.',
-                \gettype($value)
+                gettype($value)
             ));
         }
 
         $richText->blocks = [];
+
         /**
          * Pretty much everything possible is a text element with the exception of images and o-embeds
          * Lists also need additional effort. You cannot have 2 consecutive lists of the same type, so list items will
          * always belong together
          */
 
-        /** @var ListElement|null $openList */
         $openList = null;
         foreach ($value as $blockData) {
             if (! isset($blockData->type)) {
-                throw new InvalidArgumentException(\sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'No type can be determined for the rich text fragment with the payload %s',
-                    \json_encode($value)
+                    Json::encode($value)
                 ));
             }
+
             $type = $blockData->type;
             switch ($type) {
                 case 'heading1':
@@ -72,7 +82,7 @@ class RichText implements CompositeFragmentInterface
                         $openList = ListElement::fromTag('ol');
                         $richText->blocks[] = $openList;
                     }
-                    /** @var TextElement $item */
+
                     $item = TextElement::factory($blockData, $linkResolver);
                     $openList->addItem($item);
                     break;
@@ -81,12 +91,13 @@ class RichText implements CompositeFragmentInterface
                         $openList = ListElement::fromTag('ul');
                         $richText->blocks[] = $openList;
                     }
-                    /** @var TextElement $item */
+
                     $item = TextElement::factory($blockData, $linkResolver);
                     $openList->addItem($item);
                     break;
             }
         }
+
         return $richText;
     }
 
@@ -96,7 +107,8 @@ class RichText implements CompositeFragmentInterface
         foreach ($this->blocks as $block) {
             $data[] = $block->asText();
         }
-        return \implode(\PHP_EOL, $data);
+
+        return implode(PHP_EOL, $data);
     }
 
     public function asHtml() :? string
@@ -105,7 +117,8 @@ class RichText implements CompositeFragmentInterface
         foreach ($this->blocks as $block) {
             $data[] = $block->asHtml();
         }
-        return \implode(\PHP_EOL, $data);
+
+        return implode(PHP_EOL, $data);
     }
 
     public function getFirstParagraph() :? TextElement
@@ -113,26 +126,29 @@ class RichText implements CompositeFragmentInterface
         return $this->getFirstByTag('p');
     }
 
-    public function getParagraphs()
+    /** @return TextElement[] */
+    public function getParagraphs() : iterable
     {
-        return array_filter($this->blocks, function ($block) {
-            return ($block instanceof TextElement && $block->getTag() === 'p');
+        return array_filter($this->blocks, static function ($block) : bool {
+            return $block instanceof TextElement && $block->getTag() === 'p';
         });
     }
 
     public function getFirstHeading() :? TextElement
     {
         $headings = $this->getHeadings();
-        if (\count($headings)) {
-            return \current($headings);
+        if (count($headings)) {
+            return current($headings);
         }
+
         return null;
     }
 
-    public function getHeadings()
+    /** @return TextElement[] */
+    public function getHeadings() : iterable
     {
-        return array_filter($this->blocks, function ($block) {
-            return ($block instanceof TextElement && preg_match('/^h[0-9]{1}$/i', $block->getTag()));
+        return array_filter($this->blocks, static function ($block) : bool {
+            return $block instanceof TextElement && preg_match('/^h[1-9]$/i', $block->getTag());
         });
     }
 
@@ -143,17 +159,22 @@ class RichText implements CompositeFragmentInterface
                 return $fragment;
             }
         }
+
         return null;
     }
 
+    /** @return Image[] */
     public function getImages() : array
     {
         $images = [];
         foreach ($this->blocks as $block) {
-            if ($block instanceof Image) {
-                $images[] = $block;
+            if (! $block instanceof Image) {
+                continue;
             }
+
+            $images[] = $block;
         }
+
         return $images;
     }
 
@@ -164,19 +185,22 @@ class RichText implements CompositeFragmentInterface
                 return $block;
             }
         }
+
         return null;
     }
 
+    /** @return ListElement[] */
     public function getLists() : array
     {
-        return \array_filter($this->blocks, function ($block) {
-            return ($block instanceof ListElement);
+        return array_filter($this->blocks, static function ($block) : bool {
+            return $block instanceof ListElement;
         });
     }
 
     public function getFirstList() :? ListElement
     {
         $lists = $this->getLists();
-        return \count($lists) ? \current($lists) : null;
+
+        return count($lists) ? current($lists) : null;
     }
 }

@@ -6,8 +6,12 @@ namespace Prismic\Test\Document\Fragment;
 use Prismic\Document\Fragment\ListElement;
 use Prismic\Document\Fragment\TextElement;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
+use function assert;
+use function str_replace;
+use const PHP_EOL;
 
 class ListElementTest extends TestCase
 {
@@ -19,8 +23,8 @@ class ListElementTest extends TestCase
 
     public function testOrderedAndUnordered() : void
     {
-        /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
+        assert($list instanceof ListElement);
         $this->assertFalse($list->isOrdered());
         $list = ListElement::fromTag('ol');
         $this->assertTrue($list->isOrdered());
@@ -28,8 +32,8 @@ class ListElementTest extends TestCase
 
     public function testEmptyListsReturnNullForTextAndHtml() : void
     {
-        /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
+        assert($list instanceof ListElement);
         $this->assertFalse($list->hasItems());
         $this->assertNull($list->asHtml());
         $this->assertNull($list->asText());
@@ -41,11 +45,11 @@ class ListElementTest extends TestCase
     {
         $linkResolver = new FakeLinkResolver();
         $p = TextElement::factory(
-            \json_decode('{"type":"paragraph", "text":"Foo"}'),
+            Json::decodeObject('{"type":"paragraph", "text":"Foo"}'),
             $linkResolver
         );
-        /** @var ListElement $list */
         $list = ListElement::fromTag('ul');
+        assert($list instanceof ListElement);
         $this->expectException(InvalidArgumentException::class);
         $list->addItem($p);
     }
@@ -54,16 +58,16 @@ class ListElementTest extends TestCase
     {
         $linkResolver = new FakeLinkResolver();
         $item = TextElement::factory(
-            \json_decode('{"type":"o-list-item", "text":"Foo"}'),
+            Json::decodeObject('{"type":"o-list-item", "text":"Foo"}'),
             $linkResolver
         );
-        /** @var ListElement $list */
         $list = ListElement::fromTag('ol');
+        assert($list instanceof ListElement);
         $list->addItem($item);
         $this->assertTrue($list->hasItems());
 
         $expect = '<ol><li>Foo</li></ol>';
-        $html = \str_replace(\PHP_EOL, '', $list->asHtml());
+        $html = str_replace(PHP_EOL, '', $list->asHtml());
         $this->assertSame($expect, $html);
         $this->assertSame('Foo', $list->asText());
     }

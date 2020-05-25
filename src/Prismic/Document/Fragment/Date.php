@@ -6,24 +6,26 @@ namespace Prismic\Document\Fragment;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use function preg_match;
+use function sprintf;
 
 class Date extends AbstractScalarFragment
 {
-
     /** @var string */
     private $format;
 
     /** @var string|null */
     protected $value;
 
+    /** @inheritDoc */
     public static function factory($value) : self
     {
-        /** @var Date $fragment */
         $fragment = parent::factory($value);
         $fragment->format = 'c';
-        if (\preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', (string) $fragment->value)) {
+        if (preg_match('/^[\d]{4}-[\d]{2}-[\d]{2}$/', (string) $fragment->value)) {
             $fragment->format = 'Y-m-d';
         }
+
         return $fragment;
     }
 
@@ -37,8 +39,9 @@ class Date extends AbstractScalarFragment
             return $date;
         }
 
-        $date = DateTimeImmutable::createFromFormat(DateTime::ISO8601, (string) $this->value);
-        return $date ? $date : null;
+        $date = DateTimeImmutable::createFromFormat(DateTime::ATOM, (string) $this->value);
+
+        return $date ?: null;
     }
 
     public function asHtml() :? string
@@ -51,6 +54,7 @@ class Date extends AbstractScalarFragment
                 $this->value
             );
         }
+
         return null;
     }
 }

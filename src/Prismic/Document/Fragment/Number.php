@@ -9,5 +9,4 @@ namespace Prismic\Document\Fragment;
 
 class Number extends AbstractScalarFragment
 {
-
 }

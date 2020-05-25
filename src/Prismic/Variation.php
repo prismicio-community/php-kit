@@ -3,26 +3,15 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use stdClass;
-
 class Variation
 {
-    /**
-     * Variation ID
-     * @var string
-     */
+    /** @var string */
     private $id;
 
-    /**
-     * Variation Release Ref
-     * @var string
-     */
+    /** @var string */
     private $ref;
 
-    /**
-     * Variation Label
-     * @var string
-     */
+    /** @var string */
     private $label;
 
     private function __construct(string $id, string $ref, string $label)
@@ -47,7 +36,7 @@ class Variation
         return $this->label;
     }
 
-    public static function parse(stdClass $json) : self
+    public static function parse(object $json) : self
     {
         return new Variation($json->id, $json->ref, $json->label);
     }

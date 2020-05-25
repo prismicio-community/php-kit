@@ -5,7 +5,6 @@ namespace Prismic\Document\Fragment;
 
 interface FragmentInterface
 {
-
     public function asText() :? string;
 
     public function asHtml() :? string;

@@ -7,8 +7,10 @@ use Prismic\Document\Fragment\Color;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\Group;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
+use function assert;
 
 class GroupTest extends TestCase
 {
@@ -21,8 +23,8 @@ class GroupTest extends TestCase
 
     public function testEmptyGroup() : void
     {
-        /** @var Group $group */
         $group = Group::factory([], new FakeLinkResolver());
+        assert($group instanceof Group);
         $this->assertCount(0, $group->getItems());
         $this->assertNull($group->asHtml());
         $this->assertNull($group->asText());
@@ -30,18 +32,19 @@ class GroupTest extends TestCase
 
     public function testBasicGroup() : void
     {
-        $data = \json_decode($this->getJsonFixture('fragments/group.json'));
-        /** @var Group $group */
+        $data = Json::decode($this->getJsonFixture('fragments/group.json'), false);
         $group = Group::factory($data, new FakeLinkResolver());
+        assert($group instanceof Group);
         $items = $group->getItems();
         $this->assertCount(2, $items);
         $this->assertContainsOnlyInstancesOf(FragmentCollection::class, $items);
-        /** @var FragmentCollection $collection */
         foreach ($items as $collection) {
+            assert($collection instanceof FragmentCollection);
             $this->assertInstanceOf(Color::class, $collection->get('color'));
             $this->assertSame("#000000\nText", $collection->asText());
             $this->assertSame("#000000\nText", $collection->asHtml());
         }
+
         $this->assertSame("#000000\nText\n#000000\nText", $group->asText());
         $this->assertSame("#000000\nText\n#000000\nText", $group->asHtml());
     }

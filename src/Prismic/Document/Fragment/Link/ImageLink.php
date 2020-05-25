@@ -5,21 +5,23 @@ namespace Prismic\Document\Fragment\Link;
 
 use Prismic\Document\Fragment\LinkInterface;
 use Prismic\LinkResolver;
+use function assert;
 
 class ImageLink extends FileLink
 {
-
+    /** @var int|null */
     protected $height;
 
+    /** @var int|null */
     protected $width;
 
-    public static function linkFactory($value, LinkResolver $linkResolver) : LinkInterface
+    public static function linkFactory(object $value, LinkResolver $linkResolver) : LinkInterface
     {
-        /** @var ImageLink $link */
         $link = parent::linkFactory($value, $linkResolver);
+        assert($link instanceof self);
 
-        $value = isset($value->value) ? $value->value : $value;
-        $value = isset($value->image) ? $value->image : $value;
+        $value = $value->value ?? $value;
+        $value = $value->image ?? $value;
 
         $link->height = isset($value->height) ? (int) $value->height : null;
         $link->width  = isset($value->width) ? (int) $value->width : null;

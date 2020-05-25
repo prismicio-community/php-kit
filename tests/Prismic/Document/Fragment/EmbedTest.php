@@ -5,7 +5,9 @@ namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Embed;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\TestCase;
+use function assert;
 
 class EmbedTest extends TestCase
 {
@@ -13,14 +15,14 @@ class EmbedTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The type and embed_url properties are required elements of the JSON payload');
-        Embed::factory(\json_decode('{}'));
+        Embed::factory(Json::decodeObject('{}'));
     }
 
     public function testExpectedValues() : void
     {
-        $data = \json_decode($this->getJsonFixture('fragments/embed.json'));
-        /** @var Embed $embed */
+        $data = Json::decodeObject($this->getJsonFixture('fragments/embed.json'));
         $embed = Embed::factory($data);
+        assert($embed instanceof Embed);
         $this->assertSame('YouTube', $embed->getProvider());
         $this->assertSame('video', $embed->getType());
         $this->assertSame('EMBED_URL', $embed->getUrl());

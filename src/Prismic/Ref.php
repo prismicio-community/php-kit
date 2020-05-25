@@ -3,55 +3,32 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Exception;
 use DateTimeImmutable;
-use stdClass;
+use Prismic\Exception\InvalidArgumentException;
+use function floor;
 
-/**
- * Embodies a ref to be called on the prismic.io repository. The ref is a prismic.io
- * concept that represents a time on which you wish to query the repository, in the present (the
- * content that is live now, we call this ref the master ref) or in the future (the content that
- * is planned for a future content release).
- *
- * This is meant to be built during the un-marshaling of the /api document, and is not meant to
- * be used externally except for testing.
- *
- */
 class Ref
 {
-    /**
-     * The ID of the ref
-     * @var string
-     */
+    /** @var string */
     private $id;
 
-    /**
-     * The reference of the ref
-     * @var string
-     */
+    /** @var string */
     private $ref;
 
-    /**
-     * The display label of the ref
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * Is the ref the master ref?
-     * @var bool
-     */
+    /** @var bool */
     private $isMasterRef;
 
     /**
      * The date and time at which the ref is scheduled, if it is
+     *
      * @var int|null
      */
     private $maybeScheduledAt;
 
     /**
-     * Constructs a Ref object.
-     *
      * @param string $id               the ID of the release
      * @param string $ref              the ID of the ref
      * @param string $label            the display label of the ref
@@ -62,8 +39,8 @@ class Ref
         string $id,
         string $ref,
         string $label,
-        bool   $isMasterRef,
-        ?int   $maybeScheduledAt = null
+        bool $isMasterRef,
+        ?int $maybeScheduledAt
     ) {
         $this->id               = $id;
         $this->ref              = $ref;
@@ -118,10 +95,11 @@ class Ref
      */
     public function getScheduledAtTimestamp() :? int
     {
-        if (null === $this->maybeScheduledAt) {
+        if ($this->maybeScheduledAt === null) {
             return null;
         }
-        return (int) \floor($this->maybeScheduledAt / 1000);
+
+        return (int) floor($this->maybeScheduledAt / 1000);
     }
 
     /**
@@ -129,7 +107,7 @@ class Ref
      */
     public function getScheduledDate() :? DateTimeImmutable
     {
-        if (null === $this->maybeScheduledAt) {
+        if ($this->maybeScheduledAt === null) {
             return null;
         }
 
@@ -148,18 +126,16 @@ class Ref
     }
 
     /**
-     * Parses a ref.
-     * @param stdClass $json
-     * @return self
-     * @throws Exception\InvalidArgumentException if the JSON object has missing properties
+     * @throws InvalidArgumentException if the JSON object has missing properties.
      */
-    public static function parse(stdClass $json) : self
+    public static function parse(object $json) : self
     {
         if (! isset($json->id, $json->ref, $json->label)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'The properties id, ref and label should exist in the JSON object for a Ref'
             );
         }
+
         return new Ref(
             $json->id,
             $json->ref,

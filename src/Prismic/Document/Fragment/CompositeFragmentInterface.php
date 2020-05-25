@@ -5,5 +5,4 @@ namespace Prismic\Document\Fragment;
 
 interface CompositeFragmentInterface extends FragmentInterface
 {
-
 }

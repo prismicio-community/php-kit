@@ -10,113 +10,121 @@ use DateTimeZone;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\Link\DocumentLink;
-use stdClass;
+use Prismic\Exception\ExceptionInterface;
+use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\JsonError;
+use Prismic\Exception\RuntimeException;
+use function assert;
+use function count;
+use function property_exists;
+use function reset;
+use function sprintf;
 
 class Document implements DocumentInterface
 {
-
     /** @var string */
     protected $id;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $uid;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $type;
 
-    /**
-     * @var array
-     */
+    /** @var string[] */
     protected $tags;
 
-    /** @var array */
+    /** @var string[] */
     protected $slugs;
 
-    /**
-     * @var DateTimeInterface|null
-     */
+    /** @var DateTimeInterface|null */
     protected $firstPublished;
 
-    /**
-     * @var DateTimeInterface|null
-     */
+    /** @var DateTimeInterface|null */
     protected $lastPublished;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $lang;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $href;
 
     /**
      * An array of Document Link pointing to translations of this document
      *
-     * @var array
+     * @var object[]
      */
     protected $alternateLanguages;
 
-    /**
-     * @var FragmentCollection
-     */
+    /** @var FragmentCollection */
     protected $data;
 
-    /**
-     * @var Api
-     */
+    /** @var Api */
     protected $api;
 
-    private function __construct()
-    {
+    /**
+     * @param string[] $tags
+     * @param string[] $slugs
+     */
+    private function __construct(
+        string $id,
+        string $type,
+        array $tags,
+        array $slugs,
+        string $href,
+        ?string $uid,
+        ?string $lang
+    ) {
+        $this->id = $id;
+        $this->type = $type;
+        $this->tags = $tags;
+        $this->slugs = $slugs;
+        $this->href = $href;
+        $this->uid = $uid;
+        $this->lang = $lang;
     }
 
+    /**
+     * @throws JsonError If the payload is malformed.
+     */
     public static function fromJsonString(string $json, Api $api) : DocumentInterface
     {
-        $data = \json_decode($json);
-        if (! $data) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Failed to decode json payload: %s',
-                \json_last_error_msg()
-            ), \json_last_error());
-        }
-        return static::fromJsonObject($data, $api);
+        return static::fromJsonObject(
+            Json::decodeObject($json),
+            $api
+        );
     }
 
-    public static function fromJsonObject(stdClass $data, Api $api) : DocumentInterface
+    public static function fromJsonObject(object $data, Api $api) : DocumentInterface
     {
-        $inst        = new static;
+        $inst = new static(
+            static::assertRequiredProperty($data, 'id', false),
+            static::assertRequiredProperty($data, 'type', false),
+            static::assertRequiredProperty($data, 'tags', false),
+            static::assertRequiredProperty($data, 'slugs', false),
+            static::assertRequiredProperty($data, 'href', false),
+            static::assertRequiredProperty($data, 'uid', true),
+            static::assertRequiredProperty($data, 'lang', true)
+        );
         $inst->api   = $api;
-        $inst->id    = $inst->assertRequiredProperty($data, 'id', false);
-        $inst->uid   = $inst->assertRequiredProperty($data, 'uid', true);
-        $inst->type  = $inst->assertRequiredProperty($data, 'type', false);
-        $inst->tags  = $inst->assertRequiredProperty($data, 'tags', false);
-        $inst->lang  = $inst->assertRequiredProperty($data, 'lang', true);
-        $inst->href  = $inst->assertRequiredProperty($data, 'href', false);
-        $inst->slugs = $inst->assertRequiredProperty($data, 'slugs', false);
 
-        $utc            = new DateTimeZone('UTC');
-        $firstPublished = $inst->assertRequiredProperty($data, 'first_publication_date', true);
+        $utc = new DateTimeZone('UTC');
+        $firstPublished = static::assertRequiredProperty($data, 'first_publication_date', true);
         if ($firstPublished) {
-            $date                 = DateTimeImmutable::createFromFormat(DateTime::ISO8601, $firstPublished);
+            $date = DateTimeImmutable::createFromFormat(DateTime::ATOM, $firstPublished);
             $inst->firstPublished = $date->setTimezone($utc);
         }
-        $lastPublished = $inst->assertRequiredProperty($data, 'last_publication_date', true);
+
+        $lastPublished = static::assertRequiredProperty($data, 'last_publication_date', true);
         if ($lastPublished) {
-            $date                = DateTimeImmutable::createFromFormat(DateTime::ISO8601, $lastPublished);
+            $date = DateTimeImmutable::createFromFormat(DateTime::ATOM, $lastPublished);
             $inst->lastPublished = $date->setTimezone($utc);
         }
 
-        $altLang                  = $inst->assertRequiredProperty($data, 'alternate_languages', true);
-        $inst->alternateLanguages = $altLang ? $altLang : [];
+        $altLang = static::assertRequiredProperty($data, 'alternate_languages', true);
+        $inst->alternateLanguages = $altLang ?: [];
 
-        $data = $inst->assertRequiredProperty($data, 'data', false);
+        $data = static::assertRequiredProperty($data, 'data', false);
 
         /**
          * The root node in the data property is prefixed with the document type in the V1 API
@@ -126,32 +134,34 @@ class Document implements DocumentInterface
             : $data;
 
         if (! $api->getLinkResolver()) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'Documents cannot be properly hydrated without a Link Resolver being made available to the API'
             );
         }
 
         $inst->data = FragmentCollection::factory($data, $api->getLinkResolver());
 
-
         return $inst;
     }
 
-    protected function assertRequiredProperty(stdClass $object, string $property, $nullable = true)
+    /** @return mixed */
+    protected static function assertRequiredProperty(object $object, string $property, bool $nullable = true)
     {
-        if (! \property_exists($object, $property)) {
-            throw new Exception\InvalidArgumentException(sprintf(
+        if (! property_exists($object, $property)) {
+            throw new InvalidArgumentException(sprintf(
                 'A required document property was missing from the JSON payload: %s',
                 $property
             ));
         }
+
         $value = $object->{$property};
-        if (null === $value && false === $nullable) {
-            throw new Exception\InvalidArgumentException(sprintf(
+        if ($value === null && $nullable === false) {
+            throw new InvalidArgumentException(sprintf(
                 'A required document property was found to be null in the JSON payload: %s',
                 $property
             ));
         }
+
         return $object->{$property};
     }
 
@@ -170,11 +180,13 @@ class Document implements DocumentInterface
         return $this->type;
     }
 
+    /** @return string[] */
     public function getTags() : array
     {
         return $this->tags;
     }
 
+    /** @return string[] */
     public function getSlugs() : array
     {
         return $this->slugs;
@@ -182,7 +194,7 @@ class Document implements DocumentInterface
 
     public function getSlug() :? string
     {
-        return count($this->slugs) ? current($this->slugs) : null;
+        return count($this->slugs) ? reset($this->slugs) : null;
     }
 
     public function getFirstPublicationDate() : ?DateTimeInterface
@@ -205,6 +217,7 @@ class Document implements DocumentInterface
         return $this->href;
     }
 
+    /** @return object[] */
     public function getAlternateLanguages() : array
     {
         return $this->alternateLanguages;
@@ -212,18 +225,19 @@ class Document implements DocumentInterface
 
     /**
      * Return a translation of this document for the given language if one exists
-     * @param string $lang
-     * @return null|DocumentInterface
-     * @throws Exception\ExceptionInterface If a matching document is found but an error occurs retrieving it
+     *
+     * @throws ExceptionInterface If a matching document is found but an error occurs retrieving it.
      */
     public function getTranslation(string $lang) :? DocumentInterface
     {
         foreach ($this->alternateLanguages as $language) {
             if (isset($language->lang) && $language->lang === $lang) {
                 $id = isset($language->id) ? (string) $language->id : null;
+
                 return $id ? $this->api->getById($id) : null;
             }
         }
+
         return null;
     }
 
@@ -244,8 +258,9 @@ class Document implements DocumentInterface
 
     public function asLink() : DocumentLink
     {
-        /** @var LinkResolver $resolver */
         $resolver = $this->api->getLinkResolver();
+        assert($resolver instanceof LinkResolver);
+
         return DocumentLink::withDocument($this, $resolver);
     }
 }

@@ -7,7 +7,6 @@ use Prismic\Document\Fragment\LinkInterface;
 
 interface LinkResolver
 {
-
     public function resolve(LinkInterface $link) :? string;
 
     public function __invoke(LinkInterface $link) :? string;

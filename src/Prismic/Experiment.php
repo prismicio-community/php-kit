@@ -3,35 +3,23 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use stdClass;
+use function array_map;
 
 class Experiment
 {
-
-    /**
-     * Experiment ID
-     * @var string
-     */
+    /** @var string */
     private $id;
 
-    /**
-     * Google's Experiment ID
-     * @var string|null
-     */
+    /** @var string|null */
     private $googleId;
 
-    /**
-     * Experiment Name/Label
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * Prismic Variations/Releases
-     * @var array
-     */
+    /** @var Variation[] */
     private $variations;
 
+    /** @param Variation[] $variations */
     private function __construct(string $id, ?string $googleId, string $name, array $variations)
     {
         $this->id         = $id;
@@ -63,13 +51,14 @@ class Experiment
         return $this->variations;
     }
 
-    public static function parse(stdClass $json) : self
+    public static function parse(object $json) : self
     {
-        $googleId = (isset($json->googleId) ? $json->googleId : null);
-        $vars = array_map(function ($varJson) {
+        $googleId = $json->googleId ?? null;
+        $vars = array_map(static function (object $varJson) : Variation {
             return Variation::parse($varJson);
-        }, $json->variations);
-        return new self(
+        }, $json->variations ?? []);
+
+        return new static(
             $json->id,
             $googleId,
             $json->name,

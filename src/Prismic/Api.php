@@ -8,22 +8,27 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
+use Prismic\Cache\DefaultCache;
 use Prismic\Document\Hydrator;
 use Prismic\Document\HydratorInterface;
-use Prismic\Exception;
+use Prismic\Exception\ExceptionInterface;
+use Prismic\Exception\ExpiredPreviewTokenException;
+use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\RequestFailureException;
+use Prismic\Exception\RuntimeException;
 use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use function array_filter;
 use function count;
 use function filter_var;
-use function json_decode;
 use function md5;
 use function parse_url;
 use function preg_match;
 use function sprintf;
 use function str_replace;
 use function strtolower;
+use function urldecode;
 use const FILTER_FLAG_PATH_REQUIRED;
 use const FILTER_VALIDATE_URL;
 
@@ -34,13 +39,6 @@ use const FILTER_VALIDATE_URL;
  */
 class Api
 {
-
-    /**
-     * Kit version number
-     * @deprecated
-     */
-    public const VERSION = '4.0.0';
-
     private const API_VERSION_1 = '1.0.0';
 
     private const API_VERSION_2 = '2.0.0';
@@ -72,6 +70,7 @@ class Api
 
     /**
      * The API version determined by the URL passed to the named constructor
+     *
      * @var string
      */
     private $version;
@@ -87,7 +86,7 @@ class Api
      *
      * By default, this array is populated with the $_COOKIE super global but can be overridden with setRequestCookies()
      *
-     * @var array
+     * @var string[]
      */
     private $requestCookies;
 
@@ -102,30 +101,24 @@ class Api
      * If your API is set to "public" or "open", you can instantiate your Api object just like this:
      * Api::get('https://your-repository-name.prismic.io/api/v2')
      *
-     * @param string $action The URL of your repository API's endpoint
-     * @param string $accessToken A permanent access token to use if your repository API is set to private
-     * @param ClientInterface $httpClient Custom Guzzle http client
-     * @param CacheItemPoolInterface $cache Cache implementation
-     * @return self
+     * @param string                 $action      The URL of your repository API's endpoint
+     * @param string                 $accessToken A permanent access token to use if your repository API is set to private
+     * @param ClientInterface        $httpClient  Custom Guzzle http client
+     * @param CacheItemPoolInterface $cache       Cache implementation
      */
     public static function get(
-        string                  $action,
-        ?string                 $accessToken = null,
-        ?ClientInterface        $httpClient = null,
+        string $action,
+        ?string $accessToken = null,
+        ?ClientInterface $httpClient = null,
         ?CacheItemPoolInterface $cache = null
     ) : self {
-
         $api = new static();
-
         $api->accessToken = $accessToken === '' ? null : $accessToken;
-
         $api->url = $action;
-
         $api->httpClient = $httpClient ?? new Client();
+        $api->cache = $cache ?? DefaultCache::factory();
 
-        $api->cache = $cache ?? Cache\DefaultCache::factory();
-
-        $api->version = preg_match('~/v2$~i', $action) ? static::API_VERSION_2 : static::API_VERSION_1;
+        $api->version = preg_match('~/v2$~i', $action) ? self::API_VERSION_2 : self::API_VERSION_1;
 
         $api->setHydrator(new Hydrator($api, [], Document::class));
 
@@ -138,6 +131,7 @@ class Api
         $url = $this->accessToken
             ? Uri::withQueryValue($url, 'access_token', $this->accessToken)
             : $url;
+
         return (string) $url;
     }
 
@@ -148,7 +142,7 @@ class Api
         try {
             return $this->cache->getItem($key);
         } catch (CacheException $cacheException) {
-            throw new Exception\RuntimeException(
+            throw new RuntimeException(
                 'A cache exception occurred whilst retrieving cached api data',
                 0,
                 $cacheException
@@ -161,9 +155,10 @@ class Api
         $url = $this->apiDataUrl();
         try {
             $response = $this->httpClient->request('GET', $url);
+
             return ApiData::withJsonString((string) $response->getBody());
         } catch (GuzzleException $guzzleException) {
-            throw Exception\RequestFailureException::fromGuzzleException($guzzleException);
+            throw RequestFailureException::fromGuzzleException($guzzleException);
         }
     }
 
@@ -193,7 +188,7 @@ class Api
      * If preview and experiment cookie values are not available in your environment in the $_COOKIE super global, you
      * can provide them here and they'll be inspected to see if a preview is required or an experiment is running
      *
-     * @param array $cookies
+     * @param string[] $cookies
      */
     public function setRequestCookies(array $cookies) : void
     {
@@ -212,7 +207,7 @@ class Api
 
     public function isV1Api() : bool
     {
-        return $this->version === static::API_VERSION_1;
+        return $this->version === self::API_VERSION_1;
     }
 
     /**
@@ -225,9 +220,11 @@ class Api
         $groupBy = [];
         foreach ($this->getData()->getRefs() as $ref) {
             $label = $ref->getLabel();
-            if (! isset($groupBy[$label])) {
-                $groupBy[$label] = $ref;
+            if (isset($groupBy[$label])) {
+                continue;
             }
+
+            $groupBy[$label] = $ref;
         }
 
         return $groupBy;
@@ -243,6 +240,7 @@ class Api
     public function getRefFromLabel(string $label) :? Ref
     {
         $refs = $this->refs();
+
         return $refs[$label];
     }
 
@@ -250,7 +248,7 @@ class Api
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookmark() function.
      *
-     * @return array the array of bookmarks
+     * @return string[] the array of bookmarks
      */
     public function bookmarks() : array
     {
@@ -271,6 +269,7 @@ class Api
     public function bookmark(string $name) :? string
     {
         $bookmarks = $this->bookmarks();
+
         return $bookmarks[$name] ?? null;
     }
 
@@ -282,7 +281,7 @@ class Api
      */
     public function master() : Ref
     {
-        $masters = array_filter($this->getData()->getRefs(), function (Ref $ref) {
+        $masters = array_filter($this->getData()->getRefs(), static function (Ref $ref) : bool {
             return $ref->isMasterRef() === true;
         });
 
@@ -298,11 +297,10 @@ class Api
     {
         if (! $this->forms) {
             $forms = [];
-            foreach ($this->getData()->getForms() as $name => $jsonObject) {
-                $formObject = Form::withJsonObject($jsonObject);
-                $data = $formObject->defaultData();
-                $forms[$name] = new SearchForm($this, $formObject, $data);
+            foreach ($this->getData()->getForms() as $form) {
+                $forms[$form->getKey()] = new SearchForm($this, $form, $form->defaultData());
             }
+
             $this->forms = new SearchFormCollection($forms);
         }
 
@@ -316,8 +314,6 @@ class Api
 
     /**
      * Validate and filter a preview token ensuring that the URL it represents corresponds to the same host as the API
-     * @param string $token
-     * @return string The validated token
      */
     private function validatePreviewToken(string $token) : string
     {
@@ -325,11 +321,12 @@ class Api
         // repeated decodes should not cause a problem.
         $token = urldecode($token);
         if (! filter_var($token, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The preview token "%s" is not a valid url',
                 $token
             ), 400);
         }
+
         ['host' => $previewHost] = parse_url($token);
         ['host' => $apiHost] = parse_url($this->url);
         /**
@@ -342,21 +339,25 @@ class Api
         $previewHost = str_replace('.cdn.', '.', strtolower($previewHost));
         $apiHost = str_replace('.cdn.', '.', strtolower($apiHost));
         if ($previewHost !== $apiHost) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The host "%s" does not match the api host "%s"',
                 $previewHost,
                 $apiHost
             ), 400);
         }
+
         return $token;
     }
 
     /**
      * Return the URL to display a given preview
-     * @param string $token as received from Prismic server to identify the content to preview
+     *
+     * @param string $token      as received from Prismic server to identify the content to preview
      * @param string $defaultUrl the URL to return if the preview doesn't correspond to a document
+     *
      * @return string the URL you should redirect the user to preview the requested change
-     * @throws Exception\ExceptionInterface If there's a problem querying the API
+     *
+     * @throws ExceptionInterface If there's a problem querying the API.
      */
     public function previewSession(string $token, string $defaultUrl) : string
     {
@@ -364,7 +365,7 @@ class Api
             // $token is untrusted input, possibly from a GET request and will be retrieved by the http client
             $token = $this->validatePreviewToken($token);
             $response = $this->httpClient->request('GET', $token);
-            $responseBody = json_decode((string) $response->getBody());
+            $responseBody = Json::decodeObject((string) $response->getBody());
             if (isset($responseBody->mainDocument)) {
                 $document = $this->getById(
                     $responseBody->mainDocument,
@@ -372,18 +373,21 @@ class Api
                 );
                 if ($document && $this->linkResolver) {
                     $url = $this->linkResolver->resolve($document->asLink());
+
                     return $url ?: $defaultUrl;
                 }
             }
+
             return $defaultUrl;
         } catch (RequestException $requestException) {
             $apiResponse = $requestException->getResponse();
-            if ($apiResponse && Exception\ExpiredPreviewTokenException::isTokenExpiryResponse($apiResponse)) {
-                throw Exception\ExpiredPreviewTokenException::fromResponse($apiResponse);
+            if ($apiResponse && ExpiredPreviewTokenException::isTokenExpiryResponse($apiResponse)) {
+                throw ExpiredPreviewTokenException::fromResponse($apiResponse);
             }
-            throw Exception\RequestFailureException::fromGuzzleException($requestException);
+
+            throw RequestFailureException::fromGuzzleException($requestException);
         } catch (GuzzleException $exception) {
-            throw Exception\RequestFailureException::fromGuzzleException($exception);
+            throw RequestFailureException::fromGuzzleException($exception);
         }
     }
 
@@ -399,9 +403,11 @@ class Api
                 return $data;
             }
         }
+
         $data = $this->getApiData();
         $cacheItem->set($data);
         $this->cache->save($cacheItem);
+
         return $data;
     }
 
@@ -427,8 +433,8 @@ class Api
     private function getPreviewRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', static::PREVIEW_COOKIE),
-            static::PREVIEW_COOKIE,
+            str_replace(['.', ' '], '_', self::PREVIEW_COOKIE),
+            self::PREVIEW_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($this->requestCookies[$cookieName])) {
@@ -445,12 +451,13 @@ class Api
     private function getExperimentRef() :? string
     {
         $cookieNames = [
-            str_replace(['.',' '], '_', static::EXPERIMENTS_COOKIE),
-            static::EXPERIMENTS_COOKIE,
+            str_replace(['.', ' '], '_', self::EXPERIMENTS_COOKIE),
+            self::EXPERIMENTS_COOKIE,
         ];
         foreach ($cookieNames as $cookieName) {
             if (isset($this->requestCookies[$cookieName])) {
                 $experiments = $this->getExperiments();
+
                 return $experiments->refFromCookie($this->requestCookies[$cookieName]);
             }
         }
@@ -463,7 +470,7 @@ class Api
      */
     public function inPreview() : bool
     {
-        return null !== $this->getPreviewRef();
+        return $this->getPreviewRef() !== null;
     }
 
     /**
@@ -471,7 +478,7 @@ class Api
      */
     public function inExperiment() : bool
     {
-        return null !== $this->getExperimentRef() && false === $this->inPreview();
+        return $this->getExperimentRef() !== null && $this->inPreview() === false;
     }
 
     /**
@@ -485,10 +492,12 @@ class Api
         if ($preview) {
             return $preview;
         }
+
         $experiment = $this->getExperimentRef();
         if ($experiment) {
             return $experiment;
         }
+
         return $this->master()->getRef();
     }
 
@@ -496,10 +505,10 @@ class Api
      * Shortcut to query on the default reference.
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|Predicate $q         the query, as a string, predicate or array of predicates
-     * @param  array                  $options   query options: pageSize, orderings, etc.
-     * @return Response
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param  string|string[]|Predicate[]|Predicate $q       the query, as a string, predicate or array of predicates
+     * @param  mixed[]                               $options query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function query($q, array $options = []) : Response
     {
@@ -508,15 +517,18 @@ class Api
 
         $form = $this->forms()->getForm('everything');
         if (! $form) {
-            throw new Exception\RuntimeException('The form "everything" does not exist');
+            throw new RuntimeException('The form "everything" does not exist');
         }
+
         $form = $form->ref($ref);
         if (! empty($q)) {
             $form = $form->query($q);
         }
+
         foreach ($options as $key => $value) {
             $form = $form->set($key, $value);
         }
+
         return $form->submit();
     }
 
@@ -524,10 +536,10 @@ class Api
      * Return the first document matching the query
      * Use the reference from previews or experiment cookie, fallback to the master reference otherwise.
      *
-     * @param  string|array|Predicate $q The query, as a string, predicate or array of predicates
-     * @param  array $options Query options: pageSize, orderings, etc.
-     * @return DocumentInterface|null The resulting document, or null
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param  string|string[]|Predicate[]|Predicate $q       the query, as a string, predicate or array of predicates
+     * @param  mixed[]                               $options query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function queryFirst($q, array $options = []) :? DocumentInterface
     {
@@ -535,16 +547,17 @@ class Api
         if (count($documents) > 0) {
             return $documents[0];
         }
+
         return null;
     }
 
     /**
      * Search a document by its id
      *
-     * @param string $id The requested id
-     * @param array $options Query options: pageSize, orderings, etc.
-     * @return DocumentInterface|null The resulting document (null if no match)
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param string  $id      The requested id
+     * @param mixed[] $options Query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function getById(string $id, array $options = []) :? DocumentInterface
     {
@@ -554,11 +567,11 @@ class Api
     /**
      * Search a document by its uid
      *
-     * @param string $type The custom type of the requested document
-     * @param string $uid The requested uid
-     * @param array $options Query options: pageSize, orderings, etc.
-     * @return DocumentInterface|null The resulting document (null if no match)
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param string  $type    The custom type of the requested document
+     * @param string  $uid     The requested uid
+     * @param mixed[] $options Query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function getByUid(string $type, string $uid, array $options = []) :? DocumentInterface
     {
@@ -574,10 +587,10 @@ class Api
     /**
      * Return a set of document from their ids
      *
-     * @param array $ids array of strings, the requested ids
-     * @param array $options query options: pageSize, orderings, etc.
-     * @return Response the response, including documents and pagination information
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param string[] $ids     Array of strings, the requested ids
+     * @param mixed[]  $options Query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function getByIds(array $ids, array $options = []) : Response
     {
@@ -587,10 +600,10 @@ class Api
     /**
      * Get a single typed document by its type
      *
-     * @param string $type The custom type of the requested document
-     * @param array $options Query options: pageSize, orderings, etc.
-     * @return DocumentInterface|null The resulting document (null if no match)
-     * @throws Exception\ExceptionInterface if parameters are invalid
+     * @param string  $type    The custom type of the requested document
+     * @param mixed[] $options Query options: pageSize, orderings, etc.
+     *
+     * @throws ExceptionInterface if parameters are invalid.
      */
     public function getSingle(string $type, array $options = []) :? DocumentInterface
     {
@@ -599,8 +612,10 @@ class Api
 
     /**
      * Given an options array for a query, fill the lang parameter with a default value
-     * @param array $options
-     * @return array
+     *
+     * @param mixed[] $options Query options: pageSize, orderings, etc.
+     *
+     * @return mixed[]
      */
     private function prepareDefaultQueryOptions(array $options) : array
     {

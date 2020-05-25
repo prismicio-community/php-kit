@@ -19,6 +19,7 @@ class ExpiredPreviewTokenExceptionTest extends TestCase
         $this->assertSame($response, $exception->getResponse());
     }
 
+    /** @return mixed[] */
     public function invalidPayloadBodyProvider() : iterable
     {
         yield ['Not Json'];
@@ -30,7 +31,6 @@ class ExpiredPreviewTokenExceptionTest extends TestCase
 
     /**
      * @dataProvider invalidPayloadBodyProvider
-     * @param string $responseBody
      */
     public function testIsTokenExpiryResponseWithInvalidPayload(string $responseBody) : void
     {

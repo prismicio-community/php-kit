@@ -8,15 +8,16 @@ use Prismic\Document\Fragment\LinkInterface;
 
 abstract class LinkResolverAbstract implements LinkResolver
 {
-
     public function resolve(LinkInterface $link) :? string
     {
         if ($link instanceof DocumentLink) {
             if (! $link->isBroken()) {
                 return $this->resolveDocumentLink($link);
             }
+
             return null;
         }
+
         return $link->getUrl();
     }
 

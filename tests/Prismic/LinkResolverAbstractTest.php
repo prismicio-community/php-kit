@@ -4,16 +4,19 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Document\Fragment\FragmentCollection;
+use function assert;
+use function json_decode;
 
 class LinkResolverAbstractTest extends TestCase
 {
     private function getLinkCollection() : FragmentCollection
     {
-        /** @var FragmentCollection $collection */
         $collection = FragmentCollection::factory(
-            \json_decode($this->getJsonFixture('fragments/links.json')),
+            json_decode($this->getJsonFixture('fragments/links.json')),
             new FakeLinkResolver()
         );
+        assert($collection instanceof FragmentCollection);
+
         return $collection;
     }
 

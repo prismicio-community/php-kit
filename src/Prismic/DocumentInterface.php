@@ -7,12 +7,10 @@ use DateTimeInterface;
 use Prismic\Document\Fragment\FragmentCollection;
 use Prismic\Document\Fragment\FragmentInterface;
 use Prismic\Document\Fragment\Link\DocumentLink;
-use stdClass;
 
 interface DocumentInterface
 {
-
-    public static function fromJsonObject(stdClass $data, Api $api) : DocumentInterface;
+    public static function fromJsonObject(object $data, Api $api) : DocumentInterface;
 
     public function getId() : string;
 
@@ -20,6 +18,7 @@ interface DocumentInterface
 
     public function getType() : string;
 
+    /** @return string[] */
     public function getTags() : array;
 
     public function getFirstPublicationDate() :? DateTimeInterface;
@@ -30,10 +29,12 @@ interface DocumentInterface
 
     public function getHref() : string;
 
+    /** @return object[] */
     public function getAlternateLanguages() : array;
 
     public function getData() : FragmentCollection;
 
+    /** @return string[] */
     public function getSlugs() : array;
 
     public function getSlug() :? string;

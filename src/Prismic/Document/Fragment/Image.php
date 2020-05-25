@@ -6,6 +6,10 @@ namespace Prismic\Document\Fragment;
 use Prismic\Exception\RuntimeException;
 use Prismic\LinkResolver;
 use stdClass;
+use function array_diff_key;
+use function array_flip;
+use function array_keys;
+use function count;
 
 class Image implements ImageInterface
 {
@@ -16,32 +20,32 @@ class Image implements ImageInterface
     {
     }
 
-    public static function factory($value, LinkResolver $linkResolver) : self
+    public static function factory(object $value, LinkResolver $linkResolver) : self
     {
         $image = new static();
-        $value = isset($value->value) ? $value->value : $value;
+        $value = $value->value ?? $value;
 
-        $main = isset($value->main) ? $value->main : $value;
+        $main = $value->main ?? $value;
         unset($value->main);
-        /** @var stdClass|null $views */
-        $views = isset($value->views) ? $value->views : null;
+        $views = $value->views ?? null;
 
         $image->views = [
             'main' => ImageView::factory($main, $linkResolver),
         ];
-        if (is_null($views)) {
-            $views = new stdClass;
-            $keys = \array_diff_key(
+        if (! $views) {
+            $views = new stdClass();
+            $keys = array_diff_key(
                 (array) $value,
-                \array_flip(['url', 'alt', 'copyright', 'linkTo', 'label', 'dimensions', 'type'])
+                array_flip(['url', 'alt', 'copyright', 'linkTo', 'label', 'dimensions', 'type'])
             );
             if (count($keys)) {
-                foreach (\array_keys($keys) as $viewName) {
+                foreach (array_keys($keys) as $viewName) {
                     $views->{$viewName} = $value->{$viewName};
                 }
             }
         }
-        foreach (\array_keys((array) $views) as $viewName) {
+
+        foreach (array_keys((array) $views) as $viewName) {
             $image->views[$viewName] = ImageView::factory($views->{$viewName}, $linkResolver);
         }
 
@@ -57,14 +61,13 @@ class Image implements ImageInterface
              */
             throw new RuntimeException('The main view could not be retrieved for this image');
         }
+
         return $view;
     }
 
     public function getView(string $view) :? ImageInterface
     {
-        return isset($this->views[$view])
-               ? $this->views[$view]
-               : null;
+        return $this->views[$view] ?? null;
     }
 
     /**

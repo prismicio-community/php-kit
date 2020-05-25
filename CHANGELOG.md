@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- New Exception Type `\Prismic\Exception\JsonError`
+- Thin wrapper for `json_decode` so that anywhere JSON strings are unserialised, there is a consistent exception 
+  thrown.
+- A new value object `\Prismic\Value\Language` that represents the possible languages used in a repository.
+- New method `\Prismic\ApiData::languages()` that returns an iterable containing the languages used in the repo.
 
 ### Changed
 
 - Minimum PHP Version is now 7.3
+- Where parameter or return type hints used `stdClass` these have been changed to `object`
+- Changed the coding standard to the Doctrine coding standard.
 
 ### Deprecated
 
@@ -18,7 +24,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- Deprecated `Api::VERSION` constant
 
 ### Fixed
 

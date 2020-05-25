@@ -5,8 +5,10 @@ namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\RichText;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
+use function assert;
 
 class RichTextTest extends TestCase
 {
@@ -18,11 +20,11 @@ class RichTextTest extends TestCase
 
     public function testBlocksWithoutTypePropertyWillCauseException() : void
     {
-        $value = \json_decode('[
+        $value = Json::decode('[
             {
                 "foo" : "bar"
             }
-        ]');
+        ]', false);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('No type can be determined for the rich text fragment');
         RichText::factory($value, new FakeLinkResolver());
@@ -30,7 +32,7 @@ class RichTextTest extends TestCase
 
     public function testAsTextAndHtmlRenderAsExpected() : void
     {
-        $value = \json_decode('[
+        $value = Json::decode('[
             {
                 "type" : "paragraph",
                 "text" : "paragraph"
@@ -47,7 +49,7 @@ class RichTextTest extends TestCase
                 "type" : "heading1",
                 "text" : "Heading"
             }
-        ]');
+        ]', false);
         $text = RichText::factory($value, new FakeLinkResolver());
         $expect = "paragraph\nItem 1\nItem 2\nHeading";
         $this->assertSame($expect, $text->asText());
@@ -58,7 +60,7 @@ class RichTextTest extends TestCase
 
     public function testFindingByTag() : void
     {
-        $value = \json_decode('[
+        $value = Json::decode('[
             {
                 "type" : "paragraph",
                 "text" : "paragraph 1"
@@ -98,9 +100,9 @@ class RichTextTest extends TestCase
                 "type" : "list-item",
                 "text" : "Item 1"
             }
-        ]');
-        /** @var RichText $text */
+        ]', false);
         $text = RichText::factory($value, new FakeLinkResolver());
+        assert($text instanceof RichText);
 
         $paragraph = $text->getFirstParagraph();
         $this->assertSame('paragraph 1', $paragraph->asText());
@@ -129,8 +131,8 @@ class RichTextTest extends TestCase
 
     public function testFindingByTagOnEmptyStructure() : void
     {
-        /** @var RichText $text */
         $text = RichText::factory([], new FakeLinkResolver());
+        assert($text instanceof RichText);
 
         $this->assertNull($text->getFirstParagraph());
         $this->assertNull($text->getFirstHeading());

@@ -3,70 +3,49 @@ declare(strict_types=1);
 
 namespace Prismic;
 
-use Prismic\Exception;
+use Prismic\Value\Language;
 use stdClass;
+use function array_map;
+use function array_walk;
 
 class ApiData
 {
-    /**
-     * An array of the usable refs for this API
-     * @var array
-     */
+    /** @var Ref[] */
     private $refs;
 
-    /**
-     * An array of the available bookmarks
-     * @var array
-     */
+    /** @var string[] */
     private $bookmarks;
 
-    /**
-     * An array of the available types
-     * @var array
-     */
+    /** @var string[] */
     private $types;
 
-    /**
-     * An array of the available tags
-     * @var array
-     */
+    /** @var string[] */
     private $tags;
 
-    /**
-     * An array of the available forms
-     * @var array
-     */
+    /** @var Form[] */
     private $forms;
 
-    /**
-     * The URL of the endpoint to initiate the OAuth authentication
-     * @var string
-     */
-    private $oauth_initiate;
+    /** @var string */
+    private $oauthInitiateUrl;
 
-    /**
-     * The URL of the endpoint to authenticate through OAuth
-     * @var string
-     */
-    private $oauth_token;
+    /** @var string */
+    private $oauthTokenUrl;
 
-    /**
-     * List of both drafts and running experiments from Prismic
-     * @var Experiments
-     */
+    /** @var Experiments */
     private $experiments;
+
+    /** @var Language[] */
+    private $languages;
 
     /**
      * A constructor to build the object when you've retrieved all the data you need.
      *
-     * @param array       $refs
-     * @param array       $bookmarks
-     * @param array       $types
-     * @param array       $tags
-     * @param array       $forms
-     * @param Experiments $experiments
-     * @param string      $oauth_initiate
-     * @param string      $oauth_token
+     * @param Ref[]      $refs
+     * @param string[]   $bookmarks
+     * @param string[]   $types
+     * @param string[]   $tags
+     * @param stdClass[] $forms
+     * @param Language[] $languages
      */
     private function __construct(
         array $refs,
@@ -75,125 +54,117 @@ class ApiData
         array $tags,
         array $forms,
         Experiments $experiments,
-        string $oauth_initiate,
-        string $oauth_token
+        iterable $languages,
+        string $oauthInitiateUrl,
+        string $oauthTokenUrl
     ) {
-        $this->refs = $refs;
-        $this->bookmarks = $bookmarks;
-        $this->types = $types;
-        $this->tags = $tags;
-        $this->forms = $forms;
-        $this->experiments = $experiments;
-        $this->oauth_initiate = $oauth_initiate;
-        $this->oauth_token = $oauth_token;
+        $this->refs             = $refs;
+        $this->bookmarks        = $bookmarks;
+        $this->types            = $types;
+        $this->tags             = $tags;
+        $this->forms            = $forms;
+        $this->experiments      = $experiments;
+        $this->languages        = $languages;
+        $this->oauthInitiateUrl = $oauthInitiateUrl;
+        $this->oauthTokenUrl    = $oauthTokenUrl;
     }
 
     /**
      * Return a new ApiData instance from the given JSON string
-     * @param string $json
-     * @return self
+     *
+     * @throws Exception\JsonError
      */
     public static function withJsonString(string $json) : self
     {
-        $data = json_decode($json);
-        if (! $data) {
-            throw new Exception\RuntimeException(sprintf(
-                'Unable to decode JSON response: %s',
-                json_last_error_msg()
-            ), json_last_error());
-        }
-        return self::withJsonObject($data);
+        return static::withJsonObject(
+            Json::decodeObject($json)
+        );
     }
 
-    /**
-     * Return a new ApiData instance from the given JSON decoded object
-     * @param stdClass $json
-     * @return self
-     */
-    public static function withJsonObject(stdClass $json) : self
+    private static function withJsonObject(object $json) : self
     {
         $experiments = isset($json->experiments)
                      ? Experiments::parse($json->experiments)
-                     : Experiments::parse(new stdClass);
-        return new self(
+                     : Experiments::parse(new stdClass());
+
+        $languages = isset($json->languages)
+            ? array_map(static function (object $object) : Language {
+                return Language::new($object->id, $object->name);
+            }, $json->languages)
+            : [];
+
+        $formData = isset($json->forms) ? (array) $json->forms : [];
+        $forms = [];
+        array_walk($formData, static function (object $form, string $key) use (&$forms) : void {
+            $forms[$key] = Form::withJsonObject($key, $form);
+        });
+
+        return new static(
             array_map(
-                function ($ref) {
+                static function ($ref) {
                     return Ref::parse($ref);
                 },
                 $json->refs
             ),
-            (array)$json->bookmarks,
-            (array)$json->types,
+            (array) $json->bookmarks,
+            (array) $json->types,
             $json->tags,
-            (array)$json->forms,
+            $forms,
             $experiments,
+            $languages,
             $json->oauth_initiate,
             $json->oauth_token
         );
     }
 
-    /**
-     * Get the refs
-     * @return Ref[]
-     */
+    /** @return Ref[] */
     public function getRefs() : array
     {
         return $this->refs;
     }
 
-    /**
-     * Get the bookmarks
-     */
+    /** @return string[] */
     public function getBookmarks() : array
     {
         return $this->bookmarks;
     }
 
-    /**
-     * Get the types
-     */
+    /** @return string[] */
     public function getTypes() : array
     {
         return $this->types;
     }
 
-    /**
-     * Get the tags
-     */
+    /** @return string[] */
     public function getTags() : array
     {
         return $this->tags;
     }
 
-    /**
-     * Get the forms
-     */
+    /** @return Form[] */
     public function getForms() : array
     {
         return $this->forms;
     }
 
-    /**
-     * Get the Experiments
-     */
     public function getExperiments() : Experiments
     {
         return $this->experiments;
     }
 
-    /**
-     * Get the endpoint to initiate OAuth
-     */
     public function getOauthInitiate() : string
     {
-        return $this->oauth_initiate;
+        return $this->oauthInitiateUrl;
     }
 
-    /**
-     * Get the endpoint to run OAuth
-     */
     public function getOauthToken() : string
     {
-        return $this->oauth_token;
+        return $this->oauthTokenUrl;
+    }
+
+    /** @return Language[] */
+    public function languages() : iterable
+    {
+        return $this->languages;
     }
 }

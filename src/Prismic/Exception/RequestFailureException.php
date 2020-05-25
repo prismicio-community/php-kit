@@ -5,38 +5,32 @@ namespace Prismic\Exception;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use function sprintf;
 
 class RequestFailureException extends RuntimeException
 {
-
-    /**
-     * @var GuzzleException|null
-     */
+    /** @var GuzzleException|null */
     protected $guzzleException;
 
     /**
      * Factory to return a Prismic Exception wrapping a Guzzle Exception
-     *
-     * @param GuzzleException $e
-     * @return self
      */
     public static function fromGuzzleException(GuzzleException $e) : self
     {
         if ($e instanceof RequestException) {
             return static::fromGuzzleRequestException($e);
         }
+
         $exception = new static('Api Request Failed', 500, $e);
         $exception->guzzleException = $e;
+
         return $exception;
     }
 
     /**
      * Factory to wrap a Guzzle Request Exception when we should have access to a request and a response
-     *
-     * @param RequestException $e
-     * @return self
      */
     protected static function fromGuzzleRequestException(RequestException $e) : self
     {
@@ -57,6 +51,7 @@ class RequestFailureException extends RuntimeException
 
         $exception = new static($message, $code, $e);
         $exception->guzzleException = $e;
+
         return $exception;
     }
 
@@ -65,6 +60,7 @@ class RequestFailureException extends RuntimeException
         if (! $this->guzzleException instanceof RequestException) {
             return null;
         }
+
         return $this->guzzleException->getResponse();
     }
 
@@ -73,6 +69,7 @@ class RequestFailureException extends RuntimeException
         if (! $this->guzzleException instanceof RequestException) {
             return null;
         }
+
         return $this->guzzleException->getRequest();
     }
 }

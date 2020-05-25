@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\Color;
+use Prismic\Json;
 use Prismic\Test\TestCase;
+use function assert;
+use function hexdec;
 
 class ColorTest extends TestCase
 {
     public function testFactory() : void
     {
-        $data = \json_decode('{"type": "Color", "value": "#000000"}');
+        $data = Json::decodeObject('{"type": "Color", "value": "#000000"}');
         $colour = Color::factory($data);
         $this->assertInstanceOf(Color::class, $colour);
 
@@ -23,8 +26,8 @@ class ColorTest extends TestCase
 
     public function testIsColor() : void
     {
-        /** @var Color $colour */
         $colour = Color::factory('#000000');
+        assert($colour instanceof Color);
         $this->assertTrue($colour->isColor());
 
         $colour = Color::factory(null);
@@ -36,15 +39,17 @@ class ColorTest extends TestCase
 
     private function getBlack() : Color
     {
-        /** @var Color $colour */
         $colour = Color::factory('#000000');
+        assert($colour instanceof Color);
+
         return $colour;
     }
 
     private function getNonColor() : Color
     {
-        /** @var Color $colour */
         $colour = Color::factory(null);
+        assert($colour instanceof Color);
+
         return $colour;
     }
 
@@ -75,7 +80,7 @@ class ColorTest extends TestCase
     public function testAsInteger() : void
     {
         $colour = $this->getBlack();
-        $expect = \hexdec('000000');
+        $expect = hexdec('000000');
         $this->assertSame($expect, $colour->asInteger());
 
         $colour = $this->getNonColor();

@@ -20,7 +20,7 @@ jobs:
               uses: shivammathur/setup-php@1.6.1
               with:
                   php-version: ${{ matrix.php-versions }}
-                  extensions: mbstring,curl,json,intl,apcu
+                  extensions: mbstring,curl,json,intl,apcu,apc
                   coverage: pcov
                   pecl: true
                   ini-values: apc.enabled=1, apc.enable_cli=1

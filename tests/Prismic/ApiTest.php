@@ -6,6 +6,7 @@ namespace Prismic\Test;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Response;
 use Prismic;
 use Prismic\Api;
@@ -17,11 +18,14 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use function assert;
 use function json_decode;
+use function serialize;
+use function uniqid;
+use function urlencode;
 
 class ApiTest extends TestCase
 {
-
     /** @var ApiData */
     private $apiData;
 
@@ -33,6 +37,8 @@ class ApiTest extends TestCase
 
     /**
      * @see fixtures/data.json
+     *
+     * @var string
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
@@ -62,8 +68,8 @@ class ApiTest extends TestCase
     {
         $url = $this->repoUrl . '?access_token=My-Access-Token';
         $key = Api::generateCacheKey($url);
-        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
+        assert($item instanceof CacheItemInterface || $item instanceof ObjectProphecy);
         $item->get()->willReturn($this->apiData);
         $item->isHit()->willReturn(true);
         $this->cache->getItem($key)->willReturn($item->reveal());
@@ -79,8 +85,8 @@ class ApiTest extends TestCase
         $expect = $url . '&access_token=' . $token;
         $expectedKey = Api::generateCacheKey($expect);
 
-        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
+        assert($item instanceof CacheItemInterface || $item instanceof ObjectProphecy);
         $item->get()->willReturn($this->apiData);
         $item->isHit()->willReturn(true);
         $this->cache->getItem($expectedKey)->willReturn($item);
@@ -92,14 +98,14 @@ class ApiTest extends TestCase
 
     public function testApiVersionInformation() : void
     {
-        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
+        assert($item instanceof CacheItemInterface || $item instanceof ObjectProphecy);
         $item->get()->willReturn($this->apiData);
         $item->isHit()->willReturn(true);
         $this->cache->getItem(Argument::type('string'))->willReturn($item->reveal());
         $this->httpClient->request()->shouldNotBeCalled();
 
-        $cache  = $this->cache->reveal();
+        $cache = $this->cache->reveal();
 
         $v1Url = 'https://whatever.prismic.io/api';
         $api = Api::get($v1Url, null, null, $cache);
@@ -127,8 +133,8 @@ class ApiTest extends TestCase
     {
         $url = $this->repoUrl . '?access_token=My-Access-Token';
         $key = Api::generateCacheKey($url);
-        /** @var CacheItemInterface|ObjectProphecy $item */
         $item = $this->prophesize(CacheItemInterface::class);
+        assert($item instanceof CacheItemInterface || $item instanceof ObjectProphecy);
         $item->isHit()->willReturn(false);
         $item->set(Argument::any())->shouldBeCalled();
         $this->cache->getItem($key)->willReturn($item->reveal());
@@ -163,6 +169,7 @@ class ApiTest extends TestCase
         $this->assertFalse($api->inExperiment());
     }
 
+    /** @return mixed[] */
     public function getPreviewRefs() : array
     {
         return [
@@ -171,28 +178,26 @@ class ApiTest extends TestCase
                     'io.prismic.preview' => 'preview',
                     'other' => 'other',
                 ],
-                'preview'
+                'preview',
             ],
             [
                 [
                     'io.prismic.preview' => 'preview',
                     'io.prismic.experiment' => 'experiment',
                 ],
-                'preview'
+                'preview',
             ],
             [
-                [
-                    'io_prismic_preview' => 'preview',
-                ],
-                'preview'
+                ['io_prismic_preview' => 'preview'],
+                'preview',
             ],
         ];
     }
 
     /**
+     * @param string[] $cookie
+     *
      * @dataProvider getPreviewRefs
-     * @param array $cookie
-     * @param string $expect
      */
     public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect) : void
     {
@@ -202,9 +207,9 @@ class ApiTest extends TestCase
     }
 
     /**
+     * @param string[] $cookie
+     *
      * @dataProvider getPreviewRefs
-     * @param array $cookie
-     * @param string $expect
      */
     public function testCookieValuesCanBeSetOverridingSuperGlobal(array $cookie, string $expect) : void
     {
@@ -218,18 +223,14 @@ class ApiTest extends TestCase
 
     public function testInPreviewIsTrueWhenPreviewCookieIsSet() : void
     {
-        $_COOKIE = [
-            'io.prismic.preview' => 'whatever',
-        ];
+        $_COOKIE = ['io.prismic.preview' => 'whatever'];
         $api = $this->getApiWithDefaultData();
         $this->assertTrue($api->inPreview());
     }
 
     public function testRefDoesNotReturnStaleExperimentRef() : void
     {
-        $_COOKIE = [
-            'io.prismic.experiment' => 'Stale Experiment Cookie Value',
-        ];
+        $_COOKIE = ['io.prismic.experiment' => 'Stale Experiment Cookie Value'];
         $api = $this->getApiWithDefaultData();
         $this->assertSame($this->expectedMasterRef, $api->ref());
     }
@@ -238,9 +239,7 @@ class ApiTest extends TestCase
     {
         $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $expectedRef = 'VDUUmHIKAZQKk9uq'; // The ref at index 1 for the variations in this experiment
-        $_COOKIE = [
-            'io.prismic.experiment' => $runningGoogleCookie,
-        ];
+        $_COOKIE = ['io.prismic.experiment' => $runningGoogleCookie];
         $api = $this->getApiWithDefaultData();
         $this->assertSame($expectedRef, $api->ref());
         $this->assertTrue($api->inExperiment());
@@ -273,12 +272,18 @@ class ApiTest extends TestCase
         $this->assertNull($api->bookmark('not_known_bookmark_name'));
     }
 
-    public function testFormsReturnsOnlyFormInstances() : void
+    public function testFormsCanBeAccessedWithMagicGetter() : void
     {
         $api = $this->getApiWithDefaultData();
         $forms = $api->forms();
         $this->assertTrue(isset($forms->everything));
         $this->assertInstanceOf(SearchForm::class, $forms->everything);
+    }
+
+    public function testFormsCanBeRetrievedByNameFromTheCollection() : void
+    {
+        $api = $this->getApiWithDefaultData();
+        $this->assertInstanceOf(SearchForm::class, $api->forms()->getForm('blogs'));
     }
 
     public function testFormsIsASearchFormCollection() : void
@@ -336,7 +341,7 @@ class ApiTest extends TestCase
 
     public function testPreviewSessionWrapsGuzzleExceptions() : void
     {
-        $exception = new \GuzzleHttp\Exception\TransferException('Some Exception Message');
+        $exception = new TransferException('Some Exception Message');
         $this->httpClient->request('GET', $this->repoUrl)->willThrow($exception);
         $api = $this->getApiWithDefaultData();
         $this->expectException(Prismic\Exception\RequestFailureException::class);
@@ -404,7 +409,6 @@ class ApiTest extends TestCase
         $cacheItem->isHit()->willReturn(true);
         $cacheItem->get()->willReturn($searchResult);
         $this->cache->getItem(Argument::type('string'))->willReturn($cacheItem->reveal());
-
 
         $api = $this->getApiWithDefaultData();
         $api->setLinkResolver(new FakeLinkResolver());

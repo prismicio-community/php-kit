@@ -5,8 +5,10 @@ namespace Prismic\Test\Document\Fragment;
 
 use Prismic\Document\Fragment\TextElement;
 use Prismic\Exception\InvalidArgumentException;
+use Prismic\Json;
 use Prismic\Test\FakeLinkResolver;
 use Prismic\Test\TestCase;
+use function assert;
 
 class TextElementTest extends TestCase
 {
@@ -14,7 +16,7 @@ class TextElementTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         TextElement::factory(
-            \json_decode('{"foo":"bar"}'),
+            Json::decodeObject('{"foo":"bar"}'),
             new FakeLinkResolver()
         );
     }
@@ -23,14 +25,14 @@ class TextElementTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         TextElement::factory(
-            \json_decode('{"type":"unknown"}'),
+            Json::decodeObject('{"type":"unknown"}'),
             new FakeLinkResolver()
         );
     }
 
     public function testSpanWithEmptyType() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph.",
             "spans": [
@@ -46,7 +48,7 @@ class TextElementTest extends TestCase
 
     public function testBoldText() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with bold text.",
             "spans": [
@@ -64,7 +66,7 @@ class TextElementTest extends TestCase
 
     public function testSpanAroundUtf8Characters() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Unicode paragraph with ßold tex†.",
             "spans": [
@@ -82,7 +84,7 @@ class TextElementTest extends TestCase
 
     public function testNestedSpans() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with nested spans of several types.",
             "spans": [
@@ -114,7 +116,7 @@ class TextElementTest extends TestCase
 
     public function testNestedSpansAtTheSameIndex() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with multiple spans at the same index.",
             "spans": [
@@ -138,8 +140,8 @@ class TextElementTest extends TestCase
                 }
             ]
         }');
-        /** @var TextElement $text */
         $text = TextElement::factory($value, new FakeLinkResolver());
+        assert($text instanceof TextElement);
         $expect = '<p>Paragraph with multiple <strong><em><span class="test-label">spans at the same index</span></em></strong>.</p>';
         $this->assertSame($expect, $text->asHtml());
         $this->assertSame('Paragraph with multiple spans at the same index.', $text->asText());
@@ -148,7 +150,7 @@ class TextElementTest extends TestCase
 
     public function testLabelAtBlockLevel() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph labelled as a block.",
             "spans": [],
@@ -162,14 +164,14 @@ class TextElementTest extends TestCase
 
     public function testNullTextWillRenderAsNull() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": null,
             "spans": [],
             "label": "test-label"
         }');
-        /** @var TextElement $text */
         $text = TextElement::factory($value, new FakeLinkResolver());
+        assert($text instanceof TextElement);
         $this->assertNull($text->asText());
         $this->assertNull($text->asHtml());
         $this->assertNull($text->withoutFormatting());
@@ -177,7 +179,7 @@ class TextElementTest extends TestCase
 
     public function testLinkSpan() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with a link to another document.",
             "spans": [
@@ -192,15 +194,15 @@ class TextElementTest extends TestCase
                 }
             ]
         }');
-        /** @var TextElement $text */
         $text = TextElement::factory($value, new FakeLinkResolver());
+        assert($text instanceof TextElement);
         $expect = '<p>Paragraph with a <a href="URL">link to another document</a>.</p>';
         $this->assertSame($expect, $text->asHtml());
     }
 
     public function testNewLinesAreConvertedToLineBreaksWhenSpansArePresent() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with\nbold\ntext.",
             "spans": [
@@ -218,7 +220,7 @@ class TextElementTest extends TestCase
 
     public function testNewLinesAreConvertedToLineBreaksWhenSpansAreNotPresent() : void
     {
-        $value = \json_decode('{
+        $value = Json::decodeObject('{
             "type": "paragraph",
             "text": "Paragraph with\nbold\ntext.",
             "spans": []

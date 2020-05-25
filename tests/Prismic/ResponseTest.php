@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Document\Hydrator;
-use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\JsonError;
 use Prismic\Response;
 
 class ResponseTest extends TestCase
@@ -32,8 +32,8 @@ class ResponseTest extends TestCase
         $jsonString = 'invalid';
         $hydrator = $this->prophesize(Hydrator::class);
         $hydrator->hydrate()->shouldNotBeCalled();
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Failed to decode json payload');
+        $this->expectException(JsonError::class);
+        $this->expectExceptionMessage('Failed to decode JSON payload');
         Response::fromJsonString($jsonString, $hydrator->reveal());
     }
 }

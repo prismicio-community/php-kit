@@ -3,22 +3,23 @@ declare(strict_types=1);
 
 namespace Prismic;
 
+use function implode;
+use function is_array;
+use function is_string;
+
 class SimplePredicate implements Predicate
 {
-
     /** @var string  */
     private $name;
 
     /** @var string  */
     private $fragment;
 
-    /** @var array  */
+    /** @var mixed[] */
     private $args;
 
     /**
-     * @param string $name
-     * @param string $fragment
-     * @param array  $args
+     * @param mixed[] $args
      */
     public function __construct(string $name, string $fragment, array $args = [])
     {
@@ -27,41 +28,42 @@ class SimplePredicate implements Predicate
         $this->args     = $args;
     }
 
-    /**
-     * @return string
-     */
     public function q() : string
     {
-        $query = "[:d = " . $this->name . "(";
-        if ($this->name === "similar") {
-            $query .= "\"" . $this->fragment . "\"";
+        $query = '[:d = ' . $this->name . '(';
+        if ($this->name === 'similar') {
+            $query .= '"' . $this->fragment . '"';
         } else {
             $query .= $this->fragment;
         }
+
         foreach ($this->args as $arg) {
-            $query .= ", " . $this->serializeField($arg);
+            $query .= ', ' . $this->serializeField($arg);
         }
-        $query .= ")]";
+
+        $query .= ')]';
+
         return $query;
     }
 
     /**
      * @param mixed $value
-     *
-     * @return string
      */
     private function serializeField($value) : string
     {
         if (is_string($value)) {
-            return "\"" . $value . "\"";
+            return '"' . $value . '"';
         }
+
         if (is_array($value)) {
-            $str_array = [];
+            $fields = [];
             foreach ($value as $elt) {
-                array_push($str_array, $this->serializeField($elt));
+                $fields[] = $this->serializeField($elt);
             }
-            return "[" . implode(", ", $str_array) . "]";
+
+            return '[' . implode(', ', $fields) . ']';
         }
+
         return (string) $value;
     }
 }

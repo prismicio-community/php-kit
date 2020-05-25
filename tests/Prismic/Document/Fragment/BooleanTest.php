@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Prismic\Test\Document\Fragment;
 
-use Prismic\Document\Fragment\Boolean;
 use PHPUnit\Framework\TestCase;
+use Prismic\Document\Fragment\Boolean;
 use function json_decode;
 
 class BooleanTest extends TestCase
 {
+    /** @return mixed[] */
     public function possibleFragmentValues() : iterable
     {
         return [

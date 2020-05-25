@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Prismic\Exception;
 
+use JsonException;
+use Prismic\Json;
 use Psr\Http\Message\ResponseInterface;
-use function json_decode;
+use function is_string;
 use function strtolower;
 
 class ExpiredPreviewTokenException extends RuntimeException
 {
     /**
      * This is the string we match in the API response to see if the error is for an expired token
-     * @var string
      */
     private const RESPONSE_MESSAGE = 'Preview token expired';
 
@@ -20,14 +21,17 @@ class ExpiredPreviewTokenException extends RuntimeException
 
     public static function isTokenExpiryResponse(ResponseInterface $response) : bool
     {
-        $body = json_decode((string) $response->getBody(), true);
-        if (! $body) {
+        try {
+            $body = Json::decodeObject((string) $response->getBody());
+        } catch (JsonException $error) {
             return false;
         }
-        if (! isset($body['error'])) {
+
+        if (! isset($body->error) || ! is_string($body->error)) {
             return false;
         }
-        return strtolower($body['error']) === strtolower(self::RESPONSE_MESSAGE);
+
+        return strtolower($body->error) === strtolower(self::RESPONSE_MESSAGE);
     }
 
     public static function fromResponse(ResponseInterface $response) :? self
@@ -40,8 +44,10 @@ class ExpiredPreviewTokenException extends RuntimeException
                 410 // Corresponds to 'Gone' status code
             );
             $exception->response = $response;
+
             return $exception;
         }
+
         return null;
     }
 
