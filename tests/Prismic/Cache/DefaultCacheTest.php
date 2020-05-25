@@ -14,8 +14,8 @@ class DefaultCacheTest extends TestCase
 {
     public function testApcUsedAsDefaultCacheIfAvailable() : void
     {
-        if (! extension_loaded('apc')) {
-            $this->fail('APC extension is not loaded');
+        if (! extension_loaded('apcu')) {
+            $this->fail('APCu extension is not loaded');
 
             return;
         }
@@ -30,8 +30,8 @@ class DefaultCacheTest extends TestCase
 
     public function testArrayCacheIsUsedByDefaultWhenApcIsNotAvailable() : void
     {
-        if (extension_loaded('apc')) {
-            $this->markTestSkipped('APC extension is loaded so this test cannot continue');
+        if (extension_loaded('apcu')) {
+            $this->markTestSkipped('APCu extension is loaded so this test cannot continue');
 
             return;
         }

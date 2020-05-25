@@ -14,7 +14,7 @@ class DefaultCache
 {
     public static function factory() : CacheItemPoolInterface
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             return static::getApcCache();
         }
 
