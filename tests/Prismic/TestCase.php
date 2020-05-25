@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 use function file_exists;
 use function file_get_contents;
@@ -10,6 +11,8 @@ use function sprintf;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    use ProphecyTrait;
+
     public function getJsonFixture(string $fileName) : string
     {
         $file = sprintf('%s/../fixtures/%s', __DIR__, $fileName);

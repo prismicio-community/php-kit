@@ -39,6 +39,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
         "doctrine/coding-standard": "^7.0",
         "phpcompatibility/php-compatibility": "^9.3",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9",
         "roave/security-advisories": "dev-master",
