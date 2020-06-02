@@ -3,6 +3,12 @@
 ![Build Status](https://github.com/netglue/prismic-php-kit/workflows/PHPUnit%20Test%20Suite/badge.svg)
 [![codecov](https://codecov.io/gh/netglue/prismic-php-kit/branch/master/graph/badge.svg)](https://codecov.io/gh/netglue/prismic-php-kit)
 
+## Forthcoming Abandonment…
+
+This library will soon be unmaintained in favour of a new client I've put together at [netglue/prismic-client](https://github.com/netglue/prismic-client).
+It still has similarities but is mostly a re-write that takes advantage of the http related PSRs and seeks to simplify things and further improve type safety.
+
+If you're starting a new project, want to use a client that will stick around for a while and don't want to use the outdated official client, then choose that…
 
 ## Introduction
 
