@@ -52,6 +52,9 @@ class SimplePredicate implements Predicate
      */
     private static function serializeField($value) : string
     {
+        if (is_bool($value)) {
+            return $value ? "true" : "false";
+        }
         if (is_string($value)) {
             return "\"" . $value . "\"";
         }
