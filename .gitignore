@@ -2,6 +2,8 @@
 phpdoc.dist.xml
 phpunit.xml
 /build/
+.idea/
+/.phpunit.result.cache
 
 ### Composer ###
 composer.phar

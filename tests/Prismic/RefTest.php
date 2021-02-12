@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use Prismic\Exception\ExceptionInterface;
 use Prismic\Ref;
 use DateTimeImmutable;
 use stdClass;
@@ -30,15 +31,15 @@ class RefTest extends TestCase
     public function testParseRefs($json)
     {
         $ref = Ref::parse($json);
-        $this->assertInternalType('string', $ref->getId());
+        $this->assertIsString($ref->getId());
         $this->assertStringMatchesFormat('%s', $ref->getId());
-        $this->assertInternalType('string', $ref->getRef());
+        $this->assertIsString($ref->getRef());
         $this->assertStringMatchesFormat('%s', $ref->getRef());
-        $this->assertInternalType('string', $ref->getLabel());
+        $this->assertIsString($ref->getLabel());
         $this->assertStringMatchesFormat('%s', $ref->getLabel());
-        $this->assertInternalType('boolean', $ref->isMasterRef());
+        $this->assertIsBool($ref->isMasterRef());
         if (! is_null($ref->getScheduledAt())) {
-            $this->assertInternalType('int', $ref->getScheduledAt());
+            $this->assertIsInt($ref->getScheduledAt());
             $this->assertEquals(13, strlen((string)$ref->getScheduledAt()), 'Expected a 13 digit number');
         }
     }
@@ -51,7 +52,7 @@ class RefTest extends TestCase
         $ref = Ref::parse($json);
 
         if (! is_null($ref->getScheduledAtTimestamp())) {
-            $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
+            $this->assertIsInt($ref->getScheduledAtTimestamp());
             $this->assertEquals(10, strlen((string)$ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
         } else {
             // Squash No assertions warning in PHP Unit
@@ -84,11 +85,9 @@ class RefTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Prismic\Exception\ExceptionInterface
-     */
     public function testExceptionThrownForInvalidJsonObject()
     {
+        $this->expectException(ExceptionInterface::class);
         Ref::parse(new stdClass);
     }
 }

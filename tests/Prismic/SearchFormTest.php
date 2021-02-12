@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Exception\InvalidArgumentException;
+use Prismic\Exception\RuntimeException;
 use Prismic\Ref;
 use Prismic\SearchForm;
 use Prismic\Form;
@@ -33,7 +35,7 @@ class SearchFormTest extends TestCase
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
@@ -54,55 +56,50 @@ class SearchFormTest extends TestCase
     public function testGetDataReturnsArray()
     {
         $form = $this->getSearchForm();
-        $this->assertInternalType('array', $form->getData());
+        $this->assertIsIterable($form->getData());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Form parameter key must be a non-empty string
-     */
     public function testSetWithAnEmptyKeyThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Form parameter key must be a non-empty string');
+
         $form = $this->getSearchForm();
         $form->set('', 'foo');
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Form parameter value must be scalar
-     */
     public function testSetWithANonScalarValueThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Form parameter value must be scalar');
+
         $form = $this->getSearchForm();
         $form->set('page', ['an-array']);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unknown form field parameter
-     */
     public function testSetWithAnUnknownKeyThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown form field parameter');
+
         $form = $this->getSearchForm();
         $form->set('whatever', 'foo');
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage expects a string parameter
-     */
     public function testSetStringParamWithNonStringThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('expects a string parameter');
+
         $form = $this->getSearchForm();
         $form->set('lang', 1);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage expects an integer parameter
-     */
     public function testSetIntParamWithNonNumberThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('expects an integer parameter');
+
         $form = $this->getSearchForm();
         $form->set('page', 'foo');
     }
@@ -367,12 +364,11 @@ class SearchFormTest extends TestCase
         $this->assertSame($cachedJson, $response);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Form type not supported
-     */
     public function testExceptionIsThrownForInvalidForm()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Form type not supported');
+
         $formJson = '{
             "method": "POST",
             "enctype": "application/x-www-form-urlencoded",
@@ -444,12 +440,11 @@ class SearchFormTest extends TestCase
         $this->assertSame(10, $form->count());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Unable to decode json response
-     */
     public function testExceptionIsThrownForInvalidJson()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to decode json response');
+
         $this->prepareResponse('Invalid JSON String');
         $this->cache->get(Argument::type('string'))->willReturn(null);
         $this->cache->set()->shouldNotBeCalled();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\ApiData;
+use Prismic\Exception\RuntimeException;
 use Prismic\Language;
 use Prismic\Ref;
 use Prismic\Experiments;
@@ -15,7 +16,7 @@ class ApiDataTest extends TestCase
     /** @var ApiData */
     private $data;
 
-    public function setUp()
+    public function setUp(): void
     {
         $json = $this->getJsonFixture('data.json');
         $this->data = ApiData::withJsonString($json);
@@ -28,12 +29,11 @@ class ApiDataTest extends TestCase
         $this->assertInstanceOf(ApiData::class, $data);
     }
 
-    /**
-     * @expectedException Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Unable to decode JSON response
-     */
     public function testWithJsonStringThrowsExceptionForInvalidJson()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to decode JSON response');
+
         ApiData::withJsonString('wtf?');
     }
 
