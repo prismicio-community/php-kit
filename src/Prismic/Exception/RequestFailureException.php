@@ -57,7 +57,7 @@ class RequestFailureException extends RuntimeException
 
     public function getResponse() :? ResponseInterface
     {
-        if (! $this->guzzleException instanceof ConnectException) {
+        if (! $this->guzzleException instanceof RequestException) {
             return null;
         }
         return $this->guzzleException->getResponse();
