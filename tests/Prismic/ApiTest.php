@@ -9,7 +9,6 @@ use Prismic\Api;
 use Prismic\ApiData;
 use Prismic\Cache\CacheInterface;
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
 use Prophecy\Argument;
@@ -18,8 +17,6 @@ use GuzzleHttp\ClientInterface;
 
 class ApiTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var ApiData */
     private $apiData;
 

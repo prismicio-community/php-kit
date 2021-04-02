@@ -25,8 +25,7 @@
     },
     "require-dev": {
         "phpdocumentor/phpdocumentor": "^3.0",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "^3.3"
     },
     "extra": {

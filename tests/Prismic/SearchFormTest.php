@@ -13,12 +13,9 @@ use Prismic\Cache\CacheInterface;
 use Prismic\Predicates;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class SearchFormTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var ApiData */
     private $apiData;
 

@@ -7,13 +7,10 @@ use Prismic\ApiData;
 use Prismic\Language;
 use Prismic\Ref;
 use Prismic\Experiments;
-use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 class ApiDataTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var ApiData */
     private $data;
 
