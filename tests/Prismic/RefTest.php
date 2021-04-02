@@ -12,7 +12,7 @@ class RefTest extends TestCase
 
     private $refs;
 
-    public function getRefs()
+    public function getRefs(): array
     {
         if (! $this->refs) {
             $this->refs = \json_decode($this->getJsonFixture('refs.json'));
@@ -27,18 +27,21 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testParseRefs($json)
+    public function testParseRefs($json): void
     {
         $ref = Ref::parse($json);
-        $this->assertInternalType('string', $ref->getId());
+        $this->assertIsString($ref->getId());
         $this->assertStringMatchesFormat('%s', $ref->getId());
-        $this->assertInternalType('string', $ref->getRef());
+
+        $this->assertIsString($ref->getRef());
         $this->assertStringMatchesFormat('%s', $ref->getRef());
-        $this->assertInternalType('string', $ref->getLabel());
+
+        $this->assertIsString($ref->getLabel());
         $this->assertStringMatchesFormat('%s', $ref->getLabel());
-        $this->assertInternalType('boolean', $ref->isMasterRef());
+
+        $this->assertIsBool($ref->isMasterRef());
         if (! is_null($ref->getScheduledAt())) {
-            $this->assertInternalType('int', $ref->getScheduledAt());
+            $this->assertIsInt($ref->getScheduledAt());
             $this->assertEquals(13, strlen((string)$ref->getScheduledAt()), 'Expected a 13 digit number');
         }
     }
@@ -46,12 +49,12 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testGetScheduledAtTimestamp($json)
+    public function testGetScheduledAtTimestamp($json): void
     {
         $ref = Ref::parse($json);
 
         if (! is_null($ref->getScheduledAtTimestamp())) {
-            $this->assertInternalType('int', $ref->getScheduledAtTimestamp());
+            $this->assertIsInt($ref->getScheduledAtTimestamp());
             $this->assertEquals(10, strlen((string)$ref->getScheduledAtTimestamp()), 'Expected a 10 digit number');
         } else {
             // Squash No assertions warning in PHP Unit
@@ -62,7 +65,7 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testToStringSerialisesToRef($json)
+    public function testToStringSerialisesToRef($json): void
     {
         $ref = Ref::parse($json);
         $this->assertSame($ref->getRef(), (string) $ref);
@@ -71,7 +74,7 @@ class RefTest extends TestCase
     /**
      * @dataProvider getRefs
      */
-    public function testGetScheduledDate($json)
+    public function testGetScheduledDate($json): void
     {
         $ref = Ref::parse($json);
         if (! is_null($ref->getScheduledAtTimestamp())) {
@@ -84,11 +87,9 @@ class RefTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException Prismic\Exception\ExceptionInterface
-     */
     public function testExceptionThrownForInvalidJsonObject()
     {
+        $this->expectException(\Prismic\Exception\ExceptionInterface::class);
         Ref::parse(new stdClass);
     }
 }

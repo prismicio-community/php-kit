@@ -1,10 +1,6 @@
-<?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: jeroen
- * Date: 20-3-19
- * Time: 21:24
- */
+<?php
+
+declare(strict_types=1);
 
 namespace Prismic\Test;
 
@@ -19,7 +15,7 @@ class LanguageTest extends TestCase
     /** @var \stdClass */
     private $json;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->json = $json = \json_decode($this->getJsonFixture('language.json'));
         $this->language = Language::parse($json);
@@ -31,11 +27,9 @@ class LanguageTest extends TestCase
         $this->assertSame($this->json->name, $this->language->getName());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testWrongObjectType()
     {
+        $this->expectException(InvalidArgumentException::class);
         Language::parse(new \stdClass);
     }
 }

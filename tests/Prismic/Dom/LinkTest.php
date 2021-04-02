@@ -12,7 +12,7 @@ class LinkTest extends TestCase
     private $links;
     private $linkResolver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->links = json_decode($this->getJsonFixture('links.json'));
         $this->linkResolver = new FakeLinkResolver();

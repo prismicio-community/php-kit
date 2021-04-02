@@ -38,7 +38,7 @@ class ApcCache implements CacheInterface
      * Stores a new cache entry
      *
      * @param string    $key   the key of the cache entry
-     * @param \stdClass $value the value of the entry
+     * @param mixed $value the value of the entry
      * @param int       $ttl   the time until this cache entry expires
      * @return void
      */
