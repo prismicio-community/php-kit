@@ -84,6 +84,8 @@ class Api
      * @param  CacheInterface  $cache       Cache implementation
      * @param  int             $apiCacheTTL Max time to keep the API object in cache (in seconds)
      * @return static
+     *
+     * @deprecated Use Prismic\ApiFactory::get instead.
      */
     public static function get(
         string            $action,
