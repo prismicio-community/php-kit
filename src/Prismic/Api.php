@@ -515,7 +515,7 @@ class Api
      */
     public static function defaultCache() : CacheInterface
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             return new ApcCache();
         }
         return new NoCache();
