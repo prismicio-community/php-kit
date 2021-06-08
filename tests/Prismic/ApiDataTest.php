@@ -11,11 +11,10 @@ use stdClass;
 
 class ApiDataTest extends TestCase
 {
-
     /** @var ApiData */
     private $data;
 
-    public function setUp()
+    public function setUp(): void
     {
         $json = $this->getJsonFixture('data.json');
         $this->data = ApiData::withJsonString($json);
@@ -28,12 +27,10 @@ class ApiDataTest extends TestCase
         $this->assertInstanceOf(ApiData::class, $data);
     }
 
-    /**
-     * @expectedException Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Unable to decode JSON response
-     */
     public function testWithJsonStringThrowsExceptionForInvalidJson()
     {
+        $this->expectException(\Prismic\Exception\RuntimeException::class);
+        $this->expectExceptionMessage("Unable to decode JSON response");
         ApiData::withJsonString('wtf?');
     }
 

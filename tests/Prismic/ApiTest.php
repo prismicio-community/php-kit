@@ -17,7 +17,6 @@ use GuzzleHttp\ClientInterface;
 
 class ApiTest extends TestCase
 {
-
     /** @var ApiData */
     private $apiData;
 
@@ -32,7 +31,7 @@ class ApiTest extends TestCase
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
-    public function setUp()
+    public function setUp(): void
     {
         unset($_COOKIE);
 
@@ -52,7 +51,7 @@ class ApiTest extends TestCase
         );
     }
 
-    protected function getApiWithDefaultData() : Api
+    protected function getApiWithDefaultData(): Api
     {
         $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
         $cachedData = serialize($this->apiData);
@@ -62,13 +61,13 @@ class ApiTest extends TestCase
         return $this->getApi();
     }
 
-    public function testCachedApiDataWillBeUsedIfAvailable()
+    public function testCachedApiDataWillBeUsedIfAvailable(): void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
-    public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty()
+    public function testGetIsCalledOnHttpClientWhenTheCacheIsEmpty(): void
     {
         $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
         $this->cache->get($key)->willReturn(null);
@@ -88,13 +87,13 @@ class ApiTest extends TestCase
         $this->assertSame(serialize($this->apiData), serialize($api->getData()));
     }
 
-    public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive()
+    public function testMasterRefIsReturnedWhenNeitherPreviewOrExperimentsAreActive(): void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame($this->expectedMasterRef, $api->ref());
     }
 
-    public function testMasterRefIsReturnedByMasterMethod()
+    public function testMasterRefIsReturnedByMasterMethod(): void
     {
         $api = $this->getApiWithDefaultData();
         $ref = $api->master();
@@ -102,14 +101,14 @@ class ApiTest extends TestCase
         $this->assertSame($this->expectedMasterRef, (string) $ref);
     }
 
-    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet()
+    public function testInPreviewAndInExperimentIsFalseWhenNoCookiesAreSet(): void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertFalse($api->inPreview());
         $this->assertFalse($api->inExperiment());
     }
 
-    public function getPreviewRefs()
+    public function getPreviewRefs(): array
     {
         return [
             [
@@ -138,14 +137,14 @@ class ApiTest extends TestCase
     /**
      * @dataProvider getPreviewRefs
      */
-    public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect)
+    public function testPreviewRefIsReturnedWhenPresentInSuperGlobal(array $cookie, string $expect): void
     {
         $_COOKIE = $cookie;
         $api = $this->getApiWithDefaultData();
         $this->assertSame($expect, $api->ref());
     }
 
-    public function testInPreviewIsTrueWhenPreviewCookieIsSet()
+    public function testInPreviewIsTrueWhenPreviewCookieIsSet(): void
     {
         $_COOKIE = [
             'io.prismic.preview' => 'whatever',
@@ -154,7 +153,7 @@ class ApiTest extends TestCase
         $this->assertTrue($api->inPreview());
     }
 
-    public function testRefDoesNotReturnStaleExperimentRef()
+    public function testRefDoesNotReturnStaleExperimentRef(): void
     {
         $_COOKIE = [
             'io.prismic.experiment' => 'Stale Experiment Cookie Value',
@@ -163,7 +162,7 @@ class ApiTest extends TestCase
         $this->assertSame($this->expectedMasterRef, $api->ref());
     }
 
-    public function testCorrectExperimentRefIsReturnedWhenCookieIsSet()
+    public function testCorrectExperimentRefIsReturnedWhenCookieIsSet(): void
     {
         $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $expectedRef = 'VDUUmHIKAZQKk9uq'; // The ref at index 1 for the variations in this experiment
@@ -178,7 +177,7 @@ class ApiTest extends TestCase
     /**
      * @depends testCorrectExperimentRefIsReturnedWhenCookieIsSet
      */
-    public function testPreviewRefTrumpsExperimentRefWhenSet()
+    public function testPreviewRefTrumpsExperimentRefWhenSet(): void
     {
         $runningGoogleCookie = '_UQtin7EQAOH5M34RQq6Dg 1';
         $_COOKIE = [
@@ -190,14 +189,14 @@ class ApiTest extends TestCase
         $this->assertFalse($api->inExperiment());
     }
 
-    public function testBookmarkReturnsCorrectDocumentId()
+    public function testBookmarkReturnsCorrectDocumentId(): void
     {
         $api = $this->getApiWithDefaultData();
         $this->assertSame('Ue0EDd_mqb8Dhk3j', $api->bookmark('about'));
         $this->assertNull($api->bookmark('unknown-bookmark'));
     }
 
-    public function testFormsReturnsOnlyFormInstances()
+    public function testFormsReturnsOnlyFormInstances(): void
     {
         $api = $this->getApiWithDefaultData();
         $everything = $api->form('everything');
@@ -205,7 +204,7 @@ class ApiTest extends TestCase
         $this->assertInstanceOf(SearchForm::class, $everything);
     }
 
-    public function testRefsGroupsRefsByLabel()
+    public function testRefsGroupsRefsByLabel(): void
     {
         $api = $this->getApiWithDefaultData();
         $refs = $api->refs();
@@ -215,28 +214,28 @@ class ApiTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Prismic\Ref::class, $refs);
     }
 
-    public function testRefsContainsOnlyFirstEncounteredRefWithLabel()
+    public function testRefsContainsOnlyFirstEncounteredRefWithLabel(): void
     {
         $api = $this->getApiWithDefaultData();
         $refs = $api->refs();
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $refs['San Francisco Grand opening']);
     }
 
-    public function testGetRefFromLabelReturnsExpectedRef()
+    public function testGetRefFromLabelReturnsExpectedRef(): void
     {
         $api = $this->getApiWithDefaultData();
         $ref = $api->getRefFromLabel('San Francisco Grand opening');
         $this->assertSame('UgjWRd_mqbYHvPJa', (string) $ref);
     }
 
-    public function testUsefulExceptionIsThrownWhenApiCannotBeReached()
+    public function testUsefulExceptionIsThrownWhenApiCannotBeReached(): void
     {
         $client = new Client(['connect_timeout' => 0.01]);
         try {
-            $api = Api::get('http://example.example', null, $client);
+            Api::get('http://example.example', null, $client);
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
-            $this->assertContains('example.example', $e->getMessage());
+            $this->assertStringContainsString('Api Request Failed', $e->getMessage());
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertNull($e->getResponse());
         }

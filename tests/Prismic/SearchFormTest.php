@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use Prismic\Api;
+use Prismic\Exception\RuntimeException;
 use Prismic\Ref;
 use Prismic\SearchForm;
 use Prismic\Form;
@@ -15,7 +16,6 @@ use Prophecy\Argument;
 
 class SearchFormTest extends TestCase
 {
-
     /** @var ApiData */
     private $apiData;
 
@@ -33,7 +33,7 @@ class SearchFormTest extends TestCase
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
@@ -41,7 +41,7 @@ class SearchFormTest extends TestCase
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 
-    protected function getSearchForm() : SearchForm
+    protected function getSearchForm(): SearchForm
     {
         return new SearchForm(
             $this->httpClient->reveal(),
@@ -51,68 +51,58 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testGetDataReturnsArray()
+    public function testGetDataReturnsArray(): void
     {
-        $form = $this->getSearchForm();
-        $this->assertInternalType('array', $form->getData());
+        $actualForm = $this->getSearchForm();
+        $this->assertIsArray($actualForm->getData());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Form parameter key must be a non-empty string
-     */
-    public function testSetWithAnEmptyKeyThrowsException()
+    public function testSetWithAnEmptyKeyThrowsException(): void
     {
+        $this->expectException(\Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Form parameter key must be a non-empty string");
         $form = $this->getSearchForm();
         $form->set('', 'foo');
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Form parameter value must be scalar
-     */
-    public function testSetWithANonScalarValueThrowsException()
+    public function testSetWithANonScalarValueThrowsException(): void
     {
+        $this->expectException(\Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Form parameter value must be scalar");
         $form = $this->getSearchForm();
         $form->set('page', ['an-array']);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unknown form field parameter
-     */
-    public function testSetWithAnUnknownKeyThrowsException()
+    public function testSetWithAnUnknownKeyThrowsException(): void
     {
+        $this->expectException(\Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unknown form field parameter");
         $form = $this->getSearchForm();
         $form->set('whatever', 'foo');
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage expects a string parameter
-     */
-    public function testSetStringParamWithNonStringThrowsException()
+    public function testSetStringParamWithNonStringThrowsException(): void
     {
+        $this->expectException(\Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("expects a string parameter");
         $form = $this->getSearchForm();
         $form->set('lang', 1);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\InvalidArgumentException
-     * @expectedExceptionMessage expects an integer parameter
-     */
-    public function testSetIntParamWithNonNumberThrowsException()
+    public function testSetIntParamWithNonNumberThrowsException(): void
     {
+        $this->expectException(\Prismic\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("expects an integer parameter");
         $form = $this->getSearchForm();
         $form->set('page', 'foo');
     }
 
-    protected function assertSearchFormClone(SearchForm $a, SearchForm $b)
+    protected function assertSearchFormClone(SearchForm $a, SearchForm $b): void
     {
         $this->assertNotSame($a, $b);
     }
 
-    public function testSetIsSuccessfulForSingleScalarValue()
+    public function testSetIsSuccessfulForSingleScalarValue(): void
     {
         $form = $this->getSearchForm();
         $data = $form->getData();
@@ -126,7 +116,7 @@ class SearchFormTest extends TestCase
         $this->assertEquals('10', $data['page']);
     }
 
-    public function testSetAppendsForMultipleFields()
+    public function testSetAppendsForMultipleFields(): void
     {
         $form = $this->getSearchForm();
         $data = $form->getData();
@@ -138,7 +128,7 @@ class SearchFormTest extends TestCase
         $this->assertContains('some-value', $data['q']);
     }
 
-    public function testRefAcceptsString()
+    public function testRefAcceptsString(): void
     {
         $form = $this->getSearchForm();
         $clone = $form->ref('some-ref');
@@ -147,7 +137,7 @@ class SearchFormTest extends TestCase
         $this->assertSame('some-ref', $data['ref']);
     }
 
-    public function testRefAcceptsRef()
+    public function testRefAcceptsRef(): void
     {
         $ref = current($this->apiData->getRefs());
         $form = $this->getSearchForm();
@@ -156,20 +146,20 @@ class SearchFormTest extends TestCase
         $this->assertSame((string) $ref, $data['ref']);
     }
 
-    private function assertScalarOptionIsSet(SearchForm $form, string $key, $expectedValue)
+    private function assertScalarOptionIsSet(SearchForm $form, string $key, $expectedValue): void
     {
         $data = $form->getData();
         $this->assertArrayHasKey($key, $data);
         $this->assertSame($expectedValue, $data[$key]);
     }
 
-    private function assertScalarOptionIsNotSet(SearchForm $form, string $key)
+    private function assertScalarOptionIsNotSet(SearchForm $form, string $key): void
     {
         $data = $form->getData();
         $this->assertArrayNotHasKey($key, $data);
     }
 
-    public function testAfter()
+    public function testAfter(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->after('Whatever'),
@@ -178,7 +168,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testLang()
+    public function testLang(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->lang('en-gb'),
@@ -187,7 +177,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testPageSize()
+    public function testPageSize(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->pageSize(99),
@@ -196,7 +186,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testPage()
+    public function testPage(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->page(99),
@@ -205,7 +195,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testFetchWithStringArgs()
+    public function testFetchWithStringArgs(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->fetch('one', 'two', 'three'),
@@ -214,7 +204,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testFetchWithArrayArg()
+    public function testFetchWithArrayArg(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->fetch(...['one','two','three']),
@@ -223,7 +213,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testFetchLinksWithStringArgs()
+    public function testFetchLinksWithStringArgs(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->fetchLinks('one', 'two', 'three'),
@@ -232,7 +222,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testGraphQueryWithStringArg()
+    public function testGraphQueryWithStringArg(): void
     {
         $query = '{
             blogpost {
@@ -247,7 +237,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testOrderingsWithStringArgs()
+    public function testOrderingsWithStringArgs(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->orderings('one', 'two', 'three'),
@@ -256,7 +246,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testOrderingsStripsSquareBrackets()
+    public function testOrderingsStripsSquareBrackets(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->orderings('[my.foo desc]', '[my.bar]'),
@@ -265,7 +255,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testOrderingsWillAcceptUnpackedArrays()
+    public function testOrderingsWillAcceptUnpackedArrays(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->orderings(...['[my.a]', 'my.b', 'my.c desc']),
@@ -274,7 +264,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testOrderingsFiltersEmptyValues()
+    public function testOrderingsFiltersEmptyValues(): void
     {
         $this->assertScalarOptionIsSet(
             $this->getSearchForm()->orderings(...['', 'my.b', '', 'my.c desc']),
@@ -283,7 +273,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testOrderingsIsNotSetWhenOnlyEmptyValuesAreProvided()
+    public function testOrderingsIsNotSetWhenOnlyEmptyValuesAreProvided(): void
     {
         $this->assertScalarOptionIsNotSet(
             $this->getSearchForm()->orderings(...['', '']),
@@ -291,7 +281,7 @@ class SearchFormTest extends TestCase
         );
     }
 
-    public function testStringQueryIsUnprocessedInQuery()
+    public function testStringQueryIsUnprocessedInQuery(): void
     {
         $form = $this->getSearchForm()->query('[:d = at(document.id, "ValidIdentifier")]');
         $data = $form->getData();
@@ -299,7 +289,7 @@ class SearchFormTest extends TestCase
         $this->assertContains('[:d = at(document.id, "ValidIdentifier")]', $data['q']);
     }
 
-    public function testSinglePredicateArgumentInQuery()
+    public function testSinglePredicateArgumentInQuery(): void
     {
         $predicate = Predicates::at('document.id', 'SomeId');
         $expect = sprintf('[%s]', $predicate->q());
@@ -308,7 +298,7 @@ class SearchFormTest extends TestCase
         $this->assertContains($expect, $data['q']);
     }
 
-    public function testMultiplePredicatesInQuery()
+    public function testMultiplePredicatesInQuery(): void
     {
         $predicateA = Predicates::at('document.id', 'SomeId');
         $predicateB = Predicates::any('document.tags', 'Some Tag');
@@ -318,7 +308,7 @@ class SearchFormTest extends TestCase
         $this->assertContains($expect, $data['q']);
     }
 
-    public function testUnpackedPredicateArrayInQuery()
+    public function testUnpackedPredicateArrayInQuery(): void
     {
         $query = [
             Predicates::at('document.id', 'SomeId'),
@@ -330,7 +320,7 @@ class SearchFormTest extends TestCase
         $this->assertContains($expect, $data['q']);
     }
 
-    public function testRegularArrayArgumentInQuery()
+    public function testRegularArrayArgumentInQuery(): void
     {
         $query = [
             Predicates::at('document.id', 'SomeId'),
@@ -342,7 +332,7 @@ class SearchFormTest extends TestCase
         $this->assertContains($expect, $data['q']);
     }
 
-    public function testEmptyArgumentToQueryHasNoEffect()
+    public function testEmptyArgumentToQueryHasNoEffect(): void
     {
         $form = $this->getSearchForm()->query('');
         $data = $form->getData();
@@ -351,7 +341,7 @@ class SearchFormTest extends TestCase
         $this->assertContains($field->getDefaultValue(), $data['q']);
     }
 
-    public function testUrlRemovesPhpArrayKeys()
+    public function testUrlRemovesPhpArrayKeys(): void
     {
         $form = $this->getSearchForm()->query('query_string');
         $url = $form->url();
@@ -359,7 +349,7 @@ class SearchFormTest extends TestCase
         $this->assertSame(2, substr_count($query, 'q='));
     }
 
-    public function testCachedResponseWillBeReturnedInSubmit()
+    public function testCachedResponseWillBeReturnedInSubmit(): void
     {
         $cachedJson = \json_decode('{"some":"data"}');
         $this->cache->get(Argument::type('string'))->willReturn($cachedJson);
@@ -367,12 +357,10 @@ class SearchFormTest extends TestCase
         $this->assertSame($cachedJson, $response);
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Form type not supported
-     */
-    public function testExceptionIsThrownForInvalidForm()
+    public function testExceptionIsThrownForInvalidForm(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Form type not supported");
         $formJson = '{
             "method": "POST",
             "enctype": "application/x-www-form-urlencoded",
@@ -389,10 +377,9 @@ class SearchFormTest extends TestCase
         $searchForm->submit();
     }
 
-    public function testGuzzleExceptionsAreWrappedInSubmit()
+    public function testGuzzleExceptionsAreWrappedInSubmit(): void
     {
         $guzzleException = new \GuzzleHttp\Exception\TransferException('A Guzzle Exception');
-        /** @var \Prophecy\Prophecy\ObjectProphecy $this->httpClient */
         $this->httpClient->request('GET', Argument::type('string'))->willThrow($guzzleException);
         $this->cache->get(Argument::type('string'))->willReturn(null);
         $form = $this->getSearchForm();
@@ -416,7 +403,7 @@ class SearchFormTest extends TestCase
         return $response;
     }
 
-    public function testResponseJsonIsReturned()
+    public function testResponseJsonIsReturned(): void
     {
         $this->prepareResponse();
         $this->cache->get(Argument::type('string'))->willReturn(null);
@@ -431,7 +418,7 @@ class SearchFormTest extends TestCase
         $this->assertSame('data', $response->data);
     }
 
-    public function testCountReturnsIntWhenPresentInResponseBody()
+    public function testCountReturnsIntWhenPresentInResponseBody(): void
     {
         $this->prepareResponse('{"total_results_size":10}');
         $this->cache->get(Argument::type('string'))->willReturn(null);
@@ -444,12 +431,10 @@ class SearchFormTest extends TestCase
         $this->assertSame(10, $form->count());
     }
 
-    /**
-     * @expectedException \Prismic\Exception\RuntimeException
-     * @expectedExceptionMessage Unable to decode json response
-     */
-    public function testExceptionIsThrownForInvalidJson()
+    public function testExceptionIsThrownForInvalidJson(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Unable to decode json response");
         $this->prepareResponse('Invalid JSON String');
         $this->cache->get(Argument::type('string'))->willReturn(null);
         $this->cache->set()->shouldNotBeCalled();

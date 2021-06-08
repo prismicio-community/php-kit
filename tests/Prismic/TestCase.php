@@ -6,7 +6,7 @@ namespace Prismic\Test;
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
 
-    public function getJsonFixture(string $fileName) : string
+    public function getJsonFixture(string $fileName): string
     {
         $file = sprintf('%s/../fixtures/%s', __DIR__, $fileName);
         if (! \file_exists($file)) {

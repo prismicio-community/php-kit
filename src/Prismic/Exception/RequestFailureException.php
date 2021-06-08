@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Exception;
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
@@ -18,6 +19,8 @@ class RequestFailureException extends RuntimeException
 
     /**
      * Factory to return a Prismic Exception wrapping a Guzzle Exception
+     * @param GuzzleException $e
+     * @return RequestFailureException
      */
     public static function fromGuzzleException(GuzzleException $e) : self
     {
@@ -31,10 +34,12 @@ class RequestFailureException extends RuntimeException
 
     /**
      * Factory to wrap a Guzzle Request Exception when we should have access to a request and a response
+     * @param RequestException $e
+     * @return RequestFailureException
      */
     protected static function fromGuzzleRequestException(RequestException $e) : self
     {
-        $response = $e->getResponse();
+        $response = $e instanceof RequestException ? $e->getResponse() : null;
         $code     = $response ? $response->getStatusCode() : 0;
         $reason   = $response ? $response->getReasonPhrase() : 'No Response';
         $request  = $e->getRequest();
@@ -64,7 +69,7 @@ class RequestFailureException extends RuntimeException
 
     public function getRequest() :? RequestInterface
     {
-        if (! $this->guzzleException instanceof RequestException) {
+        if (! $this->guzzleException instanceof ConnectException) {
             return null;
         }
         return $this->guzzleException->getRequest();
