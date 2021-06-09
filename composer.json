@@ -1,6 +1,6 @@
 {
-    "name": "prismic/php-sdk",
-    "description": "PHP development kit for Prismic",
+    "name": "zumba/prismic-sdk",
+    "description": "Unofficial Prismic.io SDK",
     "config": {
         "sort-packages": true
     },
@@ -28,10 +28,11 @@
         "phpunit/phpunit": "^8.5",
         "squizlabs/php_codesniffer": "^3.3"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
+    "replace": {
+        "prismic/php-sdk": "^5.1"
+    },
+    "suggest": {
+        "ext-apcu": "APCu for caching"
     },
     "scripts": {
         "check": [

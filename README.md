@@ -1,6 +1,7 @@
-[![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")](https://travis-ci.org/prismicio/php-kit)
+# Unofficial Prismic.io SDK
 
-# PHP development kit for Prismic
+This repo/package is an unofficial version of [Prismic.io SDK](https://github.com/prismicio/php-kit). It's supporting
+new versions of PHP and applying bug fixes.
 
 ## Getting started
 
@@ -11,7 +12,7 @@ First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have th
 Install with [Composer](https://getcomposer.org/doc/00-intro.md):
 
 ```bash
-$ composer require prismic/php-sdk
+$ composer require zumba/prismic-sdk
 ```
 
 ### Usage
@@ -25,7 +26,7 @@ include_once __DIR__.'/../vendor/autoload.php';
 use Prismic\Api;
 ```
 
-Then call the API: 
+Then call the API:
 
 ```php
 <?php
@@ -33,7 +34,7 @@ $api = Api::get('https://your-repo-name.prismic.io/api/v2');
 $doc = $api->getByUID('get-started');
 ```
 
-This kit supports PHP version >= 7.1.
+This kit supports PHP version >= 7.2.
 
 Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
 For Symfony 2.7 projects, use version 2.0.3.
