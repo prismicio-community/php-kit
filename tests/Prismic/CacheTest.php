@@ -12,6 +12,17 @@ class CacheTest extends TestCase
 
     protected function setUp(): void
     {
+        if (! extension_loaded('apcu')) {
+            $this->markTestSkipped(
+                'The APCu extension is not available.'
+            );
+        }
+        if (! ini_get('apc.enabled') || ! ini_get('apc.enable_cli')) {
+            $this->markTestSkipped(
+                'The APCu extension is not enabled.'
+            );
+        }
+
         $this->cache = new ApcCache();
     }
 
