@@ -1,8 +1,10 @@
 /docs/
 phpdoc.dist.xml
 phpunit.xml
+.phpunit.result.cache
 /build/
 
 ### Composer ###
 composer.phar
+composer.lock
 /vendor/
