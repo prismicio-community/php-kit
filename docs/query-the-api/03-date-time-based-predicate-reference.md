@@ -22,10 +22,10 @@ This will NOT include anything with a date equal to the input value.
 Predicates::dateAfter( $path, $date )
 ```
 
-| Parameter                                                         | Description                                                                                                |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: “YYYY-MM-DD”</p>                                  |
+| Parameter                                                    | Description                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$date</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: “YYYY-MM-DD”</p>                                  |
 
 Examples:
 
@@ -45,10 +45,10 @@ This will NOT include anything with a date equal to the input value.
 Predicates::dateBefore( $path, $date )
 ```
 
-| Parameter                                                         | Description                                                                                                |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: “YYYY-MM-DD”</p>                                  |
+| Parameter                                                    | Description                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$date</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: “YYYY-MM-DD”</p>                                  |
 
 Examples:
 
@@ -68,9 +68,9 @@ Predicates::dateBetween( $path, $startDate, $endDate )
 
 | Parameter                                                         | Description                                                                                                |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: &quot;YYYY-MM-DD&quot;</p>                        |
-| <strong>{children}</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: &quot;YYYY-MM-DD&quot;</p>                        |
+| <strong>$path</strong><br/><code>accepted paths</code>            | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$startDate</strong><br/><code>accepted date values</code> | <p>DateTime object</p><p>String in the following format: &quot;YYYY-MM-DD&quot;</p>                        |
+| <strong>$endDate</strong><br/><code>accepted date values</code>   | <p>DateTime object</p><p>String in the following format: &quot;YYYY-MM-DD&quot;</p>                        |
 
 Examples:
 
@@ -88,10 +88,10 @@ The `dayOfMonth` predicate checks that the value in the path is equal to the day
 Predicates::dayOfMonth( $path, $day )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Day of the month</p>                                                                                    |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>integer</code>         | <p>Day of the month</p>                                                                                    |
 
 Examples:
 
@@ -111,10 +111,10 @@ Note that this will return only the days after the specified day of the month. I
 Predicates::dayOfMonthAfter( $path, $day )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Day of the month</p>                                                                                    |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>integer</code>         | <p>Day of the month</p>                                                                                    |
 
 Examples:
 
@@ -134,10 +134,10 @@ Note that this will return only the days before the specified day of the month. 
 Predicates::dayOfMonthBefore( $path, $day )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Day of the month</p>                                                                                    |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>integer</code>         | <p>Day of the month</p>                                                                                    |
 
 Examples:
 
@@ -155,10 +155,10 @@ The `dayOfWeek` predicate checks that the value in the path is equal to the day 
 Predicates::dayOfWeek( $path, $day )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
+| Parameter                                                  | Description                                                                                                |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>     | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
 
 &#39;tuesday&#39;, &#39;tue&#39;, or 2
 &#39;wednesday&#39;, &#39;wed&#39;, or 3
@@ -197,10 +197,10 @@ Note that this will return only the days after the specified day of the week. It
 Predicates::dayOfWeekAfter( $path, $day )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
+| Parameter                                                  | Description                                                                                                |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>     | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
 
 &#39;tuesday&#39;, &#39;tue&#39;, or 2
 &#39;wednesday&#39;, &#39;wed&#39;, or 3
@@ -239,10 +239,10 @@ Note that this will return only the days before the specified day of the week. I
 Predicates::dayOfWeekBefore( $path, $day )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
+| Parameter                                                  | Description                                                                                                |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>     | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$day</strong><br/><code>string\* or integer</code> | <pre>&#39;monday&#39;, &#39;mon&#39;, or 1                                                                 |
 
 &#39;tuesday&#39;, &#39;tue&#39;, or 2
 &#39;wednesday&#39;, &#39;wed&#39;, or 3
@@ -269,10 +269,10 @@ The `month` predicate checks that the value in the path occurs in the month valu
 Predicates::month( $path, $month )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
+| Parameter                                                    | Description                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$month</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
 
 &#39;february&#39;, &#39;feb&#39;, or 2
 &#39;march&#39;, &#39;mar&#39;, or 3
@@ -306,10 +306,10 @@ Note that this will only return documents where the date is after the specified 
 Predicates::monthAfter( $path, $month )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
+| Parameter                                                    | Description                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$month</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
 
 &#39;february&#39;, &#39;feb&#39;, or 2
 &#39;march&#39;, &#39;mar&#39;, or 3
@@ -343,10 +343,10 @@ Note that this will only return documents where the date is before the specified
 Predicates::monthBefore( $path, $month )
 ```
 
-| Parameter                                                        | Description                                                                                                |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code>      | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
+| Parameter                                                    | Description                                                                                                |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code>       | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$month</strong><br/><code>string\* or integer</code> | <pre>&#39;january&#39;, &#39;jan&#39;, or 1                                                                |
 
 &#39;february&#39;, &#39;feb&#39;, or 2
 &#39;march&#39;, &#39;mar&#39;, or 3
@@ -378,10 +378,10 @@ The `year` predicate checks that the value in the path occurs in the year value 
 Predicates::year( $path, $year )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Year</p>                                                                                                |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$year</strong><br/><code>integer</code>        | <p>Year</p>                                                                                                |
 
 Examples:
 
@@ -403,10 +403,10 @@ Note that this predicate will technically work for a Date field, but won’t be 
 Predicates::hour( $path, $hour )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$hour</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
 
 Examples:
 
@@ -430,10 +430,10 @@ This predicate will technically work for a Date field, but won’t be very usefu
 Predicates::hourAfter( $path, $hour )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$hour</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
 
 Examples:
 
@@ -457,10 +457,10 @@ This predicate will technically work for a Date field, but won’t be very usefu
 Predicates::hourBefore( $path, $hour )
 ```
 
-| Parameter                                                   | Description                                                                                                |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
-| <strong>{children}</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
+| Parameter                                              | Description                                                                                                |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| <strong>$path</strong><br/><code>accepted paths</code> | <p>document.first_publication_date</p><p>document.last_publication_date</p><p>my.{custom-type}.{field}</p> |
+| <strong>$hour</strong><br/><code>integer</code>        | <p>Hour between 0 and 23</p>                                                                               |
 
 Examples:
 
