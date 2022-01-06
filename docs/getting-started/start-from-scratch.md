@@ -2,7 +2,7 @@
 
 Prismic makes it easy to get started on a new PHP project by providing a specific PHP starter project kit.
 
-> **Just getting started with Prismic? **
+> **Just getting started with Prismic?**
 >
 > If you're just getting started with Prismic we recommend first checking out our [PHP Tutorial Example](https://prismic.io/quickstart#?lang=php) to see how to get a repository set up and a simple website running in minutes.
 
@@ -75,4 +75,3 @@ After you have created and published some documents in your content repository, 
 ### Integrate content into your templates
 
 The final step will be to integrate your content into the website templates. Check out the [templating documentation](./the-response-object-php.md) to learn how to integrate each content field type.
-
