@@ -94,11 +94,11 @@ The `at` predicate checks that the path matches the described value exactly. I
 Predicates::at( $path, $value )
 ```
 
-|                                                                        | Description                                                                                    |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p>      |
-| <p>$value</p><pre><code>accepted values</code></pre>                   | <p>single value (for all but document.tags)</p><p>array of values (only for document.tags)</p> |
-| <p>my.{custom-type}.{field}</p><pre><code>accepted fields</code></pre> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p><p>Boolean</p>                   |
+| Parameter                                                    | Description                                                                                    |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code>  | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p>      |
+| <strong>{children}</strong><br/><code>accepted values</code> | <p>single value (for all but document.tags)</p><p>array of values (only for document.tags)</p> |
+| <strong>{children}</strong><br/><code>accepted fields</code> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p><p>Boolean</p>                   |
 
 Examples:
 
@@ -116,11 +116,11 @@ The `not` predicate checks that the path doesn't match the provided value exac
 Predicates::not( $path, $value )
 ```
 
-|                                                                        | Description                                                                               |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
-| <p>$value</p><pre><code>accepted value</code></pre>                    | <p>Single value</p>                                                                       |
-| <p>my.{custom-type}.{field}</p><pre><code>accepted fields</code></pre> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p><p>Boolean</p>              |
+| Parameter                                                    | Description                                                                               |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code>  | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>accepted value</code>  | <p>Single value</p>                                                                       |
+| <strong>{children}</strong><br/><code>accepted fields</code> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p><p>Boolean</p>              |
 
 Example:
 
@@ -138,11 +138,11 @@ When using this predicate with the ID or UID field, it will not necessarily retu
 Predicates::any( $path, $values )
 ```
 
-|                                                                        | Description                                                                               |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
-| <p>$values</p><pre><code>array</code></pre>                            | <p>Array of values</p>                                                                    |
-| <p>my.{custom-type}.{field}</p><pre><code>accepted fields</code></pre> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p>                            |
+| Parameter                                                    | Description                                                                               |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code>  | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>array</code>           | <p>Array of values</p>                                                                    |
+| <strong>{children}</strong><br/><code>accepted fields</code> | <p>UID</p><p>Key Text</p><p>Select</p><p>Number</p><p>Date</p>                            |
 
 Example:
 
@@ -160,10 +160,10 @@ This returns the documents in the same order as the passed array.
 Predicates::in( $path, $values )
 ```
 
-|                                                    | Description                                   |
-| -------------------------------------------------- | --------------------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre> | <p>document.id</p><p>my.{custom-type}.uid</p> |
-| <p>$values</p><pre><code>array</code></pre>        | <p>Array of IDs or UIDs</p>                   |
+| Parameter                                                   | Description                                   |
+| ----------------------------------------------------------- | --------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document.id</p><p>my.{custom-type}.uid</p> |
+| <strong>{children}</strong><br/><code>array</code>          | <p>Array of IDs or UIDs</p>                   |
 
 Examples:
 
@@ -195,10 +195,10 @@ The fulltext search is not case sensitive.
 Predicates::fulltext( $path, $value )
 ```
 
-|                                                    | Description                                    |
-| -------------------------------------------------- | ---------------------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre> | <p>document</p><p>my.{custom-type}.{field}</p> |
-| <p>$value</p><pre><code>string</code></pre>        | <p>Search terms</p>                            |
+| Parameter                                                   | Description                                    |
+| ----------------------------------------------------------- | ---------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code> | <p>document</p><p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>string</code>         | <p>Search terms</p>                            |
 
 Examples:
 
@@ -218,10 +218,10 @@ Note that this predicate will restrict the results to the custom type implied in
 Predicates::has( $path )
 ```
 
-|                                                                        | Description                                    |
-| ---------------------------------------------------------------------- | ---------------------------------------------- |
-| <p>$path</p><pre><code>accepted path</code></pre>                      | <p>my.{custom-type}.{field}</p>                |
-| <p>my.{custom-type}.{field}</p><pre><code>accepted fields</code></pre> | <p>All fields except for Groups and Slices</p> |
+| Parameter                                                    | Description                                    |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted path</code>   | <p>my.{custom-type}.{field}</p>                |
+| <strong>{children}</strong><br/><code>accepted fields</code> | <p>All fields except for Groups and Slices</p> |
 
 Example:
 
@@ -239,10 +239,10 @@ Note that this predicate will restrict the results to the custom type implied in
 Predicates::missing( $path )
 ```
 
-|                                                                        | Description                                    |
-| ---------------------------------------------------------------------- | ---------------------------------------------- |
-| <p>$path</p><pre><code>accepted path</code></pre>                      | <p>my.{custom-type}.{field}</p>                |
-| <p>my.{custom-type}.{field}</p><pre><code>accepted fields</code></pre> | <p>All fields except for Groups and Slices</p> |
+| Parameter                                                    | Description                                    |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted path</code>   | <p>my.{custom-type}.{field}</p>                |
+| <strong>{children}</strong><br/><code>accepted fields</code> | <p>All fields except for Groups and Slices</p> |
 
 Example:
 
@@ -260,10 +260,10 @@ Also, remember that you can combine it with other predicates. Therefore not only
 Predicates::similar( $id, $value )
 ```
 
-|                                              | Description                                                                                      |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| <p>$id</p><pre><code>string</code></pre>     | <p>The document ID</p>                                                                           |
-| <p>$value</p><pre><code>integer</code></pre> | <p>The maximum number of documents that a term may appear in to still be considered relevant</p> |
+| Parameter                                            | Description                                                                                      |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| <strong>{children}</strong><br/><code>string</code>  | <p>The document ID</p>                                                                           |
+| <strong>{children}</strong><br/><code>integer</code> | <p>The maximum number of documents that a term may appear in to still be considered relevant</p> |
 
 Example:
 
@@ -285,12 +285,12 @@ The near predicate will order the results from nearest to farthest from the give
 Predicates::near( $path, $latitude, $longitude, $radius )
 ```
 
-|                                                   | Description                                       |
-| ------------------------------------------------- | ------------------------------------------------- |
-| <p>$path</p><pre><code>accepted path</code></pre> | <p>my.{custom-type}.{field}</p>                   |
-| <p>$latitude</p><pre><code>float</code></pre>     | <p>Latitude of the center of the search area</p>  |
-| <p>$longitude</p><pre><code>float</code></pre>    | <p>Longitude of the center of the search area</p> |
-| <p>$radius</p><pre><code>float</code></pre>       | <p>Radius of search in kilometers</p>             |
+| Parameter                                                  | Description                                       |
+| ---------------------------------------------------------- | ------------------------------------------------- |
+| <strong>{children}</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p>                   |
+| <strong>{children}</strong><br/><code>float</code>         | <p>Latitude of the center of the search area</p>  |
+| <strong>{children}</strong><br/><code>float</code>         | <p>Longitude of the center of the search area</p> |
+| <strong>{children}</strong><br/><code>float</code>         | <p>Radius of search in kilometers</p>             |
 
 Example:
 
@@ -314,10 +314,10 @@ This is a strict less-than operator, it will not give values equal to the specif
 Predicates::lt( $path, $value )
 ```
 
-|                                                   | Description                     |
-| ------------------------------------------------- | ------------------------------- |
-| <p>$path</p><pre><code>accepted path</code></pre> | <p>my.{custom-type}.{field}</p> |
-| <p>$value</p><pre><code>float</code></pre>        | <p>Number value</p>             |
+| Parameter                                                  | Description                     |
+| ---------------------------------------------------------- | ------------------------------- |
+| <strong>{children}</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>float</code>         | <p>Number value</p>             |
 
 Examples:
 
@@ -336,10 +336,10 @@ This is a strict greater-than operator, it will not give values equal to the spe
 Predicates::gt( $path, $value )
 ```
 
-|                                                   | Description                     |
-| ------------------------------------------------- | ------------------------------- |
-| <p>$path</p><pre><code>accepted path</code></pre> | <p>my.{custom-type}.{field}</p> |
-| <p>$value</p><pre><code>float</code></pre>        | <p>Number value</p>             |
+| Parameter                                                  | Description                     |
+| ---------------------------------------------------------- | ------------------------------- |
+| <strong>{children}</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>float</code>         | <p>Number value</p>             |
 
 Examples:
 
@@ -358,11 +358,11 @@ This is an inclusive search, it will include values equal to the upper and lower
 Predicates::inRange( $path, $lowerLimit, $upperLimit )
 ```
 
-|                                                    | Description                     |
-| -------------------------------------------------- | ------------------------------- |
-| <p>$path</p><pre><code>accepted paths</code></pre> | <p>my.{custom-type}.{field}</p> |
-| <p>$lowerLimit</p><pre><code>float</code></pre>    | <p>Lower limit of the range</p> |
-| <p>$upperLimit</p><pre><code>float</code></pre>    | <p>Upper limit of the range</p> |
+| Parameter                                                   | Description                     |
+| ----------------------------------------------------------- | ------------------------------- |
+| <strong>{children}</strong><br/><code>accepted paths</code> | <p>my.{custom-type}.{field}</p> |
+| <strong>{children}</strong><br/><code>float</code>          | <p>Lower limit of the range</p> |
+| <strong>{children}</strong><br/><code>float</code>          | <p>Upper limit of the range</p> |
 
 Examples:
 
