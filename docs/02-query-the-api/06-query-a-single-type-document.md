@@ -36,6 +36,6 @@ $document = $response->getResults()[0];
 
 > **Querying by Language**
 >
-> Note that if you are trying to query a document that isn't in the master language of your repository this way, you will need to specify the language code or wildcard language value. You can read how to do this on the [Query by Language page](./query-by-language-php.md).
+> Note that if you are trying to query a document that isn't in the master language of your repository this way, you will need to specify the language code or wildcard language value. You can read how to do this on the [Query by Language page](./19-query-by-language.md).
 >
 > If you are using the query helper function above, you do not need to do this.

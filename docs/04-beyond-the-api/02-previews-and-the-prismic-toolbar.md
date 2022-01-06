@@ -55,7 +55,7 @@ In your preview settings add an endpoint to the optional Link Resolver field as 
 Now you need to add the Link Resolver endpoint in your website application. When requested this endpoint must:
 
 -   Retrieve the preview token from the `token` parameter in the query string
--   Call the Prismic development kit with this token and the [Link Resolver](./link-resolver-php.md) will retrieve the correct URL for the document being previewed
+-   Call the Prismic development kit with this token and the [Link Resolver](./01-link-resolving.md) will retrieve the correct URL for the document being previewed
 -   Redirect to the given URL
 
 > **The Preview Token**
@@ -73,7 +73,7 @@ $url = $api->previewSession($token, $linkResolver, '/');
 header('Location: ' . $url);
 ```
 
-The example above uses a Link Resolver function stored in the variable `$linkResolver` to determine the end url to redirect to. To learn more about how to set this up, check out our [Link Resolving](./link-resolver-php.md) page.
+The example above uses a Link Resolver function stored in the variable `$linkResolver` to determine the end url to redirect to. To learn more about how to set this up, check out our [Link Resolving](./01-link-resolving.md) page.
 
 ## 4. Use the correct reference
 

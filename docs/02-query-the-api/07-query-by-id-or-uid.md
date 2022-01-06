@@ -4,7 +4,7 @@ You can retrieve either multiple documents or a single one by their document ID 
 
 > **Querying by Language**
 >
-> Note that if you are trying to query a document that isn't in the master language of your repository, you will need to specify the language code or wildcard language value. You can read how to do this on the [Query by Language page](./query-by-language-php.md).
+> Note that if you are trying to query a document that isn't in the master language of your repository, you will need to specify the language code or wildcard language value. You can read how to do this on the [Query by Language page](./19-query-by-language.md).
 >
 > If you are using one of the query helper functions below, you do not need to do this. The only exception is the `getByUID` helper which is explained below.
 

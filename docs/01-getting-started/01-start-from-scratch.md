@@ -58,7 +58,7 @@ You can now open your browser to [http://localhost:8000](http://localhost:8000),
 
 > **Pagination of API Results**
 >
-> When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](./pagination-for-results-php.md) page.
+> When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](../02-query-the-api/18-pagination-for-results.md) page.
 
 ## And your Prismic journey begins!
 
@@ -74,4 +74,4 @@ After you have created and published some documents in your content repository, 
 
 ### Integrate content into your templates
 
-The final step will be to integrate your content into the website templates. Check out the [templating documentation](./the-response-object-php.md) to learn how to integrate each content field type.
+The final step will be to integrate your content into the website templates. Check out the [templating documentation](../03-templating/01-the-response-object.md) to learn how to integrate each content field type.

@@ -82,7 +82,7 @@ The value you enter for the fetchLinks option needs to take the following format
 | <strong>{custom-type}</strong><br/> | <p>The custom type API-ID of the linked document</p>                         |
 | <strong>{field}</strong><br/>       | <p>The API-ID of the field you wish to retrieve from the linked document</p> |
 
-To view a complete example of how this option works, view the example on the [Fetch Linked Document Fields](./fetch-linked-document-fields-php.md) page.
+To view a complete example of how this option works, view the example on the [Fetch Linked Document Fields](./16-fetch-linked-document-fields.md) page.
 
 ```css
 [ 'fetchLinks' => 'author.full_name' ]
@@ -111,7 +111,7 @@ You can also use the *lang* option to specify that you want to query documents
 [ 'lang' => '*' ]
 ```
 
-To view a complete example of how this option works, view the examples on the [Query by Language](./query-by-language-php.md) page.
+To view a complete example of how this option works, view the examples on the [Query by Language](./19-query-by-language.md) page.
 
 ## orderings
 

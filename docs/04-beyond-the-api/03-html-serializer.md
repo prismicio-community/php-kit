@@ -6,7 +6,7 @@ You can customize the HTML output of a Rich Text Field by incorporating an HTML 
 >
 > This page assumes that you have retrieved your content and stored it in a variable named `$document`.
 >
-> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](./link-resolver-php.md) page.
+> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](./01-link-resolving.md) page.
 
 ## Adding the HTML Serializer function
 
@@ -93,11 +93,11 @@ $htmlSerializer = function ($element, $content) {
 }
 ```
 
-Note that if you want to change the output for the hyperlink element, you will need to use a Link Resolver. You can read more about this on the [Link Resolving](./link-resolver-php.md) page.
+Note that if you want to change the output for the hyperlink element, you will need to use a Link Resolver. You can read more about this on the [Link Resolving](./01-link-resolving.md) page.
 
 ## Using the serializer function
 
-To use it, all you need to do is pass the Serializer function into the `asHtml` method for a Rich Text element. Make sure to pass it in after the [Link Resolver](./link-resolver-php.md).
+To use it, all you need to do is pass the Serializer function into the `asHtml` method for a Rich Text element. Make sure to pass it in after the [Link Resolver](./01-link-resolving.md).
 
 **php (sdk v4 or later)**:
 
@@ -320,4 +320,4 @@ $htmlSerializer = function ($element, $content) {
 };
 ```
 
-Note that if want to change the output for the hyperlink element, you will need to use a Link Resolver function. You can read more about this on the [Link Resolving](./link-resolver-php.md) page.
+Note that if want to change the output for the hyperlink element, you will need to use a Link Resolver function. You can read more about this on the [Link Resolving](./01-link-resolving.md) page.

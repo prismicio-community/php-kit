@@ -10,7 +10,7 @@ The `fulltext` predicate searches the term in any of the following fields:
 -   UID
 -   Select
 
-To learn more about this predicate checkout the [Query predicate reference](./query-predicate-reference-php.md) page.
+To learn more about this predicate checkout the [Query predicate reference](./02-query-predicate-reference.md) page.
 
 > Note that the fulltext search is not case sensitive.
 

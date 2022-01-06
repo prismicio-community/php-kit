@@ -79,11 +79,11 @@ $api = Api::get($url, $token);
 $response = $api->query(Predicates::at('document.type', 'page'));
 ```
 
-To learn more about querying the API, check out the [How to Query the API](./how-to-query-the-api-php.md) page.
+To learn more about querying the API, check out the [How to Query the API](../02-query-the-api/01-how-to-query-the-api.md) page.
 
 ### Pagination of API Results
 
-When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](./pagination-for-results-php.md) page.
+When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](../02-query-the-api/18-pagination-for-results.md) page.
 
 ## 5. Add the content to your templates
 
@@ -132,9 +132,8 @@ You can read more about templating your content in the Templating section of the
 
 ## 6. Take advantage of Previews and the Prismic Toolbar
 
-In order to take advantage of all that Prismic has to offer, check out the [Previews and the Prismic Toolbar](./previews-and-the-prismic-toolbar-php.md) page to learn how to add these great features to your project!
+In order to take advantage of all that Prismic has to offer, check out the [Previews and the Prismic Toolbar](../04-beyond-the-api/02-previews-and-the-prismic-toolbar.md) page to learn how to add these great features to your project!
 
 ## And your Prismic journey begins!
 
 You should now have all the tools to really get going with your project. We invite you to further explore the documentation to learn how to define your Custom Types, query the API, and add your content to your templates.
-

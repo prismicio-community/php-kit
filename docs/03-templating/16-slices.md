@@ -6,7 +6,7 @@ The Slices field is used to define a dynamic zone for richer page layouts.
 >
 > This page assumes that you have retrieved your content and stored it in a variable named `$document`.
 >
-> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](./link-resolver-php.md) page.
+> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.
 
 ## Example 1
 
@@ -228,4 +228,3 @@ function text($slice) {
   ?>
 </div>
 ```
-

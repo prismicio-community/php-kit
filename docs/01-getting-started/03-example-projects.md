@@ -114,7 +114,6 @@ Now you can customize the code and content however you want, and deploy your pro
 
 ## Related articles
 
--   [**Deployment**](./deployment-php.md)<br/>Learn how to deploy your PHP app and rebuild your site when you update your content.
+-   [**Deployment**](./04-deployment.md)<br/>Learn how to deploy your PHP app and rebuild your site when you update your content.
 
--   [**Previews and the Prismic toolbar**](./previews-and-the-prismic-toolbar-php.md)<br/>Learn how to preview content changes without publishing your document or rebuilding your project.
-
+-   [**Previews and the Prismic toolbar**](../04-beyond-the-api/02-previews-and-the-prismic-toolbar.md)<br/>Learn how to preview content changes without publishing your document or rebuilding your project.

@@ -6,7 +6,7 @@ The Link field is used for adding links to the Web, to files in your prismic.io 
 >
 > This page assumes that you have retrieved your content and stored it in a variable named `$document`.
 >
-> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](./link-resolver-php.md) page.
+> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.
 
 ## Adding a hyperlink
 
@@ -42,4 +42,4 @@ $link->getTarget() . '" rel="noopener"' : ''; ?>
 
 Note that the example above uses a Link Resolver to output the link. This is only required for a Link to a Document / Content Relationship.
 
-If you know that your link will always be to Media Item or to the Web, then you can remove this. If the link is to or might be to a Document, then you should always use the [Link Resolver](./link-resolver-php.md).
+If you know that your link will always be to Media Item or to the Web, then you can remove this. If the link is to or might be to a Document, then you should always use the [Link Resolver](../04-beyond-the-api/01-link-resolving.md).

@@ -373,5 +373,4 @@ Predicates::inRange('my.product.price', 9.99, 49.99)
 
 ## Date & Time based Predicates
 
-There are a number of predicates that are specifically used for the Date and Timestamp fields. You can read more about them on the [Date & Time based Predicate Reference](./date-time-based-predicate-reference-php.md) page.
-
+There are a number of predicates that are specifically used for the Date and Timestamp fields. You can read more about them on the [Date & Time based Predicate Reference](./03-date-time-based-predicate-reference.md) page.
