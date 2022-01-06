@@ -137,3 +137,4 @@ In order to take advantage of all that Prismic has to offer, check out the [Prev
 ## And your Prismic journey begins!
 
 You should now have all the tools to really get going with your project. We invite you to further explore the documentation to learn how to define your Custom Types, query the API, and add your content to your templates.
+

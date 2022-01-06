@@ -2,7 +2,7 @@
 
 Prismic makes it easy to get started on a new PHP project by providing a specific PHP starter project kit.
 
-> #### Just getting started with Prismic?
+> **Just getting started with Prismic? **
 >
 > If you're just getting started with Prismic we recommend first checking out our [PHP Tutorial Example](https://prismic.io/quickstart#?lang=php) to see how to get a repository set up and a simple website running in minutes.
 
@@ -56,7 +56,7 @@ Now you can to launch your local server.
 
 You can now open your browser to [http://localhost:8000](http://localhost:8000), where you will find a tutorial page. This page contains information helpful to getting started. You will learn how to query the API and start building pages for your new site.
 
-> #### Pagination of API Results
+> **Pagination of API Results**
 >
 > When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](./pagination-for-results-php.md) page.
 
