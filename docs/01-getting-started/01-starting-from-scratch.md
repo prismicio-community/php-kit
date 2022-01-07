@@ -70,7 +70,7 @@ First you will need to model your pages, blog posts, articles, etc. into differe
 
 ### Query your documents
 
-After you have created and published some documents in your content repository, you will be able to query your API and retrieve the content. We provide explanations and plenty of examples of queries in the documentation. Start by learning more on the [How to Query the API](./how-to-query-the-api-php.md) page.
+After you have created and published some documents in your content repository, you will be able to query your API and retrieve the content. We provide explanations and plenty of examples of queries in the documentation. Start by learning more on the [How to Query the API](../02-query-the-api/01-how-to-query-the-api.md) page.
 
 ### Integrate content into your templates
 

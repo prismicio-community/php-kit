@@ -6,7 +6,7 @@ You can customize the HTML output of a Rich Text Field by incorporating an HTML 
 >
 > This page assumes that you have retrieved your content and stored it in a variable named `$document`.
 >
-> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](./01-link-resolving.md) page.
+> It is also assumed that you have set up a Link Resolver stored in the variable `$linkResolver`. When integrating a Link in your templates, a link resolver might be necessary as shown & discussed below. To learn more about this, check out our [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.
 
 ## Adding the HTML Serializer function
 
@@ -20,7 +20,7 @@ Here is an example of an HTML Serializer that will prevent image elements from b
 
 **php (sdk v4 or later)**:
 
-```php
+```
 <?php
 $htmlSerializer = function ($element, $content) use ($linkResolver) {
   switch ($element->type) {
@@ -54,7 +54,7 @@ $htmlSerializer = function ($element, $content) use ($linkResolver) {
 
 **php (sdk v3 or earlier)**:
 
-```php
+```
 <?php
 
 use Prismic\Fragment\Block\ImageBlock;
@@ -93,15 +93,15 @@ $htmlSerializer = function ($element, $content) {
 }
 ```
 
-Note that if you want to change the output for the hyperlink element, you will need to use a Link Resolver. You can read more about this on the [Link Resolving](./01-link-resolving.md) page.
+Note that if you want to change the output for the hyperlink element, you will need to use a Link Resolver. You can read more about this on the [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.
 
 ## Using the serializer function
 
-To use it, all you need to do is pass the Serializer function into the `asHtml` method for a Rich Text element. Make sure to pass it in after the [Link Resolver](./01-link-resolving.md).
+To use it, all you need to do is pass the Serializer function into the `asHtml` method for a Rich Text element. Make sure to pass it in after the [Link Resolver](../04-beyond-the-api/01-link-resolving.md).
 
 **php (sdk v4 or later)**:
 
-```php
+```
 <?php
 use Prismic\Dom\RichText;
 ?>
@@ -113,7 +113,7 @@ use Prismic\Dom\RichText;
 
 **php (sdk v3 or earlier)**:
 
-```php
+```
 <div>
     <?= $document->getStructuredText('page.rich_text')->asHtml($linkResolver, $htmlSerializer) ?>
 </div>
@@ -125,7 +125,7 @@ Here is an example that shows you how to change all of the available Rich Text e
 
 **php (sdk v4 or later)**:
 
-```php
+```
 <?php
 $htmlSerializer = function ($element, $content) use ($linkResolver) {
   switch ($element->type) {
@@ -213,7 +213,7 @@ $htmlSerializer = function ($element, $content) use ($linkResolver) {
 
 **php (sdk v3 or earlier)**:
 
-```php
+```
 <?php
 
 use Prismic\Fragment\Block\EmbedBlock;
@@ -320,4 +320,4 @@ $htmlSerializer = function ($element, $content) {
 };
 ```
 
-Note that if want to change the output for the hyperlink element, you will need to use a Link Resolver function. You can read more about this on the [Link Resolving](./01-link-resolving.md) page.
+Note that if want to change the output for the hyperlink element, you will need to use a Link Resolver function. You can read more about this on the [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.

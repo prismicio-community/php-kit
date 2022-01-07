@@ -10,8 +10,8 @@ Here's an example of integrating an image. In this case the Image field has the 
 
 ```html
 <img
-    src="<?= $document->data->illustration->url ?>"
-    alt="<?= $document->data->illustration->alt ?>"
+  src="<?= $document->data->illustration->url ?>"
+  alt="<?= $document->data->illustration->alt ?>"
 />
 ```
 
@@ -19,8 +19,8 @@ Here's an example of integrating an image. In this case the Image field has the 
 
 ```html
 <img
-    src="<?= $document->getImage('page.illustration')->getUrl() ?>"
-    alt="<?= $document->getImage('page.illustration')->getAlt() ?>"
+  src="<?= $document->getImage('page.illustration')->getUrl() ?>"
+  alt="<?= $document->getImage('page.illustration')->getAlt() ?>"
 />
 ```
 
@@ -36,11 +36,11 @@ use Prismic\Dom\RichText;
 ?>
 
 <figure>
-    <img
-        src="<?= $document->data->illustration->url ?>"
-        alt="<?= $document->data->illustration->alt ?>"
-    />
-    <figcaption><?= RichText::asText($document->data->caption) ?></figcaption>
+  <img
+    src="<?= $document->data->illustration->url ?>"
+    alt="<?= $document->data->illustration->alt ?>"
+  />
+  <figcaption><?= RichText::asText($document->data->caption) ?></figcaption>
 </figure>
 ```
 
@@ -48,13 +48,13 @@ use Prismic\Dom\RichText;
 
 ```html
 <figure>
-    <img
-        src="<?= $document->getImage('page.illustration')->getUrl() ?>"
-        alt="<?= $document->getImage('page.illustration')->getAlt() ?>"
-    />
-    <figcaption>
-        <?= $document->getStructuredText('page.caption')->asText() ?>
-    </figcaption>
+  <img
+    src="<?= $document->getImage('page.illustration')->getUrl() ?>"
+    alt="<?= $document->getImage('page.illustration')->getAlt() ?>"
+  />
+  <figcaption>
+    <?= $document->getStructuredText('page.caption')->asText() ?>
+  </figcaption>
 </figure>
 ```
 
@@ -71,12 +71,12 @@ $document->data->responsive_image->tablet; $mobileView =
 $document->data->responsive_image->mobile; ?>
 
 <picture>
-    <source media="(max-width: 400px)" , srcset="<?= $mobileView->url ?>" />
-     
-    <source media="(max-width: 900px)" , srcset="<?= $tabletView->url ?>" />
-     
-    <source srcset="<?= $mainView->url ?>" />
-    <image src="<?= $mainView->url ?>" alt="<?= $mainView->alt ?>" />
+  <source media="(max-width: 400px)" , srcset="<?= $mobileView->url ?>" />
+   
+  <source media="(max-width: 900px)" , srcset="<?= $tabletView->url ?>" />
+   
+  <source srcset="<?= $mainView->url ?>" />
+  <image src="<?= $mainView->url ?>" alt="<?= $mainView->alt ?>" />
 </picture>
 ```
 
@@ -90,20 +90,11 @@ $mobileView = $document->getImage('page.responsive_image')->getView('mobile');
 ?>
 
 <picture>
-    <source
-        media="(max-width: 400px)"
-        ,
-        srcset="<?= $mobileView->getUrl() ?>"
-    />
-    <source
-        media="(max-width: 900px)"
-        ,
-        srcset="<?= $tabletView->getUrl() ?>"
-    />
-     
-    <source srcset="<?= $mainView->getUrl() ?>" />
-     
-    <image src="<?= $mainView->getUrl() ?>" alt="<?= $mainView->getAlt() ?>" />
+  <source media="(max-width: 400px)" , srcset="<?= $mobileView->getUrl() ?>" />
+  <source media="(max-width: 900px)" , srcset="<?= $tabletView->getUrl() ?>" />
+   
+  <source srcset="<?= $mainView->getUrl() ?>" />
+    <image src="<?= $mainView->getUrl() ?>" alt="<?= $mainView->getAlt() ?>" />
 </picture>
 ```
 

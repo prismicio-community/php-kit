@@ -14,7 +14,7 @@ $response = $api->query(
 // $response contains the response object
 ```
 
-You can find more query predicates for Number fields on the [Query Predicate Reference](./02-query-predicate-reference.md) page.
+You can find more query predicates for Number fields on the [Query Predicate Reference](../02-query-the-api/02-query-predicate-reference.md) page.
 
 ## Key Text field
 

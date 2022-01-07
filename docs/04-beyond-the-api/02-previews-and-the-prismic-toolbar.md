@@ -11,11 +11,11 @@ The Toolbar allows you to edit your pages. In your website, just click the butto
 
 In your repository, navigate to **Settings > Previews**. Here you can add the configuration for a new preview, just add:
 
--   **The Site Name**: The name of the current site your configuring.
--   **Domain URL**: You can add the URL of your live website or a localhost domain, such as: http://localhost:8000.
--   **Link Resolver (optional) **: In order to be taken directly to the page you are previewing instead of the homepage, add a Link Resolver which is an endpoint on your server that takes a Prismic document and returns the url for that document. More details on step _3. Add a Link Resolver endpoint._
+- **The Site Name**: The name of the current site your configuring.
+- **Domain URL**: You can add the URL of your live website or a localhost domain, such as: http://localhost:8000.
+- **Link Resolver (optional) **: In order to be taken directly to the page you are previewing instead of the homepage, add a Link Resolver which is an endpoint on your server that takes a Prismic document and returns the url for that document. More details on step _3. Add a Link Resolver endpoint._
 
-!!!!!!!!!!!! MISSING HANDLER: image
+![](https://images.prismic.io/prismicio-docs-v3/ZDViMDc0MWMtMDBhZC00YmNkLWIwZjMtNjgxMGQ2ZTNiNTZj_7090417a-cf3f-457d-8229-2f8bbc7af4aa_screenshot2020-09-13at20.34.27.pngautocompressformatrect00954834w700h612?auto=compress,format&rect=0,0,700,612&w=960&h=839)
 
 ## 2. Include the Prismic Toolbar javascript file
 
@@ -54,9 +54,9 @@ In your preview settings add an endpoint to the optional Link Resolver field as 
 
 Now you need to add the Link Resolver endpoint in your website application. When requested this endpoint must:
 
--   Retrieve the preview token from the `token` parameter in the query string
--   Call the Prismic development kit with this token and the [Link Resolver](./01-link-resolving.md) will retrieve the correct URL for the document being previewed
--   Redirect to the given URL
+- Retrieve the preview token from the `token` parameter in the query string
+- Call the Prismic development kit with this token and the [Link Resolver](../04-beyond-the-api/01-link-resolving.md) will retrieve the correct URL for the document being previewed
+- Redirect to the given URL
 
 > **The Preview Token**
 >
@@ -73,7 +73,7 @@ $url = $api->previewSession($token, $linkResolver, '/');
 header('Location: ' . $url);
 ```
 
-The example above uses a Link Resolver function stored in the variable `$linkResolver` to determine the end url to redirect to. To learn more about how to set this up, check out our [Link Resolving](./01-link-resolving.md) page.
+The example above uses a Link Resolver function stored in the variable `$linkResolver` to determine the end url to redirect to. To learn more about how to set this up, check out our [Link Resolving](../04-beyond-the-api/01-link-resolving.md) page.
 
 ## 4. Use the correct reference
 

@@ -12,7 +12,7 @@ The `getByUID` function is used to query the specified custom type by a certai
 
 This function will only ever retrieve one document as there can only be one instance of a given UID value for each custom type & language.
 
-| Parameter                                            | Description                                                           |
+| Property                                             | Description                                                           |
 | ---------------------------------------------------- | --------------------------------------------------------------------- |
 | <strong>custom-type</strong><br/><code>string</code> | <p>(required) The API-ID of the custom type you are searching for</p> |
 | <strong>uid</strong><br/><code>string</code>         | <p>(required) The UID of the document you want to retrieve</p>        |
@@ -45,7 +45,7 @@ The `getByID` function is used to query a certain document by its document id.
 
 This function will only ever retrieve one document as each document has a unique id value.
 
-| Parameter                                       | Description                                                   |
+| Property                                        | Description                                                   |
 | ----------------------------------------------- | ------------------------------------------------------------- |
 | <strong>id</strong><br/><code>string</code>     | <p>(required) The id of the document you want to retrieve</p> |
 | <strong>options</strong><br/><code>array</code> | <p>(optional) An array with option parameters and values</p>  |
@@ -77,7 +77,7 @@ The `getByIDs` function is used to query multiple documents by their ids.
 
 This will return the documents in the same order specified in the array, unless options are added to sort them otherwise.
 
-| Parameter                                       | Description                                                                              |
+| Property                                        | Description                                                                              |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | <strong>ids</strong><br/><code>array</code>     | <p>(required) An array of strings with the ids of the documents you want to retrieve</p> |
 | <strong>options</strong><br/><code>array</code> | <p>(optional) An array with option parameters and values</p>                             |
@@ -111,7 +111,7 @@ The `getSingle` function is used to query the document of a Single custom type
 
 This will only ever retrieve one document.
 
-| Parameter                                            | Description                                                                 |
+| Property                                             | Description                                                                 |
 | ---------------------------------------------------- | --------------------------------------------------------------------------- |
 | <strong>custom-type</strong><br/><code>string</code> | <p>(required) The API ID of the single custom type you want to retrieve</p> |
 | <strong>options</strong><br/><code>array</code>      | <p>(optional) An array with option parameters and values</p>                |

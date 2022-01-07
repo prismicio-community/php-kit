@@ -8,18 +8,18 @@ The `after` option can be used along with the orderings option. It will remove
 
 To clarify, let’s say you have a query that return the following documents in this order:
 
--   `V9Zt3icAAAl8Uzob (Page 1)`
--   `PqZtvCcAALuRUzmO (Page 2)`
--   `VkRmhykAAFA6PoBj (Page 3)`
--   `V4Fs8rDbAAH9Pfow (Page 4)`
--   `G8ZtxQhAALuSix6R (Page 5)`
--   `Ww9yuAvdAhl87wh6 (Page 6)`
+- `V9Zt3icAAAl8Uzob (Page 1)`
+- `PqZtvCcAALuRUzmO (Page 2)`
+- `VkRmhykAAFA6PoBj (Page 3)`
+- `V4Fs8rDbAAH9Pfow (Page 4)`
+- `G8ZtxQhAALuSix6R (Page 5)`
+- `Ww9yuAvdAhl87wh6 (Page 6)`
 
 If you add the `after` option and specify page 3, “VkRmhykAAFA6PoBj”, your query will return the following:
 
--   `V4Fs8rDbAAH9Pfow (Page 4)`
--   `G8ZtxQhAALuSix6R (Page 5)`
--   `Ww9yuAvdAhl87wh6 (Page 6)`
+- `V4Fs8rDbAAH9Pfow (Page 4)`
+- `G8ZtxQhAALuSix6R (Page 5)`
+- `Ww9yuAvdAhl87wh6 (Page 6)`
 
 By reversing the orderings in your query, you can use this same method to retrieve all the documents before the specified document.
 
@@ -51,25 +51,25 @@ The `fetchLinks` option allows you to retrieve a specific content field from a
 
 Note that this will only retrieve content of the following field types:
 
--   Color
--   Content Relationship
--   Date
--   Image
--   Key Text
--   Number
--   Rich Text (but only the first element)
--   Select
--   Timestamp
--   Title
+- Color
+- Content Relationship
+- Date
+- Image
+- Key Text
+- Number
+- Rich Text (but only the first element)
+- Select
+- Timestamp
+- Title
 
 It is **not** possible to retrieve the following content field types:
 
--   Embed
--   GeoPoint
--   Link
--   Link to Media
--   Rich Text (anything other than the first element)
--   Any field in a Group or Slice
+- Embed
+- GeoPoint
+- Link
+- Link to Media
+- Rich Text (anything other than the first element)
+- Any field in a Group or Slice
 
 The value you enter for the fetchLinks option needs to take the following format:
 
@@ -77,12 +77,12 @@ The value you enter for the fetchLinks option needs to take the following format
 [ 'fetchLinks' => '{custom-type}.{field}' ]
 ```
 
-| Parameter                           | Description                                                                  |
+| Property                            | Description                                                                  |
 | ----------------------------------- | ---------------------------------------------------------------------------- |
 | <strong>{custom-type}</strong><br/> | <p>The custom type API-ID of the linked document</p>                         |
 | <strong>{field}</strong><br/>       | <p>The API-ID of the field you wish to retrieve from the linked document</p> |
 
-To view a complete example of how this option works, view the example on the [Fetch Linked Document Fields](./16-fetch-linked-document-fields.md) page.
+To view a complete example of how this option works, view the example on the [Fetch Linked Document Fields](../02-query-the-api/16-fetch-linked-document-fields.md) page.
 
 ```css
 [ 'fetchLinks' => 'author.full_name' ]
@@ -111,13 +111,13 @@ You can also use the *lang* option to specify that you want to query documents
 [ 'lang' => '*' ]
 ```
 
-To view a complete example of how this option works, view the examples on the [Query by Language](./19-query-by-language.md) page.
+To view a complete example of how this option works, view the examples on the [Query by Language](../02-query-the-api/19-query-by-language.md) page.
 
 ## orderings
 
 The `orderings` option orders the results by the specified field(s). You can specify as many fields as you want.
 
-| Parameter                               | Description                                                                                    |
+| Property                                | Description                                                                                    |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | <strong>lowest to highest</strong><br/> | <p>It will automatically order the field from lowest to highest</p>                            |
 | <strong>highest to lowest</strong><br/> | <p>Use &quot;desc&quot; next to the field name to instead order it from greatest to lowest</p> |
@@ -143,7 +143,7 @@ Here is an example that first sorts the products by price from lowest to highest
 
 It is also possible to order documents by their first or last publication dates.
 
-| Parameter                                    | Description                                                                    |
+| Property                                     | Description                                                                    |
 | -------------------------------------------- | ------------------------------------------------------------------------------ |
 | <strong>first_publication_date</strong><br/> | <p>The date that the document was originally published for the first time</p>  |
 | <strong>last_publication_date</strong><br/>  | <p>The most recent date that the document has been published after editing</p> |
@@ -159,7 +159,7 @@ The `page` option defines the pagination for the result of your query.
 
 Defaults to "1", corresponding to the first page.
 
-| Parameter                                       | Description                                         |
+| Property                                        | Description                                         |
 | ----------------------------------------------- | --------------------------------------------------- |
 | <strong>value</strong><br/><code>integer</code> | <p>page index (1 = 1st page, 2 = 2nd page, ...)</p> |
 
@@ -173,7 +173,7 @@ The `pageSize` option defines the maximum number of documents that the API wil
 
 Default is 20, max is 100.
 
-| Parameter                                       | Description                          |
+| Property                                        | Description                          |
 | ----------------------------------------------- | ------------------------------------ |
 | <strong>value</strong><br/><code>integer</code> | <p>page size (between 1 and 100)</p> |
 
@@ -187,7 +187,7 @@ The `ref` option defines which version of your content to query.
 
 By default the Prismic PHP development kit will use the master ref to retrieve the currently published documents.
 
-| Parameter                                      | Description                                        |
+| Property                                       | Description                                        |
 | ---------------------------------------------- | -------------------------------------------------- |
 | <strong>value</strong><br/><code>string</code> | <p>Master, Release, Experiment, or Preview ref</p> |
 

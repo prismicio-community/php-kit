@@ -14,8 +14,8 @@ $latitude = $document->data->location->latitude; $longitude =
 $document->data->location->longitude; ?>
 
 <p>
-    Location:
-    <?= $latitude . ', ' . $longitude ?>
+  Location:
+  <?= $latitude . ', ' . $longitude ?>
 </p>
 // Outputs: Location: 48.880401900547, 2.3423677682877
 ```
@@ -28,8 +28,8 @@ $latitude = $document->getGeoPoint('store.location')->getLatitude(); $longitude
 = $document->getGeoPoint('store.location')->getLongitude(); ?>
 
 <p>
-    Location:
-    <?= $latitude . ', ' . $longitude ?>
+  Location:
+  <?= $latitude . ', ' . $longitude ?>
 </p>
 // Outputs: Location: 48.880401900547, 2.3423677682877
 ```

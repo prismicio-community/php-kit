@@ -139,7 +139,7 @@ Object(
 
 At the topmost level of the response object, you mostly have information about the number of results returned from the query and the pagination of the results.
 
-| Parameter                                | Description                                                                           |
+| Property                                 | Description                                                                           |
 | ---------------------------------------- | ------------------------------------------------------------------------------------- |
 | <strong>page</strong><br/>               | <p>The current page of the pagination of the results</p>                              |
 | <strong>results_per_page</strong><br/>   | <p>The number of documents per page of the pagination</p>                             |

@@ -2,7 +2,7 @@
 
 This page shows multiple ways to query documents based on a date field.
 
-Here we use a few predicates that can query based on Date or Timestamp fields. Feel free to explore the [Date & Time based Predicate Reference](./03-date-time-based-predicate-reference.md) page to learn more about this.
+Here we use a few predicates that can query based on Date or Timestamp fields. Feel free to explore the [Date & Time based Predicate Reference](../02-query-the-api/03-date-and-time-based-predicate-reference.md) page to learn more about this.
 
 ## Query by an exact date
 

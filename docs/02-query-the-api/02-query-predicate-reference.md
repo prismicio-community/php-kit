@@ -94,7 +94,7 @@ The `at` predicate checks that the path matches the described value exactly. I
 Predicates::at( $path, $value )
 ```
 
-| Parameter                                                                  | Description                                                                                    |
+| Property                                                                   | Description                                                                                    |
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p>      |
 | <strong>$value</strong><br/><code>accepted values</code>                   | <p>single value (for all but document.tags)</p><p>array of values (only for document.tags)</p> |
@@ -116,7 +116,7 @@ The `not` predicate checks that the path doesn't match the provided value exac
 Predicates::not( $path, $value )
 ```
 
-| Parameter                                                                  | Description                                                                               |
+| Property                                                                   | Description                                                                               |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
 | <strong>$value</strong><br/><code>accepted value</code>                    | <p>Single value</p>                                                                       |
@@ -138,7 +138,7 @@ When using this predicate with the ID or UID field, it will not necessarily retu
 Predicates::any( $path, $values )
 ```
 
-| Parameter                                                                  | Description                                                                               |
+| Property                                                                   | Description                                                                               |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code>                     | <p>document.type</p><p>document.tags</p><p>document.id</p><p>my.{custom-type}.{field}</p> |
 | <strong>$values</strong><br/><code>array</code>                            | <p>Array of values</p>                                                                    |
@@ -160,7 +160,7 @@ This returns the documents in the same order as the passed array.
 Predicates::in( $path, $values )
 ```
 
-| Parameter                                              | Description                                   |
+| Property                                               | Description                                   |
 | ------------------------------------------------------ | --------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code> | <p>document.id</p><p>my.{custom-type}.uid</p> |
 | <strong>$values</strong><br/><code>array</code>        | <p>Array of IDs or UIDs</p>                   |
@@ -183,11 +183,11 @@ You can search a document or a text fragment for either just one term or for mul
 
 The full document search and specific field search works on the following fields:
 
--   Rich Text
--   Title
--   Key Text
--   UID
--   Select
+- Rich Text
+- Title
+- Key Text
+- UID
+- Select
 
 The fulltext search is not case sensitive.
 
@@ -195,7 +195,7 @@ The fulltext search is not case sensitive.
 Predicates::fulltext( $path, $value )
 ```
 
-| Parameter                                              | Description                                    |
+| Property                                               | Description                                    |
 | ------------------------------------------------------ | ---------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code> | <p>document</p><p>my.{custom-type}.{field}</p> |
 | <strong>$value</strong><br/><code>string</code>        | <p>Search terms</p>                            |
@@ -218,7 +218,7 @@ Note that this predicate will restrict the results to the custom type implied in
 Predicates::has( $path )
 ```
 
-| Parameter                                                                  | Description                                    |
+| Property                                                                   | Description                                    |
 | -------------------------------------------------------------------------- | ---------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted path</code>                      | <p>my.{custom-type}.{field}</p>                |
 | <strong>my.{custom-type}.{field}</strong><br/><code>accepted fields</code> | <p>All fields except for Groups and Slices</p> |
@@ -239,7 +239,7 @@ Note that this predicate will restrict the results to the custom type implied in
 Predicates::missing( $path )
 ```
 
-| Parameter                                                                  | Description                                    |
+| Property                                                                   | Description                                    |
 | -------------------------------------------------------------------------- | ---------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted path</code>                      | <p>my.{custom-type}.{field}</p>                |
 | <strong>my.{custom-type}.{field}</strong><br/><code>accepted fields</code> | <p>All fields except for Groups and Slices</p> |
@@ -260,7 +260,7 @@ Also, remember that you can combine it with other predicates. Therefore not only
 Predicates::similar( $id, $value )
 ```
 
-| Parameter                                        | Description                                                                                      |
+| Property                                         | Description                                                                                      |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | <strong>$id</strong><br/><code>string</code>     | <p>The document ID</p>                                                                           |
 | <strong>$value</strong><br/><code>integer</code> | <p>The maximum number of documents that a term may appear in to still be considered relevant</p> |
@@ -285,7 +285,7 @@ The near predicate will order the results from nearest to farthest from the give
 Predicates::near( $path, $latitude, $longitude, $radius )
 ```
 
-| Parameter                                             | Description                                       |
+| Property                                              | Description                                       |
 | ----------------------------------------------------- | ------------------------------------------------- |
 | <strong>$path</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p>                   |
 | <strong>$latitude</strong><br/><code>float</code>     | <p>Latitude of the center of the search area</p>  |
@@ -314,7 +314,7 @@ This is a strict less-than operator, it will not give values equal to the specif
 Predicates::lt( $path, $value )
 ```
 
-| Parameter                                             | Description                     |
+| Property                                              | Description                     |
 | ----------------------------------------------------- | ------------------------------- |
 | <strong>$path</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p> |
 | <strong>$value</strong><br/><code>float</code>        | <p>Number value</p>             |
@@ -336,7 +336,7 @@ This is a strict greater-than operator, it will not give values equal to the spe
 Predicates::gt( $path, $value )
 ```
 
-| Parameter                                             | Description                     |
+| Property                                              | Description                     |
 | ----------------------------------------------------- | ------------------------------- |
 | <strong>$path</strong><br/><code>accepted path</code> | <p>my.{custom-type}.{field}</p> |
 | <strong>$value</strong><br/><code>float</code>        | <p>Number value</p>             |
@@ -358,7 +358,7 @@ This is an inclusive search, it will include values equal to the upper and lower
 Predicates::inRange( $path, $lowerLimit, $upperLimit )
 ```
 
-| Parameter                                              | Description                     |
+| Property                                               | Description                     |
 | ------------------------------------------------------ | ------------------------------- |
 | <strong>$path</strong><br/><code>accepted paths</code> | <p>my.{custom-type}.{field}</p> |
 | <strong>$lowerLimit</strong><br/><code>float</code>    | <p>Lower limit of the range</p> |
@@ -373,4 +373,4 @@ Predicates::inRange('my.product.price', 9.99, 49.99)
 
 ## Date & Time based Predicates
 
-There are a number of predicates that are specifically used for the Date and Timestamp fields. You can read more about them on the [Date & Time based Predicate Reference](./03-date-time-based-predicate-reference.md) page.
+There are a number of predicates that are specifically used for the Date and Timestamp fields. You can read more about them on the [Date & Time based Predicate Reference](../02-query-the-api/03-date-and-time-based-predicate-reference.md) page.

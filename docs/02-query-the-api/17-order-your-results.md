@@ -6,7 +6,7 @@ This page shows how to order the results of your query for prismic.io. It explai
 
 The `orderings` option orders the results by the specified field(s). You can specify as many fields as you want.
 
-| Parameter                               | Description                                                                                    |
+| Property                                | Description                                                                                    |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | <strong>lowest to highest</strong><br/> | <p>It will automatically order the field from lowest to highest</p>                            |
 | <strong>highest to lowest</strong><br/> | <p>Use &quot;desc&quot; next to the field name to instead order it from greatest to lowest</p> |
@@ -45,18 +45,18 @@ The `after` option can be used along with the orderings option. It will remove a
 
 To clarify, let’s say you have a query that return the following documents in this order:
 
--   `V9Zt3icAAAl8Uzob (Page 1)`
--   `PqZtvCcAALuRUzmO (Page 2)`
--   `VkRmhykAAFA6PoBj (Page 3)`
--   `V4Fs8rDbAAH9Pfow (Page 4)`
--   `G8ZtxQhAALuSix6R (Page 5)`
--   `Ww9yuAvdAhl87wh6 (Page 6)`
+- `V9Zt3icAAAl8Uzob (Page 1)`
+- `PqZtvCcAALuRUzmO (Page 2)`
+- `VkRmhykAAFA6PoBj (Page 3)`
+- `V4Fs8rDbAAH9Pfow (Page 4)`
+- `G8ZtxQhAALuSix6R (Page 5)`
+- `Ww9yuAvdAhl87wh6 (Page 6)`
 
 If you add the `after` option and specify page 3, “VkRmhykAAFA6PoBj”, your query will return the following:
 
--   `V4Fs8rDbAAH9Pfow (Page 4)`
--   `G8ZtxQhAALuSix6R (Page 5)`
--   `Ww9yuAvdAhl87wh6 (Page 6)`
+- `V4Fs8rDbAAH9Pfow (Page 4)`
+- `G8ZtxQhAALuSix6R (Page 5)`
+- `Ww9yuAvdAhl87wh6 (Page 6)`
 
 By reversing the orderings in your query, you can use this same method to retrieve all the documents before the specified document. Simply use the `after` parameter in your query options as shown below.
 

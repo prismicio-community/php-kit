@@ -8,25 +8,25 @@ The `fetchLinks` option allows you to retrieve a specific content field from a
 
 Note that this will only retrieve content of the following field types:
 
--   Color
--   Content Relationship
--   Date
--   Image
--   Key Text
--   Number
--   Rich Text (but only returns the first element)
--   Select
--   Timestamp
--   Title
+- Color
+- Content Relationship
+- Date
+- Image
+- Key Text
+- Number
+- Rich Text (but only returns the first element)
+- Select
+- Timestamp
+- Title
 
 It is **not** possible to retrieve the following content field types:
 
--   Embed
--   GeoPoint
--   Link
--   Link to Media
--   Rich Text (anything other than the first element)
--   Any field in a Group or Slice
+- Embed
+- GeoPoint
+- Link
+- Link to Media
+- Rich Text (anything other than the first element)
+- Any field in a Group or Slice
 
 The value you enter for the fetchLinks option needs to take the following format:
 
@@ -34,7 +34,7 @@ The value you enter for the fetchLinks option needs to take the following format
 [ 'fetchLinks' => '{custom-type}.{field}' ]
 ```
 
-| Parameter                           | Description                                                                  |
+| Property                            | Description                                                                  |
 | ----------------------------------- | ---------------------------------------------------------------------------- |
 | <strong>{custom-type}</strong><br/> | <p>The custom type API-ID of the linked document</p>                         |
 | <strong>{field}</strong><br/>       | <p>The API-ID of the field you wish to retrieve from the linked document</p> |

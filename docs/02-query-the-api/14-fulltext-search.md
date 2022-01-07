@@ -4,13 +4,13 @@ You can use the Fulltext predicate to search a document for a given term or term
 
 The `fulltext` predicate searches the term in any of the following fields:
 
--   Rich Text
--   Title
--   Key Text
--   UID
--   Select
+- Rich Text
+- Title
+- Key Text
+- UID
+- Select
 
-To learn more about this predicate checkout the [Query predicate reference](./02-query-predicate-reference.md) page.
+To learn more about this predicate checkout the [Query predicate reference](../02-query-the-api/02-query-predicate-reference.md) page.
 
 > Note that the fulltext search is not case sensitive.
 

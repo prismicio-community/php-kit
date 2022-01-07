@@ -4,7 +4,7 @@ In order to retrieve the content from your repository, you will need to query th
 
 Let’s take a look at how to put together queries for whatever case you need.
 
-> Check out the [Integrating with an existing PHP project](../01-getting-started/02-integrating-with-an-existing-project.md) page to learn how to get set up to query documents.
+> Check out the [Integrating with an existing PHP project](../01-getting-started/02-integrating-with-existing-project.md) page to learn how to get set up to query documents.
 
 ## The Basics
 
@@ -57,7 +57,7 @@ Predicates::at('document.type', 'blog-post')
 
 The predicate(s) will define which documents are retrieved from the content repository. This particular example will retrieve all of the documents of the type "blog-post".
 
-The first part, "document.type" is the **path**, or what the query will be looking for. You will find a list and description of the available paths on the [Query Predicates Reference](./02-query-predicate-reference.md) page. The second part the predicate in the above example is "blog-post" this is the **value** that the query is looking for.
+The first part, "document.type" is the **path**, or what the query will be looking for. You will find a list and description of the available paths on the [Query Predicates Reference](../02-query-the-api/02-query-predicate-reference.md) page. The second part the predicate in the above example is "blog-post" this is the **value** that the query is looking for.
 
 You can combine more than one predicate together to refine your query. You just need to put all your predicates into a comma-separated array like the following example.
 
@@ -68,7 +68,7 @@ You can combine more than one predicate together to refine your query. You just 
 
 This particular query will retrieve all the documents of the "blog-post" type that also have the tag "featured".
 
-You will find a list and description of all the available predicates on the [Query Predicates Reference](./02-query-predicate-reference.md) page.
+You will find a list and description of all the available predicates on the [Query Predicates Reference](../02-query-the-api/02-query-predicate-reference.md) page.
 
 ### Options
 
@@ -84,7 +84,7 @@ The above specifies how the returned list of documents will be ordered. You can 
 [ 'pageSize' => 10, 'page' => 2 ]
 ```
 
-You will find a list and description of all the available options on the [Query Options Reference](./04-query-options-reference.md) page.
+You will find a list and description of all the available options on the [Query Options Reference](../02-query-the-api/04-query-options-reference.md) page.
 
 Here’s another example of a more advanced query with multiple predicates and multiple options.
 
@@ -102,4 +102,4 @@ Whenever you query your content, you end up with the response object stored in t
 
 ## Pagination of API Results
 
-When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](./18-pagination-for-results.md) page.
+When querying a Prismic repository, your results will be paginated. By default, there are 20 documents per page in the results. You can read more about how to manipulate the pagination in the [Pagination for Results](../02-query-the-api/18-pagination-for-results.md) page.

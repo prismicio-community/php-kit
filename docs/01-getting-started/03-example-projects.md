@@ -36,7 +36,7 @@ sudo npm install -g prismic-cli
 sudo yarn global add prismic-cli
 ```
 
-> **⚠️ Prismic CLI version**
+> \***\*⚠️** Prismic CLI version\*\*
 >
 > Make sure you're using the latest version of [Prismic CLI](https://www.npmjs.com/package/prismic-cli). You can check your version by running `prismic --version` command in your terminal.
 
@@ -56,8 +56,8 @@ You can choose any of the available sample projects. You can also see a preview 
 
 This blog website is an excellent starting point to explore PHP and Prismic. Modify and adapt it to your liking.
 
--   [Preview](http://sample-prismic-blog.herokuapp.com/)
--   [Explore](https://github.com/prismicio/php-blog/archive/refs/heads/master.zip)
+- [Preview](http://sample-prismic-blog.herokuapp.com/)
+- [Explore](https://github.com/prismicio/php-blog/archive/refs/heads/master.zip)
 
 **Run the following Prismic theme command in the terminal to install this project locally:**
 
@@ -73,8 +73,8 @@ prismic theme --theme-url https://github.com/prismicio/php-blog --conf config.ph
 
 A Business website with multiple pages and a dynamic menu. This project provides all the code you need for a website with a homepage, information pages, and navigation
 
--   [Preview](https://website-sample.herokuapp.com/)
--   [Explore](https://github.com/prismicio/php-website)
+- [Preview](https://website-sample.herokuapp.com/)
+- [Explore](https://github.com/prismicio/php-website)
 
 **Run the following Prismic theme command in the terminal to install this project locally:**
 
@@ -114,6 +114,6 @@ Now you can customize the code and content however you want, and deploy your pro
 
 ## Related articles
 
--   [**Deployment**](./04-deployment.md)<br/>Learn how to deploy your PHP app and rebuild your site when you update your content.
+- [**Deployment**](./deployment-php.md)<br/>Learn how to deploy your PHP app and rebuild your site when you update your content.
 
--   [**Previews and the Prismic toolbar**](../04-beyond-the-api/02-previews-and-the-prismic-toolbar.md)<br/>Learn how to preview content changes without publishing your document or rebuilding your project.
+- [**Previews and the Prismic toolbar**](../04-beyond-the-api/02-previews-and-the-prismic-toolbar.md)<br/>Learn how to preview content changes without publishing your document or rebuilding your project.

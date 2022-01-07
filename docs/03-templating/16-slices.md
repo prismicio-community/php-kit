@@ -44,18 +44,18 @@ use Prismic\Dom\RichText;
 ?>
 
 <div class="blog-content">
-    <?php 
+  <?php 
   $slices = $document->data->body; foreach ($slices as $slice) { switch
-    ($slice->slice_type) { case 'text': echo
-    RichText::asHtml($slice->primary->rich_text, $linkResolver); break; case
-    'image_gallery': echo '
-    <h2 class="gallery-title">
-        ' . RichText::asText($slice->primary->gallery_title) . '
-    </h2>
-    '; foreach ($slice->items as $item) { echo '<img
-        src="' . $item->gallery_image->url . '"
-        alt="' . $item->gallery_image->alt . '"
-    />'; } break; } } ?>
+  ($slice->slice_type) { case 'text': echo
+  RichText::asHtml($slice->primary->rich_text, $linkResolver); break; case
+  'image_gallery': echo '
+  <h2 class="gallery-title">
+    ' . RichText::asText($slice->primary->gallery_title) . '
+  </h2>
+  '; foreach ($slice->items as $item) { echo '<img
+    src="' . $item->gallery_image->url . '"
+    alt="' . $item->gallery_image->alt . '"
+  />'; } break; } } ?>
 </div>
 ```
 
@@ -63,19 +63,18 @@ use Prismic\Dom\RichText;
 
 ```html
 <div class="blog-content">
-    <?php 
+  <?php 
   $slices = $document->getSliceZone('blog_post.body')->getSlices(); foreach
-    ($slices as $slice) { switch ($slice->getSliceType()) { case 'text': echo
-    $slice->getPrimary()->getStructuredText('rich_text')->asHtml($linkResolver);
-    break; case 'image_gallery': echo '
-    <h2 class="gallery-title">
-        ' . $slice->getPrimary()->getStructuredText('gallery_title')->asText() .
-        '
-    </h2>
-    '; foreach ($slice->getItems()->getArray() as $item) { echo '<img
-        src="' . $item->getImage('gallery_image')->getUrl() . '"
-        alt="' . $item->getImage('gallery_image')->getAlt() . '"
-    />'; } break; } } ?>
+  ($slices as $slice) { switch ($slice->getSliceType()) { case 'text': echo
+  $slice->getPrimary()->getStructuredText('rich_text')->asHtml($linkResolver);
+  break; case 'image_gallery': echo '
+  <h2 class="gallery-title">
+    ' . $slice->getPrimary()->getStructuredText('gallery_title')->asText() . '
+  </h2>
+  '; foreach ($slice->getItems()->getArray() as $item) { echo '<img
+    src="' . $item->getImage('gallery_image')->getUrl() . '"
+    alt="' . $item->getImage('gallery_image')->getAlt() . '"
+  />'; } break; } } ?>
 </div>
 ```
 

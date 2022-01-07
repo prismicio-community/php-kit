@@ -36,4 +36,4 @@ $response = $api->query(
 
 ## Query by UID & language
 
-To learn more about how to query your documents by UID and language, check out the [Query by ID and UID](./07-query-by-id-or-uid.md) page.
+To learn more about how to query your documents by UID and language, check out the [Query by ID and UID](../02-query-the-api/07-query-by-id-and-uid.md) page.

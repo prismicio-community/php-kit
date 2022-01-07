@@ -257,7 +257,7 @@ $document->getAlternateLanguages()
 // returns an array
 ```
 
-You can read more about this in the [Multi-language Templating](./12-multi-language-info.md) page.
+You can read more about this in the [Multi-language Templating](../03-templating/12-multi-language-info.md) page.
 
 ## Document Content
 

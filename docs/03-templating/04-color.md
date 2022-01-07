@@ -20,7 +20,7 @@ Here is an example of how to retrieve the value from a Color field. In this case
 
 ```html
 <h2 style="color: <?= $document->getColor('page.color')->getHexValue() ?>;">
-    Colorful Title
+  Colorful Title
 </h2>
 // Outputs:
 <h2 style="color: #1e89ce;">Colorful Title</h2>
