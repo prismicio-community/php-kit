@@ -1,5 +1,5 @@
 {
-    "name": "prismic/php-sdk",
+    "name": "roelofjan-elsinga/prismic-php",
     "description": "PHP development kit for Prismic",
     "config": {
         "sort-packages": true
@@ -17,7 +17,7 @@
     "license": "Apache-2.0",
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.4|>=8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
