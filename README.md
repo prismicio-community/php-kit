@@ -11,7 +11,7 @@ First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have th
 Install with [Composer](https://getcomposer.org/doc/00-intro.md):
 
 ```bash
-$ composer require prismic/php-sdk
+$ composer require roelofjan-elsinga/prismic-php
 ```
 
 ### Usage
