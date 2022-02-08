@@ -3,14 +3,23 @@ name: CI
 on: [push]
 
 jobs:
-    build-test:
+    build:
         runs-on: ubuntu-latest
+        name: PHP ${{ matrix.php }}
+        strategy:
+            matrix:
+                php: [7.4, 8.0]
 
         steps:
             - uses: actions/checkout@v2
-            - uses: php-actions/composer@v5
-            - uses: php-actions/phpunit@v3
+            - name: Setup PHP with dependencies
+              uses: shivammathur/setup-php@v2
               with:
-                  version: 9.5.0
-                  php_version: 7.4
-                  configuration: phpunit.xml.dist
+                  php-version: ${{ matrix.php }}
+                  tools: composer:v2, phpunit:9.5.0
+                  coverage: pcov
+                  extensions: mbstring
+            - name: Install Composer dependencies
+              run: composer install
+            - name: Run PHPUnit
+              run: ./vendor/bin/phpunit
