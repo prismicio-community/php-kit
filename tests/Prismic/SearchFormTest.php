@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic\Api;
 use Prismic\Exception\InvalidArgumentException;
 use Prismic\Exception\RuntimeException;
-use Prismic\Ref;
 use Prismic\SearchForm;
 use Prismic\Form;
 use Prismic\ApiData;
@@ -14,9 +12,12 @@ use Prismic\Cache\CacheInterface;
 use Prismic\Predicates;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class SearchFormTest extends TestCase
 {
+
+    use ProphecyTrait;
 
     /** @var ApiData */
     private $apiData;
