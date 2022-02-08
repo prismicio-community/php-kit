@@ -1,4 +1,4 @@
-[![alt text](https://travis-ci.org/prismicio/php-kit.png?branch=master "Travis build")](https://travis-ci.org/prismicio/php-kit)
+![Test status](https://github.com/roelofjan-elsinga/php-kit/actions/workflows/ci.yml/badge.svg?branch=master)
 
 # PHP development kit for Prismic
 
