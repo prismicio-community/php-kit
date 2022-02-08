@@ -2,7 +2,10 @@
     "name": "roelofjan-elsinga/prismic-php",
     "description": "PHP development kit for Prismic",
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
