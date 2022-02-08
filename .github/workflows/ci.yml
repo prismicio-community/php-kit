@@ -1,0 +1,25 @@
+name: CI
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: PHP ${{ matrix.php }}
+        strategy:
+            matrix:
+                php: [7.4]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup PHP with dependencies
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  tools: composer:v2, phpunit:9.5.0
+                  coverage: pcov
+                  extensions: mbstring apcu
+            - name: Install Composer dependencies
+              run: composer install
+            - name: Run PHPUnit
+              run: php -d apc.enable_cli=1 ./vendor/bin/phpunit
