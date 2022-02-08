@@ -18,8 +18,8 @@ jobs:
                   php-version: ${{ matrix.php }}
                   tools: composer:v2, phpunit:9.5.0
                   coverage: pcov
-                  extensions: mbstring
+                  extensions: mbstring apcu
             - name: Install Composer dependencies
               run: composer install
             - name: Run PHPUnit
-              run: ./vendor/bin/phpunit
+              run: php -d apc.enable_cli=1 ./vendor/bin/phpunit
