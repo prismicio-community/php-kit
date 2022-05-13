@@ -5,3 +5,5 @@ phpunit.xml
 ### Composer ###
 composer.phar
 /vendor/
+/composer.lock
+
