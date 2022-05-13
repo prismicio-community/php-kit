@@ -63,9 +63,9 @@ class Form
      * @param array  $fields    the list of Prismic::FieldForm objects that can be used
      */
     private function __construct(
-        ?string $name = null,
+        ?string $name,
         string  $method,
-        ?string $rel = null,
+        ?string $rel,
         string  $enctype,
         string  $action,
         array   $fields
