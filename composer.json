@@ -1,6 +1,6 @@
 {
-    "name": "prismic/php-sdk",
-    "description": "PHP development kit for Prismic",
+    "name": "elgentos/prismic-php-sdk",
+    "description": "PHP development kit for Prismic (fork)",
     "config": {
         "sort-packages": true
     },
@@ -27,6 +27,9 @@
         "phpdocumentor/phpdocumentor": "dev-master",
         "phpunit/phpunit": "^7",
         "squizlabs/php_codesniffer": "^3.3"
+    },
+    "replace": {
+        "prismic/php-sdk": "*"
     },
     "extra": {
         "branch-alias": {
