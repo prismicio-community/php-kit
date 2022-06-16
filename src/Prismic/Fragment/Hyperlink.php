@@ -6,10 +6,14 @@ use Prismic\LinkResolver;
 
 class Hyperlink implements BlockInterface
 {
-    use MagicTrait, AttributesTrait;
+    use MagicTrait, AttributesTrait, HtmlSerializerTrait;
 
     public function render(string $content, LinkResolver $linkResolver = null, \closure $htmlSerializer = null): string
     {
+        if ($result = $this->renderHtmlSerializer($content, $htmlSerializer)) {
+            return $result;
+        }
+
         $attributes = $this->getAttributes();
         if (isset($this->data->target)) {
             $attributes[] = sprintf('target="%s"', $this->data->target);

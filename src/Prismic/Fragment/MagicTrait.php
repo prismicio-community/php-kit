@@ -5,7 +5,7 @@ namespace Prismic\Fragment;
 trait MagicTrait
 {
     public function __construct(
-        protected \stdClass $content
+        private readonly \stdClass $content
     ) {
     }
 

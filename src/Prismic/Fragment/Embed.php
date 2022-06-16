@@ -6,10 +6,14 @@ use Prismic\LinkResolver;
 
 class Embed implements BlockInterface
 {
-    use MagicTrait;
+    use MagicTrait, HtmlSerializerTrait;
 
     public function render(string $content, LinkResolver $linkResolver = null, \closure $htmlSerializer = null): string
     {
+        if ($result = $this->renderHtmlSerializer($content, $htmlSerializer)) {
+            return $result;
+        }
+
         if (! isset($this->oembed->html)) {
             return '';
         }
