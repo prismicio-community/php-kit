@@ -138,6 +138,25 @@ class BlockTest extends TestCase
                     'type' => 'o-list-item',
                 ]
             ],
+            [
+                '<h1>Text with <em>em</em> and <strong>strong</strong></h1>',
+                'Text with em and strong',
+                (object)[
+                    'type' => 'heading1',
+                    'spans' => [
+                        (object)[
+                            'start' => 10,
+                            'end' => 12,
+                            'type' => 'em'
+                        ],
+                        (object)[
+                            'start' => 17,
+                            'end' => 23,
+                            'type' => 'strong'
+                        ],
+                    ]
+                ]
+            ],
         ];
     }
 
