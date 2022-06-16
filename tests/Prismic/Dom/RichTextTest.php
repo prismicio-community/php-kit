@@ -49,7 +49,7 @@ class RichTextTest extends TestCase
                 '<li>Ringo</li>' .
             '</ol>' .
             '<p class="block-img">' .
-                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" />' .
             '</p>' .
             '<div data-oembed="https://www.youtube.com/watch?v=joA7VpZLQaQ" data-oembed-type="video" data-oembed-provider="youtube">' .
                 '<iframe width="480" height="270" src="https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>' .
@@ -83,7 +83,7 @@ class RichTextTest extends TestCase
                 '<li>Ringo</li>' .
             '</ol>' .
             '<p class="block-img">' .
-                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" />' .
             '</p>' .
             '<div data-oembed="https://www.youtube.com/watch?v=joA7VpZLQaQ" data-oembed-type="video" data-oembed-provider="youtube">' .
                 '<iframe width="480" height="270" src="https://www.youtube.com/embed/joA7VpZLQaQ?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>' .

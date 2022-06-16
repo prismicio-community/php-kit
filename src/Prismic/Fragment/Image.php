@@ -14,7 +14,7 @@ class Image implements BlockInterface
             '<p class="block-img%s"><img src="%s" alt="%s" /></p>',
             isset($this->label) ? ' ' . $this->label : '',
             $this->url,
-            htmlentities($this->alt)
+            htmlentities($this->alt, ENT_NOQUOTES, 'UTF-8')
         );
     }
 }

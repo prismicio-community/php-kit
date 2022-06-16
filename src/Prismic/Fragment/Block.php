@@ -11,7 +11,6 @@ class Block implements BlockInterface
     public function render(string $content, LinkResolver $linkResolver = null, \closure $htmlSerializer = null): string
     {
         $attributes = $this->getAttributes();
-//        $attributes[] = sprintf('x-data-type="%s"', $this->type);
         $attributes = implode(' ', $attributes);
 
         return nl2br(sprintf(

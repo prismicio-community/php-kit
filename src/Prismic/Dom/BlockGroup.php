@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Prismic\Dom;
 
+use Prismic\Fragment\BlockInterface;
+
 /**
  * This class embodies a group of RichText blocks.
  * This is only for internal use, when a RichText fragment gets rendered as HTML:
@@ -13,52 +15,54 @@ namespace Prismic\Dom;
 class BlockGroup
 {
     /**
-     * @var string the tag to use if should be (values are either "ul", "ol" or null)
+     * @var string|null the tag to use if should be (values are either "ul", "ol" or null)
      */
-    private $maybeTag;
+    private ?string $tag;
     /**
-     * @var array the array of BlockInterface objects that are being grouped here
+     * @var BlockInterface[] the array of BlockInterface objects that are being grouped here
      */
-    private $blocks;
+    private array $blocks;
 
     /**
      * Constructs a group of RichText blocks
      *
-     * @param string  $maybeTag  the tag to use if should be (values are either "ul", "ol" or null)
-     * @param array   $blocks  the array of BlockInterface objects that are being grouped here
+     * @param string|null $tag the tag to use if should be (values are either "ul", "ol" or null)
+     * @param BlockInterface[] $blocks the array of BlockInterface objects that are being grouped here
      */
-    public function __construct(?string $maybeTag, array $blocks)
-    {
-        $this->maybeTag = $maybeTag;
-        $this->blocks = $blocks;
+    public function __construct(
+        ?string $tag,
+        array $blocks = []
+    ) {
+        $this->tag = $tag;
+        array_walk($blocks, [$this, 'addBlock']);
     }
 
     /**
      * Adds a block to the group of blocks.
      *
-     * @param \Prismic\Fragment\Block\BlockInterface  $block  the block to add
+     * @param BlockInterface $block the block to add
      */
-    public function addBlock($block)
+    public function addBlock(BlockInterface $block): void
     {
-        array_push($this->blocks, $block);
+        $this->blocks[] = $block;
     }
 
     /**
      * Returns the tag to use if should be (values are either "ul", "ol" or null).
      *
-     * @return  string  the tag to use if should be (values are either "ul", "ol" or null).
+     * @return string|null the tag to use if should be (values are either "ul", "ol" or null).
      */
-    public function getTag() :? string
+    public function getTag(): ?string
     {
-        return $this->maybeTag;
+        return $this->tag;
     }
 
     /**
      * Returns the array of BlockInterface objects that are being grouped here
      *
-     * @return array the array of BlockInterface objects that are being grouped here
+     * @return BlockInterface[] the array of BlockInterface objects that are being grouped here
      */
-    public function getBlocks() : array
+    public function getBlocks(): array
     {
         return $this->blocks;
     }

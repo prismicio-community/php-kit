@@ -2,7 +2,12 @@
 
 namespace Prismic\Dom;
 
-use Prismic\Dom\BlockGroup;
+use Prismic\Fragment\Block;
+use Prismic\Fragment\BlockInterface;
+use Prismic\Fragment\Embed;
+use Prismic\Fragment\Hyperlink;
+use Prismic\Fragment\Image;
+use Prismic\LinkResolver;
 
 /**
  * This class embodies a RichText fragment.
@@ -14,92 +19,82 @@ use Prismic\Dom\BlockGroup;
  */
 class RichText
 {
+
+    private const
+        GROUP_TAG_MAPPING = [
+            'list-item' => 'ul',
+            'o-list-item' => 'ol',
+        ],
+        DEFAULT_RENDERER = Block::class,
+        RENDERERS = [
+            'image' => Image::class,
+            'embed' => Embed::class,
+            'hyperlink' => Hyperlink::class,
+        ];
+
     /**
      * Builds a text version of the RichText fragment
      *
-     *
-     * @param object $richText the rich text object
-     *
+     * @param array $richText the rich text object
      * @return string the text version of the RichText fragment
      */
-    public static function asText($richText)
-    {
-        $result = '';
-
-        foreach ($richText as $block) {
-            if (isset($block->text)) {
-                $result .= $block->text . "\n";
-            }
-        }
-
-        return $result;
+    public static function asText(
+        array $richText
+    ): string {
+        return array_reduce(
+            $richText,
+            static fn($result, $block) => $result . ($block->text ?? '') . "\n",
+            ''
+        );
     }
 
     /**
      * Builds a HTML version of the RichText fragment
      *
-     *
-     * @param object                $richText       the rich text object
-     * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer an optional function to generate custom HTML code
-     *
+     * @param array $richText the rich text object
+     * @param ?LinkResolver $linkResolver the link resolver
+     * @param ?\closure $htmlSerializer an optional function to generate custom HTML code
      * @return string the HTML version of the RichText fragment
      */
-    public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
-    {
+    public static function asHtml(
+        array $richText,
+        LinkResolver $linkResolver = null,
+        \closure $htmlSerializer = null
+    ): string {
         $groups = [];
+        $group = null;
 
         foreach ($richText as $block) {
-            $count = count($groups);
-            if ($count > 0) {
-                $lastOne = $groups[$count - 1];
-                if ('ul' == $lastOne->getTag() && $block->type === 'list-item') {
-                    $lastOne->addBlock($block);
-                } elseif ('ol' == $lastOne->getTag() && $block->type === 'o-list-item') {
-                    $lastOne->addBlock($block);
-                } elseif ($block->type === 'list-item') {
-                    $newBlockGroup = new BlockGroup('ul', []);
-                    $newBlockGroup->addBlock($block);
-                    array_push($groups, $newBlockGroup);
-                } else {
-                    if ($block->type === 'o-list-item') {
-                        $newBlockGroup = new BlockGroup('ol', []);
-                        $newBlockGroup->addBlock($block);
-                        array_push($groups, $newBlockGroup);
-                    } else {
-                        $newBlockGroup = new BlockGroup(null, []);
-                        $newBlockGroup->addBlock($block);
-                        array_push($groups, $newBlockGroup);
-                    }
+            $block = self::createBlock($block);
+
+            if (isset(self::GROUP_TAG_MAPPING[$block->type])) {
+                // group item
+                if (! $group || $group->getTag() !== self::GROUP_TAG_MAPPING[$block->type]) {
+                    $group = new BlockGroup(self::GROUP_TAG_MAPPING[$block->type]);
+                    // Add group to stack
+                    $groups[] = $group;
                 }
+                // Add block to group
+                $group->addBlock($block);
             } else {
-                if ($block->type === 'list-item') {
-                    $tag = 'ul';
-                } elseif ($block->type === 'o-list-item') {
-                    $tag = 'ol';
-                } else {
-                    $tag = null;
-                }
-                $newBlockGroup = new BlockGroup($tag, []);
-                $newBlockGroup->addBlock($block);
-                array_push($groups, $newBlockGroup);
+                $groups[] = new BlockGroup(null, [$block]);
+                $group = null;
             }
         }
 
         $html = '';
 
+        /** @var BlockGroup $group */
         foreach ($groups as $group) {
-            $maybeTag = $group->getTag();
-            if ($maybeTag) {
-                $html = $html . '<' . $group->getTag() . '>';
-                foreach ($group->getBlocks() as $block) {
-                    $html = $html . RichText::asHtmlBlock($block, $linkResolver, $htmlSerializer);
-                }
-                $html = $html . '</' . $group->getTag() . '>';
-            } else {
-                foreach ($group->getBlocks() as $block) {
-                    $html = $html . RichText::asHtmlBlock($block, $linkResolver, $htmlSerializer);
-                }
+            $groupTag = $group->getTag();
+            if ($groupTag) {
+                $html .= '<' . $groupTag . '>';
+            }
+            foreach ($group->getBlocks() as $block) {
+                $html .= self::asHtmlBlock($block, $linkResolver, $htmlSerializer);
+            }
+            if ($groupTag) {
+                $html .= '</' . $groupTag . '>';
             }
         }
 
@@ -110,46 +105,38 @@ class RichText
      * Transforms a block into HTML
      *
      *
-     * @param object                $block          a given block
-     * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param BlockInterface $block a given block
+     * @param LinkResolver|null $linkResolver the link resolver
+     * @param \closure|null $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the block
      */
-    private static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
-    {
-        $content = '';
-
-        if ($block->type === 'heading1' ||
-            $block->type === 'heading2' ||
-            $block->type === 'heading3' ||
-            $block->type === 'heading4' ||
-            $block->type === 'heading5' ||
-            $block->type === 'heading6' ||
-            $block->type === 'paragraph' ||
-            $block->type === 'list-item' ||
-            $block->type === 'o-list-item' ||
-            $block->type === 'preformatted'
-        ) {
-            $content = RichText::insertSpans($block->text, $block->spans, $linkResolver, $htmlSerializer);
-        }
-
-        return RichText::serialize($block, $content, $linkResolver, $htmlSerializer);
+    private static function asHtmlBlock(
+        BlockInterface $block,
+        LinkResolver $linkResolver = null,
+        \closure $htmlSerializer = null
+    ): string {
+        $content = self::insertSpans($block->text ?? '', $block->spans ?? [], $linkResolver, $htmlSerializer);
+        return self::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
 
     /**
      * Transforms a text block into HTML
      *
      *
-     * @param string                $text           the raw text of the block
-     * @param array                 $spans          the spans of the block
-     * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param string $text the raw text of the block
+     * @param array $spans the spans of the block
+     * @param LinkResolver $linkResolver the link resolver
+     * @param \closure $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the block
      */
-    private static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
-    {
+    private static function insertSpans(
+        string $text,
+        array $spans,
+        LinkResolver $linkResolver = null,
+        \closure $htmlSerializer = null
+    ): string {
         if (empty($spans)) {
             return htmlentities($text, ENT_NOQUOTES, 'UTF-8');
         }
@@ -164,15 +151,15 @@ class RichText
             if (! array_key_exists($span->end, $tagsEnd)) {
                 $tagsEnd[$span->end] = [];
             }
-            array_push($tagsStart[$span->start], $span);
-            array_push($tagsEnd[$span->end], $span);
+
+            $tagsStart[$span->start][] = $span;
+            $tagsEnd[$span->end][] = $span;
         }
 
-        $c = null;
         $html = '';
         $stack = [];
 
-        for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
+        for ($pos = 0, $len = mb_strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
             if (array_key_exists($pos, $tagsEnd)) {
                 foreach ($tagsEnd[$pos] as $endTag) {
                     // Close a tag
@@ -180,16 +167,21 @@ class RichText
                     // Continue only if block contains content.
                     if ($tag && $tag['span']) {
                         $innerHtml = trim(
-                            RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer)
+                            self::serialize(
+                                self::createBlock($tag['span']),
+                                $tag['text'],
+                                $linkResolver,
+                                $htmlSerializer
+                            )
                         );
-                        if (count($stack) == 0) {
+                        if (empty($stack)) {
                             // The tag was top level
                             $html .= $innerHtml;
                         } else {
                             // Add the content to the parent tag
                             $last = array_pop($stack);
-                            $last['text'] = $last['text'] . $innerHtml;
-                            array_push($stack, $last);
+                            $last['text'] .= $innerHtml;
+                            $stack[] = $last;
                         }
                     }
                 }
@@ -203,25 +195,21 @@ class RichText
                 usort($sspans, $spanSort);
                 foreach ($sspans as $span) {
                     // Open a tag
-                    array_push($stack, [
+                    $stack[] = [
                         'span' => $span,
                         'text' => ''
-                    ]);
+                    ];
                 }
             }
-            if ($pos < strlen($text)) {
+            if ($pos < mb_strlen($text)) {
                 $c = mb_substr($text, $pos, 1, 'UTF-8');
-                if (count($stack) == 0) {
+                if (empty($stack)) {
                     // Top-level text
                     $html .= htmlentities($c, ENT_NOQUOTES, 'UTF-8');
                 } else {
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
-                    $last = $stack[$last_idx];
-                    $stack[$last_idx] = [
-                        'span' => $last['span'],
-                        'text' => $last['text'] . htmlentities($c, ENT_NOQUOTES, 'UTF-8')
-                    ];
+                    $stack[$last_idx]['text'] .= htmlentities($c, ENT_NOQUOTES, 'UTF-8');
                 }
             }
         }
@@ -233,117 +221,34 @@ class RichText
      * Transforms an element into HTML
      *
      *
-     * @param object                $element        element to serialize
-     * @param string                $content        inner HTML content of the element
-     * @param \Prismic\LinkResolver $linkResolver   the link resolver
-     * @param lambda                $htmlSerializer the user's custom HTML serializer
+     * @param BlockInterface $element element to serialize
+     * @param string $content inner HTML content of the element
+     * @param LinkResolver $linkResolver the link resolver
+     * @param \closure $htmlSerializer the user's custom HTML serializer
      *
      * @return string the HTML representation of the element
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer) : string
+    private static function serialize(
+        BlockInterface $element,
+        string $content,
+        LinkResolver $linkResolver = null,
+        \closure $htmlSerializer = null
+    ): string {
+        if ($htmlSerializer && ($custom = $htmlSerializer($element, $content))) {
+            return $custom;
+        }
+
+        return $element->render(
+            $content,
+            $linkResolver,
+            $htmlSerializer
+        );
+    }
+
+    private static function createBlock(\stdClass $element): BlockInterface
     {
-        if ($htmlSerializer) {
-            $custom = $htmlSerializer($element, $content);
-            if ($custom) {
-                return $custom;
-            }
-        }
-
-        $classCode = '';
-
-        if (isset($element->label)) {
-            $classCode = ' class="' . $element->label . '"';
-        }
-
-        // Blocks
-        switch ($element->type) {
-            case 'heading1':
-                return nl2br('<h1' . $classCode . '>' . $content . '</h1>');
-            case 'heading2':
-                return nl2br('<h2' . $classCode . '>' . $content . '</h2>');
-            case 'heading3':
-                return nl2br('<h3' . $classCode . '>' . $content . '</h3>');
-            case 'heading4':
-                return nl2br('<h4' . $classCode . '>' . $content . '</h4>');
-            case 'heading5':
-                return nl2br('<h5' . $classCode . '>' . $content . '</h5>');
-            case 'heading6':
-                return nl2br('<h6' . $classCode . '>' . $content . '</h6>');
-            case 'paragraph':
-                return nl2br('<p' . $classCode . '>' . $content . '</p>');
-            case 'preformatted':
-                return '<pre' . $classCode . '>' . $content . '</pre>';
-            case 'list-item':
-            case 'o-list-item':
-                return nl2br('<li' . $classCode . '>' . $content . '</li>');
-            case 'image':
-                return (
-                    '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
-                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt ?? '', ENT_NOQUOTES, 'UTF-8') . '">' .
-                    '</p>'
-                );
-            case 'embed':
-                $providerAttr = '';
-                if ($element->oembed->provider_name) {
-                    $providerAttr = ' data-oembed-provider="' . strtolower($element->oembed->provider_name) . '"';
-                }
-                if ($element->oembed->html) {
-                    return sprintf(
-                        '<div data-oembed="%s" data-oembed-type="%s"%s>%s</div>',
-                        $element->oembed->embed_url,
-                        strtolower($element->oembed->type),
-                        $providerAttr,
-                        $element->oembed->html
-                    );
-                }
-                return '';
-        }
-
-        // Spans
-        $attributes = [];
-        switch ($element->type) {
-            case 'strong':
-                $nodeName = 'strong';
-                break;
-            case 'em':
-                $nodeName = 'em';
-                break;
-            case 'hyperlink':
-                $nodeName = 'a';
-                if (isset($element->data->target)) {
-                    $attributes = array_merge([
-                        'target' => $element->data->target,
-                        'rel' => 'noopener',
-                    ], $attributes);
-                }
-                if ($element->data->link_type === 'Document') {
-                    $attributes['href'] = $linkResolver ? $linkResolver($element->data) : '';
-                } else {
-                    $attributes['href'] = $element->data->url;
-                }
-                if ($attributes['href'] === null) {
-                    // We have no link (LinkResolver said it is not valid,
-                    // or something else went wrong). Abort this span.
-                    return $content;
-                }
-                break;
-            default:
-                // throw new \Exception("Unknown span type " . get_class($span));
-                $nodeName = 'span';
-        }
-
-        if (isset($element->label)) {
-            $attributes['class'] = $element->label;
-        } elseif (isset($element->data->label)) {
-            $attributes['class'] = $element->data->label;
-        }
-
-        $html = '<' . $nodeName;
-        foreach ($attributes as $k => $v) {
-            $html .= (' ' . $k . '="' . $v . '"');
-        }
-        $html .= ('>' . $content . '</' . $nodeName . '>');
-
-        return $html;
+        /** @var BlockInterface $class */
+        $class = self::RENDERERS[$element->type ?? ''] ?? self::DEFAULT_RENDERER;
+        return new $class($element);
     }
 }
