@@ -21,7 +21,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^7.3"
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Prismic\Test;
 
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * GuzzleHttp\Client does not provide concrete get(), post() methods
@@ -14,7 +15,7 @@ use GuzzleHttp\Client;
 class GuzzleClient extends Client
 {
 
-    public function get()
+    public function get($uri, array $options = []): ResponseInterface
     {
     }
 }
