@@ -279,7 +279,7 @@ class RichText
             case 'image':
                 return (
                     '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
-                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' .
+                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt, ENT_NOQUOTES, 'UTF-8') . '">' .
                     '</p>'
                 );
             case 'embed':
