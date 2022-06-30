@@ -277,9 +277,13 @@ class RichText
             case 'o-list-item':
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
+                $img = '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">';
+
+                $link = property_exists($element, 'linkTo') ? Link::asUrl($element->linkTo, $linkResolver) : null;
+
                 return (
                     '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
-                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' .
+                    ($link ? '<a href="' . $link . '" target="_blank">' . $img . '</a>' : $img) .
                     '</p>'
                 );
             case 'embed':
