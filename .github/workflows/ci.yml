@@ -8,7 +8,7 @@ jobs:
         name: PHP ${{ matrix.php }}
         strategy:
             matrix:
-                php: [8.0]
+                php: [7.4, 8.0, 8.1]
 
         steps:
             - uses: actions/checkout@v2
