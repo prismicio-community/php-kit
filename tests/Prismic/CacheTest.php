@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic\Cache\ApcCache;
+use Prismic\Cache\MemoryCache;
 
 class CacheTest extends TestCase
 {
@@ -11,7 +11,7 @@ class CacheTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cache = new ApcCache();
+        $this->cache = new MemoryCache();
     }
 
     public function testSetGetValue()
