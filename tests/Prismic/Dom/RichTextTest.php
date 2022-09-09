@@ -12,7 +12,7 @@ class RichTextTest extends TestCase
     private $richText;
     private $linkResolver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->richText = json_decode($this->getJsonFixture('rich-text.json'));
         $this->linkResolver = new FakeLinkResolver();
