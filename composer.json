@@ -2,7 +2,10 @@
     "name": "prismic/php-sdk",
     "description": "PHP development kit for Prismic",
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -17,21 +20,18 @@
     "license": "Apache-2.0",
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.1",
+        "php": ">=8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
-        "phpdocumentor/phpdocumentor": "dev-master",
-        "phpunit/phpunit": "^7",
+        "phpdocumentor/phpdocumentor": "^3.0",
+        "phpspec/prophecy": "^1.15",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9",
         "squizlabs/php_codesniffer": "^3.3"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
     },
     "scripts": {
         "check": [
