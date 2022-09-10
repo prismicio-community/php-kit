@@ -27,7 +27,6 @@
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
-        "phpdocumentor/phpdocumentor": "^3.0",
         "phpspec/prophecy": "^1.15",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9",
@@ -40,7 +39,7 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "docs": "phpdoc",
+        "docs": "phpdoc.phar",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-html build/report",
         "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php"

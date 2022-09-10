@@ -7,6 +7,7 @@ php:
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION != 'hhvm' ]]; then phpenv config-add ./tests/apc.ini; fi;
+  - wget -O phpdoc.phar https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.3.1/phpDocumentor.phar
   - composer install
 
 script:
