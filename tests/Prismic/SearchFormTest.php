@@ -67,7 +67,6 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $form->set('', 'foo');
-
     }
 
     public function testSetWithANonScalarValueThrowsException()
@@ -77,7 +76,6 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $form->set('page', ['an-array']);
-
     }
 
     public function testSetWithAnUnknownKeyThrowsException()
@@ -87,7 +85,6 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $form->set('whatever', 'foo');
-
     }
 
     public function testSetStringParamWithNonStringThrowsException()
@@ -97,7 +94,6 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $form->set('lang', 1);
-
     }
 
     public function testSetIntParamWithNonNumberThrowsException()
@@ -107,7 +103,6 @@ class SearchFormTest extends TestCase
 
         $form = $this->getSearchForm();
         $form->set('page', 'foo');
-
     }
 
     protected function assertSearchFormClone(SearchForm $a, SearchForm $b)
