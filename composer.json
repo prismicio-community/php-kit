@@ -39,7 +39,7 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "docs": "phpdoc.phar",
+        "docs": "php phpdoc.phar",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-html build/report",
         "serve": "php -S 0.0.0.0:8080 -t samples samples/document-explorer.php"
