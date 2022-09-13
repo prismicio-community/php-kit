@@ -1,5 +1,5 @@
 {
-    "name": "elgentos/prismic-php-sdk",
+    "name": "prismic/php-sdk",
     "description": "PHP development kit for Prismic (fork)",
     "config": {
         "sort-packages": true
@@ -27,9 +27,6 @@
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.3"
-    },
-    "replace": {
-        "prismic/php-sdk": "*"
     },
     "extra": {
         "branch-alias": {
