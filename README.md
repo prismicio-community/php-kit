@@ -6,7 +6,7 @@
 
 ### Install the kit for your project
 
-First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default built-in cache support.
+First of all, install [APCu](https://www.php.net/manual/en/ref.apcu.php) to have the default built-in cache support.
 
 Install with [Composer](https://getcomposer.org/doc/00-intro.md):
 
