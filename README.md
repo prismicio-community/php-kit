@@ -76,8 +76,8 @@ echo $date->format('Y-m-d H:i:s');
 
 -   [Developer docs](./docs)
 -   [PHP Quickstart tutorial](https://prismic.io/quickstart#?lang=php)
--   [PHPDoc](https://prismicio.github.io/php-kit)
--   [Changelog](https://github.com/prismicio/php-kit/releases)
+-   [PHPDoc](https://prismicio-community.github.io/php-kit/)
+-   [Changelog](https://github.com/prismicio-community/php-kit/releases)
 
 ## Install the kit locally
 
