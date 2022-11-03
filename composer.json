@@ -2,10 +2,7 @@
     "name": "prismic/php-sdk",
     "description": "PHP development kit for Prismic",
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "symfony/flex": true
-        }
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
@@ -20,7 +17,7 @@
     "license": "Apache-2.0",
     "minimum-stability": "stable",
     "require": {
-        "php": ">=8.0",
+        "php": "~8.0 || ~8.1",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
