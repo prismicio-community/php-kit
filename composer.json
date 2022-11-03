@@ -32,6 +32,9 @@
         "phpunit/phpunit": "^9",
         "squizlabs/php_codesniffer": "^3.3"
     },
+    "suggest": {
+        "ext-apcu": "*"
+    },
     "scripts": {
         "check": [
             "@cs-check",

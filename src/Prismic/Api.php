@@ -511,11 +511,11 @@ class Api
     }
 
     /**
-     * Use the APC cache if APC is activated on the server, otherwise fallback to the noop cache (no cache)
+     * Use the APCu cache if APCu is activated on the server, otherwise fallback to the noop cache (no cache)
      */
     public static function defaultCache() : CacheInterface
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             return new ApcCache();
         }
         return new NoCache();
