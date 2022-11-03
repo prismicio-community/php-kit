@@ -16,7 +16,7 @@ use stdClass;
 /**
  * This class embodies a connection to your Prismic repository's API.
  * Initialize it with Prismic::Api::get(), and use your Prismic::Api::form() to make API calls
- * (read more in <a href="https://github.com/prismicio/php-kit">the kit's README file</a>)
+ * (read more in <a href="https://github.com/prismicio-community/php-kit">the kit's README file</a>)
  */
 class Api
 {
