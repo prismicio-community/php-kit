@@ -1,4 +1,4 @@
-[![Build Status](https://app.travis-ci.com/prismicio/php-kit.svg?branch=master "Travis build")](https://app.travis-ci.com/prismicio/php-kit)
+[![Build Status](https://app.travis-ci.com/prismicio-community/php-kit.svg?branch=master "Travis build")](https://app.travis-ci.com/github/prismicio-community/php-kit)
 
 # PHP development kit for Prismic
 
