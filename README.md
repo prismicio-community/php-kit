@@ -6,7 +6,7 @@
 
 ### Install the kit for your project
 
-First of all, install [apc](http://www.php.net/manual/en/ref.apc.php) to have the default built-in cache support.
+First of all, install [APCu](https://www.php.net/manual/en/ref.apcu.php) to have the default built-in cache support.
 
 Install with [Composer](https://getcomposer.org/doc/00-intro.md):
 
@@ -33,10 +33,7 @@ $api = Api::get('https://your-repo-name.prismic.io/api/v2');
 $doc = $api->getByUID('get-started');
 ```
 
-This kit supports PHP version >= 7.1.
-
-Because of a dependency on the event dispatcher, this library is compatible with Symfony version 2.8 and higher.
-For Symfony 2.7 projects, use version 2.0.3.
+This kit supports PHP version >= 8.0
 
 ### DOM helpers usage
 
@@ -76,8 +73,8 @@ echo $date->format('Y-m-d H:i:s');
 
 -   [Developer docs](./docs)
 -   [PHP Quickstart tutorial](https://prismic.io/quickstart#?lang=php)
--   [PHPDoc](https://prismicio.github.io/php-kit)
--   [Changelog](https://github.com/prismicio/php-kit/releases)
+-   [PHPDoc](https://prismicio-community.github.io/php-kit/)
+-   [Changelog](https://github.com/prismicio-community/php-kit/releases)
 
 ## Install the kit locally
 

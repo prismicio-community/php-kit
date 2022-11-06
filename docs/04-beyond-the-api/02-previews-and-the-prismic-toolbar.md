@@ -49,7 +49,7 @@ In your preview settings add an endpoint to the optional Link Resolver field as 
 
 > **Using an official Prismic starter project?**
 >
-> If you are using our official Prismic PHP development kit ([php-kit](https://github.com/prismicio/php-kit)) or any other of our starter projects, then you should already have all the code in place that you need for Previews and the Prismic Toolbar!<br/>
+> If you are using our official Prismic PHP development kit ([php-kit](https://github.com/prismicio-community/php-kit)) or any other of our starter projects, then you should already have all the code in place that you need for Previews and the Prismic Toolbar!<br/>
 > If you are not using this kit to make your queries, then follow the rest of the steps below.
 
 Now you need to add the Link Resolver endpoint in your website application. When requested this endpoint must:
@@ -79,7 +79,7 @@ The example above uses a Link Resolver function stored in the variable `$linkRe
 
 > **Are you using our php-kit?**
 >
-> This last step is only required if you are not using the [php-kit](https://github.com/prismicio/php-kit) to retrieve your API object.
+> This last step is only required if you are not using the [php-kit](https://github.com/prismicio-community/php-kit) to retrieve your API object.
 
 If you are using the `Api::get` method to retrieve your API object, then the correct reference will automatically be used and this last step is not necessary. If you **are not** using this method, then do the following:
 

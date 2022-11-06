@@ -1,6 +1,8 @@
-phpdoc.dist.xml
-phpunit.xml
+.phpunit.result.cache
 /build/
+phpdoc.dist.xml
+phpdoc.phar
+phpunit.xml
 
 ### Composer ###
 composer.phar

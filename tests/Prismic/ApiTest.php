@@ -12,11 +12,14 @@ use Prismic\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 
 class ApiTest extends TestCase
 {
+
+    use ProphecyTrait;
 
     /** @var ApiData */
     private $apiData;
@@ -32,7 +35,7 @@ class ApiTest extends TestCase
      */
     private $expectedMasterRef = 'UgjWQN_mqa8HvPJY';
 
-    public function setUp()
+    public function setUp(): void
     {
         unset($_COOKIE);
 
@@ -236,7 +239,7 @@ class ApiTest extends TestCase
             $api = Api::get('http://example.example', null, $client);
             $this->fail('No exception was thrown');
         } catch (Prismic\Exception\RequestFailureException $e) {
-            $this->assertContains('example.example', $e->getMessage());
+            $this->assertStringContainsString('example.example', $e->getMessage());
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertNull($e->getResponse());
         }
