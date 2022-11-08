@@ -56,7 +56,7 @@ use Prismic\Dom\RichText;
 ?>
 
 <div class="blog-post-content">
-    <?= $RichText::asHtml($document->data->blog_post, $linkResolver) ?>
+    <?= RichText::asHtml($document->data->blog_post, $linkResolver) ?>
 </div>
 ```
 
