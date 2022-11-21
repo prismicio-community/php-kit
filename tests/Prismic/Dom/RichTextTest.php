@@ -20,9 +20,27 @@ class RichTextTest extends TestCase
 
     public function testAsText()
     {
-        $expected = "The title\n";
-        $actual = RichText::asText($this->richText->title);
-        $this->assertEquals($expected, $actual);
+        $expected = (
+            "Heading 1\n".
+            "Heading 2\n".
+            "Heading 3\n".
+            "Heading 4\n".
+            "Heading 5\n".
+            "Heading 6\n".
+            "Paragraph em and strong\n".
+            "Paragraph Web link and media link\n".
+            "Preformatted block\n".
+            "Help\n".
+            "Revolver\n".
+            "Abbey Road\n".
+            "John\n".
+            "Paul\n".
+            "George\n".
+            "Ringo"
+        );
+
+        $this->assertEquals($expected, RichText::asText($this->richText->description));
+        $this->assertEquals($expected, RichText::asText($this->richText->description, $this->linkResolver));
     }
 
     public function testAsHtml()
