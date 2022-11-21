@@ -151,7 +151,7 @@ class RichText
     private static function insertSpans($text, array $spans, $linkResolver = null, $htmlSerializer = null)
     {
         if (empty($spans)) {
-            return htmlentities($text, null, 'UTF-8');
+            return htmlentities($text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
         }
 
         $tagsStart = [];
@@ -213,14 +213,14 @@ class RichText
                 $c = mb_substr($text, $pos, 1, 'UTF-8');
                 if (count($stack) == 0) {
                     // Top-level text
-                    $html .= htmlentities($c, null, 'UTF-8');
+                    $html .= htmlentities($c, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
                 } else {
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
                     $stack[$last_idx] = [
                         'span' => $last['span'],
-                        'text' => $last['text'] . htmlentities($c, null, 'UTF-8')
+                        'text' => $last['text'] . htmlentities($c, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8')
                     ];
                 }
             }

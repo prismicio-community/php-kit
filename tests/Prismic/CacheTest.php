@@ -9,7 +9,7 @@ class CacheTest extends TestCase
 {
     private $cache;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cache = new ApcCache();
     }
