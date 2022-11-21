@@ -151,6 +151,35 @@
             }
         },
         {
+            "type":"image",
+            "url":"https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg",
+            "alt": "Alt text",
+            "copyright": "Copyright text",
+            "dimensions": {
+                "width": 400,
+                "height": 400
+            },
+            "linkTo":{
+               "link_type":"Web",
+               "url":"https://prismic.io",
+               "target":"_blank"
+            }
+        },
+        {
+            "type":"image",
+            "url":"https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg",
+            "alt": "Alt text",
+            "copyright": "Copyright text",
+            "dimensions": {
+                "width": 400,
+                "height": 400
+            },
+            "linkTo":{
+               "link_type":"Web",
+               "url":"https://prismic.io"
+            }
+         },
+        {
             "type": "embed",
             "oembed": {
                 "type": "video",
