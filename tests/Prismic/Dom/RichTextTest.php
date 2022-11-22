@@ -41,6 +41,8 @@ class RichTextTest extends TestCase
 
         $this->assertEquals($expected, RichText::asText($this->richText->description));
         $this->assertEquals($expected, RichText::asText($this->richText->description, $this->linkResolver));
+
+        $this->assertStringEndsNotWith("\n", RichText::asText($this->richText->description));
     }
 
     public function testAsHtml()
