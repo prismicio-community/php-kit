@@ -30,7 +30,7 @@ Then call the API:
 ```php
 <?php
 $api = Api::get('https://your-repo-name.prismic.io/api/v2');
-$doc = $api->getByUID('get-started');
+$doc = $api->getByUID('get-started-type', 'get-started');
 ```
 
 This kit supports PHP version >= 8.0
