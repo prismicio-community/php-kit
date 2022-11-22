@@ -282,7 +282,7 @@ class RichText
                 $link = property_exists($element, 'linkTo') ? Link::asUrl($element->linkTo, $linkResolver) : null;
 
                 $target     = property_exists($element, 'linkTo') ? ($element->linkTo->target ?? null) : null;
-                $targetCode = $target ? ' target="' . $target . '"' : '';
+                $targetCode = $target ? ' target="' . htmlentities($target) . '"' : '';
 
                 return (
                     '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
