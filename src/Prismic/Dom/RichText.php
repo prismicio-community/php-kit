@@ -32,7 +32,7 @@ class RichText
             }
         }
 
-        return $result;
+        return trim($result);
     }
 
     /**
