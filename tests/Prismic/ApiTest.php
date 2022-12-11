@@ -40,7 +40,7 @@ class ApiTest extends TestCase
         unset($_COOKIE);
 
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
-        $this->httpClient = $this->prophesize(GuzzleClient::class);
+        $this->httpClient = $this->prophesize(Client::class);
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 

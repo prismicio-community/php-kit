@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Prismic\Test;
 
+use GuzzleHttp\Client;
 use Prismic\Api;
 use Prismic\Ref;
 use Prismic\SearchForm;
@@ -40,7 +41,7 @@ class SearchFormTest extends TestCase
     {
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
-        $this->httpClient = $this->prophesize(GuzzleClient::class);
+        $this->httpClient = $this->prophesize(Client::class);
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 

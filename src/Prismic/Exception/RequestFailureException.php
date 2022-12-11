@@ -1,12 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Prismic\Exception;
 
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class RequestFailureException extends RuntimeException
 {
@@ -18,23 +20,34 @@ class RequestFailureException extends RuntimeException
 
     /**
      * Factory to return a Prismic Exception wrapping a Guzzle Exception
+     *
+     * @param GuzzleException $e
+     *
+     * @return self
      */
-    public static function fromGuzzleException(GuzzleException $e) : self
+    public static function fromGuzzleException(GuzzleException $e): self
     {
-        if ($e instanceof RequestException) {
-            return static::fromGuzzleRequestException($e);
+        if ($e instanceof RequestException || $e instanceof ConnectException) {
+            return static::fromGuzzleRequestOrConnectException($e);
         }
+
         $exception = new static('Api Request Failed', 500, $e);
         $exception->guzzleException = $e;
         return $exception;
     }
 
+
     /**
-     * Factory to wrap a Guzzle Request Exception when we should have access to a request and a response
+     * Factory to wrap a Guzzle Request or Connect Exception when we should have access
+     * to a request and a optionally response
+     *
+     * @param RequestException|ConnectException $e
+     *
+     * @return self
      */
-    protected static function fromGuzzleRequestException(RequestException $e) : self
+    protected static function fromGuzzleRequestOrConnectException(GuzzleException $e): self
     {
-        $response = $e->getResponse();
+        $response = $e instanceof RequestException ? $e->getResponse() : null;
         $code     = $response ? $response->getStatusCode() : 0;
         $reason   = $response ? $response->getReasonPhrase() : 'No Response';
         $request  = $e->getRequest();
@@ -54,19 +67,38 @@ class RequestFailureException extends RuntimeException
         return $exception;
     }
 
-    public function getResponse() :? ResponseInterface
+    /**
+     * Returns the response that caused the exception, if available.
+     * Returns null if the exception does not have a response.
+     *
+     * Since Guzzle ^7.0 the ConnectException does not have a response, so null is returned.
+     *
+     * @return ResponseInterface|null
+     */
+    public function getResponse(): ?ResponseInterface
     {
-        if (! $this->guzzleException instanceof RequestException) {
+        if (!$this->guzzleException instanceof RequestException) {
             return null;
         }
+
         return $this->guzzleException->getResponse();
     }
 
-    public function getRequest() :? RequestInterface
+    /**
+     * Returns the request that caused the exception, if available.
+     * Returns null if the exception does not have a request.
+     *
+     * @return RequestInterface|null
+     */
+    public function getRequest(): ?RequestInterface
     {
-        if (! $this->guzzleException instanceof RequestException) {
+        if (
+            !$this->guzzleException instanceof RequestException &&
+            !$this->guzzleException instanceof ConnectException
+        ) {
             return null;
         }
+
         return $this->guzzleException->getRequest();
     }
 }
