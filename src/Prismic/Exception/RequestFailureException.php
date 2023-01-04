@@ -27,7 +27,11 @@ class RequestFailureException extends RuntimeException
      */
     public static function fromGuzzleException(GuzzleException $e): self
     {
-        if ($e instanceof RequestException || $e instanceof ConnectException) {
+        if ($e instanceof RequestException) {
+            return static::fromGuzzleRequestException($e);
+        }
+
+        if ($e instanceof ConnectException) {
             return static::fromGuzzleRequestOrConnectException($e);
         }
 
@@ -38,6 +42,22 @@ class RequestFailureException extends RuntimeException
 
 
     /**
+     * Factory to wrap a Guzzle Request Exception when we should have access to a request and a response.
+     *
+     * This function is deprectaed and will be removed in a future release.
+     *
+     * @deprecated since v5.3.0
+     *
+     * @param RequestException $e
+     *
+     * @return self
+     */
+    protected static function fromGuzzleRequestException(RequestException $e): self
+    {
+        return static::fromGuzzleRequestOrConnectException($e);
+    }
+
+    /**
      * Factory to wrap a Guzzle Request or Connect Exception when we should have access
      * to a request and a optionally response
      *
@@ -45,7 +65,7 @@ class RequestFailureException extends RuntimeException
      *
      * @return self
      */
-    protected static function fromGuzzleRequestOrConnectException(GuzzleException $e): self
+    private static function fromGuzzleRequestOrConnectException(GuzzleException $e): self
     {
         $response = $e instanceof RequestException ? $e->getResponse() : null;
         $code     = $response ? $response->getStatusCode() : 0;
@@ -77,7 +97,7 @@ class RequestFailureException extends RuntimeException
      */
     public function getResponse(): ?ResponseInterface
     {
-        if (! $this->guzzleException instanceof RequestException) {
+        if (!$this->guzzleException instanceof RequestException) {
             return null;
         }
 
@@ -92,8 +112,9 @@ class RequestFailureException extends RuntimeException
      */
     public function getRequest(): ?RequestInterface
     {
-        if (! $this->guzzleException instanceof RequestException &&
-            ! $this->guzzleException instanceof ConnectException
+        if (
+            !$this->guzzleException instanceof RequestException &&
+            !$this->guzzleException instanceof ConnectException
         ) {
             return null;
         }
