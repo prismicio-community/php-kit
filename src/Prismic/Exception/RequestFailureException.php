@@ -97,7 +97,7 @@ class RequestFailureException extends RuntimeException
      */
     public function getResponse(): ?ResponseInterface
     {
-        if (!$this->guzzleException instanceof RequestException) {
+        if (! $this->guzzleException instanceof RequestException) {
             return null;
         }
 
@@ -112,9 +112,8 @@ class RequestFailureException extends RuntimeException
      */
     public function getRequest(): ?RequestInterface
     {
-        if (
-            !$this->guzzleException instanceof RequestException &&
-            !$this->guzzleException instanceof ConnectException
+        if (! $this->guzzleException instanceof RequestException &&
+            ! $this->guzzleException instanceof ConnectException
         ) {
             return null;
         }
