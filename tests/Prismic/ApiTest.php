@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Prismic\Test;
@@ -40,11 +41,11 @@ class ApiTest extends TestCase
         unset($_COOKIE);
 
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
-        $this->httpClient = $this->prophesize(Client::class);
+        $this->httpClient = $this->prophesize(ClientInterface::class);
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 
-    protected function getApi() : Api
+    protected function getApi(): Api
     {
         return Api::get(
             'https://whatever.prismic.io/api/v2',
@@ -55,7 +56,7 @@ class ApiTest extends TestCase
         );
     }
 
-    protected function getApiWithDefaultData() : Api
+    protected function getApiWithDefaultData(): Api
     {
         $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
         $cachedData = serialize($this->apiData);
