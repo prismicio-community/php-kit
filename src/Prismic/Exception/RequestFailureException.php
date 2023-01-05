@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+/** @final This class is not designed to be open to extension */
 class RequestFailureException extends RuntimeException
 {
 
