@@ -318,7 +318,7 @@ class Api
 
         // Query the server for the rest
         if (count($promises) > 0) {
-            $raw_responses = Promise\unwrap($promises);
+            $raw_responses = Promise\Utils::unwrap($promises);
 
             foreach ($urls as $url) {
                 $response = $raw_responses[$url];

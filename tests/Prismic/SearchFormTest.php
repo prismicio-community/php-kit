@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Prismic\Test;
 
-use Prismic\Api;
-use Prismic\Ref;
+use GuzzleHttp\ClientInterface;
 use Prismic\SearchForm;
 use Prismic\Form;
 use Prismic\ApiData;
@@ -40,11 +40,11 @@ class SearchFormTest extends TestCase
     {
         $this->apiData = ApiData::withJsonString($this->getJsonFixture('data.json'));
         $this->form = Form::withJsonObject($this->apiData->getForms()['blogs']);
-        $this->httpClient = $this->prophesize(GuzzleClient::class);
+        $this->httpClient = $this->prophesize(ClientInterface::class);
         $this->cache = $this->prophesize(CacheInterface::class);
     }
 
-    protected function getSearchForm() : SearchForm
+    protected function getSearchForm(): SearchForm
     {
         return new SearchForm(
             $this->httpClient->reveal(),
@@ -215,7 +215,7 @@ class SearchFormTest extends TestCase
     public function testFetchWithArrayArg()
     {
         $this->assertScalarOptionIsSet(
-            $this->getSearchForm()->fetch(...['one','two','three']),
+            $this->getSearchForm()->fetch(...['one', 'two', 'three']),
             'fetch',
             'one,two,three'
         );
@@ -401,7 +401,7 @@ class SearchFormTest extends TestCase
         }
     }
 
-    private function prepareResponse(?string $body = null) : Response
+    private function prepareResponse(?string $body = null): Response
     {
         $body = $body ? $body : '{"data":"data"}';
         $response = new Response(
