@@ -17,8 +17,8 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: apc, apcu
-                  ini-file: tests/apc.ini
+                  extensions: apcu
+                  ini-values: apc.enable=1, apc.enable_cli=1
 
             - name: Checkout
               uses: actions/checkout@master
