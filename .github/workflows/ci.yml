@@ -18,6 +18,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: apc, apcu
+                  ini-file: tests/apc.ini
 
             - name: Checkout
               uses: actions/checkout@master
