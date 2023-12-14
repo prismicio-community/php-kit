@@ -1,0 +1,43 @@
+name: ci
+
+on: push
+
+jobs:
+    suite:
+        name: Suite (${{ matrix.os }}, PHP ${{ matrix.php }})
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest]
+                php: ["8.0", "8.1", "8.2"]
+
+        steps:
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: apcu
+                  ini-values: apc.enable=1, apc.enable_cli=1
+
+            - name: Checkout
+              uses: actions/checkout@master
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+            - name: Install dependencies
+              run: composer install --prefer-dist
+
+            - name: Test
+              run: composer test
+
+            - name: Lint
+              run: composer cs-check
