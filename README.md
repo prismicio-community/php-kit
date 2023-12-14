@@ -1,4 +1,4 @@
-[![Build Status](https://app.travis-ci.com/prismicio-community/php-kit.svg?branch=master "Travis build")](https://app.travis-ci.com/github/prismicio-community/php-kit)
+[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 
 # PHP development kit for Prismic
 
@@ -110,3 +110,6 @@ Copyright 2018 Prismic (https://prismic.io).
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[github-actions-ci-src]: https://github.com/prismicio-community/php-kit/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio-community/php-kit/actions?query=workflow%3Aci
