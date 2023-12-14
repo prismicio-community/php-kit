@@ -4,7 +4,7 @@ on: push
 
 jobs:
     prepare:
-        name: Prepare (${{ matrix.os}}, Node ${{ matrix.node }})
+        name: Prepare (${{ matrix.os}}, PHP ${{ matrix.php }})
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
