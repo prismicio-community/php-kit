@@ -69,16 +69,16 @@ class RichTextTest extends TestCase
                 '<li>Ringo</li>' .
             '</ol>' .
             '<p class="block-img">' .
-                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
             '</p>' .
             '<p class="block-img">' .
                 '<a href="https://prismic.io" target="_blank">' .
-                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
                 '</a>' .
             '</p>' .
             '<p class="block-img">' .
                 '<a href="https://prismic.io">' .
-                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
                 '</a>' .
             '</p>' .
             '<div data-oembed="https://www.youtube.com/watch?v=joA7VpZLQaQ" data-oembed-type="video" data-oembed-provider="youtube">' .
@@ -113,16 +113,16 @@ class RichTextTest extends TestCase
                 '<li>Ringo</li>' .
             '</ol>' .
             '<p class="block-img">' .
-                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
             '</p>' .
             '<p class="block-img">' .
                 '<a href="https://prismic.io" target="_blank">' .
-                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
                 '</a>' .
             '</p>' .
             '<p class="block-img">' .
                 '<a href="https://prismic.io">' .
-                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text">' .
+                    '<img src="https://prismic-io.s3.amazonaws.com/levi-templeting/357366ce9af5fd05dcd0a76e6ee267fc46c08f6a_mi0003995354.jpg" alt="Alt text" width="400" height="400">' .
                 '</a>' .
             '</p>' .
             '<div data-oembed="https://www.youtube.com/watch?v=joA7VpZLQaQ" data-oembed-type="video" data-oembed-provider="youtube">' .
