@@ -17,7 +17,7 @@ class Variation
      * Variation Release Ref
      * @var string
      */
-    private $ref;
+    private $ref = "";
 
     /**
      * Variation Label
