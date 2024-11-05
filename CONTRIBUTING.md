@@ -30,6 +30,17 @@ Once your environment is set up, you can start developing new features or fixing
 
 Before starting on a large change, it’s recommended that you open an issue to discuss your proposed changes. This allows you to receive early feedback and helps determine the best way to proceed.
 
+If you want to test your changes in an example you can either create a new file in the `samples` directory or modify an existing one (locally). In case you want to test the changes in a real project, you can link your local package to the project using [Composer](https://getcomposer.org/doc/05-repositories.md#path).
+
+In any case please make sure to write test cases for your changes.
+
+**Useful commands:**
+
+| Command             | Description                                                                      |
+| ------------------- | -------------------------------------------------------------------------------- |
+| `composer test`     | This command will run the test suite with PHPUnit (requires the APCu extension). |
+| `composer cs-check` | This command will check the code style with PHP CS Fixer.                        |
+
 ## Tests
 
 Please ensure that you write tests for any new features or bug fixes you implement.
