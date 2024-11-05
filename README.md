@@ -13,8 +13,8 @@ This is the official PHP SDK for Prismic.io, providing a straightforward way to 
 ### Overview
 
 1. [Getting started](#getting-started)
-    1. [Requirements](#requirements)
-    2. [Installation](#installation)
+    1. [Installation](#installation)
+    2. [Reccomended PHP Extension](#reccomended-php-extensions)
     3. [Basic Usage & API calls](#basic-usage--api-calls)
     4. [DOM Helper](#dom-helper)
 2. [More information](#more-information)
@@ -23,10 +23,6 @@ This is the official PHP SDK for Prismic.io, providing a straightforward way to 
 
 ## Getting started
 
-### Requirements
-
-If you want to have the built-in default cache support, you need to have the [APCu](https://www.php.net/manual/en/ref.apcu.php) extension installed and enabled.
-
 ### Installation
 
 Installation using [Composer](https://getcomposer.org/doc/00-intro.md):
@@ -34,6 +30,10 @@ Installation using [Composer](https://getcomposer.org/doc/00-intro.md):
 ```bash
 $ composer require prismic/php-sdk
 ```
+
+### Reccomended PHP Extensions
+
+We recommend installing and enabeling the [APCu](https://www.php.net/manual/en/ref.apcu.php) extension to have the built-in default cache support. Otherwise, you can implement your own cache strategy by extending the `Prismic\Cache\CacheInterface` interface.
 
 ### Basic Usage & API calls
 
