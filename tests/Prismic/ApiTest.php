@@ -201,6 +201,26 @@ class ApiTest extends TestCase
         $this->assertNull($api->bookmark('unknown-bookmark'));
     }
 
+    public function testApiWorksWithoutBookmarks()
+    {
+        // Create an ApiData object without bookmarks
+        $data = $this->getJsonFixture('data-without-bookmarks.json');
+        $apiData = ApiData::withJsonString($data);
+
+        // Cache the data
+        $key = 'https://whatever.prismic.io/api/v2#My-Access-Token';
+        $cachedData = serialize($apiData);
+        $this->cache->get($key)->willReturn($cachedData);
+        $this->httpClient->request()->shouldNotBeCalled();
+
+        $api = $this->getApi();
+
+        // Test that the bookmarks are empty
+        $this->assertEmpty($api->bookmarks());
+        $this->assertNull($api->bookmark('about'));
+        $this->assertNull($api->bookmark('unknown-bookmark'));
+    }
+
     public function testFormsReturnsOnlyFormInstances()
     {
         $api = $this->getApiWithDefaultData();
