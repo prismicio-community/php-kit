@@ -201,7 +201,8 @@ class ApiTest extends TestCase
         $this->assertNull($api->bookmark('unknown-bookmark'));
     }
 
-    public function testApiWorksWithoutBookmarks() {
+    public function testApiWorksWithoutBookmarks()
+    {
         // Create an ApiData object without bookmarks
         $data = $this->getJsonFixture('data-without-bookmarks.json');
         $apiData = ApiData::withJsonString($data);
