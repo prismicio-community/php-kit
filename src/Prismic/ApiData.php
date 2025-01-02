@@ -162,7 +162,8 @@ class ApiData
     /**
      * Get the bookmarks
      *
-     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025, as bookmarks are removed from the API.
+     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025,
+     * as bookmarks are removed from the API.
      */
     public function getBookmarks() : array
     {

@@ -151,7 +151,8 @@ class Api
      * Returns the list of all bookmarks on the repository. If you're looking
      * for a document from it's bookmark name, you should use the bookmark() function.
      *
-     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025, as bookmarks are removed from the API.
+     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025,
+     * as bookmarks are removed from the API.
      *
      * @return array the array of bookmarks
      */
@@ -167,7 +168,8 @@ class Api
      * Most starter projects embed a helper to query a document from their ID string,
      * which makes this even easier.
      *
-     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025, as bookmarks are removed from the API.
+     * @deprecated 5.4.0 This method will no longer work after the 12 February 2025,
+     * as bookmarks are removed from the API.
      *
      * @param string $name the bookmark name to use
      *
