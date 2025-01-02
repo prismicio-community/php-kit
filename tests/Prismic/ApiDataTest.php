@@ -36,6 +36,14 @@ class ApiDataTest extends TestCase
         ApiData::withJsonString('wtf?');
     }
 
+    public function testApiDataWorksWithoutBookmarks(){
+        $json = $this->getJsonFixture('data-without-bookmarks.json');
+        $data = ApiData::withJsonString($json);
+
+        $this->assertInstanceOf(ApiData::class, $data);
+        $this->assertEquals([], $data->getBookmarks());
+    }
+
     public function testApiDataHasExpectedValues()
     {
         $this->assertCount(3, $this->data->getRefs());
