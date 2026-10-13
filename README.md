@@ -1,3 +1,8 @@
+> [!NOTE]
+> This SDK is archived and no longer maintained. For a community-maintained alternative, see [netglue/prismic-client](https://github.com/netglue/prismic-client).
+> 
+> Thanks to [@c0nst4ntin](https://github.com/c0nst4ntin) and all past contributors for maintaining this kit.
+
 # Prismic.io PHP SDK
 
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
